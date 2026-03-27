@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.expo/
+coverage/
+*.png
+*.jpg
+*.gif
+*.wav
+*.mp3
