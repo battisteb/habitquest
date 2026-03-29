@@ -4,11 +4,14 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HabitList } from '../../src/features/habits/components/habit-list';
 import { fetchHabits } from '../../src/features/habits/stores/habits-store';
+import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 export default function TodayScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+
+  useStreakRiskNotification();
 
   useEffect(() => {
     fetchHabits();

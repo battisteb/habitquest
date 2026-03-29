@@ -4,6 +4,10 @@ import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth } from '../src/features/auth/stores/auth-store';
+import {
+  configureNotifications,
+  applyNotificationPrefs,
+} from '../src/features/notifications/utils/notification-service';
 import { colors } from '../src/ui/theme/tokens';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -37,6 +41,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 export default function RootLayout() {
   useEffect(() => {
     initAuth();
+    configureNotifications().then(() => applyNotificationPrefs());
   }, []);
 
   return (
