@@ -1,11 +1,28 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { useEffect } from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { HabitList } from '../../src/features/habits/components/habit-list';
+import { fetchHabits } from '../../src/features/habits/stores/habits-store';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 export default function TodayScreen() {
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchHabits();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Today</Text>
-      <Text style={styles.subtitle}>Your quests for today will appear here</Text>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={styles.header}>
+        <Text style={styles.title}>TODAY</Text>
+        <Pressable style={styles.addButton} onPress={() => router.push('/habit/create')}>
+          <Text style={styles.addButtonText}>+</Text>
+        </Pressable>
+      </View>
+      <HabitList />
     </View>
   );
 }
@@ -13,19 +30,36 @@ export default function TodayScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: colors.background,
-    padding: spacing.lg,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
   title: {
-    fontSize: fontSizes.xxl,
+    fontSize: fontSizes.xl,
     fontWeight: 'bold',
     color: colors.text,
+    letterSpacing: 2,
   },
-  subtitle: {
-    fontSize: fontSizes.md,
-    color: colors.textSecondary,
-    marginTop: spacing.sm,
+  addButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 4,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: colors.primaryDark,
+    borderBottomWidth: 4,
+  },
+  addButtonText: {
+    color: colors.text,
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    marginTop: -2,
   },
 });
