@@ -4,6 +4,7 @@ import { authStore$ } from '../../auth/stores/auth-store';
 import { calculateNewStreak } from '../utils/streak-calculator';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
+import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import type { Database } from '../../../lib/supabase/types';
 
 type Habit = Database['public']['Tables']['habits']['Row'];
@@ -72,6 +73,9 @@ export async function fetchHabits() {
         completionMap[c.habit_id] = true;
       });
       habitsStore$.todayCompletions.set(completionMap);
+
+      // Check for broken streaks and apply punishment (non-blocking)
+      checkAndApplyPunishments(userId, streakMap).catch(() => {});
     }
   } finally {
     habitsStore$.isLoading.set(false);
