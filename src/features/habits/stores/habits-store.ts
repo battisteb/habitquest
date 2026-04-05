@@ -3,6 +3,7 @@ import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { calculateNewStreak } from '../utils/streak-calculator';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
+import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 import type { Database } from '../../../lib/supabase/types';
 
 type Habit = Database['public']['Tables']['habits']['Row'];
@@ -157,4 +158,7 @@ export async function completeHabit(habitId: string) {
       last_completed_at: now,
     });
   }
+
+  // Check achievements in background (non-blocking)
+  checkAndUnlockAchievements().catch(() => {});
 }

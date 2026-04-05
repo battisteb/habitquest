@@ -1,11 +1,14 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useStats } from '../../src/features/habits/hooks/use-stats';
 import { WeeklyChart } from '../../src/features/habits/components/weekly-chart';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 export default function StatsScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const stats = useStats();
 
   if (stats.isLoading) {
@@ -42,6 +45,12 @@ export default function StatsScreen() {
       </View>
 
       {stats.weeklyCompletions.length > 0 && <WeeklyChart data={stats.weeklyCompletions} />}
+
+      <PixelButton
+        title="View Achievements"
+        onPress={() => router.push('/achievements')}
+        variant="secondary"
+      />
     </ScrollView>
   );
 }

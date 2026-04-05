@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          id: string
+          key: string
+          name: string
+          description: string
+          category: string
+          icon: string
+          threshold: number
+          xp_reward: number
+          gold_reward: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          name: string
+          description: string
+          category: string
+          icon?: string
+          threshold?: number
+          xp_reward?: number
+          gold_reward?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          name?: string
+          description?: string
+          category?: string
+          icon?: string
+          threshold?: number
+          xp_reward?: number
+          gold_reward?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          id: string
+          user_id: string
+          achievement_id: string
+          unlocked_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          achievement_id: string
+          unlocked_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          achievement_id?: string
+          unlocked_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       completions: {
         Row: {
           completed_at: string
