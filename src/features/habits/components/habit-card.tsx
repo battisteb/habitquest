@@ -10,15 +10,31 @@ interface HabitCardProps {
   onPress: () => void;
 }
 
-const categoryColors: Record<string, string> = {
-  sport: '#4ecca3',
-  studies: '#7b68ee',
-  wellness: '#f5c518',
-  meditation: '#e684ae',
-  stretching: '#ff6b35',
-  reading: '#00b4d8',
-  custom: '#aaa',
+const CATEGORY_CONFIG: Record<string, { color: string; icon: string }> = {
+  health: { color: '#4ecca3', icon: '💚' },
+  fitness: { color: '#ff6b35', icon: '💪' },
+  learning: { color: '#7b68ee', icon: '📚' },
+  mindfulness: { color: '#e684ae', icon: '🧘' },
+  productivity: { color: '#00b4d8', icon: '⚡' },
+  nutrition: { color: '#22c55e', icon: '🥗' },
+  sleep: { color: '#8b5cf6', icon: '😴' },
+  social: { color: '#f59e0b', icon: '🤝' },
+  creativity: { color: '#ec4899', icon: '🎨' },
+  finance: { color: '#10b981', icon: '💰' },
+  general: { color: '#aaa', icon: '⭐' },
+  // Legacy categories
+  sport: { color: '#ff6b35', icon: '💪' },
+  studies: { color: '#7b68ee', icon: '📚' },
+  wellness: { color: '#f5c518', icon: '✨' },
+  meditation: { color: '#e684ae', icon: '🧘' },
+  stretching: { color: '#ff6b35', icon: '🤸' },
+  reading: { color: '#00b4d8', icon: '📖' },
+  custom: { color: '#aaa', icon: '⭐' },
 };
+
+function getCategoryConfig(category: string) {
+  return CATEGORY_CONFIG[category] ?? CATEGORY_CONFIG.general;
+}
 
 export function HabitCard({
   name,
@@ -28,14 +44,16 @@ export function HabitCard({
   onComplete,
   onPress,
 }: HabitCardProps) {
-  const categoryColor = categoryColors[category] ?? categoryColors.custom;
+  const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
 
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <View style={[styles.categoryBar, { backgroundColor: categoryColor }]} />
       <View style={styles.content}>
         <View style={styles.info}>
-          <Text style={[styles.name, isCompletedToday && styles.nameCompleted]}>{name}</Text>
+          <Text style={[styles.name, isCompletedToday && styles.nameCompleted]}>
+            {categoryIcon} {name}
+          </Text>
           <View style={styles.meta}>
             <Text style={[styles.category, { color: categoryColor }]}>
               {category.toUpperCase()}

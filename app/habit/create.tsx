@@ -5,22 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { PixelInput } from '../../src/ui/components/pixel-input';
 import { createHabit } from '../../src/features/habits/stores/habits-store';
-import { HABIT_CATEGORIES, type HabitCategory } from '../../src/lib/constants/categories';
+import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
 import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
-
-const categoryColors: Record<string, string> = {
-  sport: '#4ecca3',
-  studies: '#7b68ee',
-  wellness: '#f5c518',
-  meditation: '#e684ae',
-  stretching: '#ff6b35',
-  reading: '#00b4d8',
-  custom: '#aaa',
-};
 
 export default function CreateHabitScreen() {
   const [name, setName] = useState('');
-  const [category, setCategory] = useState<HabitCategory>('custom');
+  const [category, setCategory] = useState<HabitCategory>('general');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -62,28 +52,31 @@ export default function CreateHabitScreen() {
       <View style={styles.categorySection}>
         <Text style={styles.categoryLabel}>CATEGORY</Text>
         <View style={styles.categoryGrid}>
-          {HABIT_CATEGORIES.map((cat) => (
-            <Pressable
-              key={cat}
-              style={[
-                styles.categoryChip,
-                {
-                  borderColor: category === cat ? categoryColors[cat] : colors.border,
-                  backgroundColor: category === cat ? categoryColors[cat] + '22' : colors.surface,
-                },
-              ]}
-              onPress={() => setCategory(cat)}
-            >
-              <Text
+          {HABIT_CATEGORIES.map((cat) => {
+            const config = CATEGORY_CONFIG[cat];
+            return (
+              <Pressable
+                key={cat}
                 style={[
-                  styles.categoryChipText,
-                  { color: category === cat ? categoryColors[cat] : colors.textSecondary },
+                  styles.categoryChip,
+                  {
+                    borderColor: category === cat ? config.color : colors.border,
+                    backgroundColor: category === cat ? config.color + '22' : colors.surface,
+                  },
                 ]}
+                onPress={() => setCategory(cat)}
               >
-                {cat.toUpperCase()}
-              </Text>
-            </Pressable>
-          ))}
+                <Text
+                  style={[
+                    styles.categoryChipText,
+                    { color: category === cat ? config.color : colors.textSecondary },
+                  ]}
+                >
+                  {config.icon} {config.label.toUpperCase()}
+                </Text>
+              </Pressable>
+            );
+          })}
         </View>
       </View>
 
