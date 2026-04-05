@@ -1,6 +1,7 @@
 import { supabase } from '../../../lib/supabase/client';
 import { storage } from '../../../lib/storage/mmkv';
 import { calculatePunishment } from './punishment';
+import { isFreezeActiveToday } from './streak-freeze';
 
 const PUNISHED_KEY = 'punished-streaks';
 
@@ -29,6 +30,11 @@ export async function checkAndApplyPunishments(
   userId: string,
   streaks: Record<string, { current_count: number; longest_count: number; last_completed_at: string | null; habit_id: string }>,
 ): Promise<{ totalXpLoss: number; totalGoldLoss: number; brokenCount: number }> {
+  // If streak freeze is active today, skip all punishments
+  if (isFreezeActiveToday()) {
+    return { totalXpLoss: 0, totalGoldLoss: 0, brokenCount: 0 };
+  }
+
   const now = new Date();
   const today = now.toISOString().slice(0, 10);
   const punished = getPunishedSet();
