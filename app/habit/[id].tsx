@@ -1,10 +1,16 @@
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, Alert, ScrollView, Pressable, Linking } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
-import { habitsStore$, archiveHabit } from '../../src/features/habits/stores/habits-store';
+import { HabitTimer } from '../../src/features/habits/components/habit-timer';
+import { HabitChecklist } from '../../src/features/habits/components/habit-checklist';
+import { habitsStore$, archiveHabit, completeHabit } from '../../src/features/habits/stores/habits-store';
+import { CONTENT_TYPE_CONFIG } from '../../src/features/habits/types/habit-content';
+import { getCategoryColor } from '../../src/lib/constants/categories';
 import { colors, spacing, fontSizes } from '../../src/ui/theme/tokens';
+import type { HabitContent } from '../../src/features/habits/types/habit-content';
 
 export default function HabitDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -12,9 +18,13 @@ export default function HabitDetailScreen() {
   const insets = useSafeAreaInsets();
   const habits = use$(habitsStore$.habits);
   const streaks = use$(habitsStore$.streaks);
+  const todayCompletions = use$(habitsStore$.todayCompletions);
+  const [contentExpanded, setContentExpanded] = useState(false);
 
   const habit = habits.find((h) => h.id === id);
   const streak = id ? streaks[id] : undefined;
+  const isCompletedToday = id ? !!todayCompletions[id] : false;
+  const content = habit?.content as HabitContent | null | undefined;
 
   if (!habit) {
     return (
@@ -38,23 +48,133 @@ export default function HabitDetailScreen() {
     ]);
   };
 
+  const handleComplete = async () => {
+    await completeHabit(habit.id);
+    setContentExpanded(false);
+  };
+
+  const handleLinkOpen = async () => {
+    if (content?.type !== 'link') return;
+    const url = content.url.startsWith('http') ? content.url : `https://${content.url}`;
+    const canOpen = await Linking.canOpenURL(url).catch(() => false);
+    if (canOpen) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert('Cannot open link', url);
+    }
+  };
+
+  const categoryColor = getCategoryColor(habit.category);
+
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <ScrollView
+      style={[styles.scroll, { paddingTop: insets.top }]}
+      contentContainerStyle={styles.container}
+    >
       <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
 
-      <Text style={styles.title}>{habit.name}</Text>
-      <Text style={styles.category}>{habit.category.toUpperCase()}</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={[styles.category, { color: categoryColor }]}>
+          {habit.category.toUpperCase()}
+        </Text>
+        <Text style={styles.title}>{habit.name}</Text>
+      </View>
 
+      {/* Stats */}
       <View style={styles.statsGrid}>
         <View style={styles.statCard}>
-          <Text style={styles.statValue}>{streak?.current_count ?? 0}</Text>
-          <Text style={styles.statLabel}>CURRENT STREAK</Text>
+          <Text style={[styles.statValue, { color: colors.streak }]}>
+            {streak?.current_count ?? 0}
+          </Text>
+          <Text style={styles.statLabel}>STREAK</Text>
         </View>
         <View style={styles.statCard}>
-          <Text style={styles.statValue}>{streak?.longest_count ?? 0}</Text>
-          <Text style={styles.statLabel}>BEST STREAK</Text>
+          <Text style={[styles.statValue, { color: colors.accent }]}>
+            {streak?.longest_count ?? 0}
+          </Text>
+          <Text style={styles.statLabel}>BEST</Text>
+        </View>
+        <View style={styles.statCard}>
+          <Text style={[styles.statValue, { color: isCompletedToday ? colors.success : colors.textMuted }]}>
+            {isCompletedToday ? '✓' : '—'}
+          </Text>
+          <Text style={styles.statLabel}>TODAY</Text>
         </View>
       </View>
+
+      {/* Content section */}
+      {content && (
+        <View style={styles.contentSection}>
+          <Pressable
+            style={styles.contentHeader}
+            onPress={() => setContentExpanded((e) => !e)}
+          >
+            <View style={styles.contentHeaderLeft}>
+              <Text style={styles.contentIcon}>
+                {CONTENT_TYPE_CONFIG[content.type].icon}
+              </Text>
+              <View>
+                <Text style={styles.contentType}>
+                  {CONTENT_TYPE_CONFIG[content.type].label.toUpperCase()}
+                </Text>
+                <Text style={styles.contentSubtitle} numberOfLines={1}>
+                  {content.type === 'timer' && `${content.label} — ${Math.floor(content.duration / 60)}min${content.duration % 60 > 0 ? ` ${content.duration % 60}s` : ''}`}
+                  {content.type === 'checklist' && `${content.items.length} steps`}
+                  {content.type === 'link' && content.label}
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.expandChevron}>{contentExpanded ? '▲' : '▼'}</Text>
+          </Pressable>
+
+          {contentExpanded && (
+            <View style={styles.contentBody}>
+              {content.type === 'timer' && (
+                <HabitTimer
+                  duration={content.duration}
+                  label={content.label}
+                  onComplete={isCompletedToday ? () => {} : handleComplete}
+                />
+              )}
+              {content.type === 'checklist' && (
+                <HabitChecklist
+                  items={content.items}
+                  onComplete={isCompletedToday ? () => {} : handleComplete}
+                />
+              )}
+              {content.type === 'link' && (
+                <View style={styles.linkContent}>
+                  <Text style={styles.linkUrl} numberOfLines={2}>{content.url}</Text>
+                  <PixelButton
+                    title={`Open: ${content.label}`}
+                    onPress={handleLinkOpen}
+                    variant="secondary"
+                  />
+                  {!isCompletedToday && (
+                    <PixelButton
+                      title="Mark as done"
+                      onPress={handleComplete}
+                    />
+                  )}
+                </View>
+              )}
+              {isCompletedToday && (
+                <Text style={styles.alreadyDone}>Already completed today ✓</Text>
+              )}
+            </View>
+          )}
+        </View>
+      )}
+
+      {/* Quick complete (no content, or no content set) */}
+      {!content && !isCompletedToday && (
+        <PixelButton
+          title="Mark as done"
+          onPress={handleComplete}
+          style={styles.quickComplete}
+        />
+      )}
 
       <PixelButton
         title="Archive quest"
@@ -62,16 +182,22 @@ export default function HabitDetailScreen() {
         variant="secondary"
         style={styles.archiveButton}
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scroll: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  container: {
     padding: spacing.lg,
     gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  header: {
+    gap: spacing.xs,
   },
   title: {
     fontSize: fontSizes.xxl,
@@ -79,15 +205,13 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   category: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.xs,
     fontWeight: 'bold',
-    color: colors.textSecondary,
-    letterSpacing: 1,
+    letterSpacing: 2,
   },
   statsGrid: {
     flexDirection: 'row',
-    gap: spacing.md,
-    marginTop: spacing.md,
+    gap: spacing.sm,
   },
   statCard: {
     flex: 1,
@@ -95,20 +219,81 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 2,
     borderColor: colors.border,
-    padding: spacing.md,
+    padding: spacing.sm,
     alignItems: 'center',
-    gap: spacing.xs,
+    gap: 2,
   },
   statValue: {
-    fontSize: fontSizes.title,
+    fontSize: fontSizes.xl,
     fontWeight: 'bold',
-    color: colors.streak,
   },
   statLabel: {
     fontSize: fontSizes.xs,
     fontWeight: 'bold',
     color: colors.textMuted,
     letterSpacing: 1,
+  },
+  contentSection: {
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    overflow: 'hidden',
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: spacing.md,
+  },
+  contentHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    flex: 1,
+  },
+  contentIcon: {
+    fontSize: 28,
+  },
+  contentType: {
+    color: colors.text,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  contentSubtitle: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    marginTop: 2,
+  },
+  expandChevron: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    marginLeft: spacing.sm,
+  },
+  contentBody: {
+    borderTopWidth: 2,
+    borderTopColor: colors.border,
+    padding: spacing.md,
+    gap: spacing.md,
+  },
+  linkContent: {
+    gap: spacing.md,
+  },
+  linkUrl: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontStyle: 'italic',
+  },
+  alreadyDone: {
+    color: colors.success,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    letterSpacing: 1,
+  },
+  quickComplete: {
+    marginTop: spacing.xs,
   },
   archiveButton: {
     marginTop: 'auto',

@@ -4,13 +4,16 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { PixelInput } from '../../src/ui/components/pixel-input';
+import { ContentPicker } from '../../src/features/habits/components/content-picker';
 import { createHabit } from '../../src/features/habits/stores/habits-store';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
+import type { HabitContent } from '../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
 
 export default function CreateHabitScreen() {
   const [name, setName] = useState('');
   const [category, setCategory] = useState<HabitCategory>('general');
+  const [content, setContent] = useState<HabitContent | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -20,7 +23,7 @@ export default function CreateHabitScreen() {
 
     setLoading(true);
     try {
-      await createHabit(name.trim(), category);
+      await createHabit(name.trim(), category, content);
       router.back();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Failed to create habit';
@@ -79,6 +82,8 @@ export default function CreateHabitScreen() {
           })}
         </View>
       </View>
+
+      <ContentPicker value={content} onChange={setContent} />
 
       <PixelButton
         title="Create quest"

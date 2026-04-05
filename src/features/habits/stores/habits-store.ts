@@ -8,9 +8,10 @@ import { updateQuestProgress } from '../../daily-quests/stores/daily-quests-stor
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { getLevelForXp } from '../../../lib/constants/game-config';
+import type { HabitContent } from '../types/habit-content';
 import type { Database } from '../../../lib/supabase/types';
 
-type Habit = Database['public']['Tables']['habits']['Row'];
+type Habit = Database['public']['Tables']['habits']['Row'] & { content?: HabitContent | null };
 type Streak = Database['public']['Tables']['streaks']['Row'];
 type Completion = Database['public']['Tables']['completions']['Row'];
 
@@ -85,13 +86,13 @@ export async function fetchHabits() {
   }
 }
 
-export async function createHabit(name: string, category: string) {
+export async function createHabit(name: string, category: string, content?: HabitContent | null) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
   const { data: habit, error } = await supabase
     .from('habits')
-    .insert({ user_id: userId, name, category })
+    .insert({ user_id: userId, name, category, content: content ?? null })
     .select()
     .single();
 
@@ -103,7 +104,7 @@ export async function createHabit(name: string, category: string) {
   await fetchHabits();
 }
 
-export async function updateHabit(id: string, updates: { name?: string; category?: string }) {
+export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null }) {
   const { error } = await supabase.from('habits').update(updates).eq('id', id);
   if (error) throw error;
   await fetchHabits();
