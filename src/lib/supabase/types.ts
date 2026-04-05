@@ -183,8 +183,48 @@ export type Database = {
           },
         ]
       }
+      equipped_items: {
+        Row: {
+          id: string
+          user_id: string
+          item_id: string
+          slot: string
+          equipped_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          item_id: string
+          slot: string
+          equipped_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          item_id?: string
+          slot?: string
+          equipped_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipped_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipped_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "shop_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
+          active_theme: string
           created_at: string
           email: string
           gold: number
@@ -195,6 +235,7 @@ export type Database = {
           xp: number
         }
         Insert: {
+          active_theme?: string
           created_at?: string
           email: string
           gold?: number
@@ -205,6 +246,7 @@ export type Database = {
           xp?: number
         }
         Update: {
+          active_theme?: string
           created_at?: string
           email?: string
           gold?: number
@@ -213,6 +255,81 @@ export type Database = {
           rank?: string
           username?: string
           xp?: number
+        }
+        Relationships: []
+      }
+      purchases: {
+        Row: {
+          id: string
+          user_id: string
+          item_id: string
+          purchased_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          item_id: string
+          purchased_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          item_id?: string
+          purchased_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchases_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchases_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "shop_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shop_items: {
+        Row: {
+          id: string
+          name: string
+          description: string
+          category: string
+          price_gold: number
+          rarity: string
+          required_level: number
+          sprite_key: string
+          is_available: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string
+          category: string
+          price_gold: number
+          rarity?: string
+          required_level?: number
+          sprite_key?: string
+          is_available?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string
+          category?: string
+          price_gold?: number
+          rarity?: string
+          required_level?: number
+          sprite_key?: string
+          is_available?: boolean
+          created_at?: string
         }
         Relationships: []
       }

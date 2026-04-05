@@ -35,6 +35,13 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="shop"
+        options={{
+          title: 'SHOP',
+          tabBarLabel: 'SHOP',
+        }}
+      />
+      <Tabs.Screen
         name="social"
         options={{
           title: 'SOCIAL',
