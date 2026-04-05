@@ -1,4 +1,3 @@
-import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { storage } from '../../../lib/storage/mmkv';
 
@@ -21,6 +20,14 @@ const DEFAULT_PREFS: NotificationPrefs = {
   streakRiskEnabled: true,
 };
 
+function isNative(): boolean {
+  return Platform.OS !== 'web';
+}
+
+async function getNotifications() {
+  return await import('expo-notifications');
+}
+
 export function getNotificationPrefs(): NotificationPrefs {
   const raw = storage.getString(PREFS_KEY);
   if (!raw) return DEFAULT_PREFS;
@@ -36,6 +43,8 @@ export function saveNotificationPrefs(prefs: NotificationPrefs): void {
 }
 
 export async function requestPermissions(): Promise<boolean> {
+  if (!isNative()) return false;
+  const Notifications = await getNotifications();
   const { status: existing } = await Notifications.getPermissionsAsync();
   if (existing === 'granted') return true;
 
@@ -44,6 +53,9 @@ export async function requestPermissions(): Promise<boolean> {
 }
 
 export async function configureNotifications(): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -64,7 +76,9 @@ export async function configureNotifications(): Promise<void> {
 }
 
 export async function scheduleDailyReminder(hour: number, minute: number): Promise<void> {
-  // Cancel existing before rescheduling
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+
   await cancelDailyReminder();
 
   await Notifications.scheduleNotificationAsync({
@@ -83,6 +97,8 @@ export async function scheduleDailyReminder(hour: number, minute: number): Promi
 }
 
 export async function cancelDailyReminder(): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
   await Notifications.cancelScheduledNotificationAsync(DAILY_REMINDER_ID);
 }
 
@@ -90,16 +106,17 @@ export async function scheduleStreakRiskReminder(
   uncompletedCount: number,
   atRiskStreaks: number,
 ): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+
   await cancelStreakRiskReminder();
 
   if (uncompletedCount === 0 || atRiskStreaks === 0) return;
 
-  // Schedule for 8 PM today
   const now = new Date();
   const trigger = new Date();
   trigger.setHours(20, 0, 0, 0);
 
-  // If it's already past 8 PM, don't schedule
   if (trigger <= now) return;
 
   const streakWord = atRiskStreaks === 1 ? 'streak' : 'streaks';
@@ -119,6 +136,8 @@ export async function scheduleStreakRiskReminder(
 }
 
 export async function cancelStreakRiskReminder(): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
   await Notifications.cancelScheduledNotificationAsync(STREAK_RISK_ID);
 }
 
@@ -134,7 +153,6 @@ export async function applyNotificationPrefs(prefs?: NotificationPrefs): Promise
     await cancelDailyReminder();
   }
 
-  // Streak risk is scheduled dynamically from the habits hook, not here
   if (!p.streakRiskEnabled) {
     await cancelStreakRiskReminder();
   }
