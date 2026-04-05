@@ -1,5 +1,4 @@
-import { Canvas, Rect, Group } from '@shopify/react-native-skia';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 
 // Pixel scale: each "pixel" is SCALE x SCALE real pixels
 const SCALE = 4;
@@ -252,43 +251,44 @@ export function PixelAvatar({
 
   const bgColors = background && BG_COLORS[background] ? BG_COLORS[background] : BG_COLORS.default;
 
-  // Idle bounce
+  // Idle bounce offset (in px)
   const bounceY = idleFrame % 2 === 0 ? 0 : -1 * scale;
+  // Vertical offset to push body group down (equivalent to translateY: 2 * pixelSize)
+  const groupOffsetY = 2 * pixelSize;
 
   function renderPixels(pixels: PixelData) {
     return pixels.map(([x, y, colorKey], i) => (
-      <Rect
+      <View
         key={i}
-        x={x * pixelSize}
-        y={y * pixelSize + bounceY}
-        width={pixelSize}
-        height={pixelSize}
-        color={colorMap[colorKey] ?? colorKey}
+        style={{
+          position: 'absolute',
+          left: x * pixelSize,
+          top: y * pixelSize + bounceY + groupOffsetY,
+          width: pixelSize,
+          height: pixelSize,
+          backgroundColor: colorMap[colorKey] ?? colorKey,
+        }}
       />
     ));
   }
 
   return (
     <View style={[styles.container, { width: size, height: size }]}>
-      <Canvas style={{ width: size, height: size }}>
-        {/* Background */}
-        <Rect x={0} y={0} width={size} height={size} color={bgColors[0]} />
-        <Rect x={0} y={size * 0.6} width={size} height={size * 0.4} color={bgColors[1]} />
+      {/* Background */}
+      <View style={{ position: 'absolute', top: 0, left: 0, width: size, height: size, backgroundColor: bgColors[0] }} />
+      <View style={{ position: 'absolute', top: size * 0.6, left: 0, width: size, height: size * 0.4, backgroundColor: bgColors[1] }} />
 
-        <Group transform={[{ translateY: 2 * pixelSize }]}>
-          {/* Accessory behind body (cape, wings, aura) */}
-          {accessory && ACCESSORY_SPRITES[accessory] && renderPixels(ACCESSORY_SPRITES[accessory])}
+      {/* Accessory behind body (cape, wings, aura) */}
+      {accessory && ACCESSORY_SPRITES[accessory] && renderPixels(ACCESSORY_SPRITES[accessory])}
 
-          {/* Hair (behind head, hidden if hat) */}
-          {!hat && renderPixels(HAIR_PIXELS.default)}
+      {/* Hair (behind head, hidden if hat) */}
+      {!hat && renderPixels(HAIR_PIXELS.default)}
 
-          {/* Body */}
-          {renderPixels(BODY_PIXELS)}
+      {/* Body */}
+      {renderPixels(BODY_PIXELS)}
 
-          {/* Hat (on top of head) */}
-          {hat && HAT_SPRITES[hat] && renderPixels(HAT_SPRITES[hat])}
-        </Group>
-      </Canvas>
+      {/* Hat (on top of head) */}
+      {hat && HAT_SPRITES[hat] && renderPixels(HAT_SPRITES[hat])}
     </View>
   );
 }
