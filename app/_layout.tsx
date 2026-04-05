@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth } from '../src/features/auth/stores/auth-store';
+import { hasCompletedOnboarding } from './onboarding';
 import {
   configureNotifications,
   applyNotificationPrefs,
@@ -23,7 +24,11 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     if (!isAuthenticated && !inAuthGroup) {
       router.replace('/(auth)/sign-in');
     } else if (isAuthenticated && inAuthGroup) {
-      router.replace('/(tabs)/today');
+      if (!hasCompletedOnboarding()) {
+        router.replace('/onboarding');
+      } else {
+        router.replace('/(tabs)/today');
+      }
     }
   }, [isAuthenticated, isInitialized, segments]);
 
