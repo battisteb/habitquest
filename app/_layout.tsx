@@ -2,9 +2,12 @@ import { useEffect } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth } from '../src/features/auth/stores/auth-store';
 import { hasCompletedOnboarding } from './onboarding';
+import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
+import { LevelUpOverlay } from '../src/ui/animations/level-up-overlay';
 import {
   configureNotifications,
   applyNotificationPrefs,
@@ -27,7 +30,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       if (!hasCompletedOnboarding()) {
         router.replace('/onboarding');
       } else {
-        router.replace('/(tabs)/today');
+        router.replace('/(tabs)/profile');
       }
     }
   }, [isAuthenticated, isInitialized, segments]);
@@ -44,6 +47,9 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout() {
+  const showLevelUp = use$(levelUpStore$.showLevelUp);
+  const newLevel = use$(levelUpStore$.newLevel);
+
   useEffect(() => {
     initAuth();
     configureNotifications().then(() => applyNotificationPrefs());
@@ -60,6 +66,11 @@ export default function RootLayout() {
           }}
         />
       </AuthGuard>
+      <LevelUpOverlay
+        visible={showLevelUp}
+        newLevel={newLevel}
+        onComplete={dismissLevelUp}
+      />
     </>
   );
 }

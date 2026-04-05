@@ -1,8 +1,11 @@
+import { useState, useCallback } from 'react';
 import { FlatList, View, Text, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useRouter } from 'expo-router';
 import { habitsStore$, completeHabit } from '../stores/habits-store';
 import { HabitCard } from './habit-card';
+import { XpToast } from '../../../ui/animations/xp-toast';
+import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 
 export function HabitList() {
@@ -10,6 +13,22 @@ export function HabitList() {
   const streaks = use$(habitsStore$.streaks);
   const todayCompletions = use$(habitsStore$.todayCompletions);
   const router = useRouter();
+  const [xpToast, setXpToast] = useState<{ visible: boolean; xp: number; gold: number }>({
+    visible: false,
+    xp: 0,
+    gold: 0,
+  });
+
+  const handleComplete = useCallback(async (habitId: string) => {
+    const streak = streaks[habitId];
+    const currentCount = streak?.current_count ?? 0;
+    const xp = calculateXpEarned(currentCount + 1);
+    const gold = calculateGoldEarned(xp);
+
+    await completeHabit(habitId);
+
+    setXpToast({ visible: true, xp, gold });
+  }, [streaks]);
 
   if (habits.length === 0) {
     return (
@@ -25,6 +44,12 @@ export function HabitList() {
 
   return (
     <View style={styles.container}>
+      <XpToast
+        visible={xpToast.visible}
+        xpAmount={xpToast.xp}
+        goldAmount={xpToast.gold}
+        onComplete={() => setXpToast((prev) => ({ ...prev, visible: false }))}
+      />
       <View style={styles.progress}>
         <Text style={styles.progressText}>
           {completedCount}/{totalCount} completed
@@ -48,7 +73,7 @@ export function HabitList() {
             category={item.category}
             streakCount={streaks[item.id]?.current_count ?? 0}
             isCompletedToday={!!todayCompletions[item.id]}
-            onComplete={() => completeHabit(item.id)}
+            onComplete={() => handleComplete(item.id)}
             onPress={() => router.push(`/habit/${item.id}`)}
           />
         )}

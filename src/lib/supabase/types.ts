@@ -14,6 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
+      daily_quest_templates: {
+        Row: {
+          id: string
+          title: string
+          description: string
+          quest_type: string
+          target_value: number
+          target_category: string | null
+          xp_reward: number
+          gold_reward: number
+          difficulty: string
+          is_active: boolean
+        }
+        Insert: {
+          id?: string
+          title: string
+          description: string
+          quest_type: string
+          target_value: number
+          target_category?: string | null
+          xp_reward?: number
+          gold_reward?: number
+          difficulty?: string
+          is_active?: boolean
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string
+          quest_type?: string
+          target_value?: number
+          target_category?: string | null
+          xp_reward?: number
+          gold_reward?: number
+          difficulty?: string
+          is_active?: boolean
+        }
+        Relationships: []
+      }
+      user_daily_quests: {
+        Row: {
+          id: string
+          user_id: string
+          template_id: string
+          assigned_date: string
+          current_progress: number
+          is_completed: boolean
+          is_claimed: boolean
+          completed_at: string | null
+          claimed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          template_id: string
+          assigned_date?: string
+          current_progress?: number
+          is_completed?: boolean
+          is_claimed?: boolean
+          completed_at?: string | null
+          claimed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          template_id?: string
+          assigned_date?: string
+          current_progress?: number
+          is_completed?: boolean
+          is_claimed?: boolean
+          completed_at?: string | null
+          claimed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_daily_quests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_daily_quests_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "daily_quest_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       achievements: {
         Row: {
           id: string

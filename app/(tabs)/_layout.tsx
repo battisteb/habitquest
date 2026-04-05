@@ -21,10 +21,17 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'ME',
+          tabBarLabel: 'ME',
+        }}
+      />
+      <Tabs.Screen
         name="today"
         options={{
-          title: 'TODAY',
-          tabBarLabel: 'TODAY',
+          title: 'QUESTS',
+          tabBarLabel: 'QUESTS',
         }}
       />
       <Tabs.Screen
@@ -46,13 +53,6 @@ export default function TabsLayout() {
         options={{
           title: 'SOCIAL',
           tabBarLabel: 'SOCIAL',
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'PROFILE',
-          tabBarLabel: 'PROFILE',
         }}
       />
     </Tabs>

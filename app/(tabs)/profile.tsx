@@ -1,48 +1,89 @@
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useAuth } from '../../src/features/auth/hooks/use-auth';
 import { signOut } from '../../src/features/auth/stores/auth-store';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
+import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
+import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
+import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 export default function ProfileScreen() {
   const { user } = useAuth();
   const { profile, xpForNextLevel, xpProgress, isLoading } = useProfileStats();
+  const equippedSlots = use$(shopStore$.equippedSlots);
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const [idleFrame, setIdleFrame] = useState(0);
+
+  useEffect(() => {
+    fetchShop();
+  }, []);
+
+  // Idle animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIdleFrame((f) => f + 1);
+    }, 600);
+    return () => clearInterval(interval);
+  }, []);
+
+  const level = profile?.level ?? 0;
+  const rank = getRankForLevel(level);
+  const equippedHat = equippedSlots?.hat?.item?.sprite_key;
+  const equippedOutfit = equippedSlots?.outfit?.item?.sprite_key;
+  const equippedBg = equippedSlots?.background?.item?.sprite_key;
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text style={styles.title}>PROFILE</Text>
-
+    <ScrollView
+      style={[styles.container, { paddingTop: insets.top }]}
+      contentContainerStyle={styles.content}
+    >
       {isLoading ? (
-        <ActivityIndicator size="large" color={colors.primary} />
+        <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: spacing.xl }} />
       ) : (
         <>
-          <View style={styles.card}>
+          {/* Avatar hero section */}
+          <View style={styles.avatarSection}>
+            <PixelAvatar
+              size={220}
+              hat={equippedHat}
+              outfit={equippedOutfit}
+              background={equippedBg}
+              idleFrame={idleFrame}
+            />
+
             <Text style={styles.username}>{profile?.username ?? 'Adventurer'}</Text>
-            <Text style={styles.email}>{user?.email}</Text>
+            <Text style={[styles.rankBadge, { color: rank.color }]}>
+              {rank.name}
+            </Text>
           </View>
 
+          {/* XP Bar */}
           <View style={styles.card}>
             <XpBar
-              level={profile?.level ?? 0}
+              level={level}
               currentXp={profile?.xp ?? 0}
               nextLevelXp={xpForNextLevel}
               progress={xpProgress}
             />
           </View>
 
+          {/* Stats row */}
           <View style={styles.statsRow}>
             <View style={styles.miniStat}>
               <Text style={styles.miniStatValue}>{profile?.xp ?? 0}</Text>
-              <Text style={styles.miniStatLabel}>TOTAL XP</Text>
+              <Text style={styles.miniStatLabel}>XP</Text>
             </View>
             <View style={styles.miniStat}>
-              <Text style={styles.miniStatValue}>{profile?.level ?? 0}</Text>
+              <Text style={[styles.miniStatValue, { color: colors.xp }]}>
+                {level}
+              </Text>
               <Text style={styles.miniStatLabel}>LEVEL</Text>
             </View>
             <View style={styles.miniStat}>
@@ -53,24 +94,33 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.rankLabel}>RANK</Text>
-            <Text style={styles.rankValue}>
-              {profile?.rank ?? 'Novice'}
-            </Text>
+          {/* Quick actions */}
+          <View style={styles.actionsRow}>
+            <PixelButton
+              title="Shop"
+              onPress={() => router.push('/(tabs)/shop')}
+              variant="secondary"
+              style={{ flex: 1 }}
+            />
+            <PixelButton
+              title="Achievements"
+              onPress={() => router.push('/achievements')}
+              variant="secondary"
+              style={{ flex: 1 }}
+            />
+          </View>
+
+          <View style={styles.actionsRow}>
+            <PixelButton
+              title="Settings"
+              onPress={() => router.push('/settings')}
+              variant="ghost"
+              style={{ flex: 1 }}
+            />
           </View>
         </>
       )}
-
-      <View style={styles.actions}>
-        <PixelButton
-          title="Settings"
-          onPress={() => router.push('/settings')}
-          variant="secondary"
-        />
-        <PixelButton title="Sign out" onPress={signOut} variant="ghost" />
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -78,13 +128,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  content: {
     padding: spacing.md,
     gap: spacing.md,
+    paddingBottom: spacing.xxl,
   },
-  title: {
-    fontSize: fontSizes.xl,
+  avatarSection: {
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingVertical: spacing.md,
+  },
+  username: {
+    fontSize: fontSizes.xxl,
     fontWeight: 'bold',
     color: colors.text,
+    letterSpacing: 1,
+    marginTop: spacing.sm,
+  },
+  rankBadge: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
     letterSpacing: 2,
   },
   card: {
@@ -95,18 +159,9 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     gap: spacing.xs,
   },
-  username: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  email: {
-    fontSize: fontSizes.sm,
-    color: colors.textMuted,
-  },
   statsRow: {
     flexDirection: 'row',
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   miniStat: {
     flex: 1,
@@ -119,7 +174,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   miniStatValue: {
-    fontSize: fontSizes.xxl,
+    fontSize: fontSizes.xl,
     fontWeight: 'bold',
     color: colors.accent,
   },
@@ -129,20 +184,8 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     letterSpacing: 1,
   },
-  rankLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  rankValue: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.streak,
-  },
-  actions: {
-    marginTop: 'auto',
+  actionsRow: {
+    flexDirection: 'row',
     gap: spacing.sm,
-    paddingBottom: spacing.md,
   },
 });
