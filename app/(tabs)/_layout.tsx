@@ -49,6 +49,13 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="training"
+        options={{
+          title: 'TRAIN',
+          tabBarLabel: 'TRAIN',
+        }}
+      />
+      <Tabs.Screen
         name="social"
         options={{
           title: 'SOCIAL',

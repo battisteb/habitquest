@@ -176,12 +176,20 @@ export default function HabitDetailScreen() {
         />
       )}
 
-      <PixelButton
-        title="Archive quest"
-        onPress={handleArchive}
-        variant="secondary"
-        style={styles.archiveButton}
-      />
+      <View style={styles.bottomRow}>
+        <PixelButton
+          title="Edit"
+          onPress={() => router.push(`/habit/edit/${habit.id}`)}
+          variant="ghost"
+          style={{ flex: 1 }}
+        />
+        <PixelButton
+          title="Archive"
+          onPress={handleArchive}
+          variant="secondary"
+          style={{ flex: 1 }}
+        />
+      </View>
     </ScrollView>
   );
 }
@@ -295,7 +303,9 @@ const styles = StyleSheet.create({
   quickComplete: {
     marginTop: spacing.xs,
   },
-  archiveButton: {
+  bottomRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
     marginTop: 'auto',
     marginBottom: spacing.lg,
   },
