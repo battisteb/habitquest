@@ -4,7 +4,10 @@ import { authStore$ } from '../../auth/stores/auth-store';
 import { calculateNewStreak } from '../utils/streak-calculator';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
+import { updateQuestProgress } from '../../daily-quests/stores/daily-quests-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
+import { triggerLevelUp } from '../../gamification/stores/level-up-store';
+import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { Database } from '../../../lib/supabase/types';
 
 type Habit = Database['public']['Tables']['habits']['Row'];
@@ -143,13 +146,29 @@ export async function completeHabit(habitId: string) {
     })
     .eq('habit_id', habitId);
 
-  // Update profile XP
+  // Update profile XP and detect level-up
   const userId = authStore$.user.get()?.id;
   if (userId) {
+    // Get current XP before increment for level-up detection
+    const { data: profileBefore } = await supabase
+      .from('profiles')
+      .select('xp')
+      .eq('id', userId)
+      .single();
+
     await supabase.rpc('increment_xp' as never, {
       user_id: userId,
       xp_amount: xpEarned,
     } as never);
+
+    // Check for level-up
+    if (profileBefore) {
+      const oldLevel = getLevelForXp(profileBefore.xp);
+      const newLevel = getLevelForXp(profileBefore.xp + xpEarned);
+      if (newLevel > oldLevel) {
+        triggerLevelUp(newLevel);
+      }
+    }
   }
 
   // Optimistic update
@@ -165,4 +184,13 @@ export async function completeHabit(habitId: string) {
 
   // Check achievements in background (non-blocking)
   checkAndUnlockAchievements().catch(() => {});
+
+  // Update daily quest progress (non-blocking)
+  const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
+  updateQuestProgress('complete_habits').catch(() => {});
+  if (habit?.category) {
+    updateQuestProgress('complete_category', habit.category).catch(() => {});
+  }
+  updateQuestProgress('earn_xp', undefined, xpEarned).catch(() => {});
+  updateQuestProgress('maintain_streak').catch(() => {});
 }
