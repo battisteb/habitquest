@@ -45,6 +45,19 @@ export default function ProfileScreen() {
               <Text style={styles.miniStatValue}>{profile?.level ?? 0}</Text>
               <Text style={styles.miniStatLabel}>LEVEL</Text>
             </View>
+            <View style={styles.miniStat}>
+              <Text style={[styles.miniStatValue, { color: colors.accent }]}>
+                {profile?.gold ?? 0}
+              </Text>
+              <Text style={styles.miniStatLabel}>GOLD</Text>
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.rankLabel}>RANK</Text>
+            <Text style={styles.rankValue}>
+              {profile?.rank ?? 'Novice'}
+            </Text>
           </View>
         </>
       )}
@@ -115,6 +128,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.textMuted,
     letterSpacing: 1,
+  },
+  rankLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  rankValue: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.streak,
   },
   actions: {
     marginTop: 'auto',

@@ -81,28 +81,136 @@ export type Database = {
           },
         ]
       }
+      friendships: {
+        Row: {
+          id: string
+          requester_id: string
+          addressee_id: string
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          requester_id: string
+          addressee_id: string
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          requester_id?: string
+          addressee_id?: string
+          status?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "friendships_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "friendships_addressee_id_fkey"
+            columns: ["addressee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenges: {
+        Row: {
+          id: string
+          creator_id: string
+          opponent_id: string
+          type: string
+          target: number
+          creator_progress: number
+          opponent_progress: number
+          status: string
+          winner_id: string | null
+          gold_wager: number
+          starts_at: string | null
+          ends_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          creator_id: string
+          opponent_id: string
+          type: string
+          target: number
+          creator_progress?: number
+          opponent_progress?: number
+          status?: string
+          winner_id?: string | null
+          gold_wager?: number
+          starts_at?: string | null
+          ends_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          creator_id?: string
+          opponent_id?: string
+          type?: string
+          target?: number
+          creator_progress?: number
+          opponent_progress?: number
+          status?: string
+          winner_id?: string | null
+          gold_wager?: number
+          starts_at?: string | null
+          ends_at?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenges_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenges_opponent_id_fkey"
+            columns: ["opponent_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
           email: string
+          gold: number
           id: string
           level: number
+          rank: string
           username: string
           xp: number
         }
         Insert: {
           created_at?: string
           email: string
+          gold?: number
           id: string
           level?: number
+          rank?: string
           username: string
           xp?: number
         }
         Update: {
           created_at?: string
           email?: string
+          gold?: number
           id?: string
           level?: number
+          rank?: string
           username?: string
           xp?: number
         }

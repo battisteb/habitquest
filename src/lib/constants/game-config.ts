@@ -37,3 +37,34 @@ export function calculateXpEarned(streakCount: number): number {
   );
   return Math.round(XP_CONFIG.BASE_XP_PER_COMPLETION * multiplier);
 }
+
+export const RANKS = [
+  { name: 'Novice', minLevel: 0, color: '#aaa' },
+  { name: 'Apprentice', minLevel: 3, color: '#4ecca3' },
+  { name: 'Warrior', minLevel: 5, color: '#e94560' },
+  { name: 'Knight', minLevel: 7, color: '#f5c518' },
+  { name: 'Champion', minLevel: 9, color: '#7b68ee' },
+  { name: 'Legend', minLevel: 11, color: '#ff6b35' },
+] as const;
+
+export function getRankForLevel(level: number): (typeof RANKS)[number] {
+  let rank: (typeof RANKS)[number] = RANKS[0];
+  for (const r of RANKS) {
+    if (level >= r.minLevel) {
+      rank = r;
+    } else {
+      break;
+    }
+  }
+  return rank;
+}
+
+export const GOLD_CONFIG = {
+  GOLD_PER_XP_RATIO: 0.1,
+  CHALLENGE_MIN_WAGER: 5,
+  CHALLENGE_MAX_WAGER: 100,
+} as const;
+
+export function calculateGoldEarned(xpEarned: number): number {
+  return Math.floor(xpEarned * GOLD_CONFIG.GOLD_PER_XP_RATIO);
+}
