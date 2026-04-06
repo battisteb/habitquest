@@ -91,7 +91,7 @@ export async function getWeeklyDuelsUsed(): Promise<number> {
 
   const weekStart = getWeekStart();
 
-  const { count, error } = await supabase
+  const { count, error } = await (supabase as any)
     .from('duels')
     .select('*', { count: 'exact', head: true })
     .or(`challenger_id.eq.${userId},opponent_id.eq.${userId}`)
@@ -115,7 +115,7 @@ export async function fetchDuels(): Promise<void> {
 
   duelStore$.isLoading.set(true);
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('duels')
     .select('*')
     .or(`challenger_id.eq.${userId},opponent_id.eq.${userId}`)
@@ -166,7 +166,7 @@ export async function createDuel(opponentId: string, attackId: string): Promise<
     throw new Error('Weekly duel limit reached — 2 duels per week maximum');
   }
 
-  const { error } = await supabase.from('duels').insert({
+  const { error } = await (supabase as any).from('duels').insert({
     challenger_id: userId,
     opponent_id: opponentId,
     challenger_attack_id: attackId,
