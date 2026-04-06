@@ -1,5 +1,7 @@
 import { Platform } from 'react-native';
 import { storage } from '../../../lib/storage/mmkv';
+import { getRandomMessage } from './notification-messages';
+import { getOptimalNotificationHour } from './adaptive-timing';
 
 const DAILY_REMINDER_ID = 'daily-reminder';
 const STREAK_RISK_ID = 'streak-risk';
@@ -84,16 +86,21 @@ export async function scheduleDailyReminder(hour: number, minute: number): Promi
 
   await cancelDailyReminder();
 
+  // Use the adaptive hour derived from the user's historical completion patterns;
+  // fall back to the user-selected hour if no data is available yet.
+  const adaptiveHour = getOptimalNotificationHour();
+  const scheduledHour = adaptiveHour !== 9 ? adaptiveHour : hour;
+
   await Notifications.scheduleNotificationAsync({
     identifier: DAILY_REMINDER_ID,
     content: {
       title: '⚔️ HabitQuest',
-      body: 'Your daily quests are waiting! Keep your streaks alive.',
+      body: getRandomMessage('reminder'),
       sound: true,
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour,
+      hour: scheduledHour,
       minute,
     },
   });
@@ -122,13 +129,11 @@ export async function scheduleStreakRiskReminder(
 
   if (trigger <= now) return;
 
-  const streakWord = atRiskStreaks === 1 ? 'streak' : 'streaks';
-
   await Notifications.scheduleNotificationAsync({
     identifier: STREAK_RISK_ID,
     content: {
       title: '🔥 Streak at risk!',
-      body: `You have ${uncompletedCount} uncompleted habits. ${atRiskStreaks} ${streakWord} will break if you miss today!`,
+      body: getRandomMessage('streak_at_risk'),
       sound: true,
     },
     trigger: {

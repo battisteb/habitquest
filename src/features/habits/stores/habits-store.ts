@@ -7,6 +7,7 @@ import { checkAndUnlockAchievements } from '../../gamification/stores/achievemen
 import { updateQuestProgress } from '../../daily-quests/stores/daily-quests-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
+import { recordCompletionHour } from '../../notifications/utils/adaptive-timing';
 import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { HabitContent } from '../types/habit-content';
 import type { Database } from '../../../lib/supabase/types';
@@ -190,6 +191,7 @@ export async function completeHabit(habitId: string) {
 
   // Optimistic update
   habitsStore$.todayCompletions[habitId].set(true);
+  recordCompletionHour();
   if (streak) {
     habitsStore$.streaks[habitId].set({
       ...streak,
