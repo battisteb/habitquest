@@ -24,20 +24,26 @@ const DURATION_OPTIONS = [
 const WAGER_OPTIONS = [5, 10, 25, 50];
 
 export default function CreateChallengeScreen() {
-  const { opponentId } = useLocalSearchParams<{ opponentId: string }>();
+  const { opponentId, opponentName } = useLocalSearchParams<{ opponentId: string; opponentName?: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [type, setType] = useState('xp_race');
   const [duration, setDuration] = useState(7);
   const [wager, setWager] = useState(10);
-  const [target, setTarget] = useState(100);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Auto-compute target based on type + duration
+  function getTarget() {
+    if (type === 'xp_race') return duration * 50;       // 50 XP/day pace
+    if (type === 'completion_count') return duration * 3; // 3 habits/day pace
+    return duration * 10;
+  }
 
   async function handleCreate() {
     if (!opponentId) return;
     setIsSubmitting(true);
     try {
-      await createChallenge(opponentId, type, target, wager, duration);
+      await createChallenge(opponentId, type, getTarget(), wager, duration);
       router.back();
     } catch (e: any) {
       Alert.alert('Error', e.message ?? 'Failed to create challenge');
@@ -50,7 +56,12 @@ export default function CreateChallengeScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <PixelButton title="Back" onPress={() => router.back()} variant="ghost" />
-        <Text style={styles.title}>NEW CHALLENGE</Text>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={styles.title}>NEW CHALLENGE</Text>
+          {opponentName && (
+            <Text style={styles.opponent}>vs {opponentName}</Text>
+          )}
+        </View>
         <View style={{ width: 60 }} />
       </View>
 
@@ -124,8 +135,15 @@ export default function CreateChallengeScreen() {
         </View>
       </View>
 
+      <View style={styles.summary}>
+        <Text style={styles.summaryText}>
+          Target: <Text style={styles.summaryVal}>{getTarget()} {type === 'xp_race' ? 'XP' : 'habits'}</Text>
+          {'  ·  '}Wager: <Text style={[styles.summaryVal, { color: colors.accent }]}>{wager}g</Text>
+        </Text>
+      </View>
+
       <PixelButton
-        title={isSubmitting ? 'Sending...' : 'Send Challenge'}
+        title={isSubmitting ? 'Sending...' : '⚔️ Send Challenge'}
         onPress={handleCreate}
         disabled={isSubmitting}
         style={{ margin: spacing.md }}
@@ -150,6 +168,29 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
     letterSpacing: 2,
+  },
+  opponent: {
+    fontSize: fontSizes.sm,
+    color: colors.primary,
+    fontWeight: 'bold',
+    marginTop: 2,
+  },
+  summary: {
+    marginHorizontal: spacing.md,
+    padding: spacing.md,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    alignItems: 'center',
+  },
+  summaryText: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.sm,
+  },
+  summaryVal: {
+    color: colors.xp,
+    fontWeight: 'bold',
   },
   section: {
     padding: spacing.md,
