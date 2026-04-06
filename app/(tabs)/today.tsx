@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { HabitCard } from '../../src/features/habits/components/habit-card';
 import { XpToast } from '../../src/ui/animations/xp-toast';
+import { StreakMilestone } from '../../src/ui/animations/streak-milestone';
+import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
 import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
 import { habitsStore$, fetchHabits, completeHabit } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
@@ -41,6 +43,7 @@ function todayLabel(): string {
 }
 
 const ALL_KEY = 'all';
+const MILESTONES = [7, 14, 30, 60, 100];
 
 export default function TodayScreen() {
   const insets = useSafeAreaInsets();
@@ -56,6 +59,9 @@ export default function TodayScreen() {
   const [xpToast, setXpToast] = useState<{ visible: boolean; xp: number; gold: number }>({
     visible: false, xp: 0, gold: 0,
   });
+  const [milestoneSeen, setMilestoneSeen] = useState<number | null>(null);
+  const [showAllDone, setShowAllDone] = useState(false);
+  const allDoneTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useStreakRiskNotification();
   const burnoutSignal = useBurnoutSignal();
@@ -95,7 +101,20 @@ export default function TodayScreen() {
     const gold = calculateGoldEarned(xp);
     await completeHabit(habitId);
     setXpToast({ visible: true, xp, gold });
-  }, [streaks]);
+
+    const newStreak = currentCount + 1;
+    if (MILESTONES.includes(newStreak)) {
+      setMilestoneSeen(newStreak);
+    }
+
+    const nowCompletedCount = activeHabits.filter((h) => !!todayCompletions[h.id]).length;
+    const afterCompletionCount = nowCompletedCount + 1;
+    if (afterCompletionCount === totalCount && totalCount > 0) {
+      if (allDoneTimerRef.current) clearTimeout(allDoneTimerRef.current);
+      setShowAllDone(true);
+      allDoneTimerRef.current = setTimeout(() => setShowAllDone(false), 3500);
+    }
+  }, [streaks, activeHabits, todayCompletions, totalCount]);
 
   const handleFreeze = () => {
     if (freezeActive) return;
@@ -214,6 +233,12 @@ export default function TodayScreen() {
         goldAmount={xpToast.gold}
         onComplete={() => setXpToast((p) => ({ ...p, visible: false }))}
       />
+      <StreakMilestone
+        streak={milestoneSeen ?? 0}
+        visible={milestoneSeen !== null}
+        onDismiss={() => setMilestoneSeen(null)}
+      />
+      <AllDoneCelebration visible={showAllDone} />
 
       {/* Header */}
       <View style={styles.header}>
