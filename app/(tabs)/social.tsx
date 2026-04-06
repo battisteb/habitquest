@@ -238,6 +238,11 @@ export default function SocialScreen() {
     ];
 
     return (
+      <PixelButton
+        title="⚔️ DUEL ARENA — Turn-Based Combat"
+        onPress={() => router.push('/duels')}
+        style={styles.duelArenaBtn}
+      />
       <FlatList
         data={allChallenges}
         keyExtractor={(item) => item.id}
@@ -528,6 +533,7 @@ const styles = StyleSheet.create({
   progressVal: { fontSize: 9, color: colors.textMuted, fontWeight: 'bold', minWidth: 28 },
   challengeActions: { flexDirection: 'row', gap: spacing.sm },
   wager: { fontSize: fontSizes.xs, color: colors.accent, fontWeight: 'bold' },
+  duelArenaBtn: { marginHorizontal: spacing.md, marginTop: spacing.sm },
 
   // Search
   searchContainer: { flex: 1 },
