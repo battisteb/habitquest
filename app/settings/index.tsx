@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, Switch, ScrollView, Alert, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
@@ -134,6 +134,17 @@ export default function SettingsScreen() {
               Every Sunday at 8 PM — your week in stats.
             </Text>
           )}
+        </View>
+      </View>
+
+      {/* Focus Mode section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>GAMEPLAY</Text>
+        <View style={styles.card}>
+          <Pressable style={styles.row} onPress={() => router.push('/settings/contextual-mode')}>
+            <Text style={styles.label}>Focus Mode</Text>
+            <Text style={styles.value}>›</Text>
+          </Pressable>
         </View>
       </View>
 

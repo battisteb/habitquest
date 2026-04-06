@@ -21,6 +21,13 @@ import {
   isFreezeActiveToday,
   activateFreeze,
 } from '../../src/features/habits/utils/streak-freeze';
+import {
+  getActiveMode,
+  isHabitActiveInMode,
+  getModeDefinition,
+  getRemainingDays,
+  deactivateMode,
+} from '../../src/features/habits/utils/contextual-mode';
 import { calculateXpEarned, calculateGoldEarned } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
@@ -41,6 +48,7 @@ export default function TodayScreen() {
   const streaks = use$(habitsStore$.streaks);
   const todayCompletions = use$(habitsStore$.todayCompletions);
 
+  const [activeMode, setActiveMode] = useState(() => getActiveMode());
   const [freezeActive, setFreezeActive] = useState(isFreezeActiveToday());
   const [freezesLeft, setFreezesLeft] = useState(getFreezesRemaining());
   const [activeCategory, setActiveCategory] = useState(ALL_KEY);
@@ -59,12 +67,12 @@ export default function TodayScreen() {
     return Array.from(seen);
   }, [habits]);
 
-  // Filter + sort: exclude paused, incomplete first, then completed
+  // Filter + sort: exclude mode-paused, exclude paused, incomplete first, then completed
   const displayedHabits = useMemo(() => {
     const filtered = (activeCategory === ALL_KEY
       ? habits
       : habits.filter((h) => h.category === activeCategory)
-    ).filter((h) => !(h as any).is_paused);
+    ).filter((h) => isHabitActiveInMode(h.category, activeMode)).filter((h) => !(h as any).is_paused);
     return [...filtered].sort((a, b) => {
       const aDone = !!todayCompletions[a.id];
       const bDone = !!todayCompletions[b.id];
@@ -112,6 +120,20 @@ export default function TodayScreen() {
     <View>
       {/* Daily quests */}
       <DailyQuestsSection />
+
+      {/* Active mode banner */}
+      {activeMode && (() => {
+        const def = getModeDefinition(activeMode.key);
+        const days = getRemainingDays(activeMode);
+        return def ? (
+          <View style={styles.modeBanner}>
+            <Text style={styles.modeBannerText}>{def.emoji} {def.name.toUpperCase()} — {days}d left</Text>
+            <Pressable onPress={() => { deactivateMode(); setActiveMode(null); }}>
+              <Text style={styles.modeDeactivate}>✕</Text>
+            </Pressable>
+          </View>
+        ) : null;
+      })()}
 
       {/* All done banner */}
       {allDone && (
@@ -305,6 +327,32 @@ const styles = StyleSheet.create({
   // List
   list: { flex: 1 },
   listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xxl },
+
+  // Mode banner
+  modeBanner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: colors.primary + '18',
+    borderWidth: 2,
+    borderColor: colors.primary,
+    borderRadius: 4,
+    padding: spacing.sm,
+    margin: spacing.md,
+    marginBottom: 0,
+  },
+  modeBannerText: {
+    color: colors.primary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    flex: 1,
+  },
+  modeDeactivate: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    padding: spacing.xs,
+  },
 
   // All done banner
   allDoneBanner: {
