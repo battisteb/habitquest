@@ -3,6 +3,7 @@ import { storage } from '../../../lib/storage/mmkv';
 
 const DAILY_REMINDER_ID = 'daily-reminder';
 const STREAK_RISK_ID = 'streak-risk';
+const WEEKLY_RECAP_ID = 'weekly-recap';
 
 const PREFS_KEY = 'notification-prefs';
 
@@ -11,6 +12,7 @@ export interface NotificationPrefs {
   dailyReminderHour: number;
   dailyReminderMinute: number;
   streakRiskEnabled: boolean;
+  weeklyRecapEnabled: boolean;
 }
 
 const DEFAULT_PREFS: NotificationPrefs = {
@@ -18,6 +20,7 @@ const DEFAULT_PREFS: NotificationPrefs = {
   dailyReminderHour: 9,
   dailyReminderMinute: 0,
   streakRiskEnabled: true,
+  weeklyRecapEnabled: true,
 };
 
 function isNative(): boolean {
@@ -141,6 +144,45 @@ export async function cancelStreakRiskReminder(): Promise<void> {
   await Notifications.cancelScheduledNotificationAsync(STREAK_RISK_ID);
 }
 
+export async function scheduleWeeklyRecap(
+  weekStats: { completions: number; bestStreak: number; xpEarned: number },
+): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+
+  await cancelWeeklyRecap();
+
+  const { completions, bestStreak, xpEarned } = weekStats;
+
+  const lines: string[] = [];
+  if (completions > 0) lines.push(`${completions} habits done`);
+  if (xpEarned > 0) lines.push(`+${xpEarned} XP`);
+  if (bestStreak > 0) lines.push(`🔥 ${bestStreak}-day best streak`);
+
+  await Notifications.scheduleNotificationAsync({
+    identifier: WEEKLY_RECAP_ID,
+    content: {
+      title: '📊 Weekly Recap',
+      body: lines.length > 0
+        ? lines.join(' · ') + ' — Keep it up!'
+        : 'A new week starts now. Make it count! ⚔️',
+      sound: true,
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+      weekday: 1, // Sunday
+      hour: 20,
+      minute: 0,
+    },
+  });
+}
+
+export async function cancelWeeklyRecap(): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+  await Notifications.cancelScheduledNotificationAsync(WEEKLY_RECAP_ID);
+}
+
 export async function applyNotificationPrefs(prefs?: NotificationPrefs): Promise<void> {
   const p = prefs ?? getNotificationPrefs();
 
@@ -155,5 +197,15 @@ export async function applyNotificationPrefs(prefs?: NotificationPrefs): Promise
 
   if (!p.streakRiskEnabled) {
     await cancelStreakRiskReminder();
+  }
+
+  if (p.weeklyRecapEnabled) {
+    const granted = await requestPermissions();
+    if (granted) {
+      // Schedule with zeroed stats — actual data injected when week ends
+      await scheduleWeeklyRecap({ completions: 0, bestStreak: 0, xpEarned: 0 });
+    }
+  } else {
+    await cancelWeeklyRecap();
   }
 }

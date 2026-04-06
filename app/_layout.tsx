@@ -12,6 +12,7 @@ import {
   configureNotifications,
   applyNotificationPrefs,
 } from '../src/features/notifications/utils/notification-service';
+import { useWeeklyRecapScheduler } from '../src/features/notifications/hooks/use-weekly-recap-scheduler';
 import { colors } from '../src/ui/theme/tokens';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -49,6 +50,8 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 export default function RootLayout() {
   const showLevelUp = use$(levelUpStore$.showLevelUp);
   const newLevel = use$(levelUpStore$.newLevel);
+
+  useWeeklyRecapScheduler();
 
   useEffect(() => {
     initAuth();

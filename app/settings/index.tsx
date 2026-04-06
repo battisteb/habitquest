@@ -117,6 +117,23 @@ export default function SettingsScreen() {
               Notifies at 8 PM if you have uncompleted habits with active streaks.
             </Text>
           )}
+
+          <View style={styles.divider} />
+
+          <View style={styles.row}>
+            <Text style={styles.label}>Weekly recap</Text>
+            <Switch
+              value={prefs.weeklyRecapEnabled}
+              onValueChange={(v) => setPrefs((p) => ({ ...p, weeklyRecapEnabled: v }))}
+              trackColor={{ false: colors.border, true: colors.xp }}
+              thumbColor={colors.text}
+            />
+          </View>
+          {prefs.weeklyRecapEnabled && (
+            <Text style={styles.hint}>
+              Every Sunday at 8 PM — your week in stats.
+            </Text>
+          )}
         </View>
       </View>
 
