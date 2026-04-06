@@ -23,6 +23,8 @@ interface ShopItemCardProps {
   isEquipped: boolean;
   canAfford: boolean;
   canUnlock: boolean;
+  /** Human-readable unlock requirement shown when canUnlock is false */
+  unlockLabel?: string;
   /** Current equipped slots — so preview shows the full equipped look + this item */
   currentHat?: string;
   currentOutfit?: string;
@@ -43,6 +45,7 @@ export function ShopItemCard({
   isEquipped,
   canAfford,
   canUnlock,
+  unlockLabel,
   currentHat,
   currentOutfit,
   currentAccessory,
@@ -96,6 +99,12 @@ export function ShopItemCard({
       <Text style={styles.name} numberOfLines={1}>{name}</Text>
       <RarityBadge rarity={rarity} />
 
+      {!isOwned && !canUnlock && unlockLabel && (
+        <Text style={styles.unlockLabel} numberOfLines={2}>
+          {unlockLabel}
+        </Text>
+      )}
+
       {isOwned ? (
         <Text style={[styles.status, isEquipped && styles.statusEquipped]}>
           {isEquipped ? '● EQUIPPED' : '○ OWNED'}
@@ -105,8 +114,8 @@ export function ShopItemCard({
           <Text style={[styles.price, !canAfford && styles.priceLocked]}>
             {priceGold}g
           </Text>
-          {requiredLevel > 0 && (
-            <Text style={[styles.levelReq, !canUnlock && styles.priceLocked]}>
+          {requiredLevel > 0 && canUnlock && (
+            <Text style={styles.levelReq}>
               Lv.{requiredLevel}
             </Text>
           )}
@@ -197,5 +206,12 @@ const styles = StyleSheet.create({
   levelReq: {
     fontSize: fontSizes.xs,
     color: colors.textMuted,
+  },
+  unlockLabel: {
+    fontSize: 9,
+    color: colors.textMuted,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    lineHeight: 12,
   },
 });

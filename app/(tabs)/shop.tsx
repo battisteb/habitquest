@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,9 @@ import {
   setActiveTheme,
 } from '../../src/features/shop/stores/shop-store';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
+import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
+import { isItemUnlocked } from '../../src/features/shop/utils/unlock-checker';
+import { SHOP_ITEMS } from '../../src/features/shop/types/shop-item';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 const CATEGORIES = [
@@ -59,6 +62,22 @@ export default function ShopScreen() {
   const userGold = profile?.gold ?? 0;
   const userLevel = profile?.level ?? 0;
 
+  // Compute the longest streak across all tracked habits for streak-gated unlocks
+  const streaks = use$(habitsStore$.streaks);
+  const longestStreak = useMemo(
+    () => Math.max(0, ...Object.values(streaks).map((s) => s?.longest_count ?? 0)),
+    [streaks],
+  );
+
+  // Build a lookup from sprite_key -> static catalog item for streak conditions
+  const staticCatalogBySpriteKey = useMemo(
+    () =>
+      new Map(
+        SHOP_ITEMS.map((si) => [si.id.replace(/^(theme|powerup|avatar)_/, ''), si]),
+      ),
+    [],
+  );
+
   useEffect(() => { fetchShop(); }, []);
 
   const filteredItems = items.filter((item) => item.category === activeCategory);
@@ -87,18 +106,30 @@ export default function ShopScreen() {
       return;
     }
 
-    // Not owned — purchase flow
-    if (userGold < item.price_gold) {
-      Alert.alert(
-        'Not enough gold',
-        `You need ${item.price_gold - userGold}g more.\nComplete habits to earn gold!`,
-      );
-      return;
-    }
+    // Not owned — check level lock first
     if (userLevel < item.required_level) {
       Alert.alert(
         'Level too low',
         `This item requires level ${item.required_level}.\nYou are level ${userLevel}.`,
+      );
+      return;
+    }
+
+    // Check streak-based unlock from the static catalog (matched by sprite_key)
+    const staticItem = staticCatalogBySpriteKey.get(item.sprite_key);
+    if (staticItem && !isItemUnlocked(staticItem, userLevel, longestStreak)) {
+      Alert.alert(
+        'Not yet unlocked',
+        `Unlock condition: ${staticItem.unlockCondition?.label ?? 'Unknown'}`,
+      );
+      return;
+    }
+
+    // Check gold
+    if (userGold < item.price_gold) {
+      Alert.alert(
+        'Not enough gold',
+        `You need ${item.price_gold - userGold}g more.\nComplete habits to earn gold!`,
       );
       return;
     }
@@ -238,7 +269,23 @@ export default function ShopScreen() {
           renderItem={({ item }) => {
             const slot = CATEGORY_TO_SLOT[item.category];
             const isEquipped = equippedSlots[slot]?.itemId === item.id;
-            const isLoading = purchasing === item.id;
+            const isItemLoading = purchasing === item.id;
+
+            // Level condition from DB field
+            const meetsLevel = userLevel >= item.required_level;
+            // Streak condition from static catalog (matched by sprite_key)
+            const staticItem = staticCatalogBySpriteKey.get(item.sprite_key);
+            const meetsStreak = staticItem
+              ? isItemUnlocked(staticItem, userLevel, longestStreak)
+              : true;
+            const canUnlock = meetsLevel && meetsStreak;
+
+            // Build a combined unlock label to surface in the card
+            const unlockLabel: string | undefined = !meetsLevel
+              ? `Reach level ${item.required_level}`
+              : !meetsStreak && staticItem?.unlockCondition
+              ? staticItem.unlockCondition.label
+              : undefined;
 
             return (
               <ShopItemCard
@@ -252,12 +299,13 @@ export default function ShopScreen() {
                 isOwned={ownedItemIds.has(item.id)}
                 isEquipped={isEquipped}
                 canAfford={userGold >= item.price_gold}
-                canUnlock={userLevel >= item.required_level}
+                canUnlock={canUnlock}
+                unlockLabel={unlockLabel}
                 currentHat={currentHat}
                 currentOutfit={currentOutfit}
                 currentAccessory={currentAccessory}
                 currentBg={currentBg}
-                onPress={() => !isLoading && handleItemPress(item)}
+                onPress={() => !isItemLoading && handleItemPress(item)}
               />
             );
           }}
