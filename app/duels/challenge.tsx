@@ -6,7 +6,7 @@ import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { friendsStore$, fetchFriends } from '../../src/features/social/stores/friends-store';
-import { duelStore$, fetchUnlockedCategories } from '../../src/features/duels/stores/duel-store';
+import { duelStore$, fetchUnlockedCategories, createDuel } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 
 export default function ChallengeScreen() {
@@ -16,6 +16,7 @@ export default function ChallengeScreen() {
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
   const [selectedFriendId, setSelectedFriendId] = useState<string | null>(null);
   const [selectedAttackId, setSelectedAttackId] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
 
   const attacks = getUnlockedAttacks(unlockedCategories);
 
@@ -24,20 +25,33 @@ export default function ChallengeScreen() {
     fetchUnlockedCategories();
   }, []);
 
-  const handleChallenge = () => {
+  const handleChallenge = async () => {
     if (!selectedFriendId || !selectedAttackId) {
       Alert.alert('Select both a friend and your opening attack!');
       return;
     }
-    const friend = friends.find(
-      (f) => f.id === selectedFriendId || f.profile?.id === selectedFriendId,
-    );
-    const attack = attacks.find((a) => a.id === selectedAttackId);
-    Alert.alert(
-      'Duel Sent!',
-      `You challenged ${friend?.profile?.username ?? 'your friend'} with ${attack?.name}!\n\nThey must accept and choose their attack. Battle resolves when both are ready.`,
-      [{ text: 'OK', onPress: () => router.back() }],
-    );
+
+    setIsSending(true);
+    try {
+      await createDuel(selectedFriendId, selectedAttackId);
+      Alert.alert(
+        'Challenge Sent!',
+        'Your opponent has until the end of the week to accept.',
+        [{ text: 'OK', onPress: () => router.back() }],
+      );
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      if (message.toLowerCase().includes('limit')) {
+        Alert.alert(
+          'Weekly Limit Reached',
+          "You've used both duels this week. Come back next Monday!",
+        );
+      } else {
+        Alert.alert('Error', message);
+      }
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -101,7 +115,11 @@ export default function ChallengeScreen() {
         }}
       />
 
-      <PixelButton title="SEND CHALLENGE" onPress={handleChallenge} style={styles.sendBtn} />
+      <PixelButton
+        title={isSending ? 'Sending...' : 'SEND CHALLENGE'}
+        onPress={handleChallenge}
+        style={styles.sendBtn}
+      />
     </View>
   );
 }

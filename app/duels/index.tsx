@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
-import { duelStore$, fetchUnlockedCategories } from '../../src/features/duels/stores/duel-store';
+import { duelStore$, fetchUnlockedCategories, fetchDuels, getWeeklyDuelsUsed } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 
 export default function DuelsIndexScreen() {
@@ -13,16 +13,36 @@ export default function DuelsIndexScreen() {
   const router = useRouter();
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
   const attacks = getUnlockedAttacks(unlockedCategories);
+  const [weeklyUsed, setWeeklyUsed] = useState(0);
 
   useEffect(() => {
     fetchUnlockedCategories();
+    fetchDuels();
+    getWeeklyDuelsUsed().then((n) => setWeeklyUsed(n));
   }, []);
+
+  const limitReached = weeklyUsed >= 2;
+
+  const badgeColor =
+    weeklyUsed === 0
+      ? colors.success
+      : weeklyUsed === 1
+      ? colors.warning
+      : colors.danger;
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>DUELS</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>DUELS</Text>
+          <View style={[styles.weeklyBadge, { borderColor: badgeColor }]}>
+            <Text style={[styles.weeklyBadgeText, { color: badgeColor }]}>
+              {weeklyUsed}/2 this week
+            </Text>
+          </View>
+        </View>
         <Text style={styles.sub}>Challenge friends to turn-based combat</Text>
+        <Text style={styles.resetNote}>Resets every Monday</Text>
       </View>
 
       <View style={styles.section}>
@@ -46,11 +66,21 @@ export default function DuelsIndexScreen() {
         )}
       </View>
 
-      <PixelButton
-        title="Challenge a Friend"
-        onPress={() => router.push('/duels/challenge')}
-        style={styles.challengeBtn}
-      />
+      {limitReached ? (
+        <View style={styles.lockedContainer}>
+          <Text style={styles.lockedIcon}>🔒</Text>
+          <Text style={styles.lockedTitle}>WEEKLY LIMIT REACHED</Text>
+          <Text style={styles.lockedMessage}>
+            Come back next Monday — 2 duels used this week
+          </Text>
+        </View>
+      ) : (
+        <PixelButton
+          title="Challenge a Friend"
+          onPress={() => router.push('/duels/challenge')}
+          style={styles.challengeBtn}
+        />
+      )}
 
       <PixelButton
         title="Duel Simulator (Demo)"
@@ -73,8 +103,17 @@ export default function DuelsIndexScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
   header: { gap: 4, marginBottom: spacing.lg },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   title: { fontSize: fontSizes.xxl, fontWeight: 'bold', color: colors.text, letterSpacing: 2 },
+  weeklyBadge: {
+    borderWidth: 2,
+    borderRadius: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+  },
+  weeklyBadgeText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
   sub: { fontSize: fontSizes.sm, color: colors.textMuted },
+  resetNote: { fontSize: 10, color: colors.textMuted, fontStyle: 'italic' },
   section: { marginBottom: spacing.lg },
   sectionTitle: {
     fontSize: fontSizes.xs,
@@ -97,6 +136,29 @@ const styles = StyleSheet.create({
   attackName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', textAlign: 'center' },
   attackStats: { color: colors.textMuted, fontSize: 9, letterSpacing: 0.5 },
   hint: { color: colors.textMuted, fontSize: fontSizes.xs, fontStyle: 'italic', marginTop: spacing.sm },
+  lockedContainer: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.danger,
+    borderRadius: 6,
+    padding: spacing.md,
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  lockedIcon: { fontSize: 28 },
+  lockedTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.danger,
+    letterSpacing: 2,
+  },
+  lockedMessage: {
+    fontSize: fontSizes.sm,
+    color: colors.textMuted,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
   challengeBtn: { marginBottom: spacing.sm },
   simBtn: { marginBottom: spacing.lg },
   howItWorks: {
