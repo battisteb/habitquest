@@ -8,6 +8,7 @@ type Achievement = Database['public']['Tables']['achievements']['Row'];
 interface AchievementWithStatus extends Achievement {
   isUnlocked: boolean;
   unlockedAt: string | null;
+  currentValue: number;
 }
 
 interface AchievementsState {
@@ -28,14 +29,14 @@ export async function fetchAchievements() {
 
   achievementsStore$.isLoading.set(true);
   try {
-    // Get all achievements
+    // Fetch all achievements
     const { data: allAchievements } = await supabase
       .from('achievements')
       .select('*')
       .order('category')
       .order('threshold');
 
-    // Get user's unlocked achievements
+    // Fetch user unlocks
     const { data: unlocked } = await supabase
       .from('user_achievements')
       .select('achievement_id, unlocked_at')
@@ -45,13 +46,69 @@ export async function fetchAchievements() {
       (unlocked ?? []).map((u) => [u.achievement_id, u.unlocked_at]),
     );
 
-    const withStatus: AchievementWithStatus[] = (allAchievements ?? []).map(
-      (a) => ({
+    // Fetch current user stats for progress bars
+    const [profileRes, habitsRes] = await Promise.all([
+      supabase.from('profiles').select('xp, level').eq('id', userId).single(),
+      supabase.from('habits').select('id').eq('user_id', userId),
+    ]);
+
+    const habitIds = habitsRes.data?.map((h) => h.id) ?? [];
+
+    const [streaksRes, completionsRes, friendsRes1, friendsRes2, purchasesRes] =
+      await Promise.all([
+        habitIds.length > 0
+          ? supabase.from('streaks').select('current_count, longest_count').in('habit_id', habitIds)
+          : Promise.resolve({ data: [] }),
+        supabase
+          .from('completions')
+          .select('*', { count: 'exact', head: true })
+          .in('habit_id', habitIds),
+        supabase
+          .from('friendships')
+          .select('*', { count: 'exact', head: true })
+          .eq('requester_id', userId)
+          .eq('status', 'accepted'),
+        supabase
+          .from('friendships')
+          .select('*', { count: 'exact', head: true })
+          .eq('addressee_id', userId)
+          .eq('status', 'accepted'),
+        supabase
+          .from('purchases')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', userId),
+      ]);
+
+    const bestStreak = Math.max(
+      0,
+      ...((streaksRes.data ?? []).map((s) =>
+        Math.max(s.current_count ?? 0, s.longest_count ?? 0),
+      )),
+    );
+
+    const statsMap: Record<string, number> = {
+      streak: bestStreak,
+      completion: completionsRes.count ?? 0,
+      xp: profileRes.data?.xp ?? 0,
+      social: (friendsRes1.count ?? 0) + (friendsRes2.count ?? 0),
+      shop: purchasesRes.count ?? 0,
+    };
+
+    const withStatus: AchievementWithStatus[] = (allAchievements ?? []).map((a) => {
+      let currentValue = 0;
+      if (a.category === 'special') {
+        currentValue = a.key?.startsWith('level_') ? (profileRes.data?.level ?? 0) : 0;
+      } else {
+        currentValue = statsMap[a.category] ?? 0;
+      }
+
+      return {
         ...a,
         isUnlocked: unlockedMap.has(a.id),
         unlockedAt: unlockedMap.get(a.id) ?? null,
-      }),
-    );
+        currentValue,
+      };
+    });
 
     achievementsStore$.achievements.set(withStatus);
   } finally {
@@ -188,6 +245,7 @@ export async function checkAndUnlockAchievements() {
         ...a,
         isUnlocked: true,
         unlockedAt: new Date().toISOString(),
+        currentValue: a.threshold,
       });
     }
   }

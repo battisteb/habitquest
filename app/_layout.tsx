@@ -7,7 +7,9 @@ import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth } from '../src/features/auth/stores/auth-store';
 import { hasCompletedOnboarding } from './onboarding';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
+import { achievementsStore$, clearNewlyUnlocked } from '../src/features/gamification/stores/achievements-store';
 import { LevelUpOverlay } from '../src/ui/animations/level-up-overlay';
+import { AchievementToast } from '../src/ui/animations/achievement-toast';
 import {
   configureNotifications,
   applyNotificationPrefs,
@@ -50,6 +52,8 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 export default function RootLayout() {
   const showLevelUp = use$(levelUpStore$.showLevelUp);
   const newLevel = use$(levelUpStore$.newLevel);
+  const newlyUnlocked = use$(achievementsStore$.newlyUnlocked);
+  const currentToast = newlyUnlocked[0] ?? null;
 
   useWeeklyRecapScheduler();
 
@@ -74,6 +78,19 @@ export default function RootLayout() {
         newLevel={newLevel}
         onComplete={dismissLevelUp}
       />
+      {currentToast && (
+        <AchievementToast
+          key={currentToast.id}
+          name={currentToast.name}
+          description={currentToast.description}
+          category={currentToast.category}
+          xpReward={currentToast.xp_reward}
+          goldReward={currentToast.gold_reward}
+          onDismiss={() =>
+            achievementsStore$.newlyUnlocked.set((prev) => prev.slice(1))
+          }
+        />
+      )}
     </>
   );
 }

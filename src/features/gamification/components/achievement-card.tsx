@@ -17,6 +17,8 @@ interface AchievementCardProps {
   isUnlocked: boolean;
   xpReward: number;
   goldReward: number;
+  threshold: number;
+  currentValue: number;
 }
 
 export function AchievementCard({
@@ -26,7 +28,12 @@ export function AchievementCard({
   isUnlocked,
   xpReward,
   goldReward,
+  threshold,
+  currentValue,
 }: AchievementCardProps) {
+  const progress = threshold > 0 ? Math.min(currentValue / threshold, 1) : 0;
+  const showProgress = !isUnlocked && threshold > 0 && currentValue > 0;
+
   return (
     <View style={[styles.card, !isUnlocked && styles.locked]}>
       <Text style={styles.icon}>
@@ -37,6 +44,18 @@ export function AchievementCard({
           {name}
         </Text>
         <Text style={styles.description}>{description}</Text>
+
+        {showProgress && (
+          <View style={styles.progressContainer}>
+            <View style={styles.progressTrack}>
+              <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+            </View>
+            <Text style={styles.progressLabel}>
+              {currentValue} / {threshold}
+            </Text>
+          </View>
+        )}
+
         {(xpReward > 0 || goldReward > 0) && (
           <View style={styles.rewards}>
             {xpReward > 0 && <Text style={styles.xpReward}>+{xpReward} XP</Text>}
@@ -54,7 +73,7 @@ export function AchievementCard({
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
@@ -63,16 +82,17 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   locked: {
-    opacity: 0.5,
+    opacity: 0.6,
   },
   icon: {
     fontSize: 24,
     width: 32,
     textAlign: 'center',
+    marginTop: 2,
   },
   info: {
     flex: 1,
-    gap: 2,
+    gap: 3,
   },
   name: {
     fontSize: fontSizes.md,
@@ -85,6 +105,31 @@ const styles = StyleSheet.create({
   description: {
     fontSize: fontSizes.xs,
     color: colors.textSecondary,
+  },
+  progressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginTop: 4,
+  },
+  progressTrack: {
+    flex: 1,
+    height: 4,
+    backgroundColor: colors.border,
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: colors.xp,
+    borderRadius: 2,
+  },
+  progressLabel: {
+    fontSize: 9,
+    color: colors.textMuted,
+    fontWeight: 'bold',
+    minWidth: 40,
+    textAlign: 'right',
   },
   rewards: {
     flexDirection: 'row',
@@ -105,5 +150,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.lg,
     color: colors.success,
     fontWeight: 'bold',
+    marginTop: 2,
   },
 });
