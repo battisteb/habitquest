@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
@@ -64,15 +64,19 @@ export default function ProfileScreen() {
             </Text>
           </View>
 
-          {/* XP Bar */}
-          <View style={styles.card}>
+          {/* XP Bar — tap to open XP Journey */}
+          <Pressable
+            style={styles.card}
+            onPress={() => router.push('/xp-journey')}
+          >
             <XpBar
               level={level}
               currentXp={profile?.xp ?? 0}
               nextLevelXp={xpForNextLevel}
               progress={xpProgress}
             />
-          </View>
+            <Text style={styles.cardHint}>TAP FOR XP JOURNEY →</Text>
+          </Pressable>
 
           {/* Stats row */}
           <View style={styles.statsRow}>
@@ -158,6 +162,14 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     padding: spacing.md,
     gap: spacing.xs,
+  },
+  cardHint: {
+    color: colors.xp,
+    fontSize: 9,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    textAlign: 'right',
+    marginTop: 2,
   },
   statsRow: {
     flexDirection: 'row',
