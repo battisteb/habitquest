@@ -1,6 +1,15 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { PixelAvatar } from '../../avatar/renderer/pixel-avatar';
 import { RarityBadge } from './rarity-badge';
 import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+
+const RARITY_BORDER: Record<string, string> = {
+  common: colors.border,
+  uncommon: '#4ecca3',
+  rare: '#5b9bd5',
+  epic: '#a855f7',
+  legendary: '#ff6b35',
+};
 
 interface ShopItemCardProps {
   name: string;
@@ -8,10 +17,17 @@ interface ShopItemCardProps {
   priceGold: number;
   rarity: string;
   requiredLevel: number;
+  spriteKey: string;
+  category: string;
   isOwned: boolean;
   isEquipped: boolean;
   canAfford: boolean;
   canUnlock: boolean;
+  /** Current equipped slots — so preview shows the full equipped look + this item */
+  currentHat?: string;
+  currentOutfit?: string;
+  currentAccessory?: string;
+  currentBg?: string;
   onPress: () => void;
 }
 
@@ -21,29 +37,60 @@ export function ShopItemCard({
   priceGold,
   rarity,
   requiredLevel,
+  spriteKey,
+  category,
   isOwned,
   isEquipped,
   canAfford,
   canUnlock,
+  currentHat,
+  currentOutfit,
+  currentAccessory,
+  currentBg,
   onPress,
 }: ShopItemCardProps) {
-  const disabled = isOwned ? false : !canAfford || !canUnlock;
+  const disabled = !isOwned && (!canAfford || !canUnlock);
+  const borderColor = isEquipped
+    ? colors.accent
+    : RARITY_BORDER[rarity] ?? colors.border;
+
+  // Build preview props: apply this item in its slot, keep everything else
+  const previewHat = category === 'avatar_hat' ? spriteKey : currentHat;
+  const previewOutfit = category === 'avatar_outfit' ? spriteKey : currentOutfit;
+  const previewAccessory = category === 'avatar_accessory' ? spriteKey : currentAccessory;
+  const previewBg = category === 'avatar_background' ? spriteKey : currentBg;
 
   return (
     <Pressable
       style={[
         styles.card,
+        { borderColor },
         isEquipped && styles.cardEquipped,
-        !isOwned && !canAfford && styles.cardLocked,
+        disabled && styles.cardDisabled,
       ]}
       onPress={onPress}
-      disabled={disabled && !isOwned}
+      disabled={disabled}
     >
-      {/* Placeholder sprite area */}
-      <View style={styles.spriteArea}>
-        <Text style={styles.spriteEmoji}>
-          {isOwned ? '✓' : '?'}
-        </Text>
+      {/* Avatar preview */}
+      <View style={styles.previewArea}>
+        <PixelAvatar
+          size={72}
+          hat={previewHat}
+          outfit={previewOutfit}
+          accessory={previewAccessory}
+          background={previewBg}
+          idleFrame={0}
+        />
+        {isEquipped && (
+          <View style={styles.equippedBadge}>
+            <Text style={styles.equippedBadgeText}>ON</Text>
+          </View>
+        )}
+        {!canUnlock && !isOwned && (
+          <View style={styles.lockOverlay}>
+            <Text style={styles.lockIcon}>🔒</Text>
+          </View>
+        )}
       </View>
 
       <Text style={styles.name} numberOfLines={1}>{name}</Text>
@@ -51,7 +98,7 @@ export function ShopItemCard({
 
       {isOwned ? (
         <Text style={[styles.status, isEquipped && styles.statusEquipped]}>
-          {isEquipped ? 'EQUIPPED' : 'OWNED'}
+          {isEquipped ? '● EQUIPPED' : '○ OWNED'}
         </Text>
       ) : (
         <View style={styles.priceRow}>
@@ -73,8 +120,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderWidth: 2,
-    borderColor: colors.border,
     borderRadius: 4,
+    borderBottomWidth: 4,
     padding: spacing.sm,
     gap: spacing.xs,
     flex: 1,
@@ -82,24 +129,44 @@ const styles = StyleSheet.create({
     maxWidth: '48%' as any,
   },
   cardEquipped: {
-    borderColor: colors.accent,
+    backgroundColor: colors.accent + '11',
   },
-  cardLocked: {
-    opacity: 0.5,
+  cardDisabled: {
+    opacity: 0.45,
   },
-  spriteArea: {
-    height: 64,
+  previewArea: {
+    height: 80,
     backgroundColor: colors.background,
     borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: colors.border,
+    overflow: 'hidden',
   },
-  spriteEmoji: {
-    fontSize: 24,
-    color: colors.textMuted,
+  equippedBadge: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    backgroundColor: colors.accent,
+    borderRadius: 2,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
   },
+  equippedBadgeText: {
+    fontSize: 8,
+    fontWeight: 'bold',
+    color: colors.background,
+    letterSpacing: 0.5,
+  },
+  lockOverlay: {
+    position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: colors.background + 'bb',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lockIcon: { fontSize: 22 },
   name: {
     fontSize: fontSizes.sm,
     fontWeight: 'bold',
@@ -108,7 +175,8 @@ const styles = StyleSheet.create({
   status: {
     fontSize: fontSizes.xs,
     fontWeight: 'bold',
-    color: colors.success,
+    color: colors.textMuted,
+    letterSpacing: 0.5,
   },
   statusEquipped: {
     color: colors.accent,
