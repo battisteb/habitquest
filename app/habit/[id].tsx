@@ -7,6 +7,7 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { HabitTimer } from '../../src/features/habits/components/habit-timer';
 import { HabitChecklist } from '../../src/features/habits/components/habit-checklist';
 import { habitsStore$, archiveHabit, completeHabit, pauseHabit, resumeHabit } from '../../src/features/habits/stores/habits-store';
+import { useDynamicGoal } from '../../src/features/habits/hooks/use-dynamic-goal';
 import { CONTENT_TYPE_CONFIG } from '../../src/features/habits/types/habit-content';
 import { getCategoryColor } from '../../src/lib/constants/categories';
 import { colors, spacing, fontSizes } from '../../src/ui/theme/tokens';
@@ -25,6 +26,8 @@ export default function HabitDetailScreen() {
   const streak = id ? streaks[id] : undefined;
   const isCompletedToday = id ? !!todayCompletions[id] : false;
   const content = habit?.content as HabitContent | null | undefined;
+  const streakCount = id ? (streaks[id]?.current_count ?? 0) : 0;
+  const goalSuggestion = useDynamicGoal(habit?.id ?? '', streakCount);
 
   if (!habit) {
     return (
@@ -196,6 +199,18 @@ export default function HabitDetailScreen() {
         />
       )}
 
+      {/* Dynamic goal suggestion */}
+      {goalSuggestion.type !== 'none' && (
+        <View style={[
+          styles.goalCard,
+          goalSuggestion.type === 'level_up' && styles.goalCardLevelUp,
+          goalSuggestion.type === 'restart' && styles.goalCardRestart,
+        ]}>
+          <Text style={styles.goalMessage}>{goalSuggestion.message}</Text>
+          <Text style={styles.goalDetail}>{goalSuggestion.detail}</Text>
+        </View>
+      )}
+
       {isPaused && (
         <View style={styles.pausedBanner}>
           <Text style={styles.pausedText}>❄️ PAUSED — streak protected</Text>
@@ -331,6 +346,32 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     letterSpacing: 1,
+  },
+  goalCard: {
+    backgroundColor: colors.xp + '18',
+    borderWidth: 2,
+    borderColor: colors.xp + '66',
+    borderRadius: 4,
+    padding: spacing.md,
+    gap: 4,
+  },
+  goalCardLevelUp: {
+    backgroundColor: colors.accent + '18',
+    borderColor: colors.accent + '88',
+  },
+  goalCardRestart: {
+    backgroundColor: colors.success + '18',
+    borderColor: colors.success + '88',
+  },
+  goalMessage: {
+    color: colors.text,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+  },
+  goalDetail: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    lineHeight: 16,
   },
   pausedBanner: {
     backgroundColor: '#4FC3F7' + '22',
