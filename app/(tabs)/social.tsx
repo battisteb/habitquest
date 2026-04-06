@@ -238,6 +238,7 @@ export default function SocialScreen() {
     ];
 
     return (
+      <>
       <PixelButton
         title="⚔️ DUEL ARENA — Turn-Based Combat"
         onPress={() => router.push('/duels')}
@@ -302,6 +303,7 @@ export default function SocialScreen() {
           );
         }}
       />
+      </>
     );
   };
 
