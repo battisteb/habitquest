@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,6 +9,8 @@ import { signOut } from '../../src/features/auth/stores/auth-store';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
 import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
+import { AvatarDisplay } from '../../src/features/avatar/components/avatar-display';
+import { getAvatarStage, getNextAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
@@ -35,6 +37,8 @@ export default function ProfileScreen() {
 
   const level = profile?.level ?? 0;
   const rank = getRankForLevel(level);
+  const avatarStage = getAvatarStage(level);
+  const nextAvatarStage = getNextAvatarStage(level);
   const equippedHat = equippedSlots?.hat?.item?.sprite_key;
   const equippedOutfit = equippedSlots?.outfit?.item?.sprite_key;
   const equippedBg = equippedSlots?.background?.item?.sprite_key;
@@ -62,6 +66,22 @@ export default function ProfileScreen() {
             <Text style={[styles.rankBadge, { color: rank.color }]}>
               {rank.name}
             </Text>
+
+            {/* Avatar evolution stage */}
+            <View style={[styles.stageCard, { borderColor: avatarStage.aura }]}>
+              <AvatarDisplay level={level} size="sm" />
+              <View style={styles.stageInfo}>
+                <Text style={[styles.stageTitle, { color: avatarStage.aura }]}>
+                  {avatarStage.title}
+                </Text>
+                <Text style={styles.stageDescription}>{avatarStage.description}</Text>
+                {nextAvatarStage !== null && (
+                  <Text style={styles.stageNext}>
+                    {'Next: ' + nextAvatarStage.title + ' at Level ' + nextAvatarStage.minLevel}
+                  </Text>
+                )}
+              </View>
+            </View>
           </View>
 
           {/* XP Bar — tap to open XP Journey */}
@@ -199,5 +219,34 @@ const styles = StyleSheet.create({
   actionsRow: {
     flexDirection: 'row',
     gap: spacing.sm,
+  },
+  stageCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    marginTop: spacing.xs,
+  },
+  stageInfo: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  stageTitle: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  stageDescription: {
+    fontSize: fontSizes.xs,
+    color: colors.textSecondary,
+  },
+  stageNext: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+    letterSpacing: 0.5,
   },
 });

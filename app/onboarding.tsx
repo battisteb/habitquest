@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../src/ui/components/pixel-button';
@@ -18,19 +18,26 @@ export function markOnboardingComplete(): void {
   storage.set(ONBOARDING_KEY, 'true');
 }
 
+// Visual intro slides shown before the habit-creation step
+const SLIDES = [
+  {
+    emoji: '⚔️',
+    title: 'YOUR QUEST BEGINS',
+    body: 'HabitQuest turns your daily habits into epic adventures. Complete quests, earn XP, and level up your life.',
+  },
+  {
+    emoji: '🔥',
+    title: 'BUILD STREAKS',
+    body: "Show up every day to keep your streak alive. Miss a day and your streak resets — but you can freeze it with a rest day.",
+  },
+  {
+    emoji: '🏆',
+    title: 'EARN REWARDS',
+    body: 'Level up your hero, unlock themes and avatar cosmetics, and compete with friends on the leaderboard.',
+  },
+];
+
 const STEPS = [
-  {
-    title: 'Welcome, Adventurer!',
-    body: 'HabitQuest turns your daily habits into an epic quest. Build streaks, earn XP, level up, and become a legend.',
-  },
-  {
-    title: 'Daily Quests',
-    body: 'Each habit is a quest. Complete them every day to build streaks. The longer your streak, the more XP you earn!',
-  },
-  {
-    title: 'Rewards & Risks',
-    body: 'Earn gold to buy cosmetics in the shop. But beware — breaking a streak costs you XP and gold!',
-  },
   {
     title: 'Your First Quest',
     body: "Let's create your first habit to get started. You can always add more later.",
@@ -49,12 +56,18 @@ const QUICK_HABITS = [
 export default function OnboardingScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const [step, setStep] = useState(0);
+  // slideIndex: 0..SLIDES.length-1 → intro slides, SLIDES.length → action step
+  const [slideIndex, setSlideIndex] = useState(0);
   const [customHabit, setCustomHabit] = useState('');
   const [selectedQuick, setSelectedQuick] = useState<number | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  const current = STEPS[step];
+  const isActionStep = slideIndex >= SLIDES.length;
+  const currentSlide = !isActionStep ? SLIDES[slideIndex] : null;
+  const isLastSlide = slideIndex === SLIDES.length - 1;
+
+  const totalDots = SLIDES.length + STEPS.length;
+  const currentDot = slideIndex;
 
   async function handleFinish() {
     setIsCreating(true);
@@ -68,7 +81,6 @@ export default function OnboardingScreen() {
       markOnboardingComplete();
       router.replace('/(tabs)/today');
     } catch {
-      // Still navigate even if habit creation fails
       markOnboardingComplete();
       router.replace('/(tabs)/today');
     } finally {
@@ -82,22 +94,57 @@ export default function OnboardingScreen() {
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + spacing.xl }]}>
+    <KeyboardAvoidingView
+      style={[styles.container, { paddingTop: insets.top + spacing.xl, paddingBottom: insets.bottom }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       {/* Progress dots */}
       <View style={styles.dots}>
-        {STEPS.map((_, i) => (
+        {Array.from({ length: totalDots }).map((_, i) => (
           <View
             key={i}
-            style={[styles.dot, i === step && styles.dotActive, i < step && styles.dotDone]}
+            style={[
+              styles.dot,
+              i === currentDot && styles.dotActive,
+              i < currentDot && styles.dotDone,
+            ]}
           />
         ))}
       </View>
 
-      <Text style={styles.title}>{current.title}</Text>
-      <Text style={styles.body}>{current.body}</Text>
+      {!isActionStep && currentSlide !== null ? (
+        <View style={styles.slideSection}>
+          <Text style={styles.slideEmoji}>{currentSlide.emoji}</Text>
+          <Text style={styles.slideTitle}>{currentSlide.title}</Text>
+          <Text style={styles.body}>{currentSlide.body}</Text>
 
-      {current.isAction && (
+          <View style={styles.btnRow}>
+            {slideIndex > 0 && (
+              <PixelButton
+                title="Back"
+                onPress={() => setSlideIndex((s) => s - 1)}
+                variant="ghost"
+                style={{ flex: 1 }}
+              />
+            )}
+            <PixelButton
+              title={isLastSlide ? "LET'S GO" : 'Next'}
+              onPress={() => setSlideIndex((s) => s + 1)}
+              style={{ flex: 1 }}
+            />
+          </View>
+
+          <Pressable onPress={handleSkip}>
+            <Text style={styles.skip}>Skip intro</Text>
+          </Pressable>
+        </View>
+      ) : (
         <View style={styles.actionSection}>
+          <Text style={styles.title}>Your First Quest</Text>
+          <Text style={styles.body}>
+            {"Let's create your first habit to get started. You can always add more later."}
+          </Text>
+
           {/* Quick picks */}
           <Text style={styles.sectionLabel}>QUICK PICK</Text>
           {QUICK_HABITS.map((h, i) => (
@@ -120,9 +167,7 @@ export default function OnboardingScreen() {
             </Pressable>
           ))}
 
-          <Text style={[styles.sectionLabel, { marginTop: spacing.md }]}>
-            OR CUSTOM
-          </Text>
+          <Text style={[styles.sectionLabel, { marginTop: spacing.md }]}>OR CUSTOM</Text>
           <PixelInput
             label=""
             value={customHabit}
@@ -132,23 +177,18 @@ export default function OnboardingScreen() {
             }}
             placeholder="Type your own habit..."
           />
+
+          <View style={styles.actions}>
+            <PixelButton
+              title={isCreating ? 'Creating...' : 'Start Your Quest!'}
+              onPress={handleFinish}
+              disabled={isCreating || (selectedQuick === null && !customHabit.trim())}
+            />
+            <PixelButton title="Skip" onPress={handleSkip} variant="ghost" />
+          </View>
         </View>
       )}
-
-      <View style={styles.actions}>
-        {current.isAction ? (
-          <PixelButton
-            title={isCreating ? 'Creating...' : 'Start Your Quest!'}
-            onPress={handleFinish}
-            disabled={isCreating || (selectedQuick === null && !customHabit.trim())}
-          />
-        ) : (
-          <PixelButton title="Next" onPress={() => setStep(step + 1)} />
-        )}
-
-        <PixelButton title="Skip" onPress={handleSkip} variant="ghost" />
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -177,6 +217,35 @@ const styles = StyleSheet.create({
   dotDone: {
     backgroundColor: colors.success,
   },
+  // Intro slides
+  slideSection: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.lg,
+  },
+  slideEmoji: {
+    fontSize: 80,
+    textAlign: 'center',
+  },
+  slideTitle: {
+    fontSize: fontSizes.xxl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+    textAlign: 'center',
+  },
+  btnRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    width: '100%',
+  },
+  skip: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    textDecorationLine: 'underline',
+  },
+  // Action step
   title: {
     fontSize: fontSizes.xxl,
     fontWeight: 'bold',
@@ -221,5 +290,6 @@ const styles = StyleSheet.create({
   actions: {
     gap: spacing.sm,
     paddingBottom: spacing.lg,
+    marginTop: spacing.md,
   },
 });
