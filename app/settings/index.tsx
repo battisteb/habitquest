@@ -137,6 +137,17 @@ export default function SettingsScreen() {
         </View>
       </View>
 
+      {/* Appearance section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>APPEARANCE</Text>
+        <View style={styles.card}>
+          <Pressable style={styles.row} onPress={() => router.push('/settings/theme')}>
+            <Text style={styles.label}>Theme</Text>
+            <Text style={styles.value}>›</Text>
+          </Pressable>
+        </View>
+      </View>
+
       {/* Focus Mode section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>GAMEPLAY</Text>

@@ -16,6 +16,7 @@ import {
 } from '../src/features/notifications/utils/notification-service';
 import { useWeeklyRecapScheduler } from '../src/features/notifications/hooks/use-weekly-recap-scheduler';
 import { colors } from '../src/ui/theme/tokens';
+import { ThemeProvider } from '../src/ui/theme/theme-context';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -63,7 +64,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <>
+    <ThemeProvider>
       <StatusBar style="light" />
       <AuthGuard>
         <Stack
@@ -91,7 +92,7 @@ export default function RootLayout() {
           }
         />
       )}
-    </>
+    </ThemeProvider>
   );
 }
 
