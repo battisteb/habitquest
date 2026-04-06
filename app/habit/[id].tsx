@@ -6,7 +6,7 @@ import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { HabitTimer } from '../../src/features/habits/components/habit-timer';
 import { HabitChecklist } from '../../src/features/habits/components/habit-checklist';
-import { habitsStore$, archiveHabit, completeHabit } from '../../src/features/habits/stores/habits-store';
+import { habitsStore$, archiveHabit, completeHabit, pauseHabit, resumeHabit } from '../../src/features/habits/stores/habits-store';
 import { CONTENT_TYPE_CONFIG } from '../../src/features/habits/types/habit-content';
 import { getCategoryColor } from '../../src/lib/constants/categories';
 import { colors, spacing, fontSizes } from '../../src/ui/theme/tokens';
@@ -34,6 +34,8 @@ export default function HabitDetailScreen() {
     );
   }
 
+  const isPaused = !!(habit as any).is_paused;
+
   const handleArchive = () => {
     Alert.alert('Archive quest', `Remove "${habit.name}" from your active quests?`, [
       { text: 'Cancel', style: 'cancel' },
@@ -46,6 +48,24 @@ export default function HabitDetailScreen() {
         },
       },
     ]);
+  };
+
+  const handlePauseResume = () => {
+    if (isPaused) {
+      Alert.alert('Resume Quest', `Resume "${habit.name}"? Streak tracking will restart.`, [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Resume', onPress: () => resumeHabit(habit.id) },
+      ]);
+    } else {
+      Alert.alert(
+        'Pause Quest',
+        `Pause "${habit.name}"? Your streak is preserved — you won't be penalised while paused.`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Pause', onPress: () => pauseHabit(habit.id) },
+        ],
+      );
+    }
   };
 
   const handleComplete = async () => {
@@ -176,6 +196,12 @@ export default function HabitDetailScreen() {
         />
       )}
 
+      {isPaused && (
+        <View style={styles.pausedBanner}>
+          <Text style={styles.pausedText}>❄️ PAUSED — streak protected</Text>
+        </View>
+      )}
+
       <View style={styles.bottomRow}>
         <PixelButton
           title="Edit"
@@ -184,9 +210,15 @@ export default function HabitDetailScreen() {
           style={{ flex: 1 }}
         />
         <PixelButton
+          title={isPaused ? '▶ Resume' : '⏸ Pause'}
+          onPress={handlePauseResume}
+          variant="secondary"
+          style={{ flex: 1 }}
+        />
+        <PixelButton
           title="Archive"
           onPress={handleArchive}
-          variant="secondary"
+          variant="ghost"
           style={{ flex: 1 }}
         />
       </View>
@@ -298,6 +330,20 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontWeight: 'bold',
     textAlign: 'center',
+    letterSpacing: 1,
+  },
+  pausedBanner: {
+    backgroundColor: '#4FC3F7' + '22',
+    borderWidth: 2,
+    borderColor: '#4FC3F7',
+    borderRadius: 4,
+    padding: spacing.sm,
+    alignItems: 'center',
+  },
+  pausedText: {
+    color: '#4FC3F7',
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
     letterSpacing: 1,
   },
   quickComplete: {

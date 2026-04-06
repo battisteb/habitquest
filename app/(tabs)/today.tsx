@@ -59,11 +59,12 @@ export default function TodayScreen() {
     return Array.from(seen);
   }, [habits]);
 
-  // Filter + sort: incomplete first, then completed
+  // Filter + sort: exclude paused, incomplete first, then completed
   const displayedHabits = useMemo(() => {
-    const filtered = activeCategory === ALL_KEY
+    const filtered = (activeCategory === ALL_KEY
       ? habits
-      : habits.filter((h) => h.category === activeCategory);
+      : habits.filter((h) => h.category === activeCategory)
+    ).filter((h) => !(h as any).is_paused);
     return [...filtered].sort((a, b) => {
       const aDone = !!todayCompletions[a.id];
       const bDone = !!todayCompletions[b.id];
@@ -72,8 +73,9 @@ export default function TodayScreen() {
     });
   }, [habits, activeCategory, todayCompletions]);
 
-  const completedCount = habits.filter((h) => !!todayCompletions[h.id]).length;
-  const totalCount = habits.length;
+  const activeHabits = habits.filter((h) => !(h as any).is_paused);
+  const completedCount = activeHabits.filter((h) => !!todayCompletions[h.id]).length;
+  const totalCount = activeHabits.length;
   const allDone = totalCount > 0 && completedCount === totalCount;
 
   const handleComplete = useCallback(async (habitId: string) => {

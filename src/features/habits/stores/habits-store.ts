@@ -116,6 +116,22 @@ export async function archiveHabit(id: string) {
   await fetchHabits();
 }
 
+export async function pauseHabit(id: string) {
+  const { error } = await (supabase.from('habits') as any)
+    .update({ is_paused: true, paused_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
+  await fetchHabits();
+}
+
+export async function resumeHabit(id: string) {
+  const { error } = await (supabase.from('habits') as any)
+    .update({ is_paused: false, paused_at: null })
+    .eq('id', id);
+  if (error) throw error;
+  await fetchHabits();
+}
+
 export async function completeHabit(habitId: string) {
   // Already completed today?
   if (habitsStore$.todayCompletions.get()[habitId]) return;
