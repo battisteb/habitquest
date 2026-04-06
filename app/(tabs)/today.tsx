@@ -140,7 +140,9 @@ export default function TodayScreen() {
   const ListHeader = (
     <View>
       {/* Daily quests */}
-      <DailyQuestsSection />
+      <DailyQuestsSection
+        pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
+      />
 
       {/* Active mode banner */}
       {activeMode && (() => {
@@ -267,7 +269,9 @@ export default function TodayScreen() {
       {/* Unified list */}
       {habits.length === 0 ? (
         <View>
-          <DailyQuestsSection />
+          <DailyQuestsSection
+            pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
+          />
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>⚔️</Text>
             <Text style={styles.emptyTitle}>No quests yet</Text>

@@ -16,7 +16,7 @@ import {
 } from '../src/features/notifications/utils/notification-service';
 import { useWeeklyRecapScheduler } from '../src/features/notifications/hooks/use-weekly-recap-scheduler';
 import { colors } from '../src/ui/theme/tokens';
-import { ThemeProvider } from '../src/ui/theme/theme-context';
+import { ThemeProvider, useTheme } from '../src/ui/theme/theme-context';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -50,7 +50,8 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export default function RootLayout() {
+function ThemedApp() {
+  const { themeKey } = useTheme();
   const showLevelUp = use$(levelUpStore$.showLevelUp);
   const newLevel = use$(levelUpStore$.newLevel);
   const newlyUnlocked = use$(achievementsStore$.newlyUnlocked);
@@ -64,10 +65,11 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <ThemeProvider>
+    <>
       <StatusBar style="light" />
       <AuthGuard>
         <Stack
+          key={themeKey}
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: colors.background },
@@ -92,6 +94,14 @@ export default function RootLayout() {
           }
         />
       )}
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <ThemedApp />
     </ThemeProvider>
   );
 }

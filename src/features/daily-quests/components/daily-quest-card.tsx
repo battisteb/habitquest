@@ -5,6 +5,7 @@ import type { DailyQuestWithTemplate, QuestDifficulty } from '../stores/daily-qu
 interface DailyQuestCardProps {
   quest: DailyQuestWithTemplate;
   onClaim: (questId: string) => void;
+  isPaused?: boolean;
 }
 
 const DIFFICULTY_COLORS: Record<QuestDifficulty, string> = {
@@ -19,7 +20,7 @@ const DIFFICULTY_LABELS: Record<QuestDifficulty, string> = {
   hard: 'HARD',
 };
 
-export function DailyQuestCard({ quest, onClaim }: DailyQuestCardProps) {
+export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestCardProps) {
   const { template } = quest;
   const difficultyColor = DIFFICULTY_COLORS[template.difficulty];
   const progress = Math.min(quest.current_progress, template.target_value);
@@ -32,7 +33,14 @@ export function DailyQuestCard({ quest, onClaim }: DailyQuestCardProps) {
   const canClaim = isCompleted && !isClaimed;
 
   return (
-    <View style={[styles.card, isClaimed && styles.cardClaimed]}>
+    <View style={[styles.card, isClaimed && styles.cardClaimed, isPaused && styles.cardPaused]}>
+      {/* Paused mode badge */}
+      {isPaused && (
+        <View style={styles.pausedBadge}>
+          <Text style={styles.pausedBadgeText}>❄️ PAUSED BY FOCUS MODE</Text>
+        </View>
+      )}
+
       {/* Header row: difficulty badge + rewards */}
       <View style={styles.headerRow}>
         <View style={[styles.difficultyBadge, { backgroundColor: difficultyColor }]}>
@@ -104,6 +112,23 @@ const styles = StyleSheet.create({
   },
   cardClaimed: {
     opacity: 0.6,
+  },
+  cardPaused: {
+    opacity: 0.45,
+    borderColor: '#4FC3F7',
+  },
+  pausedBadge: {
+    backgroundColor: '#4FC3F7' + '22',
+    borderRadius: 3,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+    alignSelf: 'flex-start',
+  },
+  pausedBadgeText: {
+    color: '#4FC3F7',
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   headerRow: {
     flexDirection: 'row',

@@ -1,4 +1,21 @@
-export const colors = {
+export const colors: {
+  background: string;
+  surface: string;
+  surfaceLight: string;
+  primary: string;
+  primaryDark: string;
+  secondary: string;
+  accent: string;
+  text: string;
+  textSecondary: string;
+  textMuted: string;
+  success: string;
+  warning: string;
+  danger: string;
+  streak: string;
+  xp: string;
+  border: string;
+} = {
   background: '#1a1a2e',
   surface: '#16213e',
   surfaceLight: '#0f3460',
@@ -15,7 +32,7 @@ export const colors = {
   streak: '#ff6b35',
   xp: '#7b68ee',
   border: '#2a2a4a',
-} as const;
+};
 
 export const spacing = {
   xs: 4,

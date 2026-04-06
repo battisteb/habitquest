@@ -4,7 +4,11 @@ import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/toke
 import { useDailyQuests } from '../hooks/use-daily-quests';
 import { DailyQuestCard } from './daily-quest-card';
 
-export function DailyQuestsSection() {
+interface DailyQuestsSectionProps {
+  pausedCategories?: string[];
+}
+
+export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSectionProps) {
   const { quests, isLoading, fetchDailyQuests, claimQuest } = useDailyQuests();
 
   useEffect(() => {
@@ -51,13 +55,20 @@ export function DailyQuestsSection() {
         <Text style={styles.refreshHint}>Resets daily</Text>
       </View>
       <View style={styles.questList}>
-        {quests.map((quest) => (
-          <DailyQuestCard
-            key={quest.id}
-            quest={quest}
-            onClaim={handleClaim}
-          />
-        ))}
+        {quests.map((quest) => {
+          const isPaused =
+            quest.template.quest_type === 'complete_category' &&
+            quest.template.target_category != null &&
+            pausedCategories.includes(quest.template.target_category);
+          return (
+            <DailyQuestCard
+              key={quest.id}
+              quest={quest}
+              onClaim={handleClaim}
+              isPaused={isPaused}
+            />
+          );
+        })}
       </View>
     </View>
   );
