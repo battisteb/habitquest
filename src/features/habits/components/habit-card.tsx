@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Pressable, View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
+import { CompletionBurst } from '../../../ui/animations/completion-burst';
 
 interface HabitCardProps {
   name: string;
@@ -56,12 +58,20 @@ export function HabitCard({
   const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
   const nextXp = calculateXpEarned(streakCount + 1);
   const flame = streakFlame(streakCount);
+  const [burst, setBurst] = useState(false);
+
+  const handleComplete = () => {
+    setBurst(true);
+    setTimeout(() => setBurst(false), 700);
+    onComplete();
+  };
 
   return (
     <Pressable
       onPress={onPress}
       style={[styles.container, isCompletedToday && styles.containerDone]}
     >
+      <CompletionBurst visible={burst} />
       <View style={[styles.categoryBar, { backgroundColor: categoryColor }]} />
       <View style={styles.content}>
         <View style={styles.info}>
@@ -81,7 +91,7 @@ export function HabitCard({
           </View>
         </View>
         <Pressable
-          onPress={onComplete}
+          onPress={handleComplete}
           style={[styles.checkButton, isCompletedToday && styles.checkButtonDone]}
           disabled={isCompletedToday}
           hitSlop={8}
@@ -103,7 +113,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.border,
     borderBottomWidth: 3,
-    overflow: 'hidden',
+    overflow: 'visible',
+    position: 'relative',
   },
   containerDone: {
     borderColor: colors.border,

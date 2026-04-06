@@ -2,7 +2,10 @@
   "expo": {
     "name": "HabitQuest",
     "slug": "habitquest",
-    "version": "0.1.0",
+    "version": "1.0.0",
+    "description": "Level up your habits with pixel art gamification. Build streaks, earn XP, and become a legend.",
+    "keywords": ["habits", "gamification", "productivity", "pixel art", "streaks", "RPG"],
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -13,8 +16,9 @@
       "backgroundColor": "#1a1a2e"
     },
     "ios": {
-      "supportsTablet": false,
-      "bundleIdentifier": "com.habitquest.app"
+      "supportsTablet": true,
+      "bundleIdentifier": "com.battiste.habitquest",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +27,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "package": "com.habitquest.app"
+      "package": "com.battiste.habitquest",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
