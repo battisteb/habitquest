@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "title": "JavaScript Core Concepts",
+  "category": "learning",
+  "description": "Essential JS concepts every developer should know",
+  "cards": [
+    { "front": "What is a closure?", "back": "A function that retains access to its outer scope even after the outer function returns", "hint": "Think: function + its lexical environment" },
+    { "front": "var vs let vs const", "back": "var: function-scoped, hoisted. let: block-scoped. const: block-scoped, no reassignment" },
+    { "front": "What does 'hoisting' mean?", "back": "Variable/function declarations are moved to the top of their scope before code executes" },
+    { "front": "What is the event loop?", "back": "A mechanism that processes the call stack and callback queue, enabling async JS in a single thread" },
+    { "front": "Promise.all vs Promise.allSettled", "back": "all: rejects on first failure. allSettled: waits for all, never rejects" },
+    { "front": "What is a pure function?", "back": "A function that always returns the same output for the same inputs and has no side effects" },
+    { "front": "== vs ===", "back": "==: type coercion (loose equality). ===: no coercion (strict equality)" },
+    { "front": "What is 'this' in an arrow function?", "back": "Arrow functions don't have their own 'this' — they inherit it from the enclosing lexical scope" },
+    { "front": "What is prototypal inheritance?", "back": "Objects inherit properties from other objects via the prototype chain, not classes" },
+    { "front": "What is the spread operator (...)?", "back": "Expands an iterable (array/object) into individual elements. Used for copy, merge, rest params" },
+    { "front": "null vs undefined", "back": "undefined: variable declared but not assigned. null: intentional absence of value" },
+    { "front": "What is memoization?", "back": "Caching function results so repeated calls with the same args return instantly" },
+    { "front": "async/await vs Promises", "back": "async/await is syntactic sugar over Promises — makes async code look synchronous" },
+    { "front": "What is debouncing?", "back": "Delaying a function call until after a period of inactivity (e.g. search input)" },
+    { "front": "What is throttling?", "back": "Ensuring a function is called at most once per time interval" }
+  ]
+}

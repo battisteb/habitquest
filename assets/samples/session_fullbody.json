@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "title": "Full Body Strength",
+  "category": "strength",
+  "description": "Classic compound movements — perfect for 3x/week",
+  "exercises": [
+    {
+      "type": "reps",
+      "name": "Squat",
+      "sets": 4,
+      "reps": 8,
+      "rest": 90,
+      "note": "Keep chest up, knees tracking toes"
+    },
+    {
+      "type": "reps",
+      "name": "Bench Press",
+      "sets": 4,
+      "reps": 8,
+      "rest": 90,
+      "note": "Retract scapula, controlled descent"
+    },
+    {
+      "type": "reps",
+      "name": "Deadlift",
+      "sets": 3,
+      "reps": 5,
+      "rest": 120,
+      "note": "Hinge at hips, neutral spine"
+    },
+    {
+      "type": "reps",
+      "name": "Pull-up",
+      "sets": 3,
+      "reps": 6,
+      "rest": 90
+    },
+    {
+      "type": "timer",
+      "name": "Plank",
+      "sets": 3,
+      "duration": 60,
+      "rest": 45,
+      "note": "Squeeze glutes and core"
+    }
+  ]
+}

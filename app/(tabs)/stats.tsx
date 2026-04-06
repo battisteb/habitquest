@@ -1,15 +1,25 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useStats } from '../../src/features/habits/hooks/use-stats';
 import { WeeklyChart } from '../../src/features/habits/components/weekly-chart';
+import { sessionsStore$ } from '../../src/features/training/stores/sessions-store';
+import { decksStore$ } from '../../src/features/training/stores/decks-store';
+import { getDueCards } from '../../src/features/training/types/flashcard';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 export default function StatsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const stats = useStats();
+  const sessions = use$(sessionsStore$.sessions);
+  const decks = use$(decksStore$.decks);
+
+  const totalWorkouts = sessions.reduce((sum, s) => sum + s.completedCount, 0);
+  const totalCardReviews = decks.reduce((sum, d) => sum + d.totalReviews, 0);
+  const dueCardsTotal = decks.reduce((sum, d) => sum + getDueCards(d).length, 0);
 
   if (stats.isLoading) {
     return (
@@ -45,6 +55,28 @@ export default function StatsScreen() {
       </View>
 
       {stats.weeklyCompletions.length > 0 && <WeeklyChart data={stats.weeklyCompletions} />}
+
+      {/* Training stats */}
+      {(sessions.length > 0 || decks.length > 0) && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>TRAINING</Text>
+          <View style={styles.statRow}>
+            <StatCard value={sessions.length} label="SESSIONS" color={colors.accent} />
+            <StatCard value={totalWorkouts} label="WORKOUTS DONE" color={colors.success} />
+          </View>
+          {decks.length > 0 && (
+            <View style={styles.statRow}>
+              <StatCard value={decks.length} label="DECKS" color={colors.primary} />
+              <StatCard value={totalCardReviews} label="CARDS REVIEWED" color={colors.xp} />
+              <StatCard
+                value={dueCardsTotal}
+                label="DUE TODAY"
+                color={dueCardsTotal > 0 ? colors.streak : colors.textMuted}
+              />
+            </View>
+          )}
+        </View>
+      )}
 
       <PixelButton
         title="View Achievements"
@@ -116,5 +148,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.textMuted,
     letterSpacing: 1,
+  },
+  section: {
+    gap: spacing.sm,
+  },
+  sectionTitle: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 2,
   },
 });

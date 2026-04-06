@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "title": "HIIT Cardio Blast",
+  "category": "cardio",
+  "description": "20 min high intensity — burn max calories",
+  "exercises": [
+    {
+      "type": "timer",
+      "name": "Jumping Jacks",
+      "sets": 4,
+      "duration": 40,
+      "rest": 20
+    },
+    {
+      "type": "timer",
+      "name": "Burpees",
+      "sets": 4,
+      "duration": 30,
+      "rest": 30,
+      "note": "Full extension at top"
+    },
+    {
+      "type": "timer",
+      "name": "Mountain Climbers",
+      "sets": 4,
+      "duration": 40,
+      "rest": 20,
+      "note": "Keep hips level"
+    },
+    {
+      "type": "reps",
+      "name": "Jump Squat",
+      "sets": 3,
+      "reps": 15,
+      "rest": 30
+    },
+    {
+      "type": "timer",
+      "name": "High Knees",
+      "sets": 3,
+      "duration": 30,
+      "rest": 20
+    }
+  ]
+}

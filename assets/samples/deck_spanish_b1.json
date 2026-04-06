@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "title": "Spanish B1 Vocabulary",
+  "category": "learning",
+  "description": "Essential Spanish words for intermediate level",
+  "cards": [
+    { "front": "el agua", "back": "water", "hint": "feminine despite 'el'" },
+    { "front": "correr", "back": "to run" },
+    { "front": "¿Cómo estás?", "back": "How are you?" },
+    { "front": "la ciudad", "back": "the city" },
+    { "front": "hablar", "back": "to speak" },
+    { "front": "el trabajo", "back": "work / job" },
+    { "front": "conocer", "back": "to know (a person/place)", "hint": "vs saber = to know a fact" },
+    { "front": "saber", "back": "to know (a fact/skill)" },
+    { "front": "la semana", "back": "the week" },
+    { "front": "el tiempo", "back": "time / weather", "hint": "context-dependent" },
+    { "front": "buscar", "back": "to look for / to search" },
+    { "front": "encontrar", "back": "to find" },
+    { "front": "el dinero", "back": "money" },
+    { "front": "conseguir", "back": "to get / to obtain" },
+    { "front": "empezar", "back": "to start / to begin" },
+    { "front": "terminar", "back": "to finish / to end" },
+    { "front": "el lugar", "back": "the place" },
+    { "front": "llegar", "back": "to arrive" },
+    { "front": "seguir", "back": "to continue / to follow" },
+    { "front": "creer", "back": "to believe / to think" }
+  ]
+}
