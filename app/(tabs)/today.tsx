@@ -16,6 +16,7 @@ import { XpToast } from '../../src/ui/animations/xp-toast';
 import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
 import { habitsStore$, fetchHabits, completeHabit } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
+import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import {
   getFreezesRemaining,
   isFreezeActiveToday,
@@ -57,6 +58,7 @@ export default function TodayScreen() {
   });
 
   useStreakRiskNotification();
+  const burnoutSignal = useBurnoutSignal();
 
   useEffect(() => { fetchHabits(); }, []);
 
@@ -134,6 +136,14 @@ export default function TodayScreen() {
           </View>
         ) : null;
       })()}
+
+      {/* Burnout banner */}
+      {burnoutSignal.risk !== 'none' && (
+        <View style={styles.burnoutBanner}>
+          <Text style={styles.burnoutMessage}>{burnoutSignal.message}</Text>
+          <Text style={styles.burnoutSuggestion}>{burnoutSignal.suggestion}</Text>
+        </View>
+      )}
 
       {/* All done banner */}
       {allDone && (
@@ -450,6 +460,29 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   filterChipTextActive: { color: colors.primary },
+
+  // Burnout banner
+  burnoutBanner: {
+    backgroundColor: '#FF6B6B' + '18',
+    borderWidth: 2,
+    borderColor: '#FF6B6B',
+    borderRadius: 4,
+    padding: spacing.sm,
+    margin: spacing.md,
+    marginBottom: 0,
+    gap: 2,
+  },
+  burnoutMessage: {
+    color: '#FF6B6B',
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  burnoutSuggestion: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    lineHeight: 16,
+  },
 
   // Habits list padding
   listPad: { paddingHorizontal: spacing.md },
