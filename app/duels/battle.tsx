@@ -221,6 +221,12 @@ export default function BattleScreen() {
     setNewLineIdx(idx);
   }, []);
 
+  // Refs to hold live state inside the async loop without stale closures
+  const meRef = useRef(me);
+  const oppRef = useRef(opp);
+  useEffect(() => { meRef.current = me; }, [me]);
+  useEffect(() => { oppRef.current = opp; }, [opp]);
+
   const handleFight = useCallback(async () => {
     if (!selectedAttackId || phase !== 'pick') return;
 
@@ -228,39 +234,39 @@ export default function BattleScreen() {
     const oppAtk = ATTACKS[Math.floor(Math.random() * ATTACKS.length)];
 
     setPhase('resolving');
-    addLog(`🤔 ${opp.name} is choosing...`, logLines.length);
+    addLog(`🤔 ${oppRef.current.name} is choosing...`, logLines.length);
 
-    await delay(1200);
-    addLog(`${opp.name} chose ${oppAtk.emoji} ${oppAtk.name}!`, logLines.length + 1);
+    await delay(1000);
+    addLog(`${oppRef.current.name} chose ${oppAtk.emoji} ${oppAtk.name}!`, logLines.length + 1);
 
-    await delay(700);
+    await delay(600);
     setPhase('showing');
 
-    // Determine turn order: higher level goes first
-    const order: Array<{ attacker: LivePlayer; attack: Attack; defenderId: string }> =
-      myLevel >= oppLevel
-        ? [{ attacker: me, attack: myAtk, defenderId: OPP_ID }, { attacker: opp, attack: oppAtk, defenderId: ME_ID }]
-        : [{ attacker: opp, attack: oppAtk, defenderId: ME_ID }, { attacker: me, attack: myAtk, defenderId: OPP_ID }];
-
-    let currentMe = { ...me };
-    let currentOpp = { ...opp };
-
+    // Work on local copies — we flush to React state after each hit
+    let currentMe = { ...meRef.current };
+    let currentOpp = { ...oppRef.current };
     let logIdx = logLines.length + 2;
 
-    for (const { attacker, attack, defenderId } of order) {
+    // Determine turn order: higher level goes first
+    const goesFirst = myLevel >= oppLevel ? ME_ID : OPP_ID;
+
+    // Helper: resolve & animate one attack between attacker → defender
+    const doAttack = async (
+      attackerId: string,
+      attack: Attack,
+      defenderId: string,
+    ) => {
+      const attacker = attackerId === ME_ID ? currentMe : currentOpp;
       const defender = defenderId === ME_ID ? currentMe : currentOpp;
-      if (defender.hp <= 0) break;
+      if (defender.hp <= 0) return; // already KO'd
 
-      const levelAdv = attacker.level - defender.level;
-      const result = resolveAttack(attack, levelAdv);
+      const result = resolveAttack(attack, attacker.level - defender.level);
 
-      // Show attacker lunging
-      setAttackingId(attacker.id);
-      await delay(400);
+      setAttackingId(attackerId);
+      await delay(350);
       setAttackingId(null);
 
       if (result.hit) {
-        // Shield block?
         if (defender.shield) {
           result.damage = 0;
           result.effect += ' (blocked by shield!)';
@@ -274,32 +280,52 @@ export default function BattleScreen() {
           }
         }
         setHitId(defenderId);
-        await delay(150);
+        await delay(120);
         setHitId(null);
       }
 
       if (result.shieldApplied) {
-        if (attacker.id === ME_ID) currentMe = { ...currentMe, shield: true };
+        if (attackerId === ME_ID) currentMe = { ...currentMe, shield: true };
         else currentOpp = { ...currentOpp, shield: true };
       }
       if (result.healAmount) {
-        if (attacker.id === ME_ID) {
-          currentMe = { ...currentMe, hp: Math.min(100, currentMe.hp + result.healAmount) };
-        } else {
-          currentOpp = { ...currentOpp, hp: Math.min(100, currentOpp.hp + result.healAmount) };
-        }
+        if (attackerId === ME_ID)
+          currentMe = { ...currentMe, hp: Math.min(currentMe.maxHp, currentMe.hp + result.healAmount) };
+        else
+          currentOpp = { ...currentOpp, hp: Math.min(currentOpp.maxHp, currentOpp.hp + result.healAmount) };
       }
 
-      setMe(currentMe);
-      setOpp(currentOpp);
+      setMe({ ...currentMe });
+      setOpp({ ...currentOpp });
       addLog(result.effect, logIdx++);
-      await delay(1200);
+      await delay(900);
+    };
+
+    // ── This round: both players attack once (in order) ──
+    if (goesFirst === ME_ID) {
+      await doAttack(ME_ID, myAtk, OPP_ID);
+      if (currentOpp.hp > 0) await doAttack(OPP_ID, oppAtk, ME_ID);
+    } else {
+      await doAttack(OPP_ID, oppAtk, ME_ID);
+      if (currentMe.hp > 0) await doAttack(ME_ID, myAtk, OPP_ID);
     }
 
-    // Determine winner
+    // ── Check if combat is over ──
+    const someoneKO = currentMe.hp <= 0 || currentOpp.hp <= 0;
+
+    if (!someoneKO) {
+      // Back to pick phase for the next round
+      addLog(`Round over — choose your next attack!`, logIdx++);
+      setSelectedAttackId(null);
+      setPhase('pick');
+      return; // exit here — no winner yet
+    }
+
+    // ── Someone reached 0 HP → end ──
     let winner: string | null = null;
-    if (currentMe.hp > currentOpp.hp) winner = ME_ID;
-    else if (currentOpp.hp > currentMe.hp) winner = OPP_ID;
+    if (currentMe.hp <= 0 && currentOpp.hp <= 0) winner = null; // simultaneous KO = draw
+    else if (currentOpp.hp <= 0) winner = ME_ID;
+    else winner = OPP_ID;
 
     const levelDiff = Math.abs(myLevel - oppLevel);
     const bonus = 20 + levelDiff * 5;
