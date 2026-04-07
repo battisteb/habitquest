@@ -27,28 +27,36 @@ export default function ChallengeScreen() {
 
   const handleChallenge = async () => {
     if (!selectedFriendId || !selectedAttackId) {
-      Alert.alert('Select both a friend and your opening attack!');
+      Alert.alert('Sélection incomplète', 'Choisis un ami et une attaque d\'ouverture.');
       return;
     }
 
+    const friend = (friends as any[]).find(
+      (f: any) => (f.id ?? f.friend_id) === selectedFriendId,
+    );
+    const friendName = friend?.username ?? friend?.friend_profile?.username ?? 'Rival';
+    const friendLevel = friend?.level ?? friend?.friend_profile?.level ?? 5;
+
+    // Navigate to battle screen immediately with the selected attack pre-loaded
+    router.push({
+      pathname: '/duels/battle',
+      params: {
+        opponentName: friendName,
+        opponentLevel: String(friendLevel),
+        openingAttackId: selectedAttackId,
+      },
+    });
+
+    // Also persist the challenge to Supabase in background
     setIsSending(true);
     try {
       await createDuel(selectedFriendId, selectedAttackId);
-      Alert.alert(
-        'Challenge Sent!',
-        'Your opponent has until the end of the week to accept.',
-        [{ text: 'OK', onPress: () => router.back() }],
-      );
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
+      const message = err instanceof Error ? err.message : '';
       if (message.toLowerCase().includes('limit')) {
-        Alert.alert(
-          'Weekly Limit Reached',
-          "You've used both duels this week. Come back next Monday!",
-        );
-      } else {
-        Alert.alert('Error', message);
+        Alert.alert('Limite hebdomadaire', 'Tu as utilisé tes 2 duels cette semaine. Reviens lundi !');
       }
+      // other errors silently ignored — battle is local demo
     } finally {
       setIsSending(false);
     }

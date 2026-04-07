@@ -83,8 +83,8 @@ export default function DuelsIndexScreen() {
       )}
 
       <PixelButton
-        title="Duel Simulator (Demo)"
-        onPress={() => router.push('/duels/result')}
+        title="⚔️ Quick Battle (Demo)"
+        onPress={() => router.push('/duels/battle')}
         variant="ghost"
         style={styles.simBtn}
       />
