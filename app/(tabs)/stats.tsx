@@ -5,6 +5,7 @@ import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useStats } from '../../src/features/habits/hooks/use-stats';
 import { WeeklyChart } from '../../src/features/habits/components/weekly-chart';
+import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
 import { sessionsStore$ } from '../../src/features/training/stores/sessions-store';
 import { decksStore$ } from '../../src/features/training/stores/decks-store';
 import { getDueCards } from '../../src/features/training/types/flashcard';
@@ -55,6 +56,8 @@ export default function StatsScreen() {
       </View>
 
       {stats.weeklyCompletions.length > 0 && <WeeklyChart data={stats.weeklyCompletions} />}
+
+      {stats.monthlyCompletions.length > 0 && <MonthlyHeatmap data={stats.monthlyCompletions} />}
 
       {/* Training stats */}
       {(sessions.length > 0 || decks.length > 0) && (

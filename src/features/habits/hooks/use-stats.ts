@@ -12,6 +12,7 @@ interface HabitStats {
   currentActiveStreaks: number;
   bestStreak: number;
   weeklyCompletions: DayCompletion[];
+  monthlyCompletions: DayCompletion[];
   completionRateThisWeek: number;
   isLoading: boolean;
 }
@@ -22,6 +23,7 @@ export function useStats(): HabitStats {
     currentActiveStreaks: 0,
     bestStreak: 0,
     weeklyCompletions: [],
+    monthlyCompletions: [],
     completionRateThisWeek: 0,
     isLoading: true,
   });
@@ -89,6 +91,35 @@ export function useStats(): HabitStats {
         weeklyCompletions.push({ date, count });
       });
 
+      // Get completions for last 30 days
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29);
+      thirtyDaysAgo.setHours(0, 0, 0, 0);
+
+      const { data: monthlyData } = await supabase
+        .from('completions')
+        .select('completed_at')
+        .in('habit_id', habitIds)
+        .gte('completed_at', thirtyDaysAgo.toISOString());
+
+      const monthMap = new Map<string, number>();
+      for (let i = 0; i < 30; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - (29 - i));
+        const key = d.toISOString().split('T')[0];
+        monthMap.set(key, 0);
+      }
+
+      monthlyData?.forEach((c) => {
+        const key = c.completed_at.split('T')[0];
+        monthMap.set(key, (monthMap.get(key) ?? 0) + 1);
+      });
+
+      const monthlyCompletions: DayCompletion[] = [];
+      monthMap.forEach((count, date) => {
+        monthlyCompletions.push({ date, count });
+      });
+
       // Total completions
       const { count: totalCompletions } = await supabase
         .from('completions')
@@ -105,6 +136,7 @@ export function useStats(): HabitStats {
         currentActiveStreaks: activeStreaks,
         bestStreak,
         weeklyCompletions,
+        monthlyCompletions,
         completionRateThisWeek: completionRate,
         isLoading: false,
       });
