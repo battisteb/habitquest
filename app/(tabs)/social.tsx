@@ -229,7 +229,10 @@ export default function SocialScreen() {
           }
 
           return (
-            <View style={styles.friendCard}>
+            <Pressable
+              style={styles.friendCard}
+              onPress={() => profile?.id && router.push(`/profile/${profile.id}`)}
+            >
               <View style={styles.friendCardLeft}>
                 <Text style={styles.friendName}>{profile?.username ?? '—'}</Text>
                 <View style={styles.friendMeta}>
@@ -254,7 +257,7 @@ export default function SocialScreen() {
                   style={styles.actionBtn}
                 />
               </View>
-            </View>
+            </Pressable>
           );
         }}
       />
