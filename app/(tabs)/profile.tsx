@@ -14,6 +14,7 @@ import { getAvatarStage, getNextAvatarStage } from '../../src/features/avatar/ut
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
 
 export default function ProfileScreen() {
   const { user } = useAuth();
@@ -23,8 +24,13 @@ export default function ProfileScreen() {
   const router = useRouter();
   const [idleFrame, setIdleFrame] = useState(0);
 
+  const resolvedDuels = use$(duelStore$.resolvedDuels);
+  const duelsWon = resolvedDuels.filter(d => d.winnerId === 'me').length;
+  const duelsLost = resolvedDuels.filter(d => d.winnerId !== 'me' && d.winnerId !== null).length;
+
   useEffect(() => {
     fetchShop();
+    fetchDuels();
   }, []);
 
   // Idle animation
@@ -115,6 +121,30 @@ export default function ProfileScreen() {
                 {profile?.gold ?? 0}
               </Text>
               <Text style={styles.miniStatLabel}>GOLD</Text>
+            </View>
+          </View>
+
+          {/* Duel stats row */}
+          <View style={styles.statsRow}>
+            <View style={styles.miniStat}>
+              <Text style={[styles.miniStatValue, { color: '#4CAF50' }]}>
+                {duelsWon}
+              </Text>
+              <Text style={styles.miniStatLabel}>⚔️ WINS</Text>
+            </View>
+            <View style={styles.miniStat}>
+              <Text style={[styles.miniStatValue, { color: '#F44336' }]}>
+                {duelsLost}
+              </Text>
+              <Text style={styles.miniStatLabel}>💀 LOSSES</Text>
+            </View>
+            <View style={styles.miniStat}>
+              <Text style={[styles.miniStatValue, { color: colors.streak }]}>
+                {duelsWon + duelsLost > 0
+                  ? Math.round((duelsWon / (duelsWon + duelsLost)) * 100)
+                  : 0}%
+              </Text>
+              <Text style={styles.miniStatLabel}>WIN RATE</Text>
             </View>
           </View>
 
