@@ -200,9 +200,9 @@ export async function resolveDuel(
 
   // Award gold to winner
   if (userId === winnerId) {
-    await supabase.rpc('increment_gold' as never, {
-      user_id: userId,
-      gold_amount: WINNER_GOLD,
+    await supabase.rpc('add_gold' as never, {
+      p_user_id: userId,
+      p_amount: WINNER_GOLD,
     } as never);
   }
 
