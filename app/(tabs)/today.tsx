@@ -32,6 +32,7 @@ import {
   deactivateMode,
 } from '../../src/features/habits/utils/contextual-mode';
 import { calculateXpEarned, calculateGoldEarned } from '../../src/lib/constants/game-config';
+import { profileStore$, fetchProfile } from '../../src/features/gamification/stores/profile-store';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -66,8 +67,9 @@ export default function TodayScreen() {
 
   useStreakRiskNotification();
   const burnoutSignal = useBurnoutSignal();
+  const profile = use$(profileStore$.profile);
 
-  useEffect(() => { fetchHabits(); }, []);
+  useEffect(() => { fetchHabits(); fetchProfile(); }, []);
 
   // Derive category list from habits
   const categories = useMemo(() => {
@@ -250,6 +252,12 @@ export default function TodayScreen() {
           <Text style={styles.dateLabel}>{todayLabel()}</Text>
         </View>
         <View style={styles.headerRight}>
+          {profile && (
+            <View style={styles.headerStats}>
+              <Text style={styles.headerStatGold}>💰{profile.gold}</Text>
+              <Text style={styles.headerStatLevel}>Lv.{profile.level}</Text>
+            </View>
+          )}
           {(freezesLeft > 0 || freezeActive) && (
             <Pressable
               style={[styles.freezeButton, freezeActive && styles.freezeButtonActive]}
@@ -341,6 +349,27 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  headerStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
+  },
+  headerStatGold: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.accent,
+  },
+  headerStatLevel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.xp,
+  },
   freezeButton: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,

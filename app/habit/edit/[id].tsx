@@ -48,7 +48,7 @@ export default function EditHabitScreen() {
     if (!name.trim()) return;
     setLoading(true);
     try {
-      await updateHabit(habit.id, { name: name.trim(), category, content });
+      await updateHabit(habit.id, { name: name.trim(), category, content, frequency });
       router.back();
     } catch (e: unknown) {
       Alert.alert('Error', e instanceof Error ? e.message : 'Failed to update habit');
@@ -106,6 +106,31 @@ export default function EditHabitScreen() {
         </View>
       </View>
 
+      <View style={styles.frequencySection}>
+        <Text style={styles.frequencyLabel}>FREQUENCY</Text>
+        <View style={styles.frequencyRow}>
+          {FREQUENCY_OPTIONS.map((opt) => (
+            <Pressable
+              key={opt.value}
+              style={[
+                styles.frequencyChip,
+                frequency === opt.value && styles.frequencyChipActive,
+              ]}
+              onPress={() => setFrequency(opt.value)}
+            >
+              <Text
+                style={[
+                  styles.frequencyChipText,
+                  frequency === opt.value && styles.frequencyChipTextActive,
+                ]}
+              >
+                {opt.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      </View>
+
       <ContentPicker value={content} onChange={setContent} />
 
       <PixelButton
@@ -151,4 +176,26 @@ const styles = StyleSheet.create({
   },
   categoryChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
   saveButton: { marginTop: spacing.md },
+  frequencySection: { gap: spacing.sm },
+  frequencyLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  frequencyRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  frequencyChip: {
+    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm + 2,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  frequencyChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  frequencyChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1, color: colors.textSecondary },
+  frequencyChipTextActive: { color: colors.primary },
 });
