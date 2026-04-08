@@ -51,7 +51,8 @@ export default function SocialScreen() {
   const pendingChallenges = use$(challengesStore$.pending);
   const completedChallenges = use$(challengesStore$.completed);
 
-  const { entries: leaderboard, isLoading: lbLoading, refresh: refreshLb } = useLeaderboard();
+  const [lbScope, setLbScope] = useState<'friends' | 'global'>('friends');
+  const { entries: leaderboard, isLoading: lbLoading, refresh: refreshLb } = useLeaderboard(lbScope);
 
   useEffect(() => {
     fetchFriends();
@@ -76,11 +77,42 @@ export default function SocialScreen() {
 
   // ── Leaderboard ────────────────────────────────────────────────────────────
   const renderLeaderboard = () => {
+    const emptyText = lbScope === 'friends'
+      ? 'Add friends to see the leaderboard!'
+      : 'No players yet — be the first!';
+
+    return (
+      <>
+        {/* Scope toggle */}
+        <View style={styles.scopeRow}>
+          <Pressable
+            style={[styles.scopeBtn, lbScope === 'friends' && styles.scopeBtnActive]}
+            onPress={() => setLbScope('friends')}
+          >
+            <Text style={[styles.scopeBtnText, lbScope === 'friends' && styles.scopeBtnTextActive]}>
+              👥 FRIENDS
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.scopeBtn, lbScope === 'global' && styles.scopeBtnActive]}
+            onPress={() => setLbScope('global')}
+          >
+            <Text style={[styles.scopeBtnText, lbScope === 'global' && styles.scopeBtnTextActive]}>
+              🌍 GLOBAL
+            </Text>
+          </Pressable>
+        </View>
+        {renderLeaderboardList(emptyText)}
+      </>
+    );
+  };
+
+  const renderLeaderboardList = (emptyText: string) => {
     if (lbLoading) return <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />;
     if (leaderboard.length === 0) return (
       <View style={styles.empty}>
         <Text style={styles.emptyEmoji}>🌍</Text>
-        <Text style={styles.emptyText}>Add friends to see the leaderboard!</Text>
+        <Text style={styles.emptyText}>{emptyText}</Text>
       </View>
     );
 
@@ -400,6 +432,36 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+  },
+
+  // Leaderboard scope toggle
+  scopeRow: {
+    flexDirection: 'row',
+    marginHorizontal: spacing.md,
+    marginTop: spacing.sm,
+    gap: spacing.sm,
+  },
+  scopeBtn: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  scopeBtnActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  scopeBtnText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  scopeBtnTextActive: {
+    color: colors.primary,
   },
 
   // Tabs
