@@ -1,7 +1,29 @@
 import { Tabs } from 'expo-router';
+import { use$ } from '@legendapp/state/react';
+import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
+import { isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
+import { friendsStore$ } from '../../src/features/social/stores/friends-store';
 import { colors } from '../../src/ui/theme/tokens';
 
+function usePendingHabitCount(): number {
+  const habits = use$(habitsStore$.habits);
+  const todayCompletions = use$(habitsStore$.todayCompletions);
+  const weekCompletions = use$(habitsStore$.weekCompletions);
+
+  const active = habits.filter((h) => !(h as any).is_paused && !h.is_archived);
+  const pending = active.filter((h) => !isHabitCompletedEnough(h.id));
+  return pending.length;
+}
+
+function usePendingFriendCount(): number {
+  const pending = use$(friendsStore$.pendingReceived);
+  return pending.length;
+}
+
 export default function TabsLayout() {
+  const pendingHabits = usePendingHabitCount();
+  const pendingFriends = usePendingFriendCount();
+
   return (
     <Tabs
       screenOptions={{
@@ -16,7 +38,7 @@ export default function TabsLayout() {
         tabBarLabelStyle: {
           fontWeight: 'bold',
           fontSize: 10,
-          letterSpacing: 1,
+          letterSpacing: 0.5,
         },
       }}
     >
@@ -25,6 +47,7 @@ export default function TabsLayout() {
         options={{
           title: 'ME',
           tabBarLabel: 'ME',
+          tabBarIcon: ({ color }) => null,
         }}
       />
       <Tabs.Screen
@@ -32,6 +55,12 @@ export default function TabsLayout() {
         options={{
           title: 'QUESTS',
           tabBarLabel: 'QUESTS',
+          tabBarBadge: pendingHabits > 0 ? pendingHabits : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: colors.streak,
+            fontSize: 9,
+            fontWeight: 'bold',
+          },
         }}
       />
       <Tabs.Screen
@@ -60,6 +89,12 @@ export default function TabsLayout() {
         options={{
           title: 'SOCIAL',
           tabBarLabel: 'SOCIAL',
+          tabBarBadge: pendingFriends > 0 ? pendingFriends : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: colors.primary,
+            fontSize: 9,
+            fontWeight: 'bold',
+          },
         }}
       />
     </Tabs>
