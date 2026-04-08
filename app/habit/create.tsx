@@ -10,10 +10,19 @@ import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
 
+const FREQUENCY_OPTIONS: { value: string; label: string }[] = [
+  { value: 'daily', label: 'DAILY' },
+  { value: '2x_week', label: '2×/WK' },
+  { value: '3x_week', label: '3×/WK' },
+  { value: '4x_week', label: '4×/WK' },
+  { value: '5x_week', label: '5×/WK' },
+];
+
 export default function CreateHabitScreen() {
   const [name, setName] = useState('');
   const [category, setCategory] = useState<HabitCategory>('general');
   const [content, setContent] = useState<HabitContent | null>(null);
+  const [frequency, setFrequency] = useState('daily');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -23,7 +32,7 @@ export default function CreateHabitScreen() {
 
     setLoading(true);
     try {
-      await createHabit(name.trim(), category, content);
+      await createHabit(name.trim(), category, content, frequency);
       router.back();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Failed to create habit';
@@ -80,6 +89,31 @@ export default function CreateHabitScreen() {
               </Pressable>
             );
           })}
+        </View>
+      </View>
+
+      <View style={styles.frequencySection}>
+        <Text style={styles.frequencyLabel}>FREQUENCY</Text>
+        <View style={styles.frequencyRow}>
+          {FREQUENCY_OPTIONS.map((opt) => (
+            <Pressable
+              key={opt.value}
+              style={[
+                styles.frequencyChip,
+                frequency === opt.value && styles.frequencyChipActive,
+              ]}
+              onPress={() => setFrequency(opt.value)}
+            >
+              <Text
+                style={[
+                  styles.frequencyChipText,
+                  frequency === opt.value && styles.frequencyChipTextActive,
+                ]}
+              >
+                {opt.label}
+              </Text>
+            </Pressable>
+          ))}
         </View>
       </View>
 
@@ -146,5 +180,40 @@ const styles = StyleSheet.create({
   },
   createButton: {
     marginTop: spacing.md,
+  },
+  frequencySection: {
+    gap: spacing.sm,
+  },
+  frequencyLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  frequencyRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  frequencyChip: {
+    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm + 2,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  frequencyChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  frequencyChipText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    color: colors.textSecondary,
+  },
+  frequencyChipTextActive: {
+    color: colors.primary,
   },
 });

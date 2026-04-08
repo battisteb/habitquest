@@ -3,6 +3,7 @@ import { Pressable, View, Text, StyleSheet, Animated } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
+import { getWeeklyTarget } from '../stores/habits-store';
 
 interface HabitCardProps {
   name: string;
@@ -12,6 +13,8 @@ interface HabitCardProps {
   onComplete: () => void;
   onPress: () => void;
   index?: number; // for staggered entry animation
+  frequency?: string;
+  weekCompletionCount?: number;
 }
 
 const CATEGORY_CONFIG: Record<string, { color: string; icon: string }> = {
@@ -56,11 +59,18 @@ export function HabitCard({
   onComplete,
   onPress,
   index = 0,
+  frequency = 'daily',
+  weekCompletionCount = 0,
 }: HabitCardProps) {
   const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
   const nextXp = calculateXpEarned(streakCount + 1);
   const flame = streakFlame(streakCount);
   const [burst, setBurst] = useState(false);
+
+  const isWeekly = frequency !== 'daily';
+  const weeklyTarget = isWeekly ? getWeeklyTarget(frequency) : 1;
+  const isWeeklyDone = isWeekly && weekCompletionCount >= weeklyTarget;
+  const effectiveDone = isWeekly ? isWeeklyDone : isCompletedToday;
 
   // Entry animation: staggered slide-up + fade
   const slideY = useRef(new Animated.Value(18)).current;
@@ -92,35 +102,41 @@ export function HabitCard({
     <Animated.View style={{ transform: [{ translateY: slideY }], opacity: entryOpacity }}>
     <Pressable
       onPress={onPress}
-      style={[styles.container, isCompletedToday && styles.containerDone]}
+      style={[styles.container, effectiveDone && styles.containerDone]}
     >
       <CompletionBurst visible={burst} />
       <View style={[styles.categoryBar, { backgroundColor: categoryColor }]} />
       <View style={styles.content}>
         <View style={styles.info}>
-          <Text style={[styles.name, isCompletedToday && styles.nameCompleted]} numberOfLines={1}>
+          <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
             {categoryIcon} {name}
           </Text>
           <View style={styles.meta}>
             <Text style={[styles.category, { color: categoryColor }]}>
               {category.toUpperCase()}
             </Text>
-            {streakCount > 0 && (
-              <Text style={styles.streak}>{flame} {streakCount}d</Text>
+            {isWeekly ? (
+              <Text style={styles.weekProgress}>
+                {weekCompletionCount}/{weeklyTarget} week
+              </Text>
+            ) : (
+              streakCount > 0 && (
+                <Text style={styles.streak}>{flame} {streakCount}d</Text>
+              )
             )}
-            {!isCompletedToday && (
+            {!effectiveDone && (
               <Text style={styles.xpPreview}>+{nextXp} XP</Text>
             )}
           </View>
         </View>
         <Pressable
           onPress={handleComplete}
-          style={[styles.checkButton, isCompletedToday && styles.checkButtonDone]}
-          disabled={isCompletedToday}
+          style={[styles.checkButton, effectiveDone && styles.checkButtonDone]}
+          disabled={effectiveDone}
           hitSlop={8}
         >
-          <Text style={[styles.checkText, isCompletedToday && styles.checkTextDone]}>
-            {isCompletedToday ? '✓' : ''}
+          <Text style={[styles.checkText, effectiveDone && styles.checkTextDone]}>
+            {effectiveDone ? '✓' : ''}
           </Text>
         </Pressable>
       </View>
@@ -177,6 +193,11 @@ const styles = StyleSheet.create({
   streak: {
     fontSize: fontSizes.xs,
     color: colors.streak,
+    fontWeight: 'bold',
+  },
+  weekProgress: {
+    fontSize: fontSizes.xs,
+    color: '#ff9500',
     fontWeight: 'bold',
   },
   xpPreview: {

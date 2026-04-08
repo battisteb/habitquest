@@ -16,7 +16,7 @@ import { XpToast } from '../../src/ui/animations/xp-toast';
 import { StreakMilestone } from '../../src/ui/animations/streak-milestone';
 import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
 import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
-import { habitsStore$, fetchHabits, completeHabit } from '../../src/features/habits/stores/habits-store';
+import { habitsStore$, fetchHabits, completeHabit, isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import {
@@ -51,6 +51,7 @@ export default function TodayScreen() {
   const habits = use$(habitsStore$.habits);
   const streaks = use$(habitsStore$.streaks);
   const todayCompletions = use$(habitsStore$.todayCompletions);
+  const weekCompletions = use$(habitsStore$.weekCompletions);
 
   const [activeMode, setActiveMode] = useState(() => getActiveMode());
   const [freezeActive, setFreezeActive] = useState(isFreezeActiveToday());
@@ -82,15 +83,15 @@ export default function TodayScreen() {
       : habits.filter((h) => h.category === activeCategory)
     ).filter((h) => isHabitActiveInMode(h.category, activeMode)).filter((h) => !(h as any).is_paused);
     return [...filtered].sort((a, b) => {
-      const aDone = !!todayCompletions[a.id];
-      const bDone = !!todayCompletions[b.id];
+      const aDone = isHabitCompletedEnough(a.id);
+      const bDone = isHabitCompletedEnough(b.id);
       if (aDone === bDone) return 0;
       return aDone ? 1 : -1;
     });
-  }, [habits, activeCategory, todayCompletions]);
+  }, [habits, activeCategory, todayCompletions, weekCompletions]);
 
   const activeHabits = habits.filter((h) => !(h as any).is_paused);
-  const completedCount = activeHabits.filter((h) => !!todayCompletions[h.id]).length;
+  const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
   const totalCount = activeHabits.length;
   const allDone = totalCount > 0 && completedCount === totalCount;
 
@@ -107,7 +108,7 @@ export default function TodayScreen() {
       setMilestoneSeen(newStreak);
     }
 
-    const nowCompletedCount = activeHabits.filter((h) => !!todayCompletions[h.id]).length;
+    const nowCompletedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
     const afterCompletionCount = nowCompletedCount + 1;
     if (afterCompletionCount === totalCount && totalCount > 0) {
       if (allDoneTimerRef.current) clearTimeout(allDoneTimerRef.current);
@@ -301,6 +302,8 @@ export default function TodayScreen() {
               onComplete={() => handleComplete(item.id)}
               onPress={() => router.push(`/habit/${item.id}`)}
               index={index}
+              frequency={item.frequency ?? 'daily'}
+              weekCompletionCount={weekCompletions[item.id] ?? 0}
             />
           )}
           ItemSeparatorComponent={() => <View style={{ height: spacing.sm }} />}

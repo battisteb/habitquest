@@ -11,6 +11,14 @@ import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../../
 import type { HabitContent } from '../../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, borderRadius } from '../../../src/ui/theme/tokens';
 
+const FREQUENCY_OPTIONS: { value: string; label: string }[] = [
+  { value: 'daily', label: 'DAILY' },
+  { value: '2x_week', label: '2×/WK' },
+  { value: '3x_week', label: '3×/WK' },
+  { value: '4x_week', label: '4×/WK' },
+  { value: '5x_week', label: '5×/WK' },
+];
+
 export default function EditHabitScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
@@ -25,6 +33,7 @@ export default function EditHabitScreen() {
   const [content, setContent] = useState<HabitContent | null>(
     (habit?.content as HabitContent | null) ?? null,
   );
+  const [frequency, setFrequency] = useState(habit?.frequency ?? 'daily');
   const [loading, setLoading] = useState(false);
 
   if (!habit) {

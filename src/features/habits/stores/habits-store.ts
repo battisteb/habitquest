@@ -20,6 +20,7 @@ interface HabitsState {
   habits: Habit[];
   streaks: Record<string, Streak>;
   todayCompletions: Record<string, boolean>;
+  weekCompletions: Record<string, number>;
   isLoading: boolean;
 }
 
@@ -27,6 +28,7 @@ export const habitsStore$ = observable<HabitsState>({
   habits: [],
   streaks: {},
   todayCompletions: {},
+  weekCompletions: {},
   isLoading: false,
 });
 
@@ -34,6 +36,32 @@ function todayStart(): string {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
   return d.toISOString();
+}
+
+function weekStart(): string {
+  const d = new Date();
+  const day = d.getDay(); // 0=Sun, 1=Mon...
+  const diff = day === 0 ? 6 : day - 1; // days since Monday
+  d.setDate(d.getDate() - diff);
+  d.setHours(0, 0, 0, 0);
+  return d.toISOString();
+}
+
+export function getWeeklyTarget(frequency: string): number {
+  const map: Record<string, number> = {
+    daily: 1, '2x_week': 2, '3x_week': 3, '4x_week': 4, '5x_week': 5,
+  };
+  return map[frequency] ?? 1;
+}
+
+export function isHabitCompletedEnough(habitId: string): boolean {
+  const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
+  const frequency = habit?.frequency ?? 'daily';
+  if (frequency === 'daily') {
+    return !!habitsStore$.todayCompletions.get()[habitId];
+  }
+  const count = habitsStore$.weekCompletions.get()[habitId] ?? 0;
+  return count >= getWeeklyTarget(frequency);
 }
 
 export async function fetchHabits() {
@@ -79,6 +107,19 @@ export async function fetchHabits() {
       });
       habitsStore$.todayCompletions.set(completionMap);
 
+      // Fetch this week's completions
+      const { data: weekCompletionsData } = await supabase
+        .from('completions')
+        .select('habit_id')
+        .in('habit_id', habitIds)
+        .gte('completed_at', weekStart());
+
+      const weekCompletionMap: Record<string, number> = {};
+      weekCompletionsData?.forEach((c) => {
+        weekCompletionMap[c.habit_id] = (weekCompletionMap[c.habit_id] ?? 0) + 1;
+      });
+      habitsStore$.weekCompletions.set(weekCompletionMap);
+
       // Check for broken streaks and apply punishment (non-blocking)
       checkAndApplyPunishments(userId, streakMap).catch(() => {});
     }
@@ -87,13 +128,13 @@ export async function fetchHabits() {
   }
 }
 
-export async function createHabit(name: string, category: string, content?: HabitContent | null) {
+export async function createHabit(name: string, category: string, content?: HabitContent | null, frequency?: string) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
   const { data: habit, error } = await supabase
     .from('habits')
-    .insert({ user_id: userId, name, category, content: content ?? null })
+    .insert({ user_id: userId, name, category, content: content ?? null, frequency: frequency ?? 'daily' })
     .select()
     .single();
 
@@ -105,7 +146,7 @@ export async function createHabit(name: string, category: string, content?: Habi
   await fetchHabits();
 }
 
-export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null }) {
+export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string }) {
   const { error } = await supabase.from('habits').update(updates).eq('id', id);
   if (error) throw error;
   await fetchHabits();
@@ -134,8 +175,17 @@ export async function resumeHabit(id: string) {
 }
 
 export async function completeHabit(habitId: string) {
-  // Already completed today?
-  if (habitsStore$.todayCompletions.get()[habitId]) return;
+  const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
+  const frequency = habit?.frequency ?? 'daily';
+
+  if (frequency === 'daily') {
+    // Already completed today?
+    if (habitsStore$.todayCompletions.get()[habitId]) return;
+  } else {
+    // Already hit weekly target?
+    const weekCount = habitsStore$.weekCompletions.get()[habitId] ?? 0;
+    if (weekCount >= getWeeklyTarget(frequency)) return;
+  }
 
   const streak = habitsStore$.streaks.get()[habitId];
   const currentCount = streak?.current_count ?? 0;
@@ -191,6 +241,8 @@ export async function completeHabit(habitId: string) {
 
   // Optimistic update
   habitsStore$.todayCompletions[habitId].set(true);
+  const prevWeekCount = habitsStore$.weekCompletions.get()[habitId] ?? 0;
+  habitsStore$.weekCompletions[habitId].set(prevWeekCount + 1);
   recordCompletionHour();
   if (streak) {
     habitsStore$.streaks[habitId].set({
@@ -205,7 +257,6 @@ export async function completeHabit(habitId: string) {
   checkAndUnlockAchievements().catch(() => {});
 
   // Update daily quest progress (non-blocking)
-  const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
   updateQuestProgress('complete_habits').catch(() => {});
   if (habit?.category) {
     updateQuestProgress('complete_category', habit.category).catch(() => {});

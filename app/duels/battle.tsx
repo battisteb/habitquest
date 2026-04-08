@@ -17,7 +17,7 @@ import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { getUnlockedAttacks, ATTACKS, Attack } from '../../src/features/duels/utils/attacks';
 import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
-import { duelStore$ } from '../../src/features/duels/stores/duel-store';
+import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-store';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -249,6 +249,7 @@ export default function BattleScreen() {
   const params = useLocalSearchParams<{
     opponentName?: string; opponentLevel?: string;
     myName?: string; myLevel?: string; openingAttackId?: string;
+    duelId?: string; opponentId?: string;
   }>();
 
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
@@ -383,6 +384,13 @@ export default function BattleScreen() {
     const bonus = 20 + levelDiff * 5;
     setXpBonus(bonus);
     setWinnerId(winner);
+
+    // Award gold/XP and persist result (non-blocking)
+    if (winner !== 'draw') {
+      const winnerId = winner === ME_ID ? ME_ID : OPP_ID;
+      const loserId = winner === ME_ID ? OPP_ID : ME_ID;
+      resolveDuel(params.duelId ?? null, winnerId, loserId).catch(() => {});
+    }
 
     const endMsg =
       winner === ME_ID ? '🏆 YOU WIN!'

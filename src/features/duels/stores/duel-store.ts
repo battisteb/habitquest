@@ -178,6 +178,45 @@ export async function createDuel(opponentId: string, attackId: string): Promise<
   await fetchDuels();
 }
 
+/** Award gold and XP at end of a duel. Call once the winner is known. */
+export async function resolveDuel(
+  duelId: string | null,
+  winnerId: string,
+  loserId: string,
+): Promise<{ winnerGold: number; loserXp: number }> {
+  const WINNER_GOLD = 30;
+  const LOSER_CATCHUP_XP = 25;
+
+  const userId = authStore$.user.get()?.id;
+  if (!userId) return { winnerGold: 0, loserXp: 0 };
+
+  // Persist duel result to DB if we have a real duelId
+  if (duelId) {
+    await (supabase as any)
+      .from('duels')
+      .update({ status: 'resolved', winner_id: winnerId })
+      .eq('id', duelId);
+  }
+
+  // Award gold to winner
+  if (userId === winnerId) {
+    await supabase.rpc('increment_gold' as never, {
+      user_id: userId,
+      gold_amount: WINNER_GOLD,
+    } as never);
+  }
+
+  // Award catch-up XP to loser
+  if (userId === loserId) {
+    await supabase.rpc('increment_xp' as never, {
+      user_id: userId,
+      xp_amount: LOSER_CATCHUP_XP,
+    } as never);
+  }
+
+  return { winnerGold: WINNER_GOLD, loserXp: LOSER_CATCHUP_XP };
+}
+
 // Re-export simulateDuel so screens can import from a single location if desired
 export { simulateDuel };
 export type { PlayerState };
