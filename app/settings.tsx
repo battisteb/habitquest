@@ -163,6 +163,11 @@ export default function SettingsScreen() {
           onPress={() => router.push('/profile/edit')}
           variant="secondary"
         />
+        <PixelButton
+          title="📦 Archived Habits"
+          onPress={() => router.push('/habit/archive')}
+          variant="secondary"
+        />
 
         <PixelButton
           title="Sign Out"

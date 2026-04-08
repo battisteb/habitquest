@@ -158,6 +158,20 @@ export async function archiveHabit(id: string) {
   await fetchHabits();
 }
 
+export async function unarchiveHabit(id: string) {
+  const { error } = await supabase.from('habits').update({ is_archived: false }).eq('id', id);
+  if (error) throw error;
+  await fetchHabits();
+}
+
+export async function deleteHabitPermanently(id: string) {
+  await supabase.from('completions').delete().eq('habit_id', id);
+  await supabase.from('streaks').delete().eq('habit_id', id);
+  const { error } = await supabase.from('habits').delete().eq('id', id);
+  if (error) throw error;
+  await fetchHabits();
+}
+
 export async function pauseHabit(id: string) {
   const { error } = await (supabase.from('habits') as any)
     .update({ is_paused: true, paused_at: new Date().toISOString() })
