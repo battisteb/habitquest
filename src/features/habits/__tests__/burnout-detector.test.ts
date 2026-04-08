@@ -18,7 +18,7 @@ function buildSelectChain(result: { data?: unknown; count?: number | null; error
   chain.in = jest.fn().mockReturnValue(chain);
   chain.gte = jest.fn().mockReturnValue(chain);
   chain.lt = jest.fn().mockReturnValue(chain);
-  chain.then = undefined; // not a promise directly
+  chain.then = undefined as any; // not a promise directly
 
   // Make the chain thenable for await
   const resolved = Promise.resolve(result);
