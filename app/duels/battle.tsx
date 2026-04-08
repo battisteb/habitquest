@@ -1,26 +1,28 @@
 /**
  * Battle screen — turn-based duel UI (Pokémon-style)
  *
- * Flow:
- *  1. PICK phase: player selects one of up to 4 attacks
- *  2. RESOLVING phase: opponent "thinks" 1.2s, then both attacks resolve
- *     - Each round event is shown one at a time with a 1.4s delay
- *  3. END phase: winner screen + rewards
+ * Flow per round:
+ *  1. PICK   — player selects 1 of up to 4 attacks
+ *  2. RESOLVE — opponent "thinks", then both attacks animate one by one
+ *  3. Loop back to PICK — or END if someone hits 0 HP
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, Pressable, Animated } from 'react-native';
+import {
+  View, Text, StyleSheet, Pressable,
+  Animated, ScrollView,
+} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { getUnlockedAttacks, ATTACKS, Attack } from '../../src/features/duels/utils/attacks';
-import { resolveAttack, PlayerState, RoundResult } from '../../src/features/duels/utils/combat-engine';
+import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
 import { duelStore$ } from '../../src/features/duels/stores/duel-store';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-type Phase = 'pick' | 'resolving' | 'showing' | 'end';
+type Phase = 'pick' | 'resolving' | 'end';
 
 interface LivePlayer {
   id: string;
@@ -31,46 +33,64 @@ interface LivePlayer {
   shield: boolean;
 }
 
-// ─── Sub-components ──────────────────────────────────────────────────────────
+interface LogEntry {
+  id: number;
+  text: string;
+  type: 'info' | 'hit' | 'miss' | 'special' | 'round' | 'end';
+}
 
-function HpBar({ hp, maxHp, color }: { hp: number; maxHp: number; color: string }) {
+const ME_ID = 'me';
+const OPP_ID = 'opp';
+let _logId = 0;
+const mkLog = (text: string, type: LogEntry['type'] = 'info'): LogEntry =>
+  ({ id: _logId++, text, type });
+
+function delay(ms: number) {
+  return new Promise<void>(r => setTimeout(r, ms));
+}
+
+// ─── HP Bar ───────────────────────────────────────────────────────────────────
+
+function HpBar({ hp, maxHp }: { hp: number; maxHp: number }) {
   const pct = Math.max(0, Math.min(1, hp / maxHp));
   const barColor = pct > 0.5 ? '#4CAF50' : pct > 0.25 ? '#FFC107' : '#F44336';
   return (
-    <View style={hpStyles.track}>
-      <View style={[hpStyles.fill, { width: `${pct * 100}%` as any, backgroundColor: barColor }]} />
+    <View style={hp_s.track}>
+      <View style={[hp_s.fill, { width: `${Math.round(pct * 100)}%` as any, backgroundColor: barColor }]} />
     </View>
   );
 }
-const hpStyles = StyleSheet.create({
-  track: { height: 8, backgroundColor: '#1a1a2e', borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: '#2a2a4a' },
-  fill: { height: '100%', borderRadius: 4 },
+const hp_s = StyleSheet.create({
+  track: { height: 10, backgroundColor: '#0a0a16', borderRadius: 5, overflow: 'hidden', borderWidth: 1, borderColor: '#2a2a4a' },
+  fill: { height: '100%', borderRadius: 5 },
 });
 
-function CharacterBox({
-  player,
-  isMe,
-  isAttacking,
-  isHit,
-  hasShield,
+// ─── Character sprite ─────────────────────────────────────────────────────────
+
+function Character({
+  player, flip, isAttacking, isHit,
 }: {
-  player: LivePlayer;
-  isMe: boolean;
-  isAttacking: boolean;
-  isHit: boolean;
-  hasShield: boolean;
+  player: LivePlayer; flip: boolean; isAttacking: boolean; isHit: boolean;
 }) {
   const stage = getAvatarStage(player.level);
   const shakeX = useRef(new Animated.Value(0)).current;
   const slideX = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (isHit) {
       Animated.sequence([
-        Animated.timing(shakeX, { toValue: isMe ? -12 : 12, duration: 60, useNativeDriver: true }),
-        Animated.timing(shakeX, { toValue: isMe ? 12 : -12, duration: 60, useNativeDriver: true }),
-        Animated.timing(shakeX, { toValue: isMe ? -8 : 8, duration: 60, useNativeDriver: true }),
-        Animated.timing(shakeX, { toValue: 0, duration: 60, useNativeDriver: true }),
+        Animated.timing(shakeX, { toValue: flip ? -14 : 14, duration: 55, useNativeDriver: true }),
+        Animated.timing(shakeX, { toValue: flip ? 14 : -14, duration: 55, useNativeDriver: true }),
+        Animated.timing(shakeX, { toValue: flip ? -8 : 8, duration: 55, useNativeDriver: true }),
+        Animated.timing(shakeX, { toValue: 0, duration: 55, useNativeDriver: true }),
+      ]).start();
+      // Flash
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 0.2, duration: 80, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 1, duration: 80, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.2, duration: 80, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 1, duration: 80, useNativeDriver: true }),
       ]).start();
     }
   }, [isHit]);
@@ -78,154 +98,200 @@ function CharacterBox({
   useEffect(() => {
     if (isAttacking) {
       Animated.sequence([
-        Animated.timing(slideX, { toValue: isMe ? 30 : -30, duration: 120, useNativeDriver: true }),
-        Animated.timing(slideX, { toValue: 0, duration: 200, useNativeDriver: true }),
+        Animated.timing(slideX, { toValue: flip ? -28 : 28, duration: 100, useNativeDriver: true }),
+        Animated.timing(slideX, { toValue: 0, duration: 180, useNativeDriver: true }),
       ]).start();
     }
   }, [isAttacking]);
 
+  const isDead = player.hp <= 0;
+
   return (
-    <View style={[charStyles.container, isMe ? charStyles.meContainer : charStyles.oppContainer]}>
-      {!isMe && (
-        <View style={charStyles.info}>
-          <Text style={charStyles.name}>{player.name}</Text>
-          <Text style={charStyles.level}>Lv.{player.level} · {stage.title}</Text>
-          <HpBar hp={player.hp} maxHp={player.maxHp} color={stage.aura} />
-          <Text style={charStyles.hpText}>{player.hp}/{player.maxHp} HP</Text>
+    <View style={[char_s.wrap, flip && char_s.flip]}>
+      <Animated.View style={[char_s.sprite, { transform: [{ translateX: shakeX }, { translateX: slideX }], opacity }]}>
+        <View style={[
+          char_s.aura,
+          {
+            borderColor: isDead ? '#333' : stage.aura,
+            backgroundColor: isDead ? '#111' : stage.aura + '25',
+          },
+        ]}>
+          <Text style={[char_s.emoji, isDead && char_s.dead]}>{isDead ? '💀' : stage.emoji}</Text>
         </View>
-      )}
-
-      <Animated.View style={[charStyles.sprite, { transform: [{ translateX: shakeX }, { translateX: slideX }] }]}>
-        <View style={[charStyles.aura, { borderColor: stage.aura + (hasShield ? 'ff' : '60'), backgroundColor: stage.aura + (hasShield ? '40' : '15') }]}>
-          <Text style={charStyles.emoji}>{stage.emoji}</Text>
-        </View>
-        {hasShield && <Text style={charStyles.shieldBadge}>🛡️</Text>}
+        {player.shield && !isDead && (
+          <Text style={char_s.shieldIcon}>🛡️</Text>
+        )}
       </Animated.View>
-
-      {isMe && (
-        <View style={charStyles.info}>
-          <Text style={charStyles.name}>{player.name}</Text>
-          <Text style={charStyles.level}>Lv.{player.level} · {stage.title}</Text>
-          <HpBar hp={player.hp} maxHp={player.maxHp} color={stage.aura} />
-          <Text style={charStyles.hpText}>{player.hp}/{player.maxHp} HP</Text>
-        </View>
-      )}
     </View>
   );
 }
-const charStyles = StyleSheet.create({
-  container: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flex: 1 },
-  meContainer: { flexDirection: 'row-reverse' },
-  oppContainer: { flexDirection: 'row' },
-  info: { flex: 1, gap: 4 },
-  name: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 1 },
-  level: { color: colors.textMuted, fontSize: fontSizes.xs },
-  hpText: { color: colors.textSecondary, fontSize: fontSizes.xs },
+const char_s = StyleSheet.create({
+  wrap: { alignItems: 'center' },
+  flip: { transform: [{ scaleX: -1 }] },
   sprite: { alignItems: 'center', justifyContent: 'center' },
   aura: {
-    width: 72, height: 72, borderRadius: 36,
+    width: 80, height: 80, borderRadius: 40,
     borderWidth: 3, alignItems: 'center', justifyContent: 'center',
   },
-  emoji: { fontSize: 38 },
-  shieldBadge: { position: 'absolute', top: -4, right: -4, fontSize: 16 },
+  emoji: { fontSize: 42 },
+  dead: { opacity: 0.4 },
+  shieldIcon: { position: 'absolute', bottom: -4, right: -4, fontSize: 18 },
+});
+
+// ─── Player info panel ────────────────────────────────────────────────────────
+
+function PlayerPanel({ player, align }: { player: LivePlayer; align: 'left' | 'right' }) {
+  const stage = getAvatarStage(player.level);
+  const isRight = align === 'right';
+  return (
+    <View style={[panel_s.wrap, isRight && panel_s.wrapRight]}>
+      <View style={[panel_s.nameRow, isRight && panel_s.nameRowRight]}>
+        <Text style={panel_s.name} numberOfLines={1}>{player.name}</Text>
+        <View style={[panel_s.badge, { backgroundColor: stage.aura + '33', borderColor: stage.aura }]}>
+          <Text style={[panel_s.badgeText, { color: stage.aura }]}>Lv.{player.level}</Text>
+        </View>
+      </View>
+      <HpBar hp={player.hp} maxHp={player.maxHp} />
+      <Text style={[panel_s.hpNum, isRight && panel_s.hpNumRight]}>
+        {player.hp}/{player.maxHp} HP
+      </Text>
+    </View>
+  );
+}
+const panel_s = StyleSheet.create({
+  wrap: { flex: 1, gap: 4 },
+  wrapRight: { alignItems: 'flex-end' },
+  nameRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  nameRowRight: { flexDirection: 'row-reverse' },
+  name: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold', flexShrink: 1 },
+  badge: { borderWidth: 1, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 1 },
+  badgeText: { fontSize: 9, fontWeight: 'bold' },
+  hpNum: { color: colors.textMuted, fontSize: 9 },
+  hpNumRight: { textAlign: 'right' },
 });
 
 // ─── Attack button ────────────────────────────────────────────────────────────
 
-function AttackBtn({ attack, selected, onPress, disabled }: { attack: Attack; selected: boolean; onPress: () => void; disabled: boolean }) {
+function AttackBtn({
+  attack, selected, onPress, disabled,
+}: { attack: Attack; selected: boolean; onPress: () => void; disabled: boolean }) {
   return (
     <Pressable
-      style={[atkStyles.btn, selected && atkStyles.selected, disabled && atkStyles.disabled]}
+      style={[atk_s.btn, selected && atk_s.selected, disabled && atk_s.disabled]}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={atkStyles.emoji}>{attack.emoji}</Text>
+      <Text style={atk_s.emoji}>{attack.emoji}</Text>
       <View style={{ flex: 1 }}>
-        <Text style={atkStyles.name}>{attack.name}</Text>
-        <Text style={atkStyles.stats}>
-          💥{attack.baseDamage} · 🎯{Math.round(attack.hitChance * 100)}%
-          {attack.special ? ` · ★${attack.special}` : ''}
+        <Text style={atk_s.name}>{attack.name}</Text>
+        <Text style={atk_s.stats}>
+          💥 {attack.baseDamage} · 🎯 {Math.round(attack.hitChance * 100)}%
+          {attack.special ? `  ★ ${attack.special}` : ''}
         </Text>
       </View>
+      {selected && <Text style={atk_s.check}>✓</Text>}
     </Pressable>
   );
 }
-const atkStyles = StyleSheet.create({
+const atk_s = StyleSheet.create({
   btn: {
     flexDirection: 'row', alignItems: 'center', gap: spacing.sm,
     backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.border,
     borderRadius: 6, borderBottomWidth: 4, padding: spacing.sm,
   },
-  selected: { borderColor: colors.accent, backgroundColor: colors.accent + '22', borderBottomColor: colors.accent },
-  disabled: { opacity: 0.4 },
-  emoji: { fontSize: 24 },
+  selected: { borderColor: colors.accent, backgroundColor: colors.accent + '18', borderBottomColor: '#c9a400' },
+  disabled: { opacity: 0.35 },
+  emoji: { fontSize: 22 },
   name: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold' },
-  stats: { color: colors.textMuted, fontSize: fontSizes.xs, marginTop: 1 },
+  stats: { color: colors.textMuted, fontSize: 10, marginTop: 2 },
+  check: { color: colors.accent, fontSize: fontSizes.md, fontWeight: 'bold' },
 });
 
-// ─── Battle log line ──────────────────────────────────────────────────────────
+// ─── Log line ─────────────────────────────────────────────────────────────────
 
-function LogLine({ text, isNew }: { text: string; isNew: boolean }) {
-  const opacity = useRef(new Animated.Value(0)).current;
+const LOG_COLORS: Record<LogEntry['type'], string> = {
+  info: colors.textSecondary,
+  hit: colors.text,
+  miss: colors.textMuted,
+  special: '#FFD700',
+  round: colors.primary,
+  end: colors.accent,
+};
+
+function LogLine({ entry, isNew }: { entry: LogEntry; isNew: boolean }) {
+  const opacity = useRef(new Animated.Value(isNew ? 0 : 1)).current;
+  const translateY = useRef(new Animated.Value(isNew ? 8 : 0)).current;
   useEffect(() => {
     if (isNew) {
-      Animated.timing(opacity, { toValue: 1, duration: 300, useNativeDriver: true }).start();
-    } else {
-      opacity.setValue(1);
+      Animated.parallel([
+        Animated.timing(opacity, { toValue: 1, duration: 250, useNativeDriver: true }),
+        Animated.timing(translateY, { toValue: 0, duration: 250, useNativeDriver: true }),
+      ]).start();
     }
-  }, [isNew]);
+  }, []);
   return (
-    <Animated.Text style={[logStyles.line, { opacity }]}>{text}</Animated.Text>
+    <Animated.Text
+      style={[log_s.line, { color: LOG_COLORS[entry.type], opacity, transform: [{ translateY }] }]}
+    >
+      {entry.text}
+    </Animated.Text>
   );
 }
-const logStyles = StyleSheet.create({
-  line: { color: colors.text, fontSize: fontSizes.sm, lineHeight: 20 },
+const log_s = StyleSheet.create({
+  line: { fontSize: fontSizes.sm, lineHeight: 22 },
 });
 
-// ─── Main Screen ──────────────────────────────────────────────────────────────
-
-const ME_ID = 'me';
-const OPP_ID = 'opp';
+// ─── Main screen ──────────────────────────────────────────────────────────────
 
 export default function BattleScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const params = useLocalSearchParams<{ opponentName?: string; opponentLevel?: string; myName?: string; myLevel?: string; openingAttackId?: string }>();
+  const params = useLocalSearchParams<{
+    opponentName?: string; opponentLevel?: string;
+    myName?: string; myLevel?: string; openingAttackId?: string;
+  }>();
 
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
-  const allAttacks = getUnlockedAttacks(unlockedCategories).slice(0, 4); // max 4
-  // ensure at least 1 attack
-  const myAttacks = allAttacks.length > 0 ? allAttacks : [ATTACKS.find(a => a.id === 'balanced_attack')!];
+  const allAttacks = getUnlockedAttacks(unlockedCategories).slice(0, 4);
+  const myAttacks = allAttacks.length > 0
+    ? allAttacks
+    : [ATTACKS.find(a => a.id === 'balanced_attack')!];
 
   const myLevel = parseInt(params.myLevel ?? '8', 10);
   const oppLevel = parseInt(params.opponentLevel ?? '6', 10);
 
+  const [round, setRound] = useState(1);
   const [me, setMe] = useState<LivePlayer>({
-    id: ME_ID, name: params.myName ?? 'You', level: myLevel, hp: 100, maxHp: 100, shield: false,
+    id: ME_ID, name: params.myName ?? 'You',
+    level: myLevel, hp: 100, maxHp: 100, shield: false,
   });
   const [opp, setOpp] = useState<LivePlayer>({
-    id: OPP_ID, name: params.opponentName ?? 'Rival', level: oppLevel, hp: 100, maxHp: 100, shield: false,
+    id: OPP_ID, name: params.opponentName ?? 'Rival',
+    level: oppLevel, hp: 100, maxHp: 100, shield: false,
   });
 
   const [phase, setPhase] = useState<Phase>('pick');
-  const [selectedAttackId, setSelectedAttackId] = useState<string | null>(params.openingAttackId ?? null);
-  const [logLines, setLogLines] = useState<string[]>(['⚔️ Battle start! Choose your attack.']);
-  const [newLineIdx, setNewLineIdx] = useState(0);
+  const [selectedAttackId, setSelectedAttackId] = useState<string | null>(
+    params.openingAttackId ?? null,
+  );
+  const [log, setLog] = useState<LogEntry[]>([mkLog('⚔️ Battle start! Choose your attack.', 'round')]);
   const [attackingId, setAttackingId] = useState<string | null>(null);
   const [hitId, setHitId] = useState<string | null>(null);
-  const [winnerId, setWinnerId] = useState<string | null>(null);
+  const [winnerId, setWinnerId] = useState<string | null | 'draw'>('draw'); // initial dummy
   const [xpBonus, setXpBonus] = useState(0);
 
-  const addLog = useCallback((line: string, idx: number) => {
-    setLogLines(prev => [...prev, line]);
-    setNewLineIdx(idx);
-  }, []);
+  const logScrollRef = useRef<ScrollView>(null);
 
-  // Refs to hold live state inside the async loop without stale closures
+  // Use refs to avoid stale closures inside async callback
   const meRef = useRef(me);
   const oppRef = useRef(opp);
   useEffect(() => { meRef.current = me; }, [me]);
   useEffect(() => { oppRef.current = opp; }, [opp]);
+
+  const pushLog = useCallback((text: string, type: LogEntry['type'] = 'info') => {
+    setLog(prev => [...prev, mkLog(text, type)]);
+    setTimeout(() => logScrollRef.current?.scrollToEnd({ animated: true }), 80);
+  }, []);
 
   const handleFight = useCallback(async () => {
     if (!selectedAttackId || phase !== 'pick') return;
@@ -234,97 +300,83 @@ export default function BattleScreen() {
     const oppAtk = ATTACKS[Math.floor(Math.random() * ATTACKS.length)];
 
     setPhase('resolving');
-    addLog(`🤔 ${oppRef.current.name} is choosing...`, logLines.length);
+    pushLog(`🤔 ${oppRef.current.name} is choosing...`, 'info');
+    await delay(900);
+    pushLog(`${oppRef.current.name} chose ${oppAtk.emoji} ${oppAtk.name}!`, 'info');
+    await delay(500);
 
-    await delay(1000);
-    addLog(`${oppRef.current.name} chose ${oppAtk.emoji} ${oppAtk.name}!`, logLines.length + 1);
+    // Work on mutable local copies
+    let curMe = { ...meRef.current };
+    let curOpp = { ...oppRef.current };
+    const goFirst = myLevel >= oppLevel ? ME_ID : OPP_ID;
 
-    await delay(600);
-    setPhase('showing');
+    const doAttack = async (attackerId: string, atk: Attack, defenderId: string) => {
+      const attacker = attackerId === ME_ID ? curMe : curOpp;
+      const defender = defenderId === ME_ID ? curMe : curOpp;
+      if (defender.hp <= 0) return;
 
-    // Work on local copies — we flush to React state after each hit
-    let currentMe = { ...meRef.current };
-    let currentOpp = { ...oppRef.current };
-    let logIdx = logLines.length + 2;
-
-    // Determine turn order: higher level goes first
-    const goesFirst = myLevel >= oppLevel ? ME_ID : OPP_ID;
-
-    // Helper: resolve & animate one attack between attacker → defender
-    const doAttack = async (
-      attackerId: string,
-      attack: Attack,
-      defenderId: string,
-    ) => {
-      const attacker = attackerId === ME_ID ? currentMe : currentOpp;
-      const defender = defenderId === ME_ID ? currentMe : currentOpp;
-      if (defender.hp <= 0) return; // already KO'd
-
-      const result = resolveAttack(attack, attacker.level - defender.level);
+      const result = resolveAttack(atk, attacker.level - defender.level);
 
       setAttackingId(attackerId);
-      await delay(350);
+      await delay(320);
       setAttackingId(null);
 
       if (result.hit) {
         if (defender.shield) {
           result.damage = 0;
           result.effect += ' (blocked by shield!)';
-          if (defenderId === ME_ID) currentMe = { ...currentMe, shield: false };
-          else currentOpp = { ...currentOpp, shield: false };
+          if (defenderId === ME_ID) curMe = { ...curMe, shield: false };
+          else curOpp = { ...curOpp, shield: false };
         } else {
-          if (defenderId === ME_ID) {
-            currentMe = { ...currentMe, hp: Math.max(0, currentMe.hp - result.damage) };
-          } else {
-            currentOpp = { ...currentOpp, hp: Math.max(0, currentOpp.hp - result.damage) };
-          }
+          if (defenderId === ME_ID) curMe = { ...curMe, hp: Math.max(0, curMe.hp - result.damage) };
+          else curOpp = { ...curOpp, hp: Math.max(0, curOpp.hp - result.damage) };
         }
         setHitId(defenderId);
-        await delay(120);
+        await delay(110);
         setHitId(null);
+        pushLog(result.effect, result.damage === 0 ? 'miss' : result.shieldApplied || result.healAmount ? 'special' : 'hit');
+      } else {
+        pushLog(result.effect, 'miss');
       }
 
       if (result.shieldApplied) {
-        if (attackerId === ME_ID) currentMe = { ...currentMe, shield: true };
-        else currentOpp = { ...currentOpp, shield: true };
+        if (attackerId === ME_ID) curMe = { ...curMe, shield: true };
+        else curOpp = { ...curOpp, shield: true };
+        pushLog(`🛡️ ${attacker.name} raised a shield!`, 'special');
       }
       if (result.healAmount) {
-        if (attackerId === ME_ID)
-          currentMe = { ...currentMe, hp: Math.min(currentMe.maxHp, currentMe.hp + result.healAmount) };
-        else
-          currentOpp = { ...currentOpp, hp: Math.min(currentOpp.maxHp, currentOpp.hp + result.healAmount) };
+        if (attackerId === ME_ID) curMe = { ...curMe, hp: Math.min(curMe.maxHp, curMe.hp + result.healAmount) };
+        else curOpp = { ...curOpp, hp: Math.min(curOpp.maxHp, curOpp.hp + result.healAmount) };
+        pushLog(`💚 ${attacker.name} recovered ${result.healAmount} HP!`, 'special');
       }
 
-      setMe({ ...currentMe });
-      setOpp({ ...currentOpp });
-      addLog(result.effect, logIdx++);
-      await delay(900);
+      setMe({ ...curMe });
+      setOpp({ ...curOpp });
+      await delay(800);
     };
 
-    // ── This round: both players attack once (in order) ──
-    if (goesFirst === ME_ID) {
+    if (goFirst === ME_ID) {
       await doAttack(ME_ID, myAtk, OPP_ID);
-      if (currentOpp.hp > 0) await doAttack(OPP_ID, oppAtk, ME_ID);
+      if (curOpp.hp > 0) await doAttack(OPP_ID, oppAtk, ME_ID);
     } else {
       await doAttack(OPP_ID, oppAtk, ME_ID);
-      if (currentMe.hp > 0) await doAttack(ME_ID, myAtk, OPP_ID);
+      if (curMe.hp > 0) await doAttack(ME_ID, myAtk, OPP_ID);
     }
 
-    // ── Check if combat is over ──
-    const someoneKO = currentMe.hp <= 0 || currentOpp.hp <= 0;
+    const ko = curMe.hp <= 0 || curOpp.hp <= 0;
 
-    if (!someoneKO) {
-      // Back to pick phase for the next round
-      addLog(`Round over — choose your next attack!`, logIdx++);
+    if (!ko) {
+      setRound(r => r + 1);
+      pushLog(`── Round over. Choose your next attack! ──`, 'round');
       setSelectedAttackId(null);
       setPhase('pick');
-      return; // exit here — no winner yet
+      return;
     }
 
-    // ── Someone reached 0 HP → end ──
-    let winner: string | null = null;
-    if (currentMe.hp <= 0 && currentOpp.hp <= 0) winner = null; // simultaneous KO = draw
-    else if (currentOpp.hp <= 0) winner = ME_ID;
+    // ── End ──
+    let winner: string | null | 'draw' = null;
+    if (curMe.hp <= 0 && curOpp.hp <= 0) winner = 'draw';
+    else if (curOpp.hp <= 0) winner = ME_ID;
     else winner = OPP_ID;
 
     const levelDiff = Math.abs(myLevel - oppLevel);
@@ -332,93 +384,121 @@ export default function BattleScreen() {
     setXpBonus(bonus);
     setWinnerId(winner);
 
-    const endMsg = winner === ME_ID ? '🏆 YOU WIN!' : winner === null ? '🤝 DRAW!' : '💀 YOU WERE DEFEATED!';
-    addLog(endMsg, logIdx++);
-
-    await delay(800);
+    const endMsg =
+      winner === ME_ID ? '🏆 YOU WIN!'
+      : winner === 'draw' ? '🤝 DRAW!'
+      : '💀 DEFEATED!';
+    pushLog(endMsg, 'end');
+    await delay(600);
     setPhase('end');
-  }, [selectedAttackId, phase, me, opp, myAttacks, logLines.length]);
+  }, [selectedAttackId, phase, myAttacks, myLevel, oppLevel, pushLog]);
 
   const isPickPhase = phase === 'pick';
   const isEnd = phase === 'end';
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top }]}>
+    <View style={[s.screen, { paddingTop: insets.top }]}>
+
+      {/* ── Top bar: round counter ── */}
+      <View style={s.topBar}>
+        <Text style={s.roundLabel}>ROUND {round}</Text>
+        <Text style={s.roundSub}>
+          {phase === 'pick' ? 'Your turn' : phase === 'resolving' ? 'Resolving...' : isEnd ? 'Battle over' : ''}
+        </Text>
+      </View>
 
       {/* ── Arena ── */}
-      <View style={styles.arena}>
-        <CharacterBox
-          player={opp}
-          isMe={false}
-          isAttacking={attackingId === OPP_ID}
-          isHit={hitId === OPP_ID}
-          hasShield={opp.shield}
-        />
-        <View style={styles.vsLabel}>
-          <Text style={styles.vsText}>VS</Text>
+      <View style={s.arena}>
+        {/* Opponent left */}
+        <View style={s.arenaSlot}>
+          <PlayerPanel player={opp} align="left" />
+          <Character
+            player={opp}
+            flip={false}
+            isAttacking={attackingId === OPP_ID}
+            isHit={hitId === OPP_ID}
+          />
         </View>
-        <CharacterBox
-          player={me}
-          isMe={true}
-          isAttacking={attackingId === ME_ID}
-          isHit={hitId === ME_ID}
-          hasShield={me.shield}
-        />
+
+        <View style={s.vsDivider}>
+          <Text style={s.vsText}>VS</Text>
+        </View>
+
+        {/* Me right */}
+        <View style={[s.arenaSlot, s.arenaSlotRight]}>
+          <Character
+            player={me}
+            flip={true}
+            isAttacking={attackingId === ME_ID}
+            isHit={hitId === ME_ID}
+          />
+          <PlayerPanel player={me} align="right" />
+        </View>
       </View>
 
       {/* ── Battle log ── */}
-      <View style={styles.log}>
-        {logLines.slice(-3).map((line, i, arr) => (
-          <LogLine key={i} text={line} isNew={i === arr.length - 1} />
+      <ScrollView
+        ref={logScrollRef}
+        style={s.logScroll}
+        contentContainerStyle={s.logContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {log.map((entry, i) => (
+          <LogLine key={entry.id} entry={entry} isNew={i === log.length - 1} />
         ))}
-      </View>
+      </ScrollView>
 
-      {/* ── Attack panel / End panel ── */}
+      {/* ── Bottom panel ── */}
       {!isEnd ? (
-        <View style={styles.attackPanel}>
-          <Text style={styles.panelTitle}>
-            {isPickPhase ? 'CHOOSE ATTACK' : '...'}
+        <View style={s.bottomPanel}>
+          <Text style={s.panelHeader}>
+            {isPickPhase ? 'CHOOSE YOUR ATTACK' : '⏳  OPPONENT IS THINKING...'}
           </Text>
-          <View style={styles.attackGrid}>
-            {myAttacks.map((atk) => (
+          <View style={s.attackGrid}>
+            {myAttacks.map(atk => (
               <AttackBtn
                 key={atk.id}
                 attack={atk}
                 selected={selectedAttackId === atk.id}
-                onPress={() => setSelectedAttackId(atk.id)}
+                onPress={() => isPickPhase && setSelectedAttackId(atk.id)}
                 disabled={!isPickPhase}
               />
             ))}
           </View>
           <Pressable
-            style={[styles.fightBtn, (!selectedAttackId || !isPickPhase) && styles.fightBtnDisabled]}
+            style={[s.fightBtn, (!selectedAttackId || !isPickPhase) && s.fightBtnOff]}
             onPress={handleFight}
             disabled={!selectedAttackId || !isPickPhase}
           >
-            <Text style={styles.fightBtnText}>
+            <Text style={s.fightBtnText}>
               {isPickPhase ? '⚔️  FIGHT!' : '⏳  Resolving...'}
             </Text>
           </Pressable>
         </View>
       ) : (
-        <View style={styles.endPanel}>
-          <Text style={styles.endTitle}>
-            {winnerId === ME_ID ? '🏆 VICTORY!' : winnerId === null ? '🤝 DRAW' : '💀 DEFEAT'}
+        <View style={s.endPanel}>
+          <Text style={s.endTitle}>
+            {winnerId === ME_ID ? '🏆 VICTORY!'
+              : winnerId === 'draw' ? '🤝 DRAW'
+              : '💀 DEFEAT'}
           </Text>
-          {winnerId === ME_ID ? (
-            <>
-              <Text style={styles.endReward}>🎨 Cosmetic unlocked in Shop</Text>
-              <Text style={styles.endReward}>🏅 Victory achievement earned</Text>
-            </>
-          ) : (
-            <>
-              <Text style={styles.endReward}>📈 +{xpBonus} XP catch-up bonus</Text>
-              <Text style={styles.endReward}>💪 Defeat makes you stronger!</Text>
-            </>
-          )}
-          {winnerId === null && <Text style={styles.endReward}>+{Math.round(xpBonus * 0.5)} XP for both fighters</Text>}
-          <Pressable style={styles.exitBtn} onPress={() => router.replace('/duels')}>
-            <Text style={styles.exitBtnText}>← Back to Arena</Text>
+          <View style={s.rewardBox}>
+            {winnerId === ME_ID ? (
+              <>
+                <Text style={s.rewardLine}>🎨 Cosmetic unlocked in Shop</Text>
+                <Text style={s.rewardLine}>🏅 Victory achievement earned</Text>
+              </>
+            ) : winnerId === 'draw' ? (
+              <Text style={s.rewardLine}>⚡ +{Math.round(xpBonus * 0.5)} XP — well fought!</Text>
+            ) : (
+              <>
+                <Text style={s.rewardLine}>📈 +{xpBonus} XP catch-up bonus</Text>
+                <Text style={s.rewardLine}>💪 Defeat makes you stronger!</Text>
+              </>
+            )}
+          </View>
+          <Pressable style={s.exitBtn} onPress={() => router.replace('/duels')}>
+            <Text style={s.exitBtnText}>← Back to Arena</Text>
           </Pressable>
         </View>
       )}
@@ -426,127 +506,80 @@ export default function BattleScreen() {
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function delay(ms: number) {
-  return new Promise<void>(resolve => setTimeout(resolve, ms));
-}
-
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: '#0a0a16',
+const s = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: '#08081A' },
+
+  // Top bar
+  topBar: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: spacing.md, paddingVertical: 6,
+    backgroundColor: '#0f0f22', borderBottomWidth: 1, borderBottomColor: colors.border,
   },
+  roundLabel: { color: colors.accent, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 2 },
+  roundSub: { color: colors.textMuted, fontSize: fontSizes.xs },
 
   // Arena
   arena: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.lg,
-    backgroundColor: '#0f0f20',
-    borderBottomWidth: 2,
-    borderBottomColor: colors.border,
+    flexDirection: 'row', alignItems: 'center',
+    paddingHorizontal: spacing.md, paddingVertical: spacing.md,
+    backgroundColor: '#0c0c1e',
+    borderBottomWidth: 2, borderBottomColor: colors.border,
     gap: spacing.sm,
   },
-  vsLabel: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 20,
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
+  arenaSlot: { flex: 1, gap: spacing.sm },
+  arenaSlotRight: { alignItems: 'flex-end' },
+  vsDivider: {
+    width: 32, height: 32, borderRadius: 16,
+    backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.border,
+    alignItems: 'center', justifyContent: 'center',
   },
-  vsText: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
+  vsText: { color: colors.textMuted, fontSize: 9, fontWeight: 'bold', letterSpacing: 1 },
 
   // Log
-  log: {
-    minHeight: 80,
-    backgroundColor: '#0d0d1c',
-    borderBottomWidth: 2,
-    borderBottomColor: colors.border,
-    padding: spacing.md,
-    gap: 4,
-    justifyContent: 'flex-end',
-  },
+  logScroll: { flex: 1, backgroundColor: '#09091a' },
+  logContent: { padding: spacing.md, gap: 2 },
 
-  // Attack panel
-  attackPanel: {
-    flex: 1,
-    padding: spacing.md,
-    gap: spacing.sm,
+  // Bottom panel
+  bottomPanel: {
+    backgroundColor: '#0f0f22',
+    borderTopWidth: 2, borderTopColor: colors.border,
+    padding: spacing.md, gap: spacing.sm,
   },
-  panelTitle: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 2,
+  panelHeader: {
+    color: colors.textMuted, fontSize: fontSizes.xs,
+    fontWeight: 'bold', letterSpacing: 2,
   },
-  attackGrid: {
-    flex: 1,
-    gap: spacing.sm,
-  },
+  attackGrid: { gap: spacing.xs },
   fightBtn: {
     backgroundColor: colors.primary,
-    borderRadius: 6,
-    borderBottomWidth: 4,
-    borderColor: colors.primaryDark,
-    padding: spacing.md,
-    alignItems: 'center',
+    borderRadius: 6, borderBottomWidth: 4, borderColor: colors.primaryDark,
+    padding: spacing.md, alignItems: 'center', marginTop: 4,
   },
-  fightBtnDisabled: {
-    opacity: 0.35,
-  },
-  fightBtnText: {
-    color: '#fff',
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-  },
+  fightBtnOff: { opacity: 0.3 },
+  fightBtnText: { color: '#fff', fontSize: fontSizes.md, fontWeight: 'bold', letterSpacing: 2 },
 
   // End panel
   endPanel: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.xl,
-    gap: spacing.md,
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    padding: spacing.xl, gap: spacing.lg,
+    backgroundColor: '#09091a',
   },
   endTitle: {
-    color: colors.accent,
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
-    letterSpacing: 3,
-    textAlign: 'center',
+    color: colors.accent, fontSize: fontSizes.xxl,
+    fontWeight: 'bold', letterSpacing: 3,
   },
-  endReward: {
-    color: colors.text,
-    fontSize: fontSizes.md,
-    textAlign: 'center',
-    lineHeight: 24,
+  rewardBox: {
+    backgroundColor: colors.surface, borderWidth: 2,
+    borderColor: colors.border, borderRadius: 8,
+    padding: spacing.md, gap: spacing.sm, width: '100%', alignItems: 'center',
   },
+  rewardLine: { color: colors.text, fontSize: fontSizes.md, textAlign: 'center' },
   exitBtn: {
-    marginTop: spacing.md,
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 6,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
+    backgroundColor: colors.surface, borderWidth: 2,
+    borderColor: colors.primary, borderRadius: 6,
+    paddingHorizontal: spacing.xl, paddingVertical: spacing.sm,
   },
-  exitBtnText: {
-    color: colors.primary,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
+  exitBtnText: { color: colors.primary, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 1 },
 });
