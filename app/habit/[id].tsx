@@ -237,6 +237,11 @@ export default function HabitDetailScreen() {
           style={{ flex: 1 }}
         />
       </View>
+      <PixelButton
+        title="History"
+        onPress={() => router.push({ pathname: '/habit/history', params: { habitId: habit.id, habitName: habit.name } })}
+        variant="ghost"
+      />
     </ScrollView>
   );
 }
