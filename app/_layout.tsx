@@ -7,7 +7,7 @@ import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth } from '../src/features/auth/stores/auth-store';
 import { hasCompletedOnboarding } from './onboarding';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
-import { achievementsStore$, clearNewlyUnlocked } from '../src/features/gamification/stores/achievements-store';
+import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';
 import { LevelUpOverlay } from '../src/ui/animations/level-up-overlay';
 import { AchievementToast } from '../src/ui/animations/achievement-toast';
 import {

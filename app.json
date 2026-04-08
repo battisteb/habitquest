@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "Level up your habits with pixel art gamification. Build streaks, earn XP, and become a legend.",
     "keywords": ["habits", "gamification", "productivity", "pixel art", "streaks", "RPG"],
-    "platforms": ["ios", "android"],
+    "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
