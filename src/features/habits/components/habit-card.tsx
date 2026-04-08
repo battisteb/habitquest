@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Pressable, View, Text, StyleSheet } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
+import { Pressable, View, Text, StyleSheet, Animated } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
@@ -11,6 +11,7 @@ interface HabitCardProps {
   isCompletedToday: boolean;
   onComplete: () => void;
   onPress: () => void;
+  index?: number; // for staggered entry animation
 }
 
 const CATEGORY_CONFIG: Record<string, { color: string; icon: string }> = {
@@ -54,11 +55,32 @@ export function HabitCard({
   isCompletedToday,
   onComplete,
   onPress,
+  index = 0,
 }: HabitCardProps) {
   const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
   const nextXp = calculateXpEarned(streakCount + 1);
   const flame = streakFlame(streakCount);
   const [burst, setBurst] = useState(false);
+
+  // Entry animation: staggered slide-up + fade
+  const slideY = useRef(new Animated.Value(18)).current;
+  const entryOpacity = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(slideY, {
+        toValue: 0,
+        duration: 280,
+        delay: index * 45,
+        useNativeDriver: true,
+      }),
+      Animated.timing(entryOpacity, {
+        toValue: 1,
+        duration: 280,
+        delay: index * 45,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const handleComplete = () => {
     setBurst(true);
@@ -67,6 +89,7 @@ export function HabitCard({
   };
 
   return (
+    <Animated.View style={{ transform: [{ translateY: slideY }], opacity: entryOpacity }}>
     <Pressable
       onPress={onPress}
       style={[styles.container, isCompletedToday && styles.containerDone]}
@@ -102,6 +125,7 @@ export function HabitCard({
         </Pressable>
       </View>
     </Pressable>
+    </Animated.View>
   );
 }
 

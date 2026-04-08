@@ -274,8 +274,15 @@ export default function TodayScreen() {
           />
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>⚔️</Text>
-            <Text style={styles.emptyTitle}>No quests yet</Text>
-            <Text style={styles.emptySubtitle}>Tap + to create your first habit</Text>
+            <Text style={styles.emptyTitle}>No habits yet</Text>
+            <Text style={styles.emptySubtitle}>
+              Every legend starts somewhere.{'\n'}Tap <Text style={{ color: colors.primary, fontWeight: 'bold' }}>+</Text> to create your first quest.
+            </Text>
+            <View style={styles.emptyTips}>
+              <Text style={styles.emptyTip}>💡 Start with 1–3 habits max</Text>
+              <Text style={styles.emptyTip}>🔥 Streaks build after 3 days</Text>
+              <Text style={styles.emptyTip}>⚡ Every completion earns XP</Text>
+            </View>
           </View>
         </View>
       ) : (
@@ -285,7 +292,7 @@ export default function TodayScreen() {
           ListHeaderComponent={ListHeader}
           contentContainerStyle={styles.listContent}
           style={styles.list}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <HabitCard
               name={item.name}
               category={item.category}
@@ -293,6 +300,7 @@ export default function TodayScreen() {
               isCompletedToday={!!todayCompletions[item.id]}
               onComplete={() => handleComplete(item.id)}
               onPress={() => router.push(`/habit/${item.id}`)}
+              index={index}
             />
           )}
           ItemSeparatorComponent={() => <View style={{ height: spacing.sm }} />}
@@ -534,5 +542,21 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     fontSize: fontSizes.sm,
     textAlign: 'center',
+    lineHeight: 20,
+  },
+  emptyTips: {
+    marginTop: spacing.md,
+    gap: spacing.xs,
+    alignSelf: 'stretch',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 6,
+    padding: spacing.md,
+  },
+  emptyTip: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    lineHeight: 18,
   },
 });
