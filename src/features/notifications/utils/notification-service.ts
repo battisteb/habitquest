@@ -188,6 +188,67 @@ export async function cancelWeeklyRecap(): Promise<void> {
   await Notifications.cancelScheduledNotificationAsync(WEEKLY_RECAP_ID);
 }
 
+// ── Per-habit reminders ────────────────────────────────────────────────────────
+
+const HABIT_REMINDER_PREFIX = 'habit-reminder-';
+
+export function getHabitReminderKey(habitId: string): string {
+  return HABIT_REMINDER_PREFIX + habitId;
+}
+
+export interface HabitReminder {
+  hour: number;
+  minute: number;
+}
+
+export function getHabitReminder(habitId: string): HabitReminder | null {
+  const raw = storage.getString(getHabitReminderKey(habitId));
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as HabitReminder;
+  } catch {
+    return null;
+  }
+}
+
+export async function scheduleHabitReminder(
+  habitId: string,
+  habitName: string,
+  hour: number,
+  minute: number,
+): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+
+  const granted = await requestPermissions();
+  if (!granted) return;
+
+  await Notifications.scheduleNotificationAsync({
+    identifier: getHabitReminderKey(habitId),
+    content: {
+      title: `⚔️ ${habitName}`,
+      body: `Time to work on your habit! Don't break the streak 🔥`,
+      sound: true,
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DAILY,
+      hour,
+      minute,
+    },
+  });
+
+  storage.set(getHabitReminderKey(habitId), JSON.stringify({ hour, minute }));
+}
+
+export async function cancelHabitReminder(habitId: string): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+  await Notifications.cancelScheduledNotificationAsync(getHabitReminderKey(habitId));
+  storage.delete(getHabitReminderKey(habitId));
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+
 export async function applyNotificationPrefs(prefs?: NotificationPrefs): Promise<void> {
   const p = prefs ?? getNotificationPrefs();
 

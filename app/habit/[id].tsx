@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView, Pressable, Linking } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, Pressable, Linking, Modal } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
@@ -11,6 +11,12 @@ import { useDynamicGoal } from '../../src/features/habits/hooks/use-dynamic-goal
 import { CONTENT_TYPE_CONFIG } from '../../src/features/habits/types/habit-content';
 import { getCategoryColor } from '../../src/lib/constants/categories';
 import { colors, spacing, fontSizes } from '../../src/ui/theme/tokens';
+import {
+  getHabitReminder,
+  scheduleHabitReminder,
+  cancelHabitReminder,
+  HabitReminder,
+} from '../../src/features/notifications/utils/notification-service';
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
 
 export default function HabitDetailScreen() {
@@ -21,6 +27,11 @@ export default function HabitDetailScreen() {
   const streaks = use$(habitsStore$.streaks);
   const todayCompletions = use$(habitsStore$.todayCompletions);
   const [contentExpanded, setContentExpanded] = useState(false);
+  const [reminder, setReminder] = useState<HabitReminder | null>(() =>
+    id ? getHabitReminder(id) : null,
+  );
+  const [showReminderPicker, setShowReminderPicker] = useState(false);
+  const [pickerHour, setPickerHour] = useState(9);
 
   const habit = habits.find((h) => h.id === id);
   const streak = id ? streaks[id] : undefined;
@@ -237,11 +248,72 @@ export default function HabitDetailScreen() {
           style={{ flex: 1 }}
         />
       </View>
+      {/* Reminder */}
+      <Pressable
+        style={styles.reminderRow}
+        onPress={() => setShowReminderPicker(true)}
+      >
+        <Text style={styles.reminderLabel}>🔔 Daily reminder</Text>
+        <Text style={[styles.reminderValue, reminder && { color: colors.primary }]}>
+          {reminder ? `${String(reminder.hour).padStart(2, '0')}:${String(reminder.minute).padStart(2, '0')}` : 'OFF'}
+        </Text>
+      </Pressable>
+
       <PixelButton
-        title="History"
+        title="📅 History"
         onPress={() => router.push({ pathname: '/habit/history', params: { habitId: habit.id, habitName: habit.name } })}
         variant="ghost"
       />
+
+      {/* Reminder time picker modal */}
+      <Modal
+        visible={showReminderPicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowReminderPicker(false)}
+      >
+        <Pressable style={styles.modalOverlay} onPress={() => setShowReminderPicker(false)}>
+          <Pressable style={styles.modalCard} onPress={() => {}}>
+            <Text style={styles.modalTitle}>SET REMINDER</Text>
+            <View style={styles.hourGrid}>
+              {[6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22].map((h) => (
+                <Pressable
+                  key={h}
+                  style={[styles.hourBtn, pickerHour === h && styles.hourBtnActive]}
+                  onPress={() => setPickerHour(h)}
+                >
+                  <Text style={[styles.hourBtnText, pickerHour === h && styles.hourBtnTextActive]}>
+                    {String(h).padStart(2,'0')}:00
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+            <View style={styles.modalActions}>
+              <PixelButton
+                title="Set Reminder"
+                onPress={async () => {
+                  await scheduleHabitReminder(habit.id, habit.name, pickerHour, 0);
+                  setReminder({ hour: pickerHour, minute: 0 });
+                  setShowReminderPicker(false);
+                }}
+                style={{ flex: 1 }}
+              />
+              {reminder && (
+                <PixelButton
+                  title="Remove"
+                  onPress={async () => {
+                    await cancelHabitReminder(habit.id);
+                    setReminder(null);
+                    setShowReminderPicker(false);
+                  }}
+                  variant="ghost"
+                  style={{ flex: 1 }}
+                />
+              )}
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </ScrollView>
   );
 }
@@ -394,6 +466,78 @@ const styles = StyleSheet.create({
   },
   quickComplete: {
     marginTop: spacing.xs,
+  },
+  reminderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 2,
+  },
+  reminderLabel: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  reminderValue: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: '#00000088',
+    justifyContent: 'flex-end',
+  },
+  modalCard: {
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderTopWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.lg,
+    gap: spacing.md,
+  },
+  modalTitle: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+    textAlign: 'center',
+  },
+  hourGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  hourBtn: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.background,
+  },
+  hourBtnActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '33',
+  },
+  hourBtnText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+  },
+  hourBtnTextActive: {
+    color: colors.primary,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: spacing.sm,
   },
   bottomRow: {
     flexDirection: 'row',
