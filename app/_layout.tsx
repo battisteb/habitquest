@@ -17,6 +17,7 @@ import {
 import { useWeeklyRecapScheduler } from '../src/features/notifications/hooks/use-weekly-recap-scheduler';
 import { colors } from '../src/ui/theme/tokens';
 import { ThemeProvider, useTheme } from '../src/ui/theme/theme-context';
+import { OfflineBanner } from '../src/ui/components/offline-banner';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -81,6 +82,7 @@ function ThemedApp() {
         newLevel={newLevel}
         onComplete={dismissLevelUp}
       />
+      <OfflineBanner />
       {currentToast && (
         <AchievementToast
           key={currentToast.id}
