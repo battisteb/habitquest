@@ -1,0 +1,271 @@
+Date : 2026-04-11 18:19:48
+Directory : c:\Users\Boungo\Desktop\perso\levelUp
+Total : 159 files,  34340 codes, 704 comments, 1988 blanks, all 37032 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |          8 |     16,396 |          0 |          8 |     16,404 |
+| TypeScript JSX     |         59 |     12,064 |        285 |        908 |     13,257 |
+| TypeScript         |         59 |      4,800 |        261 |        810 |      5,871 |
+| SQLite             |         16 |        693 |        157 |        155 |      1,005 |
+| Markdown           |         12 |        329 |          0 |        101 |        430 |
+| JavaScript         |          3 |         30 |          1 |          4 |         35 |
+| JSON with Comments |          1 |         19 |          0 |          1 |         20 |
+| Ignore             |          1 |          9 |          0 |          1 |         10 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                   | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                      |        159 |     34,340 |        704 |      1,988 |     37,032 |
+| . (Files)                                                                                              |         11 |     16,397 |          1 |         35 |     16,433 |
+| .claude                                                                                                |          8 |        184 |          0 |         44 |        228 |
+| .claude\agents                                                                                         |          7 |        170 |          0 |         41 |        211 |
+| .claude\commands                                                                                       |          1 |         14 |          0 |          3 |         17 |
+| app                                                                                                    |         32 |      8,615 |        208 |        622 |      9,445 |
+| app (Files)                                                                                            |          7 |      1,808 |         43 |        140 |      1,991 |
+| app\(auth)                                                                                             |          2 |          8 |          0 |          4 |         12 |
+| app\(tabs)                                                                                             |          7 |      2,483 |         70 |        163 |      2,716 |
+| app\challenge                                                                                          |          1 |        238 |          4 |         14 |        256 |
+| app\duels                                                                                              |          3 |        841 |         35 |         87 |        963 |
+| app\habit                                                                                              |          5 |      1,425 |         15 |         82 |      1,522 |
+| app\habit (Files)                                                                                      |          4 |      1,236 |         15 |         69 |      1,320 |
+| app\habit\edit                                                                                         |          1 |        189 |          0 |         13 |        202 |
+| app\profile                                                                                            |          2 |        436 |          5 |         39 |        480 |
+| app\settings                                                                                           |          3 |        631 |         17 |         42 |        690 |
+| app\training                                                                                           |          2 |        745 |         19 |         51 |        815 |
+| app\training (Files)                                                                                   |          1 |        396 |         12 |         29 |        437 |
+| app\training\deck                                                                                      |          1 |        349 |          7 |         22 |        378 |
+| assets                                                                                                 |          4 |        143 |          0 |          4 |        147 |
+| assets\samples                                                                                         |          4 |        143 |          0 |          4 |        147 |
+| docs                                                                                                   |          2 |         59 |          0 |         32 |         91 |
+| docs\adr                                                                                               |          1 |         26 |          0 |         10 |         36 |
+| docs\app-store                                                                                         |          1 |         33 |          0 |         22 |         55 |
+| src                                                                                                    |         86 |      8,249 |        338 |      1,096 |      9,683 |
+| src\features                                                                                           |         67 |      6,423 |        321 |        959 |      7,703 |
+| src\features\auth                                                                                      |          4 |        248 |          2 |         38 |        288 |
+| src\features\auth\__tests__                                                                            |          1 |         64 |          2 |         16 |         82 |
+| src\features\auth\components                                                                           |          1 |        114 |          0 |         10 |        124 |
+| src\features\auth\hooks                                                                                |          1 |         15 |          0 |          3 |         18 |
+| src\features\auth\stores                                                                               |          1 |         55 |          0 |          9 |         64 |
+| src\features\avatar                                                                                    |          3 |        335 |         34 |         37 |        406 |
+| src\features\avatar\components                                                                         |          1 |         62 |          0 |          8 |         70 |
+| src\features\avatar\renderer                                                                           |          1 |        245 |         34 |         25 |        304 |
+| src\features\avatar\utils                                                                              |          1 |         28 |          0 |          4 |         32 |
+| src\features\daily-quests                                                                              |          7 |        829 |         22 |        120 |        971 |
+| src\features\daily-quests (Files)                                                                      |          1 |         16 |          0 |          1 |         17 |
+| src\features\daily-quests\__tests__                                                                    |          2 |        331 |          6 |         64 |        401 |
+| src\features\daily-quests\components                                                                   |          2 |        314 |          6 |         22 |        342 |
+| src\features\daily-quests\hooks                                                                        |          1 |         20 |          0 |          4 |         24 |
+| src\features\daily-quests\stores                                                                       |          1 |        148 |         10 |         29 |        187 |
+| src\features\duels                                                                                     |          5 |        435 |         33 |         82 |        550 |
+| src\features\duels\__tests__                                                                           |          2 |        129 |          8 |         22 |        159 |
+| src\features\duels\stores                                                                              |          1 |        175 |         11 |         37 |        223 |
+| src\features\duels\utils                                                                               |          2 |        131 |         14 |         23 |        168 |
+| src\features\gamification                                                                              |          6 |        504 |         13 |         75 |        592 |
+| src\features\gamification\components                                                                   |          2 |        204 |          0 |         12 |        216 |
+| src\features\gamification\hooks                                                                        |          1 |         47 |          0 |         10 |         57 |
+| src\features\gamification\stores                                                                       |          3 |        253 |         13 |         53 |        319 |
+| src\features\habits                                                                                    |         24 |      2,530 |        112 |        345 |      2,987 |
+| src\features\habits\__tests__                                                                          |          6 |        448 |         20 |         89 |        557 |
+| src\features\habits\components                                                                         |          7 |      1,301 |         19 |         84 |      1,404 |
+| src\features\habits\hooks                                                                              |          3 |        186 |         15 |         42 |        243 |
+| src\features\habits\stores                                                                             |          1 |        223 |         16 |         42 |        281 |
+| src\features\habits\types                                                                              |          1 |         29 |          0 |          4 |         33 |
+| src\features\habits\utils                                                                              |          6 |        343 |         42 |         84 |        469 |
+| src\features\notifications                                                                             |          5 |        375 |         22 |         75 |        472 |
+| src\features\notifications\hooks                                                                       |          2 |         90 |          8 |         21 |        119 |
+| src\features\notifications\utils                                                                       |          3 |        285 |         14 |         54 |        353 |
+| src\features\shop                                                                                      |          6 |        545 |         25 |         69 |        639 |
+| src\features\shop\__tests__                                                                            |          1 |         99 |          0 |         18 |        117 |
+| src\features\shop\components                                                                           |          2 |        235 |          4 |         15 |        254 |
+| src\features\shop\stores                                                                               |          1 |         95 |          5 |         25 |        125 |
+| src\features\shop\types                                                                                |          1 |         88 |          3 |          4 |         95 |
+| src\features\shop\utils                                                                                |          1 |         28 |         13 |          7 |         48 |
+| src\features\social                                                                                    |          3 |        347 |         12 |         69 |        428 |
+| src\features\social\hooks                                                                              |          1 |        145 |          8 |         32 |        185 |
+| src\features\social\stores                                                                             |          2 |        202 |          4 |         37 |        243 |
+| src\features\training                                                                                  |          4 |        275 |         46 |         49 |        370 |
+| src\features\training\stores                                                                           |          2 |        141 |          2 |         28 |        171 |
+| src\features\training\types                                                                            |          2 |        134 |         44 |         21 |        199 |
+| src\lib                                                                                                |          5 |        789 |          3 |         33 |        825 |
+| src\lib\constants                                                                                      |          2 |         82 |          1 |         14 |         97 |
+| src\lib\storage                                                                                        |          1 |         18 |          0 |          4 |         22 |
+| src\lib\supabase                                                                                       |          2 |        689 |          2 |         15 |        706 |
+| src\types                                                                                              |          2 |         31 |          0 |          5 |         36 |
+| src\ui                                                                                                 |         12 |      1,006 |         14 |         99 |      1,119 |
+| src\ui\animations                                                                                      |          6 |        611 |          9 |         62 |        682 |
+| src\ui\components                                                                                      |          3 |        199 |          5 |         19 |        223 |
+| src\ui\theme                                                                                           |          3 |        196 |          0 |         18 |        214 |
+| supabase                                                                                               |         16 |        693 |        157 |        155 |      1,005 |
+| supabase\migrations                                                                                    |         16 |        693 |        157 |        155 |      1,005 |
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                               | language           | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\business-advisor.md                               | Markdown           |         25 |          0 |          6 |         31 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\cosmetic-designer.md                              | Markdown           |         35 |          0 |         11 |         46 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\db-architect.md                                   | Markdown           |         17 |          0 |          4 |         21 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\feature-builder.md                                | Markdown           |         24 |          0 |          5 |         29 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\git-manager.md                                    | Markdown           |         21 |          0 |          5 |         26 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\retention-analyst.md                              | Markdown           |         32 |          0 |          6 |         38 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\test-runner.md                                    | Markdown           |         16 |          0 |          4 |         20 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.claude\commands\feature.md                                      | Markdown           |         14 |          0 |          3 |         17 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.prettierignore                                                  | Ignore             |          9 |          0 |          1 |         10 |
+| c:\Users\Boungo\Desktop\perso\levelUp\.prettierrc                                                      | JSON               |          7 |          0 |          1 |          8 |
+| c:\Users\Boungo\Desktop\perso\levelUp\CLAUDE.md                                                        | Markdown           |         35 |          0 |          7 |         42 |
+| c:\Users\Boungo\Desktop\perso\levelUp\README.md                                                        | Markdown           |         51 |          0 |         18 |         69 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app.json                                                         | JSON               |         48 |          0 |          1 |         49 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(auth)\_layout.tsx                                           | TypeScript JSX     |          4 |          0 |          2 |          6 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(auth)\sign-in.tsx                                           | TypeScript JSX     |          4 |          0 |          2 |          6 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\_layout.tsx                                           | TypeScript JSX     |         97 |          0 |          6 |        103 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\profile.tsx                                           | TypeScript JSX     |        267 |          7 |         15 |        289 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\shop.tsx                                              | TypeScript JSX     |        419 |         15 |         32 |        466 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\social.tsx                                            | TypeScript JSX     |        623 |         15 |         40 |        678 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\stats.tsx                                             | TypeScript JSX     |        151 |          1 |         13 |        165 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\today.tsx                                             | TypeScript JSX     |        537 |         22 |         36 |        595 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\training.tsx                                          | TypeScript JSX     |        389 |         10 |         21 |        420 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\_layout.tsx                                                  | TypeScript JSX     |        106 |          0 |         13 |        119 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\achievements.tsx                                             | TypeScript JSX     |        253 |          3 |         14 |        270 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\challenge\create.tsx                                         | TypeScript JSX     |        238 |          4 |         14 |        256 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\duels\battle.tsx                                             | TypeScript JSX     |        499 |         32 |         63 |        594 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\duels\challenge.tsx                                          | TypeScript JSX     |        172 |          3 |         13 |        188 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\duels\index.tsx                                              | TypeScript JSX     |        170 |          0 |         11 |        181 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\habit\[id].tsx                                               | TypeScript JSX     |        520 |          7 |         22 |        549 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\habit\archive.tsx                                            | TypeScript JSX     |        188 |          0 |         10 |        198 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\habit\create.tsx                                             | TypeScript JSX     |        208 |          0 |         12 |        220 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\habit\edit\[id].tsx                                          | TypeScript JSX     |        189 |          0 |         13 |        202 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\habit\history.tsx                                            | TypeScript JSX     |        320 |          8 |         25 |        353 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\index.tsx                                                    | TypeScript JSX     |          9 |          0 |          2 |         11 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\onboarding.tsx                                               | TypeScript JSX     |        270 |          6 |         20 |        296 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\profile\[userId].tsx                                         | TypeScript JSX     |        274 |          4 |         24 |        302 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\profile\edit.tsx                                             | TypeScript JSX     |        162 |          1 |         15 |        178 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\settings.tsx                                                 | TypeScript JSX     |        306 |          7 |         22 |        335 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\settings\contextual-mode.tsx                                 | TypeScript JSX     |        280 |         10 |         19 |        309 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\settings\index.tsx                                           | TypeScript JSX     |        273 |          7 |         19 |        299 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\settings\theme.tsx                                           | TypeScript JSX     |         78 |          0 |          4 |         82 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\training\[id].tsx                                            | TypeScript JSX     |        396 |         12 |         29 |        437 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\training\deck\[id].tsx                                       | TypeScript JSX     |        349 |          7 |         22 |        378 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\weekly-recap.tsx                                             | TypeScript JSX     |        341 |          8 |         29 |        378 |
+| c:\Users\Boungo\Desktop\perso\levelUp\app\xp-journey.tsx                                               | TypeScript JSX     |        523 |         19 |         40 |        582 |
+| c:\Users\Boungo\Desktop\perso\levelUp\assets\samples\deck_javascript.json                              | JSON               |         23 |          0 |          1 |         24 |
+| c:\Users\Boungo\Desktop\perso\levelUp\assets\samples\deck_spanish_b1.json                              | JSON               |         28 |          0 |          1 |         29 |
+| c:\Users\Boungo\Desktop\perso\levelUp\assets\samples\session_fullbody.json                             | JSON               |         47 |          0 |          1 |         48 |
+| c:\Users\Boungo\Desktop\perso\levelUp\assets\samples\session_hiit.json                                 | JSON               |         45 |          0 |          1 |         46 |
+| c:\Users\Boungo\Desktop\perso\levelUp\babel.config.js                                                  | JavaScript         |          7 |          0 |          1 |          8 |
+| c:\Users\Boungo\Desktop\perso\levelUp\docs\adr\001-stack-technique.md                                  | Markdown           |         26 |          0 |         10 |         36 |
+| c:\Users\Boungo\Desktop\perso\levelUp\docs\app-store\metadata.md                                       | Markdown           |         33 |          0 |         22 |         55 |
+| c:\Users\Boungo\Desktop\perso\levelUp\eslint.config.mjs                                                | JavaScript         |          8 |          0 |          2 |         10 |
+| c:\Users\Boungo\Desktop\perso\levelUp\jest.config.js                                                   | JavaScript         |         15 |          1 |          1 |         17 |
+| c:\Users\Boungo\Desktop\perso\levelUp\package-lock.json                                                | JSON               |     16,142 |          0 |          1 |     16,143 |
+| c:\Users\Boungo\Desktop\perso\levelUp\package.json                                                     | JSON               |         56 |          0 |          1 |         57 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\auth\__tests__\auth-store.test.ts                   | TypeScript         |         64 |          2 |         16 |         82 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\auth\components\auth-form.tsx                       | TypeScript JSX     |        114 |          0 |         10 |        124 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\auth\hooks\use-auth.ts                              | TypeScript         |         15 |          0 |          3 |         18 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\auth\stores\auth-store.ts                           | TypeScript         |         55 |          0 |          9 |         64 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\avatar\components\avatar-display.tsx                | TypeScript JSX     |         62 |          0 |          8 |         70 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\avatar\renderer\pixel-avatar.tsx                    | TypeScript JSX     |        245 |         34 |         25 |        304 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\avatar\utils\avatar-evolution.ts                    | TypeScript         |         28 |          0 |          4 |         32 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\__tests__\daily-quest-card.test.tsx    | TypeScript JSX     |        112 |          0 |         20 |        132 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\__tests__\daily-quests-store.test.ts   | TypeScript         |        219 |          6 |         44 |        269 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\components\daily-quest-card.tsx        | TypeScript JSX     |        204 |          5 |         12 |        221 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\components\daily-quests-section.tsx    | TypeScript JSX     |        110 |          1 |         10 |        121 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\hooks\use-daily-quests.ts              | TypeScript         |         20 |          0 |          4 |         24 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\index.ts                               | TypeScript         |         16 |          0 |          1 |         17 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\stores\daily-quests-store.ts           | TypeScript         |        148 |         10 |         29 |        187 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\__tests__\attacks.test.ts                     | TypeScript         |         35 |          0 |          7 |         42 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\__tests__\combat-engine.test.ts               | TypeScript         |         94 |          8 |         15 |        117 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\stores\duel-store.ts                          | TypeScript         |        175 |         11 |         37 |        223 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\utils\attacks.ts                              | TypeScript         |         27 |          5 |          3 |         35 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\utils\combat-engine.ts                        | TypeScript         |        104 |          9 |         20 |        133 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\components\achievement-card.tsx        | TypeScript JSX     |        148 |          0 |          8 |        156 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\components\xp-bar.tsx                  | TypeScript JSX     |         56 |          0 |          4 |         60 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\hooks\use-profile-stats.ts             | TypeScript         |         47 |          0 |         10 |         57 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\stores\achievements-store.ts           | TypeScript         |        210 |         12 |         40 |        262 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\stores\level-up-store.ts               | TypeScript         |         16 |          0 |          5 |         21 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\stores\profile-store.ts                | TypeScript         |         27 |          1 |          8 |         36 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\burnout-detector.test.ts           | TypeScript         |        116 |         14 |         15 |        145 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\habits-store.test.ts               | TypeScript         |         86 |          2 |         16 |        104 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\punishment.test.ts                 | TypeScript         |         26 |          0 |          6 |         32 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\streak-calculator.test.ts          | TypeScript         |         68 |          0 |         15 |         83 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\streak-freeze.test.ts              | TypeScript         |         56 |          4 |         12 |         72 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\xp-formula.test.ts                 | TypeScript         |         96 |          0 |         25 |        121 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\content-picker.tsx                | TypeScript JSX     |        394 |          8 |         21 |        423 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\habit-card.tsx                    | TypeScript JSX     |        220 |          2 |         11 |        233 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\habit-checklist.tsx               | TypeScript JSX     |        147 |          3 |          9 |        159 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\habit-list.tsx                    | TypeScript JSX     |        123 |          0 |          9 |        132 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\habit-timer.tsx                   | TypeScript JSX     |        230 |          5 |         20 |        255 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\monthly-heatmap.tsx               | TypeScript JSX     |         98 |          0 |          7 |        105 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\weekly-chart.tsx                  | TypeScript JSX     |         89 |          1 |          7 |         97 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\hooks\use-burnout-signal.ts                  | TypeScript         |         12 |          0 |          4 |         16 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\hooks\use-dynamic-goal.ts                    | TypeScript         |         56 |          8 |         13 |         77 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\hooks\use-stats.ts                           | TypeScript         |        118 |          7 |         25 |        150 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\stores\habits-store.ts                       | TypeScript         |        223 |         16 |         42 |        281 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\types\habit-content.ts                       | TypeScript         |         29 |          0 |          4 |         33 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\burnout-detector.ts                    | TypeScript         |         73 |          3 |         21 |         97 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\contextual-mode.ts                     | TypeScript         |         93 |         14 |         14 |        121 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\punishment.ts                          | TypeScript         |         20 |          8 |          3 |         31 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\streak-calculator.ts                   | TypeScript         |         32 |          3 |         11 |         46 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\streak-freeze.ts                       | TypeScript         |         66 |          3 |         18 |         87 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\streak-punishment.ts                   | TypeScript         |         59 |         11 |         17 |         87 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\hooks\use-streak-risk-notification.ts | TypeScript         |         27 |          4 |          5 |         36 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\hooks\use-weekly-recap-scheduler.ts   | TypeScript         |         63 |          4 |         16 |         83 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\utils\adaptive-timing.ts              | TypeScript         |         18 |          9 |          4 |         31 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\utils\notification-messages.ts        | TypeScript         |         41 |          0 |          3 |         44 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\utils\notification-service.ts         | TypeScript         |        226 |          5 |         47 |        278 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\__tests__\unlock-checker.test.ts               | TypeScript         |         99 |          0 |         18 |        117 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\components\rarity-badge.tsx                    | TypeScript JSX     |         31 |          0 |          5 |         36 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\components\shop-item-card.tsx                  | TypeScript JSX     |        204 |          4 |         10 |        218 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\stores\shop-store.ts                           | TypeScript         |         95 |          5 |         25 |        125 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\types\shop-item.ts                             | TypeScript         |         88 |          3 |          4 |         95 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\utils\unlock-checker.ts                        | TypeScript         |         28 |         13 |          7 |         48 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\social\hooks\use-leaderboard.ts                     | TypeScript         |        145 |          8 |         32 |        185 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\social\stores\challenges-store.ts                   | TypeScript         |         95 |          0 |         13 |        108 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\social\stores\friends-store.ts                      | TypeScript         |        107 |          4 |         24 |        135 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\training\stores\decks-store.ts                      | TypeScript         |         75 |          0 |         13 |         88 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\training\stores\sessions-store.ts                   | TypeScript         |         66 |          2 |         15 |         83 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\training\types\flashcard.ts                         | TypeScript         |         83 |         22 |         13 |        118 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\features\training\types\session.ts                           | TypeScript         |         51 |         22 |          8 |         81 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\lib\constants\categories.ts                                  | TypeScript         |         21 |          0 |          5 |         26 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\lib\constants\game-config.ts                                 | TypeScript         |         61 |          1 |          9 |         71 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\lib\storage\mmkv.ts                                          | TypeScript         |         18 |          0 |          4 |         22 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\lib\supabase\client.ts                                       | TypeScript         |         30 |          0 |          5 |         35 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\lib\supabase\types.ts                                        | TypeScript         |        659 |          2 |         10 |        671 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\types\habit.ts                                               | TypeScript         |         23 |          0 |          4 |         27 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\types\user.ts                                                | TypeScript         |          8 |          0 |          1 |          9 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\achievement-toast.tsx                          | TypeScript JSX     |        156 |          2 |          9 |        167 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\all-done-celebration.tsx                       | TypeScript JSX     |         62 |          0 |          8 |         70 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\completion-burst.tsx                           | TypeScript JSX     |         80 |          1 |         10 |         91 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\level-up-overlay.tsx                           | TypeScript JSX     |        132 |          4 |         14 |        150 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\streak-milestone.tsx                           | TypeScript JSX     |        107 |          0 |         10 |        117 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\xp-toast.tsx                                   | TypeScript JSX     |         74 |          2 |         11 |         87 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\components\offline-banner.tsx                             | TypeScript JSX     |         76 |          5 |         11 |         92 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\components\pixel-button.tsx                               | TypeScript JSX     |         75 |          0 |          4 |         79 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\components\pixel-input.tsx                                | TypeScript JSX     |         48 |          0 |          4 |         52 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\theme\theme-context.tsx                                   | TypeScript JSX     |         52 |          0 |          9 |         61 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\theme\themes.ts                                           | TypeScript         |         87 |          0 |          5 |         92 |
+| c:\Users\Boungo\Desktop\perso\levelUp\src\ui\theme\tokens.ts                                           | TypeScript         |         57 |          0 |          4 |         61 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\00001_create_profiles.sql                    | SQLite             |         21 |          6 |          6 |         33 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\00002_create_habits.sql                      | SQLite             |         23 |          4 |          7 |         34 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\00003_create_completions.sql                 | SQLite             |         27 |          4 |          5 |         36 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\00004_create_streaks.sql                     | SQLite             |         36 |          4 |          6 |         46 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260329104340_create_profile_trigger.sql    | SQLite             |         18 |          1 |          2 |         21 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260329104829_add_increment_xp_function.sql | SQLite             |         25 |          4 |          3 |         32 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405140000_v1_social_and_currency.sql    | SQLite             |         95 |         30 |         25 |        150 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405160000_v2_shop_and_avatar.sql        | SQLite             |        125 |         34 |         36 |        195 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405170000_achievements.sql              | SQLite             |         59 |         17 |         14 |         90 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405171000_add_gold_rpc.sql              | SQLite             |         11 |          1 |          1 |         13 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405180000_punishment_rpc.sql            | SQLite             |         36 |          4 |          4 |         44 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405190000_extended_cosmetics.sql        | SQLite             |         19 |          6 |          2 |         27 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405200000_daily_quests.sql              | SQLite             |        155 |         30 |         33 |        218 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260406100000_habit_content.sql             | SQLite             |          9 |          3 |          3 |         15 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260406200000_habit_pause.sql               | SQLite             |          3 |          3 |          2 |          8 |
+| c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260406210000_add_duels.sql                 | SQLite             |         31 |          6 |          6 |         43 |
+| c:\Users\Boungo\Desktop\perso\levelUp\tsconfig.json                                                    | JSON with Comments |         19 |          0 |          1 |         20 |
+| Total                                                                                                  |                    |     34,340 |        704 |      1,988 |     37,032 |
++--------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

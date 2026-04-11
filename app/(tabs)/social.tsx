@@ -27,11 +27,12 @@ import {
   fetchChallenges,
   respondToChallenge,
 } from '../../src/features/social/stores/challenges-store';
-import { useLeaderboard } from '../../src/features/social/hooks/use-leaderboard';
+import { useLeaderboard, useStreakLeaderboard } from '../../src/features/social/hooks/use-leaderboard';
+import type { StreakLeaderEntry } from '../../src/features/social/hooks/use-leaderboard';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
-type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search';
+type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
 
 const MEDAL = ['🥇', '🥈', '🥉'];
 const MEDAL_COLORS = [colors.accent, '#c0c0c0', '#cd7f32'];
@@ -53,6 +54,7 @@ export default function SocialScreen() {
 
   const [lbScope, setLbScope] = useState<'friends' | 'global'>('friends');
   const { entries: leaderboard, isLoading: lbLoading, refresh: refreshLb } = useLeaderboard(lbScope);
+  const { entries: streakLeaderboard, isLoading: streakLbLoading, refresh: refreshStreakLb } = useStreakLeaderboard();
 
   useEffect(() => {
     fetchFriends();
@@ -61,7 +63,7 @@ export default function SocialScreen() {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await Promise.all([fetchFriends(), fetchChallenges(), refreshLb()]);
+    await Promise.all([fetchFriends(), fetchChallenges(), refreshLb(), refreshStreakLb()]);
     setRefreshing(false);
   };
 
@@ -72,6 +74,7 @@ export default function SocialScreen() {
     { key: 'leaderboard', label: '🏆 RANK' },
     { key: 'friends', label: '👥 FRIENDS', badge: pendingReceived.length },
     { key: 'challenges', label: '⚔️ DUELS', badge: pendingChallenges.length },
+    { key: 'streaks', label: '🔥 STREAKS' },
     { key: 'search', label: '🔍 SEARCH' },
   ];
 
@@ -342,6 +345,50 @@ export default function SocialScreen() {
     );
   };
 
+  // ── Streak Leaderboard ───────────────────────────────────────────────────────
+  const renderStreakLeaderboard = () => {
+    if (streakLbLoading) {
+      return <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />;
+    }
+    if (streakLeaderboard.length === 0) {
+      return (
+        <View style={styles.empty}>
+          <Text style={styles.emptyEmoji}>🔥</Text>
+          <Text style={styles.emptyText}>Add friends to compare streaks!</Text>
+        </View>
+      );
+    }
+
+    return (
+      <FlatList
+        data={streakLeaderboard}
+        keyExtractor={(item: StreakLeaderEntry) => item.id}
+        contentContainerStyle={styles.list}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
+        renderItem={({ item, index }: { item: StreakLeaderEntry; index: number }) => {
+          const rank = index + 1;
+          const medal = rank <= 3 ? MEDAL[rank - 1] : null;
+          const medalColor = rank <= 3 ? MEDAL_COLORS[rank - 1] : colors.textMuted;
+
+          return (
+            <View style={[styles.lbRow, item.isCurrentUser && styles.lbRowSelf]}>
+              <Text style={[styles.lbPos, { color: medalColor }]}>
+                {medal ?? `#${rank}`}
+              </Text>
+              <View style={styles.lbInfo}>
+                <Text style={styles.lbName}>
+                  {item.username}{item.isCurrentUser ? ' YOU ★' : ''}
+                </Text>
+                <Text style={styles.lbLevel}>Lv.{item.level}</Text>
+              </View>
+              <Text style={styles.streakCount}>🔥 {item.bestStreak} days</Text>
+            </View>
+          );
+        }}
+      />
+    );
+  };
+
   // ── Search ───────────────────────────────────────────────────────────────────
   const renderSearch = () => (
     <View style={styles.searchContainer}>
@@ -421,6 +468,7 @@ export default function SocialScreen() {
       {activeTab === 'leaderboard' && renderLeaderboard()}
       {activeTab === 'friends' && renderFriends()}
       {activeTab === 'challenges' && renderChallenges()}
+      {activeTab === 'streaks' && renderStreakLeaderboard()}
       {activeTab === 'search' && renderSearch()}
     </View>
   );
@@ -614,6 +662,11 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     color: colors.text,
     fontSize: fontSizes.md,
+  },
+  streakCount: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.streak,
   },
   statusChip: {
     fontSize: fontSizes.xs,

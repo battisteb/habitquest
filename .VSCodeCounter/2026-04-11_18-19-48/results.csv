@@ -1,0 +1,161 @@
+"filename", "language", "JSON with Comments", "Ignore", "Markdown", "JSON", "SQLite", "TypeScript JSX", "JavaScript", "TypeScript", "comment", "blank", "total"
+"c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\business-advisor.md", "Markdown", 0, 0, 25, 0, 0, 0, 0, 0, 0, 6, 31
+"c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\cosmetic-designer.md", "Markdown", 0, 0, 35, 0, 0, 0, 0, 0, 0, 11, 46
+"c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\db-architect.md", "Markdown", 0, 0, 17, 0, 0, 0, 0, 0, 0, 4, 21
+"c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\feature-builder.md", "Markdown", 0, 0, 24, 0, 0, 0, 0, 0, 0, 5, 29
+"c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\git-manager.md", "Markdown", 0, 0, 21, 0, 0, 0, 0, 0, 0, 5, 26
+"c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\retention-analyst.md", "Markdown", 0, 0, 32, 0, 0, 0, 0, 0, 0, 6, 38
+"c:\Users\Boungo\Desktop\perso\levelUp\.claude\agents\test-runner.md", "Markdown", 0, 0, 16, 0, 0, 0, 0, 0, 0, 4, 20
+"c:\Users\Boungo\Desktop\perso\levelUp\.claude\commands\feature.md", "Markdown", 0, 0, 14, 0, 0, 0, 0, 0, 0, 3, 17
+"c:\Users\Boungo\Desktop\perso\levelUp\.prettierignore", "Ignore", 0, 9, 0, 0, 0, 0, 0, 0, 0, 1, 10
+"c:\Users\Boungo\Desktop\perso\levelUp\.prettierrc", "JSON", 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 8
+"c:\Users\Boungo\Desktop\perso\levelUp\CLAUDE.md", "Markdown", 0, 0, 35, 0, 0, 0, 0, 0, 0, 7, 42
+"c:\Users\Boungo\Desktop\perso\levelUp\README.md", "Markdown", 0, 0, 51, 0, 0, 0, 0, 0, 0, 18, 69
+"c:\Users\Boungo\Desktop\perso\levelUp\app.json", "JSON", 0, 0, 0, 48, 0, 0, 0, 0, 0, 1, 49
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(auth)\_layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 4, 0, 0, 0, 2, 6
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(auth)\sign-in.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 4, 0, 0, 0, 2, 6
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\_layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 97, 0, 0, 0, 6, 103
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\profile.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 267, 0, 0, 7, 15, 289
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\shop.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 419, 0, 0, 15, 32, 466
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\social.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 623, 0, 0, 15, 40, 678
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\stats.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 151, 0, 0, 1, 13, 165
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\today.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 537, 0, 0, 22, 36, 595
+"c:\Users\Boungo\Desktop\perso\levelUp\app\(tabs)\training.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 389, 0, 0, 10, 21, 420
+"c:\Users\Boungo\Desktop\perso\levelUp\app\_layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 106, 0, 0, 0, 13, 119
+"c:\Users\Boungo\Desktop\perso\levelUp\app\achievements.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 253, 0, 0, 3, 14, 270
+"c:\Users\Boungo\Desktop\perso\levelUp\app\challenge\create.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 238, 0, 0, 4, 14, 256
+"c:\Users\Boungo\Desktop\perso\levelUp\app\duels\battle.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 499, 0, 0, 32, 63, 594
+"c:\Users\Boungo\Desktop\perso\levelUp\app\duels\challenge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 172, 0, 0, 3, 13, 188
+"c:\Users\Boungo\Desktop\perso\levelUp\app\duels\index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 170, 0, 0, 0, 11, 181
+"c:\Users\Boungo\Desktop\perso\levelUp\app\habit\[id].tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 520, 0, 0, 7, 22, 549
+"c:\Users\Boungo\Desktop\perso\levelUp\app\habit\archive.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 188, 0, 0, 0, 10, 198
+"c:\Users\Boungo\Desktop\perso\levelUp\app\habit\create.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 208, 0, 0, 0, 12, 220
+"c:\Users\Boungo\Desktop\perso\levelUp\app\habit\edit\[id].tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 189, 0, 0, 0, 13, 202
+"c:\Users\Boungo\Desktop\perso\levelUp\app\habit\history.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 320, 0, 0, 8, 25, 353
+"c:\Users\Boungo\Desktop\perso\levelUp\app\index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 9, 0, 0, 0, 2, 11
+"c:\Users\Boungo\Desktop\perso\levelUp\app\onboarding.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 270, 0, 0, 6, 20, 296
+"c:\Users\Boungo\Desktop\perso\levelUp\app\profile\[userId].tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 274, 0, 0, 4, 24, 302
+"c:\Users\Boungo\Desktop\perso\levelUp\app\profile\edit.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 162, 0, 0, 1, 15, 178
+"c:\Users\Boungo\Desktop\perso\levelUp\app\settings.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 306, 0, 0, 7, 22, 335
+"c:\Users\Boungo\Desktop\perso\levelUp\app\settings\contextual-mode.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 280, 0, 0, 10, 19, 309
+"c:\Users\Boungo\Desktop\perso\levelUp\app\settings\index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 273, 0, 0, 7, 19, 299
+"c:\Users\Boungo\Desktop\perso\levelUp\app\settings\theme.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 78, 0, 0, 0, 4, 82
+"c:\Users\Boungo\Desktop\perso\levelUp\app\training\[id].tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 396, 0, 0, 12, 29, 437
+"c:\Users\Boungo\Desktop\perso\levelUp\app\training\deck\[id].tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 349, 0, 0, 7, 22, 378
+"c:\Users\Boungo\Desktop\perso\levelUp\app\weekly-recap.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 341, 0, 0, 8, 29, 378
+"c:\Users\Boungo\Desktop\perso\levelUp\app\xp-journey.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 523, 0, 0, 19, 40, 582
+"c:\Users\Boungo\Desktop\perso\levelUp\assets\samples\deck_javascript.json", "JSON", 0, 0, 0, 23, 0, 0, 0, 0, 0, 1, 24
+"c:\Users\Boungo\Desktop\perso\levelUp\assets\samples\deck_spanish_b1.json", "JSON", 0, 0, 0, 28, 0, 0, 0, 0, 0, 1, 29
+"c:\Users\Boungo\Desktop\perso\levelUp\assets\samples\session_fullbody.json", "JSON", 0, 0, 0, 47, 0, 0, 0, 0, 0, 1, 48
+"c:\Users\Boungo\Desktop\perso\levelUp\assets\samples\session_hiit.json", "JSON", 0, 0, 0, 45, 0, 0, 0, 0, 0, 1, 46
+"c:\Users\Boungo\Desktop\perso\levelUp\babel.config.js", "JavaScript", 0, 0, 0, 0, 0, 0, 7, 0, 0, 1, 8
+"c:\Users\Boungo\Desktop\perso\levelUp\docs\adr\001-stack-technique.md", "Markdown", 0, 0, 26, 0, 0, 0, 0, 0, 0, 10, 36
+"c:\Users\Boungo\Desktop\perso\levelUp\docs\app-store\metadata.md", "Markdown", 0, 0, 33, 0, 0, 0, 0, 0, 0, 22, 55
+"c:\Users\Boungo\Desktop\perso\levelUp\eslint.config.mjs", "JavaScript", 0, 0, 0, 0, 0, 0, 8, 0, 0, 2, 10
+"c:\Users\Boungo\Desktop\perso\levelUp\jest.config.js", "JavaScript", 0, 0, 0, 0, 0, 0, 15, 0, 1, 1, 17
+"c:\Users\Boungo\Desktop\perso\levelUp\package-lock.json", "JSON", 0, 0, 0, 16142, 0, 0, 0, 0, 0, 1, 16143
+"c:\Users\Boungo\Desktop\perso\levelUp\package.json", "JSON", 0, 0, 0, 56, 0, 0, 0, 0, 0, 1, 57
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\auth\__tests__\auth-store.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 64, 2, 16, 82
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\auth\components\auth-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 114, 0, 0, 0, 10, 124
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\auth\hooks\use-auth.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 15, 0, 3, 18
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\auth\stores\auth-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 55, 0, 9, 64
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\avatar\components\avatar-display.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 62, 0, 0, 0, 8, 70
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\avatar\renderer\pixel-avatar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 245, 0, 0, 34, 25, 304
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\avatar\utils\avatar-evolution.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 28, 0, 4, 32
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\__tests__\daily-quest-card.test.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 112, 0, 0, 0, 20, 132
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\__tests__\daily-quests-store.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 219, 6, 44, 269
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\components\daily-quest-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 204, 0, 0, 5, 12, 221
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\components\daily-quests-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 110, 0, 0, 1, 10, 121
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\hooks\use-daily-quests.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 20, 0, 4, 24
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 16, 0, 1, 17
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\daily-quests\stores\daily-quests-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 148, 10, 29, 187
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\__tests__\attacks.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 35, 0, 7, 42
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\__tests__\combat-engine.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 94, 8, 15, 117
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\stores\duel-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 175, 11, 37, 223
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\utils\attacks.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 27, 5, 3, 35
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\duels\utils\combat-engine.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 104, 9, 20, 133
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\components\achievement-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 148, 0, 0, 0, 8, 156
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\components\xp-bar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 56, 0, 0, 0, 4, 60
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\hooks\use-profile-stats.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 47, 0, 10, 57
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\stores\achievements-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 210, 12, 40, 262
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\stores\level-up-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 16, 0, 5, 21
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\gamification\stores\profile-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 27, 1, 8, 36
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\burnout-detector.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 116, 14, 15, 145
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\habits-store.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 86, 2, 16, 104
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\punishment.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 26, 0, 6, 32
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\streak-calculator.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 68, 0, 15, 83
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\streak-freeze.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 56, 4, 12, 72
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\__tests__\xp-formula.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 96, 0, 25, 121
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\content-picker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 394, 0, 0, 8, 21, 423
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\habit-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 220, 0, 0, 2, 11, 233
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\habit-checklist.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 147, 0, 0, 3, 9, 159
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\habit-list.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 123, 0, 0, 0, 9, 132
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\habit-timer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 230, 0, 0, 5, 20, 255
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\monthly-heatmap.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 98, 0, 0, 0, 7, 105
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\components\weekly-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 89, 0, 0, 1, 7, 97
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\hooks\use-burnout-signal.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 12, 0, 4, 16
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\hooks\use-dynamic-goal.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 56, 8, 13, 77
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\hooks\use-stats.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 118, 7, 25, 150
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\stores\habits-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 223, 16, 42, 281
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\types\habit-content.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 29, 0, 4, 33
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\burnout-detector.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 73, 3, 21, 97
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\contextual-mode.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 93, 14, 14, 121
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\punishment.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 20, 8, 3, 31
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\streak-calculator.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 32, 3, 11, 46
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\streak-freeze.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 66, 3, 18, 87
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\habits\utils\streak-punishment.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 59, 11, 17, 87
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\hooks\use-streak-risk-notification.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 27, 4, 5, 36
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\hooks\use-weekly-recap-scheduler.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 63, 4, 16, 83
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\utils\adaptive-timing.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 18, 9, 4, 31
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\utils\notification-messages.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 41, 0, 3, 44
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\notifications\utils\notification-service.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 226, 5, 47, 278
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\__tests__\unlock-checker.test.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 99, 0, 18, 117
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\components\rarity-badge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 31, 0, 0, 0, 5, 36
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\components\shop-item-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 204, 0, 0, 4, 10, 218
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\stores\shop-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 95, 5, 25, 125
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\types\shop-item.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 88, 3, 4, 95
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\shop\utils\unlock-checker.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 28, 13, 7, 48
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\social\hooks\use-leaderboard.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 145, 8, 32, 185
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\social\stores\challenges-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 95, 0, 13, 108
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\social\stores\friends-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 107, 4, 24, 135
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\training\stores\decks-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 75, 0, 13, 88
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\training\stores\sessions-store.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 66, 2, 15, 83
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\training\types\flashcard.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 83, 22, 13, 118
+"c:\Users\Boungo\Desktop\perso\levelUp\src\features\training\types\session.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 51, 22, 8, 81
+"c:\Users\Boungo\Desktop\perso\levelUp\src\lib\constants\categories.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 21, 0, 5, 26
+"c:\Users\Boungo\Desktop\perso\levelUp\src\lib\constants\game-config.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 61, 1, 9, 71
+"c:\Users\Boungo\Desktop\perso\levelUp\src\lib\storage\mmkv.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 18, 0, 4, 22
+"c:\Users\Boungo\Desktop\perso\levelUp\src\lib\supabase\client.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 30, 0, 5, 35
+"c:\Users\Boungo\Desktop\perso\levelUp\src\lib\supabase\types.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 659, 2, 10, 671
+"c:\Users\Boungo\Desktop\perso\levelUp\src\types\habit.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 23, 0, 4, 27
+"c:\Users\Boungo\Desktop\perso\levelUp\src\types\user.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 8, 0, 1, 9
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\achievement-toast.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 156, 0, 0, 2, 9, 167
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\all-done-celebration.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 62, 0, 0, 0, 8, 70
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\completion-burst.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 80, 0, 0, 1, 10, 91
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\level-up-overlay.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 132, 0, 0, 4, 14, 150
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\streak-milestone.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 107, 0, 0, 0, 10, 117
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\animations\xp-toast.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 74, 0, 0, 2, 11, 87
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\components\offline-banner.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 76, 0, 0, 5, 11, 92
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\components\pixel-button.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 75, 0, 0, 0, 4, 79
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\components\pixel-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 48, 0, 0, 0, 4, 52
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\theme\theme-context.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 52, 0, 0, 0, 9, 61
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\theme\themes.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 87, 0, 5, 92
+"c:\Users\Boungo\Desktop\perso\levelUp\src\ui\theme\tokens.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 57, 0, 4, 61
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\00001_create_profiles.sql", "SQLite", 0, 0, 0, 0, 21, 0, 0, 0, 6, 6, 33
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\00002_create_habits.sql", "SQLite", 0, 0, 0, 0, 23, 0, 0, 0, 4, 7, 34
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\00003_create_completions.sql", "SQLite", 0, 0, 0, 0, 27, 0, 0, 0, 4, 5, 36
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\00004_create_streaks.sql", "SQLite", 0, 0, 0, 0, 36, 0, 0, 0, 4, 6, 46
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260329104340_create_profile_trigger.sql", "SQLite", 0, 0, 0, 0, 18, 0, 0, 0, 1, 2, 21
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260329104829_add_increment_xp_function.sql", "SQLite", 0, 0, 0, 0, 25, 0, 0, 0, 4, 3, 32
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405140000_v1_social_and_currency.sql", "SQLite", 0, 0, 0, 0, 95, 0, 0, 0, 30, 25, 150
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405160000_v2_shop_and_avatar.sql", "SQLite", 0, 0, 0, 0, 125, 0, 0, 0, 34, 36, 195
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405170000_achievements.sql", "SQLite", 0, 0, 0, 0, 59, 0, 0, 0, 17, 14, 90
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405171000_add_gold_rpc.sql", "SQLite", 0, 0, 0, 0, 11, 0, 0, 0, 1, 1, 13
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405180000_punishment_rpc.sql", "SQLite", 0, 0, 0, 0, 36, 0, 0, 0, 4, 4, 44
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405190000_extended_cosmetics.sql", "SQLite", 0, 0, 0, 0, 19, 0, 0, 0, 6, 2, 27
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260405200000_daily_quests.sql", "SQLite", 0, 0, 0, 0, 155, 0, 0, 0, 30, 33, 218
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260406100000_habit_content.sql", "SQLite", 0, 0, 0, 0, 9, 0, 0, 0, 3, 3, 15
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260406200000_habit_pause.sql", "SQLite", 0, 0, 0, 0, 3, 0, 0, 0, 3, 2, 8
+"c:\Users\Boungo\Desktop\perso\levelUp\supabase\migrations\20260406210000_add_duels.sql", "SQLite", 0, 0, 0, 0, 31, 0, 0, 0, 6, 6, 43
+"c:\Users\Boungo\Desktop\perso\levelUp\tsconfig.json", "JSON with Comments", 19, 0, 0, 0, 0, 0, 0, 0, 0, 1, 20
+"Total", "-", 19, 9, 329, 16396, 693, 12064, 30, 4800, 704, 1988, 37032

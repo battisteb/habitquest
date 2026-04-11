@@ -8,6 +8,7 @@ import { updateQuestProgress } from '../../daily-quests/stores/daily-quests-stor
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { recordCompletionHour } from '../../notifications/utils/adaptive-timing';
+import { refreshProfile } from '../../gamification/stores/profile-store';
 import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { HabitContent } from '../types/habit-content';
 import type { Database } from '../../../lib/supabase/types';
@@ -258,6 +259,7 @@ export async function completeHabit(habitId: string) {
   const prevWeekCount = habitsStore$.weekCompletions.get()[habitId] ?? 0;
   habitsStore$.weekCompletions[habitId].set(prevWeekCount + 1);
   recordCompletionHour();
+  refreshProfile();
   if (streak) {
     habitsStore$.streaks[habitId].set({
       ...streak,
