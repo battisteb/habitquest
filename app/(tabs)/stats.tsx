@@ -82,6 +82,11 @@ export default function StatsScreen() {
       )}
 
       <PixelButton
+        title="📊 Weekly Recap"
+        onPress={() => router.push('/weekly-recap')}
+        variant="secondary"
+      />
+      <PixelButton
         title="View Achievements"
         onPress={() => router.push('/achievements')}
         variant="secondary"
