@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
-import { initAuth } from '../src/features/auth/stores/auth-store';
+import { initAuth, authStore$ } from '../src/features/auth/stores/auth-store';
 import { hasCompletedOnboarding } from './onboarding';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
 import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';
@@ -13,6 +13,7 @@ import { AchievementToast } from '../src/ui/animations/achievement-toast';
 import {
   configureNotifications,
   applyNotificationPrefs,
+  registerPushToken,
 } from '../src/features/notifications/utils/notification-service';
 import { useWeeklyRecapScheduler } from '../src/features/notifications/hooks/use-weekly-recap-scheduler';
 import { colors } from '../src/ui/theme/tokens';
@@ -64,6 +65,14 @@ function ThemedApp() {
     initAuth();
     configureNotifications().then(() => applyNotificationPrefs());
   }, []);
+
+  // Register push token once user is authenticated
+  useEffect(() => {
+    const userId = authStore$.user.get()?.id;
+    if (userId) {
+      registerPushToken(userId);
+    }
+  }, [use$(authStore$.user)?.id]);
 
   return (
     <>

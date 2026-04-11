@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 import { storage } from '../../../lib/storage/mmkv';
 import { getRandomMessage } from './notification-messages';
 import { getOptimalNotificationHour } from './adaptive-timing';
+import { supabase } from '../../../lib/supabase/client';
 
 const DAILY_REMINDER_ID = 'daily-reminder';
 const STREAK_RISK_ID = 'streak-risk';
@@ -273,5 +274,26 @@ export async function applyNotificationPrefs(prefs?: NotificationPrefs): Promise
     }
   } else {
     await cancelWeeklyRecap();
+  }
+}
+
+// ── Push token registration ────────────────────────────────────────────────────
+
+export async function registerPushToken(userId: string): Promise<void> {
+  if (!isNative()) return;
+  try {
+    const granted = await requestPermissions();
+    if (!granted) return;
+
+    const Notifications = await getNotifications();
+    const tokenData = await Notifications.getExpoPushTokenAsync();
+    const token = tokenData.data;
+    if (!token) return;
+
+    await (supabase.from('profiles') as any)
+      .update({ push_token: token })
+      .eq('id', userId);
+  } catch {
+    // Non-critical — don't block app startup
   }
 }
