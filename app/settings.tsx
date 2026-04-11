@@ -164,6 +164,11 @@ export default function SettingsScreen() {
           variant="secondary"
         />
         <PixelButton
+          title="🎯 Focus Mode"
+          onPress={() => router.push('/settings/contextual-mode')}
+          variant="secondary"
+        />
+        <PixelButton
           title="📦 Archived Habits"
           onPress={() => router.push('/habit/archive')}
           variant="secondary"
