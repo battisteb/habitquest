@@ -58,6 +58,7 @@ function ThemedApp() {
   const newLevel = use$(levelUpStore$.newLevel);
   const newlyUnlocked = use$(achievementsStore$.newlyUnlocked);
   const currentToast = newlyUnlocked[0] ?? null;
+  const authUserId = use$(authStore$.user)?.id;
 
   useWeeklyRecapScheduler();
 
@@ -68,11 +69,10 @@ function ThemedApp() {
 
   // Register push token once user is authenticated
   useEffect(() => {
-    const userId = authStore$.user.get()?.id;
-    if (userId) {
-      registerPushToken(userId);
+    if (authUserId) {
+      registerPushToken(authUserId);
     }
-  }, [use$(authStore$.user)?.id]);
+  }, [authUserId]);
 
   return (
     <>
