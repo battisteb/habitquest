@@ -1,6 +1,7 @@
 import { observable } from '@legendapp/state';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import { refreshProfile } from '../../gamification/stores/profile-store';
 import type { Database } from '../../../lib/supabase/types';
 
 type ShopItem = Database['public']['Tables']['shop_items']['Row'];
@@ -79,6 +80,7 @@ export async function purchaseItem(itemId: string) {
 
   // Refresh shop and profile data
   await fetchShop();
+  refreshProfile();
 }
 
 export async function equipItem(itemId: string, slot: string) {
