@@ -2,7 +2,7 @@ import { observable, when } from '@legendapp/state';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { calculateNewStreak } from '../utils/streak-calculator';
-import { calculateXpEarned } from '../../../lib/constants/game-config';
+import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
 import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 import { updateQuestProgress } from '../../daily-quests/stores/daily-quests-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
@@ -210,6 +210,7 @@ export async function completeHabit(habitId: string) {
   // Calculate new streak
   const newStreak = calculateNewStreak(currentCount, longestCount, lastCompletedAt);
   const xpEarned = calculateXpEarned(newStreak.currentCount);
+  const goldEarned = calculateGoldEarned(xpEarned);
 
   const now = new Date().toISOString();
 
@@ -243,6 +244,13 @@ export async function completeHabit(habitId: string) {
       user_id: userId,
       xp_amount: xpEarned,
     } as never);
+
+    if (goldEarned > 0) {
+      await supabase.rpc('add_gold' as never, {
+        p_user_id: userId,
+        p_amount: goldEarned,
+      } as never);
+    }
 
     // Check for level-up
     if (profileBefore) {
