@@ -391,11 +391,16 @@ export type Database = {
           active_theme: string
           created_at: string
           email: string
+          freeze_tokens: number
           gold: number
           id: string
+          last_duel_at: string | null
           level: number
           push_token: string | null
           rank: string
+          revenue_cat_id: string | null
+          subscription_expires_at: string | null
+          subscription_status: string
           username: string
           xp: number
         }
@@ -403,11 +408,16 @@ export type Database = {
           active_theme?: string
           created_at?: string
           email: string
+          freeze_tokens?: number
           gold?: number
           id: string
+          last_duel_at?: string | null
           level?: number
           push_token?: string | null
           rank?: string
+          revenue_cat_id?: string | null
+          subscription_expires_at?: string | null
+          subscription_status?: string
           username: string
           xp?: number
         }
@@ -415,11 +425,16 @@ export type Database = {
           active_theme?: string
           created_at?: string
           email?: string
+          freeze_tokens?: number
           gold?: number
           id?: string
+          last_duel_at?: string | null
           level?: number
           push_token?: string | null
           rank?: string
+          revenue_cat_id?: string | null
+          subscription_expires_at?: string | null
+          subscription_status?: string
           username?: string
           xp?: number
         }

@@ -31,6 +31,7 @@ import { useLeaderboard, useStreakLeaderboard } from '../../src/features/social/
 import type { StreakLeaderEntry } from '../../src/features/social/hooks/use-leaderboard';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 
 type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
 
@@ -470,6 +471,7 @@ export default function SocialScreen() {
       {activeTab === 'challenges' && renderChallenges()}
       {activeTab === 'streaks' && renderStreakLeaderboard()}
       {activeTab === 'search' && renderSearch()}
+      <AdBanner position="bottom" />
     </View>
   );
 }

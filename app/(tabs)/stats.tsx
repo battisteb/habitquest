@@ -10,6 +10,8 @@ import { sessionsStore$ } from '../../src/features/training/stores/sessions-stor
 import { decksStore$ } from '../../src/features/training/stores/decks-store';
 import { getDueCards } from '../../src/features/training/types/flashcard';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { AdBanner } from '../../src/features/monetization/components/ad-banner';
+import { PremiumGate } from '../../src/features/monetization/components/premium-gate';
 
 export default function StatsScreen() {
   const insets = useSafeAreaInsets();
@@ -91,6 +93,16 @@ export default function StatsScreen() {
         onPress={() => router.push('/achievements')}
         variant="secondary"
       />
+
+      {/* Full history — premium only */}
+      <PremiumGate
+        lockedLabel="Historique complet disponible en Premium"
+        lockedIcon="📈"
+      >
+        <View />
+      </PremiumGate>
+
+      <AdBanner position="inline" />
     </ScrollView>
   );
 }

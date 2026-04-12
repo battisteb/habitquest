@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { use$ } from '@legendapp/state/react';
 import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
 import { ShopItemCard } from '../../src/features/shop/components/shop-item-card';
@@ -26,6 +27,8 @@ import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { isItemUnlocked } from '../../src/features/shop/utils/unlock-checker';
 import { SHOP_ITEMS } from '../../src/features/shop/types/shop-item';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { AdBanner } from '../../src/features/monetization/components/ad-banner';
+import { usePremium } from '../../src/features/monetization/hooks/use-premium';
 
 const CATEGORIES = [
   { key: 'avatar_hat', label: 'HATS', icon: '🎩' },
@@ -51,6 +54,7 @@ const SLOT_LABELS: Record<string, string> = {
 
 export default function ShopScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const items = use$(shopStore$.items);
   const ownedItemIds = use$(shopStore$.ownedItemIds);
   const equippedSlots = use$(shopStore$.equippedSlots);
@@ -61,6 +65,7 @@ export default function ShopScreen() {
 
   const userGold = profile?.gold ?? 0;
   const userLevel = profile?.level ?? 0;
+  const { canViewShopItem } = usePremium();
 
   // Compute the longest streak across all tracked habits for streak-gated unlocks
   const streaks = use$(habitsStore$.streaks);
@@ -287,6 +292,8 @@ export default function ShopScreen() {
               ? staticItem.unlockCondition.label
               : undefined;
 
+            const premiumLocked = !canViewShopItem(item.rarity);
+
             return (
               <ShopItemCard
                 name={item.name}
@@ -299,18 +306,26 @@ export default function ShopScreen() {
                 isOwned={ownedItemIds.has(item.id)}
                 isEquipped={isEquipped}
                 canAfford={userGold >= item.price_gold}
-                canUnlock={canUnlock}
-                unlockLabel={unlockLabel}
+                canUnlock={canUnlock && !premiumLocked}
+                unlockLabel={premiumLocked ? '👑 Premium requis' : unlockLabel}
+                isPremiumLocked={premiumLocked}
                 currentHat={currentHat}
                 currentOutfit={currentOutfit}
                 currentAccessory={currentAccessory}
                 currentBg={currentBg}
-                onPress={() => !isItemLoading && handleItemPress(item)}
+                onPress={() => {
+                  if (premiumLocked) {
+                    router.push('/paywall');
+                    return;
+                  }
+                  if (!isItemLoading) handleItemPress(item);
+                }}
               />
             );
           }}
         />
       )}
+      <AdBanner position="bottom" />
     </View>
   );
 }

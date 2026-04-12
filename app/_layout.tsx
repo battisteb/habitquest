@@ -19,6 +19,8 @@ import { useWeeklyRecapScheduler } from '../src/features/notifications/hooks/use
 import { colors } from '../src/ui/theme/tokens';
 import { ThemeProvider, useTheme } from '../src/ui/theme/theme-context';
 import { OfflineBanner } from '../src/ui/components/offline-banner';
+import { initPurchases } from '../src/features/monetization/stores/subscription-store';
+import { preloadInterstitial } from '../src/features/monetization/utils/ad-service';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -67,10 +69,11 @@ function ThemedApp() {
     configureNotifications().then(() => applyNotificationPrefs());
   }, []);
 
-  // Register push token once user is authenticated
+  // Register push token + init RevenueCat once user is authenticated
   useEffect(() => {
     if (authUserId) {
       registerPushToken(authUserId);
+      initPurchases(authUserId).then(() => preloadInterstitial());
     }
   }, [authUserId]);
 

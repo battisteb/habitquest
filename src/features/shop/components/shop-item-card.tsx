@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { PixelAvatar } from '../../avatar/renderer/pixel-avatar';
 import { RarityBadge } from './rarity-badge';
 import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { PremiumBadge } from '../../monetization/components/premium-gate';
 
 const RARITY_BORDER: Record<string, string> = {
   common: colors.border,
@@ -25,6 +26,8 @@ interface ShopItemCardProps {
   canUnlock: boolean;
   /** Human-readable unlock requirement shown when canUnlock is false */
   unlockLabel?: string;
+  /** Item requires Premium subscription */
+  isPremiumLocked?: boolean;
   /** Current equipped slots — so preview shows the full equipped look + this item */
   currentHat?: string;
   currentOutfit?: string;
@@ -46,13 +49,14 @@ export function ShopItemCard({
   canAfford,
   canUnlock,
   unlockLabel,
+  isPremiumLocked,
   currentHat,
   currentOutfit,
   currentAccessory,
   currentBg,
   onPress,
 }: ShopItemCardProps) {
-  const disabled = !isOwned && (!canAfford || !canUnlock);
+  const disabled = !isOwned && (!canAfford || !canUnlock || !!isPremiumLocked);
   const borderColor = isEquipped
     ? colors.accent
     : RARITY_BORDER[rarity] ?? colors.border;
@@ -97,7 +101,10 @@ export function ShopItemCard({
       </View>
 
       <Text style={styles.name} numberOfLines={1}>{name}</Text>
-      <RarityBadge rarity={rarity} />
+      <View style={styles.badgeRow}>
+        <RarityBadge rarity={rarity} />
+        {isPremiumLocked && <PremiumBadge />}
+      </View>
 
       {!isOwned && !canUnlock && unlockLabel && (
         <Text style={styles.unlockLabel} numberOfLines={2}>
@@ -213,5 +220,11 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     textAlign: 'center',
     lineHeight: 12,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 4,
+    alignItems: 'center',
   },
 });

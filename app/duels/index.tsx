@@ -7,6 +7,9 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { duelStore$, fetchUnlockedCategories, fetchDuels, getWeeklyDuelsUsed } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
+import { usePremium } from '../../src/features/monetization/hooks/use-premium';
+import { showInterstitial } from '../../src/features/monetization/utils/ad-service';
+import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 
 export default function DuelsIndexScreen() {
   const insets = useSafeAreaInsets();
@@ -14,6 +17,9 @@ export default function DuelsIndexScreen() {
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
   const attacks = getUnlockedAttacks(unlockedCategories);
   const [weeklyUsed, setWeeklyUsed] = useState(0);
+  const { isPremium, canStartDuel, duelCooldownRemainingMinutes, duelCooldownHours, openPaywall } = usePremium();
+  const { profile } = useProfileStats();
+  const lastDuelAt = (profile as any)?.last_duel_at ?? null;
 
   useEffect(() => {
     fetchUnlockedCategories();
@@ -21,14 +27,28 @@ export default function DuelsIndexScreen() {
     getWeeklyDuelsUsed().then((n) => setWeeklyUsed(n));
   }, []);
 
-  const limitReached = weeklyUsed >= 2;
+  const cooldownOk = canStartDuel(lastDuelAt);
+  const cooldownMinutes = duelCooldownRemainingMinutes(lastDuelAt);
+  const cooldownHours = Math.ceil(cooldownMinutes / 60);
+
+  // Legacy weekly limit for free users (3 per week = at most 1 every 2 days + max 3)
+  const weeklyLimitReached = !isPremium && weeklyUsed >= 3;
+  const limitReached = !cooldownOk || weeklyLimitReached;
 
   const badgeColor =
     weeklyUsed === 0
       ? colors.success
-      : weeklyUsed === 1
+      : weeklyUsed < 3
       ? colors.warning
       : colors.danger;
+
+  function handleChallengeFriend() {
+    showInterstitial(() => router.push('/duels/challenge'));
+  }
+
+  function handleQuickBattle() {
+    showInterstitial(() => router.push('/duels/battle'));
+  }
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -37,7 +57,7 @@ export default function DuelsIndexScreen() {
           <Text style={styles.title}>DUELS</Text>
           <View style={[styles.weeklyBadge, { borderColor: badgeColor }]}>
             <Text style={[styles.weeklyBadgeText, { color: badgeColor }]}>
-              {weeklyUsed}/2 this week
+              {isPremium ? `${weeklyUsed} this week` : `${weeklyUsed}/3 this week`}
             </Text>
           </View>
         </View>
@@ -69,22 +89,34 @@ export default function DuelsIndexScreen() {
       {limitReached ? (
         <View style={styles.lockedContainer}>
           <Text style={styles.lockedIcon}>🔒</Text>
-          <Text style={styles.lockedTitle}>WEEKLY LIMIT REACHED</Text>
-          <Text style={styles.lockedMessage}>
-            Come back next Monday — 2 duels used this week
+          <Text style={styles.lockedTitle}>
+            {weeklyLimitReached ? 'LIMITE HEBDO ATTEINTE' : 'COOLDOWN EN COURS'}
           </Text>
+          <Text style={styles.lockedMessage}>
+            {weeklyLimitReached
+              ? 'Reviens lundi — 3 duels utilisés cette semaine'
+              : `Prochain duel disponible dans ${cooldownHours}h\n(${duelCooldownHours}h entre chaque duel)`}
+          </Text>
+          {!isPremium && (
+            <PixelButton
+              title="👑 Premium : 1 duel/jour"
+              onPress={openPaywall}
+              variant="secondary"
+              style={{ marginTop: spacing.sm }}
+            />
+          )}
         </View>
       ) : (
         <PixelButton
           title="Challenge a Friend"
-          onPress={() => router.push('/duels/challenge')}
+          onPress={handleChallengeFriend}
           style={styles.challengeBtn}
         />
       )}
 
       <PixelButton
         title="⚔️ Quick Battle (Demo)"
-        onPress={() => router.push('/duels/battle')}
+        onPress={handleQuickBattle}
         variant="ghost"
         style={styles.simBtn}
       />

@@ -18,7 +18,14 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.battiste.habitquest",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "infoPlist": {
+        "SKAdNetworkItems": [
+          { "SKAdNetworkIdentifier": "cstr6suwn9.skadnetwork" },
+          { "SKAdNetworkIdentifier": "4fzdc2evr5.skadnetwork" }
+        ],
+        "NSUserTrackingUsageDescription": "This identifier will be used to show you personalized ads."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -41,7 +48,16 @@
           "icon": "./assets/icon.png",
           "color": "#e94560"
         }
-      ]
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX",
+          "iosAppId": "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX",
+          "userTrackingUsageDescription": "This identifier will be used to show you personalized ads."
+        }
+      ],
+      "react-native-purchases"
     ],
     "scheme": "habitquest"
   }
