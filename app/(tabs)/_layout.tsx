@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { use$ } from '@legendapp/state/react';
 import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
 import { friendsStore$ } from '../../src/features/social/stores/friends-store';
+import { notificationsStore$, fetchNotifications } from '../../src/features/notifications/stores/notifications-store';
 import { colors } from '../../src/ui/theme/tokens';
 
 function usePendingHabitCount(): number {
@@ -20,9 +22,18 @@ function usePendingFriendCount(): number {
   return pending.length;
 }
 
+function useUnreadNotificationCount(): number {
+  return use$(notificationsStore$.unreadCount);
+}
+
 export default function TabsLayout() {
   const pendingHabits = usePendingHabitCount();
   const pendingFriends = usePendingFriendCount();
+  const unreadNotifications = useUnreadNotificationCount();
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   return (
     <Tabs
@@ -48,6 +59,12 @@ export default function TabsLayout() {
           title: 'ME',
           tabBarLabel: 'ME',
           tabBarIcon: ({ color }) => null,
+          tabBarBadge: unreadNotifications > 0 ? unreadNotifications : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: colors.primary,
+            fontSize: 9,
+            fontWeight: 'bold',
+          },
         }}
       />
       <Tabs.Screen

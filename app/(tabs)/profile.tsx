@@ -166,6 +166,15 @@ export default function ProfileScreen() {
 
           <View style={styles.actionsRow}>
             <PixelButton
+              title="🔔 Notifications"
+              onPress={() => router.push('/notifications')}
+              variant="secondary"
+              style={{ flex: 1 }}
+            />
+          </View>
+
+          <View style={styles.actionsRow}>
+            <PixelButton
               title="Edit Profile"
               onPress={() => router.push('/profile/edit')}
               variant="ghost"
