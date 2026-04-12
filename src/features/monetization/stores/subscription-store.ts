@@ -6,8 +6,13 @@ import { authStore$ } from '../../auth/stores/auth-store';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 // RevenueCat API keys (public, safe to commit — server validates receipts)
+// TODO: Replace with real keys from RevenueCat dashboard before production release
 const RC_API_KEY_IOS = 'appl_placeholder_replace_with_real_key';
 const RC_API_KEY_ANDROID = 'goog_placeholder_replace_with_real_key';
+
+function isRcConfigured(): boolean {
+  return !RC_API_KEY_IOS.includes('placeholder') && !RC_API_KEY_ANDROID.includes('placeholder');
+}
 
 // RevenueCat entitlement ID configured in the dashboard
 export const ENTITLEMENT_PREMIUM = 'premium';
@@ -38,6 +43,11 @@ let _initialized = false;
 
 export async function initPurchases(userId: string): Promise<void> {
   if (_initialized) return;
+  if (!isRcConfigured()) {
+    // RevenueCat not configured yet — app runs fully as free tier
+    if (__DEV__) console.log('[RevenueCat] Not configured — skipping init (all users free)');
+    return;
+  }
   try {
     if (__DEV__) {
       Purchases.setLogLevel(LOG_LEVEL.DEBUG);

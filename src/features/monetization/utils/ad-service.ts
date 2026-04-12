@@ -10,25 +10,22 @@ import { Platform } from 'react-native';
 import { subscriptionStore$ } from '../stores/subscription-store';
 
 // ─── Ad Unit IDs ──────────────────────────────────────────────────────────────
-// Replace with real IDs from AdMob console before production release.
-// TestIds are safe for development (no policy violation).
-const IS_DEV = __DEV__;
+// TODO: Replace XXXXXXXXXXXXXXXX with real IDs from AdMob console before production release.
+// Until then, TestIds are used in all environments — safe, no policy violation.
+const PROD_BANNER_IOS = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+const PROD_BANNER_AND = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+const PROD_INTER_IOS  = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+const PROD_INTER_AND  = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+
+const isAdMobConfigured = !PROD_BANNER_IOS.includes('XXXX');
 
 export const ADMOB_IDS = {
-  banner: IS_DEV
-    ? TestIds.BANNER
-    : Platform.select({
-        ios: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-        android: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-        default: TestIds.BANNER,
-      })!,
-  interstitial: IS_DEV
-    ? TestIds.INTERSTITIAL
-    : Platform.select({
-        ios: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-        android: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-        default: TestIds.INTERSTITIAL,
-      })!,
+  banner: (!__DEV__ && isAdMobConfigured)
+    ? Platform.select({ ios: PROD_BANNER_IOS, android: PROD_BANNER_AND, default: TestIds.BANNER })!
+    : TestIds.BANNER,
+  interstitial: (!__DEV__ && isAdMobConfigured)
+    ? Platform.select({ ios: PROD_INTER_IOS, android: PROD_INTER_AND, default: TestIds.INTERSTITIAL })!
+    : TestIds.INTERSTITIAL,
 };
 
 export { BannerAdSize };

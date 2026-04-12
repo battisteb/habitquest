@@ -21,6 +21,8 @@ import {
 } from '../src/features/notifications/utils/notification-service';
 import { signOut } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { use$ } from '@legendapp/state/react';
+import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 
 const THEME_KEYS: ThemeKey[] = ['default', 'medieval', 'cyberpunk', 'nature'];
 
@@ -30,6 +32,7 @@ export default function SettingsScreen() {
   const { themeKey, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState<NotificationPrefs>(() => getNotificationPrefs());
+  const isPremium = use$(subscriptionStore$.isPremium);
 
   function updatePref<K extends keyof NotificationPrefs>(key: K, value: NotificationPrefs[K]) {
     const next = { ...prefs, [key]: value };
@@ -152,6 +155,23 @@ export default function SettingsScreen() {
             thumbColor={colors.text}
           />
         </View>
+      </View>
+
+      {/* Premium section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>ABONNEMENT</Text>
+        {isPremium ? (
+          <View style={styles.premiumBadgeRow}>
+            <Text style={styles.premiumActive}>👑 PREMIUM ACTIF</Text>
+            <Text style={styles.premiumSub}>Toutes les fonctionnalités sont débloquées</Text>
+          </View>
+        ) : (
+          <PixelButton
+            title="👑 Passer Premium — Supprimer les pubs"
+            onPress={() => router.push('/paywall')}
+            variant="secondary"
+          />
+        )}
       </View>
 
       {/* Account section */}
@@ -324,6 +344,27 @@ const styles = StyleSheet.create({
   },
   timeBtnTextActive: {
     color: colors.primary,
+  },
+
+  // Premium status
+  premiumBadgeRow: {
+    backgroundColor: '#FFD700' + '18',
+    borderWidth: 2,
+    borderColor: '#FFD700' + '66',
+    borderRadius: 4,
+    padding: spacing.md,
+    gap: 4,
+    alignItems: 'center',
+  },
+  premiumActive: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    letterSpacing: 1,
+  },
+  premiumSub: {
+    fontSize: fontSizes.xs,
+    color: colors.textSecondary,
   },
 
   // App info
