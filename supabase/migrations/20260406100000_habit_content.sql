@@ -3,7 +3,7 @@
 -- timers, checklists, or external links to a habit.
 
 alter table public.habits
-  add column content jsonb default null;
+  add column if not exists content jsonb default null;
 
 comment on column public.habits.content is
   'Optional structured content attached to a habit.

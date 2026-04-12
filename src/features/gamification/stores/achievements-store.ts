@@ -229,16 +229,16 @@ export async function checkAndUnlockAchievements() {
 
       // Award XP and gold rewards
       if (a.xp_reward > 0) {
-        await supabase.rpc('increment_xp' as never, {
+        await supabase.rpc('increment_xp', {
           user_id: userId,
           xp_amount: a.xp_reward,
-        } as never);
+        });
       }
       if (a.gold_reward > 0) {
-        await supabase.rpc('add_gold' as never, {
+        await supabase.rpc('add_gold', {
           p_user_id: userId,
           p_amount: a.gold_reward,
-        } as never);
+        });
       }
 
       newlyUnlocked.push({

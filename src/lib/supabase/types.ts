@@ -14,167 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      daily_quest_templates: {
-        Row: {
-          id: string
-          title: string
-          description: string
-          quest_type: string
-          target_value: number
-          target_category: string | null
-          xp_reward: number
-          gold_reward: number
-          difficulty: string
-          is_active: boolean
-        }
-        Insert: {
-          id?: string
-          title: string
-          description: string
-          quest_type: string
-          target_value: number
-          target_category?: string | null
-          xp_reward?: number
-          gold_reward?: number
-          difficulty?: string
-          is_active?: boolean
-        }
-        Update: {
-          id?: string
-          title?: string
-          description?: string
-          quest_type?: string
-          target_value?: number
-          target_category?: string | null
-          xp_reward?: number
-          gold_reward?: number
-          difficulty?: string
-          is_active?: boolean
-        }
-        Relationships: []
-      }
-      user_daily_quests: {
-        Row: {
-          id: string
-          user_id: string
-          template_id: string
-          assigned_date: string
-          current_progress: number
-          is_completed: boolean
-          is_claimed: boolean
-          completed_at: string | null
-          claimed_at: string | null
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          template_id: string
-          assigned_date?: string
-          current_progress?: number
-          is_completed?: boolean
-          is_claimed?: boolean
-          completed_at?: string | null
-          claimed_at?: string | null
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          template_id?: string
-          assigned_date?: string
-          current_progress?: number
-          is_completed?: boolean
-          is_claimed?: boolean
-          completed_at?: string | null
-          claimed_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_daily_quests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_daily_quests_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "daily_quest_templates"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       achievements: {
         Row: {
+          category: string
+          created_at: string
+          description: string
+          gold_reward: number
+          icon: string
           id: string
           key: string
           name: string
-          description: string
-          category: string
-          icon: string
           threshold: number
           xp_reward: number
-          gold_reward: number
-          created_at: string
         }
         Insert: {
+          category: string
+          created_at?: string
+          description: string
+          gold_reward?: number
+          icon?: string
           id?: string
           key: string
           name: string
-          description: string
-          category: string
-          icon?: string
           threshold?: number
           xp_reward?: number
-          gold_reward?: number
-          created_at?: string
         }
         Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          gold_reward?: number
+          icon?: string
           id?: string
           key?: string
           name?: string
-          description?: string
-          category?: string
-          icon?: string
           threshold?: number
           xp_reward?: number
-          gold_reward?: number
-          created_at?: string
         }
         Relationships: []
       }
-      user_achievements: {
+      challenges: {
         Row: {
+          created_at: string
+          creator_id: string
+          creator_progress: number
+          ends_at: string | null
+          gold_wager: number
           id: string
-          user_id: string
-          achievement_id: string
-          unlocked_at: string
+          opponent_id: string
+          opponent_progress: number
+          starts_at: string | null
+          status: string
+          target: number
+          type: string
+          winner_id: string | null
         }
         Insert: {
+          created_at?: string
+          creator_id: string
+          creator_progress?: number
+          ends_at?: string | null
+          gold_wager?: number
           id?: string
-          user_id: string
-          achievement_id: string
-          unlocked_at?: string
+          opponent_id: string
+          opponent_progress?: number
+          starts_at?: string | null
+          status?: string
+          target: number
+          type: string
+          winner_id?: string | null
         }
         Update: {
+          created_at?: string
+          creator_id?: string
+          creator_progress?: number
+          ends_at?: string | null
+          gold_wager?: number
           id?: string
-          user_id?: string
-          achievement_id?: string
-          unlocked_at?: string
+          opponent_id?: string
+          opponent_progress?: number
+          starts_at?: string | null
+          status?: string
+          target?: number
+          type?: string
+          winner_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "user_achievements_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "challenges_creator_id_fkey"
+            columns: ["creator_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "user_achievements_achievement_id_fkey"
-            columns: ["achievement_id"]
+            foreignKeyName: "challenges_opponent_id_fkey"
+            columns: ["opponent_id"]
             isOneToOne: false
-            referencedRelation: "achievements"
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenges_winner_id_fkey"
+            columns: ["winner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -208,32 +152,228 @@ export type Database = {
           },
         ]
       }
+      daily_quest_templates: {
+        Row: {
+          description: string
+          difficulty: string
+          gold_reward: number
+          id: string
+          is_active: boolean
+          quest_type: string
+          target_category: string | null
+          target_value: number
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          description: string
+          difficulty?: string
+          gold_reward?: number
+          id?: string
+          is_active?: boolean
+          quest_type: string
+          target_category?: string | null
+          target_value: number
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          description?: string
+          difficulty?: string
+          gold_reward?: number
+          id?: string
+          is_active?: boolean
+          quest_type?: string
+          target_category?: string | null
+          target_value?: number
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      duels: {
+        Row: {
+          challenger_attack_id: string | null
+          challenger_hp: number
+          challenger_id: string
+          created_at: string
+          id: string
+          loser_xp_bonus: number | null
+          opponent_attack_id: string | null
+          opponent_hp: number
+          opponent_id: string
+          resolved_at: string | null
+          rounds: Json | null
+          status: string
+          winner_id: string | null
+        }
+        Insert: {
+          challenger_attack_id?: string | null
+          challenger_hp?: number
+          challenger_id: string
+          created_at?: string
+          id?: string
+          loser_xp_bonus?: number | null
+          opponent_attack_id?: string | null
+          opponent_hp?: number
+          opponent_id: string
+          resolved_at?: string | null
+          rounds?: Json | null
+          status?: string
+          winner_id?: string | null
+        }
+        Update: {
+          challenger_attack_id?: string | null
+          challenger_hp?: number
+          challenger_id?: string
+          created_at?: string
+          id?: string
+          loser_xp_bonus?: number | null
+          opponent_attack_id?: string | null
+          opponent_hp?: number
+          opponent_id?: string
+          resolved_at?: string | null
+          rounds?: Json | null
+          status?: string
+          winner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duels_challenger_id_fkey"
+            columns: ["challenger_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "duels_opponent_id_fkey"
+            columns: ["opponent_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "duels_winner_id_fkey"
+            columns: ["winner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipped_items: {
+        Row: {
+          equipped_at: string
+          id: string
+          item_id: string
+          slot: string
+          user_id: string
+        }
+        Insert: {
+          equipped_at?: string
+          id?: string
+          item_id: string
+          slot: string
+          user_id: string
+        }
+        Update: {
+          equipped_at?: string
+          id?: string
+          item_id?: string
+          slot?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipped_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "shop_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipped_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      friendships: {
+        Row: {
+          addressee_id: string
+          created_at: string
+          id: string
+          requester_id: string
+          status: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string
+          id?: string
+          requester_id: string
+          status?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string
+          id?: string
+          requester_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "friendships_addressee_id_fkey"
+            columns: ["addressee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "friendships_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       habits: {
         Row: {
           category: string
+          content: Json | null
           created_at: string
           frequency: string
           id: string
           is_archived: boolean
+          is_paused: boolean
           name: string
+          paused_at: string | null
           user_id: string
         }
         Insert: {
           category?: string
+          content?: Json | null
           created_at?: string
           frequency?: string
           id?: string
           is_archived?: boolean
+          is_paused?: boolean
           name: string
+          paused_at?: string | null
           user_id: string
         }
         Update: {
           category?: string
+          content?: Json | null
           created_at?: string
           frequency?: string
           id?: string
           is_archived?: boolean
+          is_paused?: boolean
           name?: string
+          paused_at?: string | null
           user_id?: string
         }
         Relationships: [
@@ -246,147 +386,6 @@ export type Database = {
           },
         ]
       }
-      friendships: {
-        Row: {
-          id: string
-          requester_id: string
-          addressee_id: string
-          status: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          requester_id: string
-          addressee_id: string
-          status?: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          requester_id?: string
-          addressee_id?: string
-          status?: string
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "friendships_requester_id_fkey"
-            columns: ["requester_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "friendships_addressee_id_fkey"
-            columns: ["addressee_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      challenges: {
-        Row: {
-          id: string
-          creator_id: string
-          opponent_id: string
-          type: string
-          target: number
-          creator_progress: number
-          opponent_progress: number
-          status: string
-          winner_id: string | null
-          gold_wager: number
-          starts_at: string | null
-          ends_at: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          creator_id: string
-          opponent_id: string
-          type: string
-          target: number
-          creator_progress?: number
-          opponent_progress?: number
-          status?: string
-          winner_id?: string | null
-          gold_wager?: number
-          starts_at?: string | null
-          ends_at?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          creator_id?: string
-          opponent_id?: string
-          type?: string
-          target?: number
-          creator_progress?: number
-          opponent_progress?: number
-          status?: string
-          winner_id?: string | null
-          gold_wager?: number
-          starts_at?: string | null
-          ends_at?: string | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "challenges_creator_id_fkey"
-            columns: ["creator_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "challenges_opponent_id_fkey"
-            columns: ["opponent_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      equipped_items: {
-        Row: {
-          id: string
-          user_id: string
-          item_id: string
-          slot: string
-          equipped_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          item_id: string
-          slot: string
-          equipped_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          item_id?: string
-          slot?: string
-          equipped_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "equipped_items_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "equipped_items_item_id_fkey"
-            columns: ["item_id"]
-            isOneToOne: false
-            referencedRelation: "shop_items"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       profiles: {
         Row: {
           active_theme: string
@@ -395,6 +394,7 @@ export type Database = {
           gold: number
           id: string
           level: number
+          push_token: string | null
           rank: string
           username: string
           xp: number
@@ -406,6 +406,7 @@ export type Database = {
           gold?: number
           id: string
           level?: number
+          push_token?: string | null
           rank?: string
           username: string
           xp?: number
@@ -417,6 +418,7 @@ export type Database = {
           gold?: number
           id?: string
           level?: number
+          push_token?: string | null
           rank?: string
           username?: string
           xp?: number
@@ -426,30 +428,23 @@ export type Database = {
       purchases: {
         Row: {
           id: string
-          user_id: string
           item_id: string
           purchased_at: string
+          user_id: string
         }
         Insert: {
           id?: string
-          user_id: string
           item_id: string
           purchased_at?: string
+          user_id: string
         }
         Update: {
           id?: string
-          user_id?: string
           item_id?: string
           purchased_at?: string
+          user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "purchases_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "purchases_item_id_fkey"
             columns: ["item_id"]
@@ -457,44 +452,51 @@ export type Database = {
             referencedRelation: "shop_items"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "purchases_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       shop_items: {
         Row: {
-          id: string
-          name: string
-          description: string
           category: string
+          created_at: string
+          description: string
+          id: string
+          is_available: boolean
+          name: string
           price_gold: number
           rarity: string
           required_level: number
           sprite_key: string
-          is_available: boolean
-          created_at: string
         }
         Insert: {
-          id?: string
-          name: string
-          description?: string
           category: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_available?: boolean
+          name: string
           price_gold: number
           rarity?: string
           required_level?: number
           sprite_key?: string
-          is_available?: boolean
-          created_at?: string
         }
         Update: {
-          id?: string
-          name?: string
-          description?: string
           category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_available?: boolean
+          name?: string
           price_gold?: number
           rarity?: string
           required_level?: number
           sprite_key?: string
-          is_available?: boolean
-          created_at?: string
         }
         Relationships: []
       }
@@ -530,12 +532,138 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_daily_quests: {
+        Row: {
+          assigned_date: string
+          claimed_at: string | null
+          completed_at: string | null
+          current_progress: number
+          id: string
+          is_claimed: boolean
+          is_completed: boolean
+          template_id: string
+          user_id: string
+        }
+        Insert: {
+          assigned_date?: string
+          claimed_at?: string | null
+          completed_at?: string | null
+          current_progress?: number
+          id?: string
+          is_claimed?: boolean
+          is_completed?: boolean
+          template_id: string
+          user_id: string
+        }
+        Update: {
+          assigned_date?: string
+          claimed_at?: string | null
+          completed_at?: string | null
+          current_progress?: number
+          id?: string
+          is_claimed?: boolean
+          is_completed?: boolean
+          template_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_daily_quests_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "daily_quest_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_daily_quests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_gold: {
+        Args: { p_amount: number; p_user_id: string }
+        Returns: undefined
+      }
+      apply_punishment: {
+        Args: { p_gold_loss: number; p_user_id: string; p_xp_loss: number }
+        Returns: undefined
+      }
+      assign_daily_quests: {
+        Args: { p_user_id: string }
+        Returns: {
+          assigned_date: string
+          claimed_at: string | null
+          completed_at: string | null
+          current_progress: number
+          id: string
+          is_claimed: boolean
+          is_completed: boolean
+          template_id: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "user_daily_quests"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      claim_daily_quest: {
+        Args: { p_quest_id: string; p_user_id: string }
+        Returns: Json
+      }
+      increment_xp: {
+        Args: { user_id: string; xp_amount: number }
+        Returns: undefined
+      }
+      purchase_item: {
+        Args: { p_item_id: string; p_user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

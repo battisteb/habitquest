@@ -20,20 +20,26 @@ CREATE TABLE IF NOT EXISTS public.duels (
 ALTER TABLE public.duels ENABLE ROW LEVEL SECURITY;
 
 -- Players can see their own duels
-CREATE POLICY "duels_select" ON public.duels
-  FOR SELECT USING (
-    auth.uid() = challenger_id OR auth.uid() = opponent_id
-  );
+DO $$ BEGIN
+  CREATE POLICY "duels_select" ON public.duels
+    FOR SELECT USING (
+      auth.uid() = challenger_id OR auth.uid() = opponent_id
+    );
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Only challenger can create
-CREATE POLICY "duels_insert" ON public.duels
-  FOR INSERT WITH CHECK (auth.uid() = challenger_id);
+DO $$ BEGIN
+  CREATE POLICY "duels_insert" ON public.duels
+    FOR INSERT WITH CHECK (auth.uid() = challenger_id);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Both players can update (to submit attack, accept, resolve)
-CREATE POLICY "duels_update" ON public.duels
-  FOR UPDATE USING (
-    auth.uid() = challenger_id OR auth.uid() = opponent_id
-  );
+DO $$ BEGIN
+  CREATE POLICY "duels_update" ON public.duels
+    FOR UPDATE USING (
+      auth.uid() = challenger_id OR auth.uid() = opponent_id
+    );
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Index for efficient queries
 CREATE INDEX IF NOT EXISTS duels_challenger_idx ON public.duels(challenger_id);

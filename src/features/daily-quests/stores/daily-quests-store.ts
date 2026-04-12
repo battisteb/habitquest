@@ -52,9 +52,9 @@ export async function fetchDailyQuests() {
   dailyQuestsStore$.isLoading.set(true);
   try {
     // Call assign RPC to ensure quests exist for today
-    await supabase.rpc('assign_daily_quests' as never, {
+    await supabase.rpc('assign_daily_quests', {
       p_user_id: userId,
-    } as never);
+    });
 
     // Fetch today's quests with template join
     const today = new Date().toISOString().split('T')[0];
@@ -162,10 +162,10 @@ export async function claimQuest(questId: string) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
-  const { data, error } = await supabase.rpc('claim_daily_quest' as never, {
+  const { data, error } = await supabase.rpc('claim_daily_quest', {
     p_user_id: userId,
     p_quest_id: questId,
-  } as never);
+  });
 
   if (error) throw error;
 

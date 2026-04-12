@@ -25,7 +25,7 @@ export async function detectBurnoutRisk(userId: string): Promise<BurnoutSignal> 
     .select('id')
     .eq('user_id', userId)
     .eq('is_archived', false)
-    .eq('is_paused' as any, false);
+    .eq('is_paused', false);
 
   if (habitsError || !habits) {
     return { risk: 'none', message: '', suggestion: '' };

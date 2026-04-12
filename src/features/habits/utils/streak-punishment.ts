@@ -73,11 +73,11 @@ export async function checkAndApplyPunishments(
   }
 
   if (totalXpLoss > 0 || totalGoldLoss > 0) {
-    await supabase.rpc('apply_punishment' as never, {
+    await supabase.rpc('apply_punishment', {
       p_user_id: userId,
       p_xp_loss: totalXpLoss,
       p_gold_loss: totalGoldLoss,
-    } as never);
+    });
   }
 
   savePunishedSet(punished);

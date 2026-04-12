@@ -91,7 +91,7 @@ export async function getWeeklyDuelsUsed(): Promise<number> {
 
   const weekStart = getWeekStart();
 
-  const { count, error } = await (supabase as any)
+  const { count, error } = await supabase
     .from('duels')
     .select('*', { count: 'exact', head: true })
     .or(`challenger_id.eq.${userId},opponent_id.eq.${userId}`)
@@ -115,7 +115,7 @@ export async function fetchDuels(): Promise<void> {
 
   duelStore$.isLoading.set(true);
 
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from('duels')
     .select('*')
     .or(`challenger_id.eq.${userId},opponent_id.eq.${userId}`)
@@ -142,7 +142,7 @@ export async function fetchDuels(): Promise<void> {
       opponentAttackId: row.opponent_attack_id as string | null,
       status: row.status as DuelChallenge['status'],
       winnerId: row.winner_id as string | null,
-      rounds: (row.rounds as RoundRecord[]) ?? [],
+      rounds: (row.rounds as unknown as RoundRecord[]) ?? [],
       createdAt: row.created_at as string,
     };
 
@@ -166,7 +166,7 @@ export async function createDuel(opponentId: string, attackId: string): Promise<
     throw new Error('Weekly duel limit reached — 2 duels per week maximum');
   }
 
-  const { error } = await (supabase as any).from('duels').insert({
+  const { error } = await supabase.from('duels').insert({
     challenger_id: userId,
     opponent_id: opponentId,
     challenger_attack_id: attackId,
@@ -192,7 +192,7 @@ export async function resolveDuel(
 
   // Persist duel result to DB if we have a real duelId
   if (duelId) {
-    await (supabase as any)
+    await supabase
       .from('duels')
       .update({ status: 'resolved', winner_id: winnerId })
       .eq('id', duelId);
@@ -200,18 +200,18 @@ export async function resolveDuel(
 
   // Award gold to winner
   if (userId === winnerId) {
-    await supabase.rpc('add_gold' as never, {
+    await supabase.rpc('add_gold', {
       p_user_id: userId,
       p_amount: WINNER_GOLD,
-    } as never);
+    });
   }
 
   // Award catch-up XP to loser
   if (userId === loserId) {
-    await supabase.rpc('increment_xp' as never, {
+    await supabase.rpc('increment_xp', {
       user_id: userId,
       xp_amount: LOSER_CATCHUP_XP,
-    } as never);
+    });
   }
 
   return { winnerGold: WINNER_GOLD, loserXp: LOSER_CATCHUP_XP };

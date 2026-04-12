@@ -66,10 +66,10 @@ export async function purchaseItem(itemId: string) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
-  const { data, error } = await supabase.rpc('purchase_item' as never, {
+  const { data, error } = await supabase.rpc('purchase_item', {
     p_user_id: userId,
     p_item_id: itemId,
-  } as never);
+  });
 
   if (error) throw error;
 

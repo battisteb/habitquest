@@ -11,9 +11,9 @@ import { recordCompletionHour } from '../../notifications/utils/adaptive-timing'
 import { refreshProfile } from '../../gamification/stores/profile-store';
 import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { HabitContent } from '../types/habit-content';
-import type { Database } from '../../../lib/supabase/types';
+import type { Database, Json } from '../../../lib/supabase/types';
 
-type Habit = Database['public']['Tables']['habits']['Row'] & { content?: HabitContent | null };
+type Habit = Omit<Database['public']['Tables']['habits']['Row'], 'content'> & { content?: HabitContent | null };
 type Streak = Database['public']['Tables']['streaks']['Row'];
 type Completion = Database['public']['Tables']['completions']['Row'];
 
@@ -79,7 +79,7 @@ export async function fetchHabits() {
       .order('created_at', { ascending: true });
 
     if (!habits) return;
-    habitsStore$.habits.set(habits);
+    habitsStore$.habits.set(habits as unknown as Habit[]);
 
     // Fetch streaks for all habits
     const habitIds = habits.map((h) => h.id);
@@ -135,7 +135,7 @@ export async function createHabit(name: string, category: string, content?: Habi
 
   const { data: habit, error } = await supabase
     .from('habits')
-    .insert({ user_id: userId, name, category, content: content ?? null, frequency: frequency ?? 'daily' })
+    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily' })
     .select()
     .single();
 
@@ -148,7 +148,7 @@ export async function createHabit(name: string, category: string, content?: Habi
 }
 
 export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string }) {
-  const { error } = await supabase.from('habits').update(updates).eq('id', id);
+  const { error } = await supabase.from('habits').update({ ...updates, content: updates.content as Json | null | undefined }).eq('id', id);
   if (error) throw error;
   await fetchHabits();
 }
@@ -174,7 +174,8 @@ export async function deleteHabitPermanently(id: string) {
 }
 
 export async function pauseHabit(id: string) {
-  const { error } = await (supabase.from('habits') as any)
+  const { error } = await supabase
+    .from('habits')
     .update({ is_paused: true, paused_at: new Date().toISOString() })
     .eq('id', id);
   if (error) throw error;
@@ -182,7 +183,8 @@ export async function pauseHabit(id: string) {
 }
 
 export async function resumeHabit(id: string) {
-  const { error } = await (supabase.from('habits') as any)
+  const { error } = await supabase
+    .from('habits')
     .update({ is_paused: false, paused_at: null })
     .eq('id', id);
   if (error) throw error;
@@ -240,16 +242,16 @@ export async function completeHabit(habitId: string) {
       .eq('id', userId)
       .single();
 
-    await supabase.rpc('increment_xp' as never, {
+    await supabase.rpc('increment_xp', {
       user_id: userId,
       xp_amount: xpEarned,
-    } as never);
+    });
 
     if (goldEarned > 0) {
-      await supabase.rpc('add_gold' as never, {
+      await supabase.rpc('add_gold', {
         p_user_id: userId,
         p_amount: goldEarned,
-      } as never);
+      });
     }
 
     // Check for level-up

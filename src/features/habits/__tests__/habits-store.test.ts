@@ -67,6 +67,9 @@ describe('habitsStore$', () => {
         category: 'sport',
         frequency: 'daily',
         is_archived: false,
+        is_paused: false,
+        paused_at: null,
+        content: null,
         created_at: new Date().toISOString(),
       },
     ]);

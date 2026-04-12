@@ -290,7 +290,8 @@ export async function registerPushToken(userId: string): Promise<void> {
     const token = tokenData.data;
     if (!token) return;
 
-    await (supabase.from('profiles') as any)
+    await supabase
+      .from('profiles')
       .update({ push_token: token })
       .eq('id', userId);
   } catch {
