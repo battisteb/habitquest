@@ -32,7 +32,15 @@ import {
   deactivateMode,
 } from '../../src/features/habits/utils/contextual-mode';
 import { calculateXpEarned, calculateGoldEarned } from '../../src/lib/constants/game-config';
-import { profileStore$, fetchProfile } from '../../src/features/gamification/stores/profile-store';
+import { profileStore$, fetchProfile, refreshProfile } from '../../src/features/gamification/stores/profile-store';
+import { authStore$ } from '../../src/features/auth/stores/auth-store';
+import { supabase } from '../../src/lib/supabase/client';
+import {
+  showRewardedInterstitial,
+  preloadRewardedInterstitial,
+  shouldShowAds,
+} from '../../src/features/monetization/utils/ad-service';
+import { getMaxFreezeTokens } from '../../src/features/monetization/utils/feature-gates';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -68,8 +76,51 @@ export default function TodayScreen() {
   useStreakRiskNotification();
   const burnoutSignal = useBurnoutSignal();
   const profile = use$(profileStore$.profile);
+  const authUser = use$(authStore$.user);
 
   useEffect(() => { fetchHabits(); fetchProfile(); }, []);
+
+  // Preload rewarded ad once on mount (only for free users)
+  useEffect(() => {
+    if (shouldShowAds()) {
+      preloadRewardedInterstitial();
+    }
+  }, []);
+
+  // Show "watch ad for freeze" button when:
+  //   - ads are enabled (free tier, AdMob configured)
+  //   - user has no freeze tokens left
+  //   - freeze is not already active today
+  //   - user has not yet hit the free-tier cap (1 token)
+  const maxFreezeTokens = getMaxFreezeTokens();
+  const showWatchAdButton =
+    shouldShowAds() &&
+    freezesLeft === 0 &&
+    !freezeActive &&
+    (profile?.freeze_tokens ?? 0) < maxFreezeTokens;
+
+  const handleWatchAd = useCallback(() => {
+    const userId = authUser?.id;
+    if (!userId) return;
+
+    showRewardedInterstitial(
+      () => {
+        // onRewarded: increment on server then sync locally
+        supabase
+          .rpc('add_freeze_token' as never, { p_user_id: userId } as never)
+          .then(() => {
+            setFreezesLeft((prev) => prev + 1);
+            refreshProfile();
+          })
+          .catch(() => {
+            Alert.alert('Error', 'Could not save your freeze token. Please try again.');
+          });
+      },
+      () => {
+        // onComplete: ad closed — nothing extra needed
+      },
+    );
+  }, [authUser?.id]);
 
   // Derive category list from habits
   const categories = useMemo(() => {
@@ -269,6 +320,11 @@ export default function TodayScreen() {
               </Text>
             </Pressable>
           )}
+          {showWatchAdButton && (
+            <Pressable style={styles.watchAdButton} onPress={handleWatchAd}>
+              <Text style={styles.watchAdText}>📺 +1 FREEZE</Text>
+            </Pressable>
+          )}
           <Pressable style={styles.addButton} onPress={() => router.push('/habit/create')}>
             <Text style={styles.addButtonText}>+</Text>
           </Pressable>
@@ -385,6 +441,19 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   freezeTextActive: { color: colors.background },
+  watchAdButton: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.textMuted,
+  },
+  watchAdText: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
   addButton: {
     width: 36,
     height: 36,
