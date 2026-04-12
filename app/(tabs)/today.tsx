@@ -104,17 +104,16 @@ export default function TodayScreen() {
     if (!userId) return;
 
     showRewardedInterstitial(
-      () => {
+      async () => {
         // onRewarded: increment on server then sync locally
-        supabase
-          .rpc('add_freeze_token' as never, { p_user_id: userId } as never)
-          .then(() => {
-            setFreezesLeft((prev) => prev + 1);
-            refreshProfile();
-          })
-          .catch(() => {
-            Alert.alert('Error', 'Could not save your freeze token. Please try again.');
-          });
+        const { error } = await supabase
+          .rpc('add_freeze_token' as never, { p_user_id: userId } as never);
+        if (error) {
+          Alert.alert('Error', 'Could not save your freeze token. Please try again.');
+        } else {
+          setFreezesLeft((prev) => prev + 1);
+          refreshProfile();
+        }
       },
       () => {
         // onComplete: ad closed — nothing extra needed
