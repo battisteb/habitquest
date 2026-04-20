@@ -75,6 +75,7 @@ export default function TodayScreen() {
 
   useStreakRiskNotification();
   const burnoutSignal = useBurnoutSignal();
+  const [burnoutDismissed, setBurnoutDismissed] = useState(false);
   const profile = use$(profileStore$.profile);
   const authUser = use$(authStore$.user);
 
@@ -212,10 +213,22 @@ export default function TodayScreen() {
       })()}
 
       {/* Burnout banner */}
-      {burnoutSignal.risk !== 'none' && (
+      {burnoutSignal.risk !== 'none' && !burnoutDismissed && (
         <View style={styles.burnoutBanner}>
-          <Text style={styles.burnoutMessage}>{burnoutSignal.message}</Text>
-          <Text style={styles.burnoutSuggestion}>{burnoutSignal.suggestion}</Text>
+          <View style={styles.burnoutRow}>
+            <View style={styles.burnoutText}>
+              <Text style={styles.burnoutMessage}>{burnoutSignal.message}</Text>
+              <Text style={styles.burnoutSuggestion}>{burnoutSignal.suggestion}</Text>
+            </View>
+            <Pressable onPress={() => setBurnoutDismissed(true)} hitSlop={8}>
+              <Text style={styles.burnoutClose}>✕</Text>
+            </Pressable>
+          </View>
+          {(burnoutSignal.risk === 'high' || burnoutSignal.risk === 'moderate') && (
+            <Pressable style={styles.burnoutAction} onPress={() => router.push('/settings/contextual-mode')}>
+              <Text style={styles.burnoutActionText}>🌙 ENABLE FOCUS MODE</Text>
+            </Pressable>
+          )}
         </View>
       )}
 
@@ -609,6 +622,12 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     gap: 2,
   },
+  burnoutRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.xs,
+  },
+  burnoutText: { flex: 1, gap: 2 },
   burnoutMessage: {
     color: '#FF6B6B',
     fontSize: fontSizes.xs,
@@ -619,6 +638,26 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: fontSizes.xs,
     lineHeight: 16,
+  },
+  burnoutClose: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    paddingHorizontal: spacing.xs,
+  },
+  burnoutAction: {
+    marginTop: spacing.xs,
+    borderWidth: 1,
+    borderColor: '#FF6B6B',
+    borderRadius: 3,
+    paddingVertical: spacing.xs,
+    alignItems: 'center',
+  },
+  burnoutActionText: {
+    color: '#FF6B6B',
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
   },
 
   // Habits list padding
