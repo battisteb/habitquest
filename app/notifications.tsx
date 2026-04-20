@@ -93,6 +93,7 @@ function EmptyState() {
 
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const items = use$(notificationsStore$.items);
   const unreadCount = use$(notificationsStore$.unreadCount);
   const isLoading = use$(notificationsStore$.isLoading);
@@ -113,11 +114,16 @@ export default function NotificationsScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Text style={styles.backButtonText}>← RETOUR</Text>
+        </Pressable>
         <Text style={styles.headerTitle}>NOTIFICATIONS</Text>
-        {unreadCount > 0 && (
+        {unreadCount > 0 ? (
           <Pressable onPress={markAllAsRead} style={styles.markAllButton}>
             <Text style={styles.markAllText}>TOUT LIRE</Text>
           </Pressable>
+        ) : (
+          <View style={styles.headerSpacer} />
         )}
       </View>
 
@@ -151,13 +157,31 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: colors.border,
   },
+  backButton: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  backButtonText: {
+    fontSize: fontSizes.sm,
+    color: colors.textSecondary,
+    letterSpacing: 1,
+    fontWeight: 'bold',
+    paddingRight: spacing.sm,
+  },
   headerTitle: {
     fontSize: fontSizes.lg,
     fontWeight: 'bold',
     color: colors.text,
     letterSpacing: 2,
+    flex: 1,
+    textAlign: 'center',
+  },
+  headerSpacer: {
+    flex: 1,
   },
   markAllButton: {
+    flex: 1,
+    alignItems: 'flex-end',
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     borderWidth: 1,

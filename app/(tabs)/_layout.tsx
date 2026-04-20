@@ -54,51 +54,16 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'ME',
-          tabBarLabel: 'ME',
-          tabBarIcon: ({ color }) => null,
-          tabBarBadge: unreadNotifications > 0 ? unreadNotifications : undefined,
-          tabBarBadgeStyle: {
-            backgroundColor: colors.primary,
-            fontSize: 9,
-            fontWeight: 'bold',
-          },
-        }}
-      />
-      <Tabs.Screen
         name="today"
         options={{
-          title: 'QUESTS',
-          tabBarLabel: 'QUESTS',
+          title: 'QUÊTES',
+          tabBarLabel: 'QUÊTES',
           tabBarBadge: pendingHabits > 0 ? pendingHabits : undefined,
           tabBarBadgeStyle: {
             backgroundColor: colors.streak,
             fontSize: 9,
             fontWeight: 'bold',
           },
-        }}
-      />
-      <Tabs.Screen
-        name="stats"
-        options={{
-          title: 'STATS',
-          tabBarLabel: 'STATS',
-        }}
-      />
-      <Tabs.Screen
-        name="shop"
-        options={{
-          title: 'SHOP',
-          tabBarLabel: 'SHOP',
-        }}
-      />
-      <Tabs.Screen
-        name="training"
-        options={{
-          title: 'TRAIN',
-          tabBarLabel: 'TRAIN',
         }}
       />
       <Tabs.Screen
@@ -112,6 +77,42 @@ export default function TabsLayout() {
             fontSize: 9,
             fontWeight: 'bold',
           },
+        }}
+      />
+      <Tabs.Screen
+        name="shop"
+        options={{
+          title: 'BOUTIQUE',
+          tabBarLabel: 'BOUTIQUE',
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'MOI',
+          tabBarLabel: 'MOI',
+          tabBarBadge: unreadNotifications > 0 ? unreadNotifications : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: colors.primary,
+            fontSize: 9,
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="stats"
+        options={{
+          href: null,
+          title: 'STATS',
+          tabBarLabel: 'STATS',
+        }}
+      />
+      <Tabs.Screen
+        name="training"
+        options={{
+          href: null,
+          title: 'TRAIN',
+          tabBarLabel: 'TRAIN',
         }}
       />
     </Tabs>

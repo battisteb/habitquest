@@ -16,22 +16,22 @@ export const colors: {
   xp: string;
   border: string;
 } = {
-  background: '#1a1a2e',
-  surface: '#16213e',
-  surfaceLight: '#0f3460',
+  background: '#1e2448',
+  surface: '#262d5a',
+  surfaceLight: '#2e3870',
   primary: '#e94560',
   primaryDark: '#c13350',
-  secondary: '#533483',
+  secondary: '#6a44a0',
   accent: '#f5c518',
-  text: '#eee',
-  textSecondary: '#aaa',
-  textMuted: '#666',
+  text: '#f0f0ff',
+  textSecondary: '#b8bcdc',
+  textMuted: '#7880b0',
   success: '#4ecca3',
   warning: '#f5c518',
   danger: '#e94560',
   streak: '#ff6b35',
-  xp: '#7b68ee',
-  border: '#2a2a4a',
+  xp: '#9b8cf5',
+  border: '#3a4080',
 };
 
 export const spacing = {

@@ -43,8 +43,8 @@ import {
 import { getMaxFreezeTokens } from '../../src/features/monetization/utils/feature-gates';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
-const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAY_NAMES = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+const MONTH_NAMES = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
 
 function todayLabel(): string {
   const d = new Date();
@@ -173,12 +173,12 @@ export default function TodayScreen() {
   const handleFreeze = () => {
     if (freezeActive) return;
     Alert.alert(
-      'Streak Freeze',
-      'Use your rest day? All streaks will be protected today. You have 1 per week.',
+      'Jour de repos',
+      'Utiliser ton jour de repos ? Toutes tes séries seront protégées aujourd\'hui. Tu en as 1 par semaine.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Annuler', style: 'cancel' },
         {
-          text: 'Activate',
+          text: 'Activer',
           onPress: () => {
             const ok = activateFreeze();
             if (ok) {
@@ -204,7 +204,7 @@ export default function TodayScreen() {
         const days = getRemainingDays(activeMode);
         return def ? (
           <View style={styles.modeBanner}>
-            <Text style={styles.modeBannerText}>{def.emoji} {def.name.toUpperCase()} — {days}d left</Text>
+            <Text style={styles.modeBannerText}>{def.emoji} {def.name.toUpperCase()} — {days}j restants</Text>
             <Pressable onPress={() => { deactivateMode(); setActiveMode(null); }}>
               <Text style={styles.modeDeactivate}>✕</Text>
             </Pressable>
@@ -226,7 +226,7 @@ export default function TodayScreen() {
           </View>
           {(burnoutSignal.risk === 'high' || burnoutSignal.risk === 'moderate') && (
             <Pressable style={styles.burnoutAction} onPress={() => router.push('/settings/contextual-mode')}>
-              <Text style={styles.burnoutActionText}>🌙 ENABLE FOCUS MODE</Text>
+              <Text style={styles.burnoutActionText}>🌙 ACTIVER MODE FOCUS</Text>
             </Pressable>
           )}
         </View>
@@ -237,8 +237,8 @@ export default function TodayScreen() {
         <View style={styles.allDoneBanner}>
           <Text style={styles.allDoneEmoji}>🏆</Text>
           <View>
-            <Text style={styles.allDoneTitle}>ALL DONE!</Text>
-            <Text style={styles.allDoneSub}>Perfect day. Come back tomorrow.</Text>
+            <Text style={styles.allDoneTitle}>TOUT FAIT !</Text>
+            <Text style={styles.allDoneSub}>Journée parfaite. À demain !</Text>
           </View>
         </View>
       )}
@@ -246,7 +246,7 @@ export default function TodayScreen() {
       {/* Habits header */}
       <View style={styles.habitsHeader}>
         <View style={styles.habitsHeaderLeft}>
-          <Text style={styles.habitsTitle}>HABITS</Text>
+          <Text style={styles.habitsTitle}>HABITUDES</Text>
           <Text style={styles.habitsCounter}>
             {completedCount}/{totalCount}
           </Text>
@@ -283,7 +283,7 @@ export default function TodayScreen() {
               <Text
                 style={[styles.filterChipText, activeCategory === cat && styles.filterChipTextActive]}
               >
-                {cat === ALL_KEY ? 'ALL' : cat.toUpperCase()}
+                {cat === ALL_KEY ? 'TOUT' : cat.toUpperCase()}
               </Text>
             </Pressable>
           ))}
@@ -311,7 +311,7 @@ export default function TodayScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>TODAY</Text>
+          <Text style={styles.title}>AUJOURD'HUI</Text>
           <Text style={styles.dateLabel}>{todayLabel()}</Text>
         </View>
         <View style={styles.headerRight}>
@@ -328,7 +328,7 @@ export default function TodayScreen() {
               disabled={freezeActive}
             >
               <Text style={[styles.freezeText, freezeActive && styles.freezeTextActive]}>
-                {freezeActive ? '❄️ REST DAY' : `❄️ REST (${freezesLeft})`}
+                {freezeActive ? '❄️ REPOS' : `❄️ REPOS (${freezesLeft})`}
               </Text>
             </Pressable>
           )}
@@ -351,14 +351,14 @@ export default function TodayScreen() {
           />
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>⚔️</Text>
-            <Text style={styles.emptyTitle}>No habits yet</Text>
+            <Text style={styles.emptyTitle}>Aucune habitude</Text>
             <Text style={styles.emptySubtitle}>
-              Every legend starts somewhere.{'\n'}Tap <Text style={{ color: colors.primary, fontWeight: 'bold' }}>+</Text> to create your first quest.
+              Toute légende commence quelque part.{'\n'}Appuie sur <Text style={{ color: colors.primary, fontWeight: 'bold' }}>+</Text> pour créer ta première quête.
             </Text>
             <View style={styles.emptyTips}>
-              <Text style={styles.emptyTip}>💡 Start with 1–3 habits max</Text>
-              <Text style={styles.emptyTip}>🔥 Streaks build after 3 days</Text>
-              <Text style={styles.emptyTip}>⚡ Every completion earns XP</Text>
+              <Text style={styles.emptyTip}>💡 Commence avec 1–3 habitudes max</Text>
+              <Text style={styles.emptyTip}>🔥 Les séries démarrent après 3 jours</Text>
+              <Text style={styles.emptyTip}>⚡ Chaque complétion rapporte de l'XP</Text>
             </View>
           </View>
         </View>

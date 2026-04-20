@@ -93,7 +93,7 @@ export default function ProfileScreen() {
                 <Text style={styles.stageDescription}>{avatarStage.description}</Text>
                 {nextAvatarStage !== null && (
                   <Text style={styles.stageNext}>
-                    {'Next: ' + nextAvatarStage.title + ' at Level ' + nextAvatarStage.minLevel}
+                    {'Prochain : ' + nextAvatarStage.title + ' au Niveau ' + nextAvatarStage.minLevel}
                   </Text>
                 )}
               </View>
@@ -111,7 +111,7 @@ export default function ProfileScreen() {
               nextLevelXp={xpForNextLevel}
               progress={xpProgress}
             />
-            <Text style={styles.cardHint}>TAP FOR XP JOURNEY →</Text>
+            <Text style={styles.cardHint}>VOIR MON PARCOURS XP →</Text>
           </Pressable>
 
           {/* Stats row */}
@@ -161,13 +161,13 @@ export default function ProfileScreen() {
           {/* Quick actions */}
           <View style={styles.actionsRow}>
             <PixelButton
-              title="Shop"
+              title="Boutique"
               onPress={() => router.push('/(tabs)/shop')}
               variant="secondary"
               style={{ flex: 1 }}
             />
             <PixelButton
-              title="Achievements"
+              title="Succès"
               onPress={() => router.push('/achievements')}
               variant="secondary"
               style={{ flex: 1 }}
@@ -185,13 +185,13 @@ export default function ProfileScreen() {
 
           <View style={styles.actionsRow}>
             <PixelButton
-              title="Edit Profile"
+              title="Modifier profil"
               onPress={() => router.push('/profile/edit')}
               variant="ghost"
               style={{ flex: 1 }}
             />
             <PixelButton
-              title="Settings"
+              title="Réglages"
               onPress={() => router.push('/settings')}
               variant="ghost"
               style={{ flex: 1 }}
