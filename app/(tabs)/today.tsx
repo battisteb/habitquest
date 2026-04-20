@@ -193,11 +193,6 @@ export default function TodayScreen() {
 
   const ListHeader = (
     <View>
-      {/* Daily quests */}
-      <DailyQuestsSection
-        pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
-      />
-
       {/* Active mode banner */}
       {activeMode && (() => {
         const def = getModeDefinition(activeMode.key);
@@ -346,9 +341,6 @@ export default function TodayScreen() {
       {/* Unified list */}
       {habits.length === 0 ? (
         <View>
-          <DailyQuestsSection
-            pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
-          />
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>⚔️</Text>
             <Text style={styles.emptyTitle}>Aucune habitude</Text>
@@ -361,12 +353,20 @@ export default function TodayScreen() {
               <Text style={styles.emptyTip}>⚡ Chaque complétion rapporte de l'XP</Text>
             </View>
           </View>
+          <DailyQuestsSection
+            pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
+          />
         </View>
       ) : (
         <FlatList
           data={displayedHabits}
           keyExtractor={(item) => item.id}
           ListHeaderComponent={ListHeader}
+          ListFooterComponent={
+            <DailyQuestsSection
+              pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
+            />
+          }
           contentContainerStyle={styles.listContent}
           style={styles.list}
           renderItem={({ item, index }) => (

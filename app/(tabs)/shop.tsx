@@ -93,7 +93,7 @@ export default function ShopScreen() {
   const currentBg = equippedSlots.background?.item?.sprite_key;
 
   async function handleItemPress(item: (typeof items)[0]) {
-    const isOwned = ownedItemIds.has(item.id);
+    const isOwned = ownedItemIds.includes(item.id);
     const slot = CATEGORY_TO_SLOT[item.category];
 
     if (isOwned) {
@@ -163,7 +163,7 @@ export default function ShopScreen() {
     );
   }
 
-  const ownedCount = filteredItems.filter((i) => ownedItemIds.has(i.id)).length;
+  const ownedCount = filteredItems.filter((i) => ownedItemIds.includes(i.id)).length;
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -303,7 +303,7 @@ export default function ShopScreen() {
                 requiredLevel={item.required_level}
                 spriteKey={item.sprite_key}
                 category={item.category}
-                isOwned={ownedItemIds.has(item.id)}
+                isOwned={ownedItemIds.includes(item.id)}
                 isEquipped={isEquipped}
                 canAfford={userGold >= item.price_gold}
                 canUnlock={canUnlock && !premiumLocked}

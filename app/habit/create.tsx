@@ -119,6 +119,17 @@ export default function CreateHabitScreen() {
 
       <ContentPicker value={content} onChange={setContent} />
 
+      {(category === 'fitness' || category === 'learning') && (
+        <Pressable
+          onPress={() => router.push('/(tabs)/training')}
+          style={styles.trainingShortcut}
+        >
+          <Text style={styles.trainingShortcutText}>
+            {category === 'fitness' ? '🏋️ Gérer mes séances →' : '📚 Gérer mes decks Anki →'}
+          </Text>
+        </Pressable>
+      )}
+
       <PixelButton
         title="Create quest"
         onPress={handleCreate}
@@ -180,6 +191,20 @@ const styles = StyleSheet.create({
   },
   createButton: {
     marginTop: spacing.md,
+  },
+  trainingShortcut: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 4,
+    padding: spacing.sm,
+    alignItems: 'center',
+  },
+  trainingShortcutText: {
+    fontSize: fontSizes.sm,
+    color: colors.textSecondary,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   frequencySection: {
     gap: spacing.sm,

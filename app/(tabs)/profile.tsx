@@ -4,8 +4,6 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
-import { useAuth } from '../../src/features/auth/hooks/use-auth';
-import { signOut } from '../../src/features/auth/stores/auth-store';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
 import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
@@ -15,11 +13,11 @@ import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store
 import { avatarConfigStore$, loadAvatarConfig } from '../../src/features/avatar/stores/avatar-config-store';
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { notificationsStore$ } from '../../src/features/notifications/stores/notifications-store';
 import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
+import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 
 export default function ProfileScreen() {
-  const { user } = useAuth();
   const { profile, xpForNextLevel, xpProgress, isLoading } = useProfileStats();
   const equippedSlots = use$(shopStore$.equippedSlots);
   const insets = useSafeAreaInsets();
@@ -29,6 +27,7 @@ export default function ProfileScreen() {
   const skinColor = use$(avatarConfigStore$.skinColor);
   const hairColor = use$(avatarConfigStore$.hairColor);
   const eyeColor = use$(avatarConfigStore$.eyeColor);
+  const unreadNotifications = use$(notificationsStore$.unreadCount);
 
   const resolvedDuels = use$(duelStore$.resolvedDuels);
   const duelsWon = resolvedDuels.filter(d => d.winnerId === 'me').length;
@@ -40,11 +39,8 @@ export default function ProfileScreen() {
     loadAvatarConfig(authStore$.user.get()?.id);
   }, []);
 
-  // Idle animation
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIdleFrame((f) => f + 1);
-    }, 600);
+    const interval = setInterval(() => setIdleFrame((f) => f + 1), 600);
     return () => clearInterval(interval);
   }, []);
 
@@ -57,31 +53,45 @@ export default function ProfileScreen() {
   const equippedBg = equippedSlots?.background?.item?.sprite_key;
 
   return (
-    <ScrollView
-      style={[styles.container, { paddingTop: insets.top }]}
-      contentContainerStyle={styles.content}
-    >
-      {isLoading ? (
-        <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: spacing.xl }} />
-      ) : (
-        <>
-          {/* Avatar hero section */}
-          <View style={styles.avatarSection}>
-            <PixelAvatar
-              size={220}
-              hat={equippedHat}
-              outfit={equippedOutfit}
-              background={equippedBg}
-              idleFrame={idleFrame}
-              skinColor={skinColor}
-              hairColor={hairColor}
-              eyeColor={eyeColor}
-            />
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      {/* Top icon bar */}
+      <View style={styles.topBar}>
+        <Pressable onPress={() => router.push('/settings')} style={styles.iconBtn} hitSlop={8}>
+          <Text style={styles.iconBtnText}>⚙️</Text>
+        </Pressable>
+        <Pressable onPress={() => router.push('/notifications')} style={styles.iconBtn} hitSlop={8}>
+          <Text style={styles.iconBtnText}>🔔</Text>
+          {unreadNotifications > 0 && (
+            <View style={styles.notifBadge}>
+              <Text style={styles.notifBadgeText}>
+                {unreadNotifications > 9 ? '9+' : unreadNotifications}
+              </Text>
+            </View>
+          )}
+        </Pressable>
+      </View>
 
-            <Text style={styles.username}>{profile?.username ?? 'Adventurer'}</Text>
-            <Text style={[styles.rankBadge, { color: rank.color }]}>
-              {rank.name}
-            </Text>
+      <ScrollView contentContainerStyle={styles.content}>
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: spacing.xl }} />
+        ) : (
+          <>
+            {/* Clickable avatar → edit profile */}
+            <Pressable style={styles.avatarSection} onPress={() => router.push('/profile/edit')}>
+              <PixelAvatar
+                size={180}
+                hat={equippedHat}
+                outfit={equippedOutfit}
+                background={equippedBg}
+                idleFrame={idleFrame}
+                skinColor={skinColor}
+                hairColor={hairColor}
+                eyeColor={eyeColor}
+              />
+              <Text style={styles.username}>{profile?.username ?? 'Adventurer'}</Text>
+              <Text style={[styles.rankBadge, { color: rank.color }]}>{rank.name}</Text>
+              <Text style={styles.editHint}>Appuie pour modifier →</Text>
+            </Pressable>
 
             {/* Avatar evolution stage */}
             <View style={[styles.stageCard, { borderColor: avatarStage.aura }]}>
@@ -98,123 +108,66 @@ export default function ProfileScreen() {
                 )}
               </View>
             </View>
-          </View>
 
-          {/* XP Bar — tap to open XP Journey */}
-          <Pressable
-            style={styles.card}
-            onPress={() => router.push('/xp-journey')}
-          >
-            <XpBar
-              level={level}
-              currentXp={profile?.xp ?? 0}
-              nextLevelXp={xpForNextLevel}
-              progress={xpProgress}
-            />
-            <Text style={styles.cardHint}>VOIR MON PARCOURS XP →</Text>
-          </Pressable>
+            {/* XP Bar */}
+            <Pressable style={styles.card} onPress={() => router.push('/xp-journey')}>
+              <XpBar
+                level={level}
+                currentXp={profile?.xp ?? 0}
+                nextLevelXp={xpForNextLevel}
+                progress={xpProgress}
+              />
+              <Text style={styles.cardHint}>VOIR MON PARCOURS XP →</Text>
+            </Pressable>
 
-          {/* Stats row */}
-          <View style={styles.statsRow}>
-            <View style={styles.miniStat}>
-              <Text style={styles.miniStatValue}>{profile?.xp ?? 0}</Text>
-              <Text style={styles.miniStatLabel}>XP</Text>
+            {/* Stats row */}
+            <View style={styles.statsRow}>
+              <View style={styles.miniStat}>
+                <Text style={styles.miniStatValue}>{profile?.xp ?? 0}</Text>
+                <Text style={styles.miniStatLabel}>XP</Text>
+              </View>
+              <View style={styles.miniStat}>
+                <Text style={[styles.miniStatValue, { color: colors.xp }]}>{level}</Text>
+                <Text style={styles.miniStatLabel}>LEVEL</Text>
+              </View>
+              <View style={styles.miniStat}>
+                <Text style={[styles.miniStatValue, { color: colors.accent }]}>
+                  {profile?.gold ?? 0}
+                </Text>
+                <Text style={styles.miniStatLabel}>GOLD</Text>
+              </View>
             </View>
-            <View style={styles.miniStat}>
-              <Text style={[styles.miniStatValue, { color: colors.xp }]}>
-                {level}
-              </Text>
-              <Text style={styles.miniStatLabel}>LEVEL</Text>
-            </View>
-            <View style={styles.miniStat}>
-              <Text style={[styles.miniStatValue, { color: colors.accent }]}>
-                {profile?.gold ?? 0}
-              </Text>
-              <Text style={styles.miniStatLabel}>GOLD</Text>
-            </View>
-          </View>
 
-          {/* Duel stats row */}
-          <View style={styles.statsRow}>
-            <View style={styles.miniStat}>
-              <Text style={[styles.miniStatValue, { color: '#4CAF50' }]}>
-                {duelsWon}
-              </Text>
-              <Text style={styles.miniStatLabel}>⚔️ WINS</Text>
+            {/* Duel stats */}
+            <View style={styles.statsRow}>
+              <View style={styles.miniStat}>
+                <Text style={[styles.miniStatValue, { color: '#4CAF50' }]}>{duelsWon}</Text>
+                <Text style={styles.miniStatLabel}>⚔️ WINS</Text>
+              </View>
+              <View style={styles.miniStat}>
+                <Text style={[styles.miniStatValue, { color: '#F44336' }]}>{duelsLost}</Text>
+                <Text style={styles.miniStatLabel}>💀 LOSSES</Text>
+              </View>
+              <View style={styles.miniStat}>
+                <Text style={[styles.miniStatValue, { color: colors.streak }]}>
+                  {duelsWon + duelsLost > 0
+                    ? Math.round((duelsWon / (duelsWon + duelsLost)) * 100)
+                    : 0}%
+                </Text>
+                <Text style={styles.miniStatLabel}>WIN RATE</Text>
+              </View>
             </View>
-            <View style={styles.miniStat}>
-              <Text style={[styles.miniStatValue, { color: '#F44336' }]}>
-                {duelsLost}
-              </Text>
-              <Text style={styles.miniStatLabel}>💀 LOSSES</Text>
-            </View>
-            <View style={styles.miniStat}>
-              <Text style={[styles.miniStatValue, { color: colors.streak }]}>
-                {duelsWon + duelsLost > 0
-                  ? Math.round((duelsWon / (duelsWon + duelsLost)) * 100)
-                  : 0}%
-              </Text>
-              <Text style={styles.miniStatLabel}>WIN RATE</Text>
-            </View>
-          </View>
 
-          {/* Quick actions */}
-          <View style={styles.actionsRow}>
+            {/* Single action */}
             <PixelButton
-              title="Boutique"
-              onPress={() => router.push('/(tabs)/shop')}
-              variant="secondary"
-              style={{ flex: 1 }}
-            />
-            <PixelButton
-              title="Succès"
+              title="🏆 Succès"
               onPress={() => router.push('/achievements')}
               variant="secondary"
-              style={{ flex: 1 }}
             />
-          </View>
-
-          <View style={styles.actionsRow}>
-            <PixelButton
-              title="🏋️ Séances"
-              onPress={() => router.push('/(tabs)/training')}
-              variant="secondary"
-              style={{ flex: 1 }}
-            />
-            <PixelButton
-              title="📊 Stats"
-              onPress={() => router.push('/(tabs)/stats')}
-              variant="secondary"
-              style={{ flex: 1 }}
-            />
-          </View>
-
-          <View style={styles.actionsRow}>
-            <PixelButton
-              title="🔔 Notifications"
-              onPress={() => router.push('/notifications')}
-              variant="secondary"
-              style={{ flex: 1 }}
-            />
-          </View>
-
-          <View style={styles.actionsRow}>
-            <PixelButton
-              title="Modifier profil"
-              onPress={() => router.push('/profile/edit')}
-              variant="ghost"
-              style={{ flex: 1 }}
-            />
-            <PixelButton
-              title="Réglages"
-              onPress={() => router.push('/settings')}
-              variant="ghost"
-              style={{ flex: 1 }}
-            />
-          </View>
-        </>
-      )}
-    </ScrollView>
+          </>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -223,6 +176,40 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  iconBtn: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  iconBtnText: {
+    fontSize: 22,
+  },
+  notifBadge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+    minWidth: 16,
+    height: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  notifBadgeText: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
   content: {
     padding: spacing.md,
     gap: spacing.md,
@@ -230,7 +217,7 @@ const styles = StyleSheet.create({
   },
   avatarSection: {
     alignItems: 'center',
-    gap: spacing.sm,
+    gap: spacing.xs,
     paddingVertical: spacing.md,
   },
   username: {
@@ -244,6 +231,12 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: 'bold',
     letterSpacing: 2,
+  },
+  editHint: {
+    fontSize: 10,
+    color: colors.textMuted,
+    letterSpacing: 1,
+    marginTop: 2,
   },
   card: {
     backgroundColor: colors.surface,
@@ -286,10 +279,6 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     letterSpacing: 1,
   },
-  actionsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
   stageCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -299,7 +288,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    marginTop: spacing.xs,
   },
   stageInfo: {
     flex: 1,

@@ -8,7 +8,7 @@ type ShopItem = Database['public']['Tables']['shop_items']['Row'];
 
 interface ShopState {
   items: ShopItem[];
-  ownedItemIds: Set<string>;
+  ownedItemIds: string[];
   equippedSlots: Record<string, { itemId: string; item?: ShopItem }>;
   isLoading: boolean;
   activeCategory: string;
@@ -16,7 +16,7 @@ interface ShopState {
 
 export const shopStore$ = observable<ShopState>({
   items: [],
-  ownedItemIds: new Set(),
+  ownedItemIds: [] as string[],
   equippedSlots: {},
   isLoading: false,
   activeCategory: 'avatar_hat',
@@ -43,7 +43,7 @@ export async function fetchShop() {
       .select('item_id')
       .eq('user_id', userId);
 
-    const ownedIds = new Set((purchases ?? []).map((p) => p.item_id));
+    const ownedIds = (purchases ?? []).map((p) => p.item_id);
     shopStore$.ownedItemIds.set(ownedIds);
 
     // Fetch equipped items
