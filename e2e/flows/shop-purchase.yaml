@@ -1,0 +1,25 @@
+appId: com.battiste.habitquest
+name: Browse shop and view item details
+---
+- launchApp
+
+# Navigate to Shop tab
+- tapOn: "SHOP"
+- assertVisible: "SHOP"
+
+# See hat category (default)
+- assertVisible: "HATS"
+
+# Tap on an item to view details
+- tapOn:
+    index: 0
+    parent:
+      id: "shop-item-list"
+
+# Gold dialog should appear (or level too low alert)
+- assertVisible:
+    text: "Buy"
+    optional: true
+- assertVisible:
+    text: "Level too low"
+    optional: true

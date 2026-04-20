@@ -1,0 +1,19 @@
+appId: com.battiste.habitquest
+name: Complete a habit and earn XP
+---
+- launchApp
+
+# Should be on Today screen if already signed in
+- assertVisible: "QUESTS"
+
+# Complete first habit
+- tapOn:
+    id: "habit-card-0"
+
+# XP toast should appear
+- assertVisible:
+    text: "XP"
+    optional: true
+
+# Completion rate should update
+- assertVisible: "1/"

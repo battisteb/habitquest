@@ -1,0 +1,40 @@
+appId: com.battiste.habitquest
+name: Onboarding flow — new user creates first habit
+---
+- launchApp:
+    clearState: true
+
+# Sign up screen
+- assertVisible: "HabitQuest"
+- tapOn: "New here? Sign up"
+- inputText:
+    id: "username"
+    text: "testuser"
+- inputText:
+    id: "email"
+    text: "testuser@example.com"
+- inputText:
+    id: "password"
+    text: "password123"
+- tapOn: "Create character"
+
+# Onboarding intro slides
+- assertVisible: "YOUR QUEST BEGINS"
+- tapOn: "Next"
+- assertVisible: "BUILD STREAKS"
+- tapOn: "Next"
+- assertVisible: "EARN REWARDS"
+- tapOn: "LET'S GO"
+
+# Avatar customization step
+- assertVisible: "MEET YOUR HERO"
+- tapOn: "FIRST QUEST →"
+
+# First habit creation
+- assertVisible: "Your First Quest"
+- tapOn: "Drink 2L of water"
+- tapOn: "Start Your Quest!"
+
+# Should land on Today screen
+- assertVisible: "QUESTS"
+- assertVisible: "Drink 2L of water"
