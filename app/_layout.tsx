@@ -16,6 +16,7 @@ import {
   registerPushToken,
 } from '../src/features/notifications/utils/notification-service';
 import { useWeeklyRecapScheduler } from '../src/features/notifications/hooks/use-weekly-recap-scheduler';
+import { useNotificationObserver } from '../src/features/notifications/hooks/use-notification-observer';
 import { colors } from '../src/ui/theme/tokens';
 import { ThemeProvider, useTheme } from '../src/ui/theme/theme-context';
 import { OfflineBanner } from '../src/ui/components/offline-banner';
@@ -63,6 +64,7 @@ function ThemedApp() {
   const authUserId = use$(authStore$.user)?.id;
 
   useWeeklyRecapScheduler();
+  useNotificationObserver();
 
   useEffect(() => {
     initAuth();

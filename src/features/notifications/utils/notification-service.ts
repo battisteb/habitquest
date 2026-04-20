@@ -98,6 +98,7 @@ export async function scheduleDailyReminder(hour: number, minute: number): Promi
       title: '⚔️ HabitQuest',
       body: getRandomMessage('reminder'),
       sound: true,
+      data: { route: '/(tabs)/today' },
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -136,6 +137,7 @@ export async function scheduleStreakRiskReminder(
       title: '🔥 Streak at risk!',
       body: getRandomMessage('streak_at_risk'),
       sound: true,
+      data: { route: '/(tabs)/today' },
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DATE,
@@ -173,6 +175,7 @@ export async function scheduleWeeklyRecap(
         ? lines.join(' · ') + ' — Keep it up!'
         : 'A new week starts now. Make it count! ⚔️',
       sound: true,
+      data: { route: '/weekly-recap' },
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
@@ -230,6 +233,7 @@ export async function scheduleHabitReminder(
       title: `⚔️ ${habitName}`,
       body: `Time to work on your habit! Don't break the streak 🔥`,
       sound: true,
+      data: { route: `/habit/${habitId}` },
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
