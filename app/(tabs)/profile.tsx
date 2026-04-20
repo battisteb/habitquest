@@ -12,6 +12,8 @@ import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
 import { AvatarDisplay } from '../../src/features/avatar/components/avatar-display';
 import { getAvatarStage, getNextAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
+import { avatarConfigStore$, loadAvatarConfig } from '../../src/features/avatar/stores/avatar-config-store';
+import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
@@ -24,6 +26,10 @@ export default function ProfileScreen() {
   const router = useRouter();
   const [idleFrame, setIdleFrame] = useState(0);
 
+  const skinColor = use$(avatarConfigStore$.skinColor);
+  const hairColor = use$(avatarConfigStore$.hairColor);
+  const eyeColor = use$(avatarConfigStore$.eyeColor);
+
   const resolvedDuels = use$(duelStore$.resolvedDuels);
   const duelsWon = resolvedDuels.filter(d => d.winnerId === 'me').length;
   const duelsLost = resolvedDuels.filter(d => d.winnerId !== 'me' && d.winnerId !== null).length;
@@ -31,6 +37,7 @@ export default function ProfileScreen() {
   useEffect(() => {
     fetchShop();
     fetchDuels();
+    loadAvatarConfig(authStore$.user.get()?.id);
   }, []);
 
   // Idle animation
@@ -66,6 +73,9 @@ export default function ProfileScreen() {
               outfit={equippedOutfit}
               background={equippedBg}
               idleFrame={idleFrame}
+              skinColor={skinColor}
+              hairColor={hairColor}
+              eyeColor={eyeColor}
             />
 
             <Text style={styles.username}>{profile?.username ?? 'Adventurer'}</Text>
