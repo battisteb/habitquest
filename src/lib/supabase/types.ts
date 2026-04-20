@@ -386,19 +386,63 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          data: Json | null
+          id: string
+          is_read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          data?: Json | null
+          id?: string
+          is_read?: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          data?: Json | null
+          id?: string
+          is_read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           active_theme: string
           created_at: string
           email: string
+          eye_color: string
           freeze_tokens: number
           gold: number
+          hair_color: string
           id: string
           last_duel_at: string | null
           level: number
           push_token: string | null
           rank: string
           revenue_cat_id: string | null
+          skin_color: string
           subscription_expires_at: string | null
           subscription_status: string
           username: string
@@ -408,14 +452,17 @@ export type Database = {
           active_theme?: string
           created_at?: string
           email: string
+          eye_color?: string
           freeze_tokens?: number
           gold?: number
+          hair_color?: string
           id: string
           last_duel_at?: string | null
           level?: number
           push_token?: string | null
           rank?: string
           revenue_cat_id?: string | null
+          skin_color?: string
           subscription_expires_at?: string | null
           subscription_status?: string
           username: string
@@ -425,14 +472,17 @@ export type Database = {
           active_theme?: string
           created_at?: string
           email?: string
+          eye_color?: string
           freeze_tokens?: number
           gold?: number
+          hair_color?: string
           id?: string
           last_duel_at?: string | null
           level?: number
           push_token?: string | null
           rank?: string
           revenue_cat_id?: string | null
+          skin_color?: string
           subscription_expires_at?: string | null
           subscription_status?: string
           username?: string
@@ -639,6 +689,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_freeze_token: { Args: { p_user_id: string }; Returns: undefined }
       add_gold: {
         Args: { p_amount: number; p_user_id: string }
         Returns: undefined
@@ -670,6 +721,16 @@ export type Database = {
       claim_daily_quest: {
         Args: { p_quest_id: string; p_user_id: string }
         Returns: Json
+      }
+      create_notification: {
+        Args: {
+          p_body: string
+          p_data?: Json
+          p_title: string
+          p_type: string
+          p_user_id: string
+        }
+        Returns: undefined
       }
       increment_xp: {
         Args: { user_id: string; xp_amount: number }

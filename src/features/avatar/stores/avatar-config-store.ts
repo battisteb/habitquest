@@ -54,16 +54,9 @@ export async function loadAvatarConfig(userId: string | undefined): Promise<void
 
     if (error || !data) return;
 
-    const remote = data as any;
-    const skinColor: string = typeof remote.skin_color === 'string' && remote.skin_color
-      ? remote.skin_color
-      : local.skinColor;
-    const hairColor: string = typeof remote.hair_color === 'string' && remote.hair_color
-      ? remote.hair_color
-      : local.hairColor;
-    const eyeColor: string = typeof remote.eye_color === 'string' && remote.eye_color
-      ? remote.eye_color
-      : local.eyeColor;
+    const skinColor = data.skin_color || local.skinColor;
+    const hairColor = data.hair_color || local.hairColor;
+    const eyeColor = data.eye_color || local.eyeColor;
 
     const resolved: AvatarConfigState = { skinColor, hairColor, eyeColor };
     avatarConfigStore$.set(resolved);
@@ -90,7 +83,7 @@ export async function saveAvatarConfig(
     void Promise.resolve(
       supabase
         .from('profiles')
-        .update({ skin_color: skinColor, hair_color: hairColor, eye_color: eyeColor } as any)
+        .update({ skin_color: skinColor, hair_color: hairColor, eye_color: eyeColor })
         .eq('id', userId),
     ).catch(() => {
       // intentional no-op — offline-first, no throw

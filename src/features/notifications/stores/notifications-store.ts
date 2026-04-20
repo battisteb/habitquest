@@ -1,6 +1,7 @@
 import { observable } from '@legendapp/state';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import type { Json } from '../../../lib/supabase/types';
 
 export interface InboxNotification {
   id: string;
@@ -33,7 +34,7 @@ function mapRow(row: {
   type: string;
   title: string;
   body: string;
-  data: Record<string, unknown> | null;
+  data: Json;
   is_read: boolean;
   created_at: string;
 }): InboxNotification {
@@ -42,7 +43,7 @@ function mapRow(row: {
     type: row.type,
     title: row.title,
     body: row.body,
-    data: row.data ?? {},
+    data: (row.data as Record<string, unknown>) ?? {},
     isRead: row.is_read,
     createdAt: row.created_at,
   };
@@ -54,8 +55,7 @@ export async function fetchNotifications(): Promise<void> {
 
   notificationsStore$.isLoading.set(true);
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from('notifications')
       .select('id, type, title, body, data, is_read, created_at')
       .eq('user_id', userId)
@@ -73,8 +73,7 @@ export async function fetchNotifications(): Promise<void> {
 }
 
 export async function markAsRead(id: string): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase as any)
+  const { error } = await supabase
     .from('notifications')
     .update({ is_read: true })
     .eq('id', id);
@@ -92,8 +91,7 @@ export async function markAllAsRead(): Promise<void> {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase as any)
+  const { error } = await supabase
     .from('notifications')
     .update({ is_read: true })
     .eq('user_id', userId)

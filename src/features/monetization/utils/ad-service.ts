@@ -5,12 +5,11 @@ import { subscriptionStore$ } from '../stores/subscription-store';
 const isNative = Platform.OS !== 'web';
 
 // ─── Ad Unit IDs ──────────────────────────────────────────────────────────────
-// TODO: Replace XXXXXXXXXXXXXXXX with real IDs from AdMob console before production release.
-// Until then, TestIds are used in all environments — safe, no policy violation.
-const PROD_BANNER_IOS = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-const PROD_BANNER_AND = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-const PROD_INTER_IOS  = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-const PROD_INTER_AND  = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+// Ad unit IDs from AdMob console (Android — add iOS units when iOS app is registered in AdMob)
+const PROD_BANNER_IOS = 'ca-app-pub-3756522162472324/4591462256';
+const PROD_BANNER_AND = 'ca-app-pub-3756522162472324/4591462256';
+const PROD_INTER_IOS  = 'ca-app-pub-3756522162472324/3414111958';
+const PROD_INTER_AND  = 'ca-app-pub-3756522162472324/3414111958';
 
 const isAdMobConfigured = !PROD_BANNER_IOS.includes('XXXX');
 

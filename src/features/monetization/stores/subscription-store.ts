@@ -14,12 +14,13 @@ type PurchasesOffering = any;
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 // RevenueCat API keys (public, safe to commit — server validates receipts)
-// TODO: Replace with real keys from RevenueCat dashboard before production release
-const RC_API_KEY_IOS = 'appl_placeholder_replace_with_real_key';
-const RC_API_KEY_ANDROID = 'goog_placeholder_replace_with_real_key';
+// Test key used for both platforms while iOS/Android production keys are being configured.
+// When ready: replace iOS key with appl_xxx from RC dashboard, Android with goog_xxx.
+const RC_API_KEY_IOS = 'test_EcuySjKKaOeChKkSDdLjEXCqAts';
+const RC_API_KEY_ANDROID = 'test_EcuySjKKaOeChKkSDdLjEXCqAts';
 
 function isRcConfigured(): boolean {
-  return !RC_API_KEY_IOS.includes('placeholder') && !RC_API_KEY_ANDROID.includes('placeholder');
+  return RC_API_KEY_IOS.length > 10 && RC_API_KEY_ANDROID.length > 10;
 }
 
 // RevenueCat entitlement ID configured in the dashboard
