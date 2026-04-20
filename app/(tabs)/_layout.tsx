@@ -6,6 +6,7 @@ import { isHabitCompletedEnough } from '../../src/features/habits/stores/habits-
 import { friendsStore$ } from '../../src/features/social/stores/friends-store';
 import { notificationsStore$, fetchNotifications } from '../../src/features/notifications/stores/notifications-store';
 import { colors } from '../../src/ui/theme/tokens';
+import { useT } from '../../src/lib/i18n';
 
 function usePendingHabitCount(): number {
   const habits = use$(habitsStore$.habits);
@@ -30,6 +31,7 @@ export default function TabsLayout() {
   const pendingHabits = usePendingHabitCount();
   const pendingFriends = usePendingFriendCount();
   const unreadNotifications = useUnreadNotificationCount();
+  const T = useT();
 
   useEffect(() => {
     fetchNotifications();
@@ -56,8 +58,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="today"
         options={{
-          title: 'QUÊTES',
-          tabBarLabel: 'QUÊTES',
+          title: T.tab_quests,
+          tabBarLabel: T.tab_quests,
           tabBarBadge: pendingHabits > 0 ? pendingHabits : undefined,
           tabBarBadgeStyle: {
             backgroundColor: colors.streak,
@@ -69,8 +71,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="social"
         options={{
-          title: 'SOCIAL',
-          tabBarLabel: 'SOCIAL',
+          title: T.tab_social,
+          tabBarLabel: T.tab_social,
           tabBarBadge: pendingFriends > 0 ? pendingFriends : undefined,
           tabBarBadgeStyle: {
             backgroundColor: colors.primary,
@@ -82,15 +84,15 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="shop"
         options={{
-          title: 'BOUTIQUE',
-          tabBarLabel: 'BOUTIQUE',
+          title: T.tab_shop,
+          tabBarLabel: T.tab_shop,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'MOI',
-          tabBarLabel: 'MOI',
+          title: T.tab_me,
+          tabBarLabel: T.tab_me,
           tabBarBadge: unreadNotifications > 0 ? unreadNotifications : undefined,
           tabBarBadgeStyle: {
             backgroundColor: colors.primary,

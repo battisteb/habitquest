@@ -23,6 +23,7 @@ import { signOut } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
+import { useT, setLang, lang$ } from '../src/lib/i18n';
 
 const THEME_KEYS: ThemeKey[] = ['default', 'medieval', 'cyberpunk', 'nature'];
 
@@ -30,6 +31,8 @@ export default function SettingsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { themeKey, setTheme } = useTheme();
+  const T = useT();
+  const currentLang = use$(lang$);
 
   const [prefs, setPrefs] = useState<NotificationPrefs>(() => getNotificationPrefs());
   const isPremium = use$(subscriptionStore$.isPremium);
@@ -42,17 +45,21 @@ export default function SettingsScreen() {
   }
 
   const handleSignOut = () => {
-    Alert.alert('Sign out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Sign out',
-        style: 'destructive',
-        onPress: async () => {
-          await signOut();
-          router.replace('/(auth)/sign-in');
+    Alert.alert(
+      T.settings_sign_out_confirm_title,
+      T.settings_sign_out_confirm_msg,
+      [
+        { text: T.settings_sign_out_cancel, style: 'cancel' },
+        {
+          text: T.settings_sign_out,
+          style: 'destructive',
+          onPress: async () => {
+            await signOut();
+            router.replace('/(auth)/sign-in');
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   return (
@@ -60,16 +67,16 @@ export default function SettingsScreen() {
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.settings_back} onPress={() => router.back()} variant="ghost" />
 
       <View style={styles.header}>
-        <Text style={styles.screenLabel}>PROFILE</Text>
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.screenLabel}>{T.settings_screen_label}</Text>
+        <Text style={styles.title}>{T.settings_title}</Text>
       </View>
 
       {/* Theme section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>THEME</Text>
+        <Text style={styles.sectionTitle}>{T.settings_theme}</Text>
         <View style={styles.themeGrid}>
           {THEME_KEYS.map((key) => {
             const meta = THEME_META[key];
@@ -87,21 +94,39 @@ export default function SettingsScreen() {
                 <Text style={styles.themeDesc} numberOfLines={2}>
                   {meta.description}
                 </Text>
-                {active && <Text style={styles.activeChip}>ACTIVE</Text>}
+                {active && <Text style={styles.activeChip}>{T.theme_active}</Text>}
               </Pressable>
             );
           })}
         </View>
       </View>
 
+      {/* Language section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{T.settings_language}</Text>
+        <View style={styles.langRow}>
+          {(['fr', 'en'] as const).map((l) => (
+            <Pressable
+              key={l}
+              style={[styles.langBtn, currentLang === l && styles.langBtnActive]}
+              onPress={() => setLang(l)}
+            >
+              <Text style={[styles.langBtnText, currentLang === l && styles.langBtnTextActive]}>
+                {l === 'fr' ? T.lang_fr : T.lang_en}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      </View>
+
       {/* Notifications section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>NOTIFICATIONS</Text>
+        <Text style={styles.sectionTitle}>{T.settings_notifications}</Text>
 
         <View style={styles.prefRow}>
           <View style={styles.prefInfo}>
-            <Text style={styles.prefLabel}>Daily reminder</Text>
-            <Text style={styles.prefSub}>Get nudged to complete your habits</Text>
+            <Text style={styles.prefLabel}>{T.settings_daily_reminder}</Text>
+            <Text style={styles.prefSub}>{T.settings_daily_reminder_sub}</Text>
           </View>
           <Switch
             value={prefs.dailyReminderEnabled}
@@ -113,7 +138,7 @@ export default function SettingsScreen() {
 
         {prefs.dailyReminderEnabled && (
           <View style={styles.timeRow}>
-            <Text style={styles.prefSub}>Reminder time</Text>
+            <Text style={styles.prefSub}>{T.settings_reminder_time}</Text>
             <View style={styles.timeButtons}>
               {[7, 8, 9, 10, 12, 18, 20, 21].map((h) => (
                 <Pressable
@@ -132,8 +157,8 @@ export default function SettingsScreen() {
 
         <View style={styles.prefRow}>
           <View style={styles.prefInfo}>
-            <Text style={styles.prefLabel}>Streak at risk</Text>
-            <Text style={styles.prefSub}>Alert at 20:00 if streak not completed</Text>
+            <Text style={styles.prefLabel}>{T.settings_streak_risk}</Text>
+            <Text style={styles.prefSub}>{T.settings_streak_risk_sub}</Text>
           </View>
           <Switch
             value={prefs.streakRiskEnabled}
@@ -145,8 +170,8 @@ export default function SettingsScreen() {
 
         <View style={styles.prefRow}>
           <View style={styles.prefInfo}>
-            <Text style={styles.prefLabel}>Weekly recap</Text>
-            <Text style={styles.prefSub}>Sunday summary of your week</Text>
+            <Text style={styles.prefLabel}>{T.settings_weekly_recap}</Text>
+            <Text style={styles.prefSub}>{T.settings_weekly_recap_sub}</Text>
           </View>
           <Switch
             value={prefs.weeklyRecapEnabled}
@@ -159,7 +184,7 @@ export default function SettingsScreen() {
 
       {/* Premium section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>ABONNEMENT</Text>
+        <Text style={styles.sectionTitle}>{T.settings_subscription}</Text>
         {isPremium ? (
           <View style={styles.premiumBadgeRow}>
             <Text style={styles.premiumActive}>👑 PREMIUM ACTIF</Text>
@@ -176,26 +201,26 @@ export default function SettingsScreen() {
 
       {/* Account section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>ACCOUNT</Text>
+        <Text style={styles.sectionTitle}>{T.settings_account}</Text>
 
         <PixelButton
-          title="Edit Profile"
+          title={T.settings_edit_profile}
           onPress={() => router.push('/profile/edit')}
           variant="secondary"
         />
         <PixelButton
-          title="🎯 Focus Mode"
+          title={T.settings_focus_mode}
           onPress={() => router.push('/settings/contextual-mode')}
           variant="secondary"
         />
         <PixelButton
-          title="📦 Archived Habits"
+          title={T.settings_archived}
           onPress={() => router.push('/habit/archive')}
           variant="secondary"
         />
 
         <PixelButton
-          title="Sign Out"
+          title={T.settings_sign_out}
           onPress={handleSignOut}
           variant="ghost"
         />
@@ -203,8 +228,8 @@ export default function SettingsScreen() {
 
       {/* App info */}
       <View style={styles.appInfo}>
-        <Text style={styles.appInfoText}>HabitQuest v1.0.0</Text>
-        <Text style={styles.appInfoText}>Built with ⚔️ and pixel art</Text>
+        <Text style={styles.appInfoText}>{T.settings_version}</Text>
+        <Text style={styles.appInfoText}>{T.settings_tagline}</Text>
       </View>
     </ScrollView>
   );
@@ -343,6 +368,34 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   timeBtnTextActive: {
+    color: colors.primary,
+  },
+
+  // Language selector
+  langRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  langBtn: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+  },
+  langBtnActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  langBtnText: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 0.5,
+  },
+  langBtnTextActive: {
     color: colors.primary,
   },
 

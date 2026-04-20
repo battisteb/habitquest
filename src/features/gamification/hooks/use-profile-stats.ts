@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
-import { getXpForNextLevel } from '../../../lib/constants/game-config';
+import { getLevelForXp, getXpForNextLevel } from '../../../lib/constants/game-config';
 import type { Database } from '../../../lib/supabase/types';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -32,17 +32,16 @@ export function useProfileStats(): ProfileStats {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
 
     if (data) {
-      const nextLevelXp = getXpForNextLevel(data.level);
-      const currentLevelXp =
-        data.level > 0
-          ? getXpForNextLevel(data.level - 1)
-          : 0;
+      // Always derive level from XP client-side — the DB level column can lag
+      const level = getLevelForXp(data.xp);
+      const nextLevelXp = getXpForNextLevel(level);
+      const currentLevelXp = level > 0 ? getXpForNextLevel(level - 1) : 0;
       const xpInLevel = data.xp - currentLevelXp;
       const xpNeeded = nextLevelXp - currentLevelXp;
       const progress = xpNeeded > 0 ? Math.min(xpInLevel / xpNeeded, 1) : 0;
 
       setState({
-        profile: data,
+        profile: { ...data, level },
         xpForNextLevel: nextLevelXp,
         xpProgress: progress,
         isLoading: false,

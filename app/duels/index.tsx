@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
@@ -52,6 +52,9 @@ export default function DuelsIndexScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
+      <Pressable onPress={() => router.back()} style={styles.backButton}>
+        <Text style={styles.backButtonText}>← RETOUR</Text>
+      </Pressable>
       <View style={styles.header}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>DUELS</Text>
@@ -134,6 +137,8 @@ export default function DuelsIndexScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
+  backButton: { marginBottom: spacing.sm },
+  backButtonText: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.textSecondary, letterSpacing: 1 },
   header: { gap: 4, marginBottom: spacing.lg },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   title: { fontSize: fontSizes.xxl, fontWeight: 'bold', color: colors.text, letterSpacing: 2 },

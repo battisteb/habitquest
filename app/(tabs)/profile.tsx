@@ -176,6 +176,21 @@ export default function ProfileScreen() {
 
           <View style={styles.actionsRow}>
             <PixelButton
+              title="🏋️ Séances"
+              onPress={() => router.push('/(tabs)/training')}
+              variant="secondary"
+              style={{ flex: 1 }}
+            />
+            <PixelButton
+              title="📊 Stats"
+              onPress={() => router.push('/(tabs)/stats')}
+              variant="secondary"
+              style={{ flex: 1 }}
+            />
+          </View>
+
+          <View style={styles.actionsRow}>
+            <PixelButton
               title="🔔 Notifications"
               onPress={() => router.push('/notifications')}
               variant="secondary"
