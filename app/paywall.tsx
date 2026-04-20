@@ -49,10 +49,10 @@ export default function PaywallScreen() {
   }, [isPremium]);
 
   const monthlyPkg = offering?.availablePackages.find(
-    (p) => p.product.identifier === PRODUCT_MONTHLY,
+    (p: any) => p.product.identifier === PRODUCT_MONTHLY,
   );
   const annualPkg = offering?.availablePackages.find(
-    (p) => p.product.identifier === PRODUCT_ANNUAL,
+    (p: any) => p.product.identifier === PRODUCT_ANNUAL,
   );
 
   // Fallback prices shown before offerings load

@@ -56,8 +56,7 @@
           "iosAppId": "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX",
           "userTrackingUsageDescription": "This identifier will be used to show you personalized ads."
         }
-      ],
-      "react-native-purchases"
+      ]
     ],
     "scheme": "habitquest"
   }

@@ -1,8 +1,16 @@
 import { observable } from '@legendapp/state';
-import Purchases, { LOG_LEVEL, type CustomerInfo, type PurchasesOffering } from 'react-native-purchases';
 import { Platform } from 'react-native';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+
+// react-native-purchases is native-only — lazy require to avoid web crashes
+const isNative = Platform.OS !== 'web';
+function getPurchases() {
+  if (!isNative) return null;
+  try { return require('react-native-purchases').default; } catch { return null; }
+}
+type CustomerInfo = any;
+type PurchasesOffering = any;
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 // RevenueCat API keys (public, safe to commit — server validates receipts)
@@ -43,13 +51,15 @@ let _initialized = false;
 
 export async function initPurchases(userId: string): Promise<void> {
   if (_initialized) return;
-  if (!isRcConfigured()) {
-    // RevenueCat not configured yet — app runs fully as free tier
+  if (!isNative || !isRcConfigured()) {
     if (__DEV__) console.log('[RevenueCat] Not configured — skipping init (all users free)');
     return;
   }
+  const Purchases = getPurchases();
+  if (!Purchases) return;
   try {
     if (__DEV__) {
+      const { LOG_LEVEL } = require('react-native-purchases');
       Purchases.setLogLevel(LOG_LEVEL.DEBUG);
     }
     const apiKey = Platform.OS === 'ios' ? RC_API_KEY_IOS : RC_API_KEY_ANDROID;
@@ -64,6 +74,8 @@ export async function initPurchases(userId: string): Promise<void> {
 
 // ─── Refresh status from RevenueCat ──────────────────────────────────────────
 export async function refreshSubscriptionStatus(): Promise<void> {
+  const Purchases = getPurchases();
+  if (!Purchases) return;
   try {
     subscriptionStore$.isLoading.set(true);
     const customerInfo = await Purchases.getCustomerInfo();
@@ -97,6 +109,8 @@ export async function refreshSubscriptionStatus(): Promise<void> {
 
 // ─── Load offerings ───────────────────────────────────────────────────────────
 export async function loadOfferings(): Promise<void> {
+  const Purchases = getPurchases();
+  if (!Purchases) return;
   try {
     const offerings = await Purchases.getOfferings();
     if (offerings.current) {
@@ -109,6 +123,8 @@ export async function loadOfferings(): Promise<void> {
 
 // ─── Purchase ─────────────────────────────────────────────────────────────────
 export async function purchaseSubscription(productIdentifier: string): Promise<boolean> {
+  const Purchases = getPurchases();
+  if (!Purchases) return false;
   try {
     subscriptionStore$.isLoading.set(true);
     subscriptionStore$.error.set(null);
@@ -117,7 +133,7 @@ export async function purchaseSubscription(productIdentifier: string): Promise<b
     if (!offering) throw new Error('No offerings available');
 
     const pkg = offering.availablePackages.find(
-      (p) => p.product.identifier === productIdentifier,
+      (p: any) => p.product.identifier === productIdentifier,
     );
     if (!pkg) throw new Error(`Product ${productIdentifier} not found`);
 
@@ -141,6 +157,8 @@ export async function purchaseSubscription(productIdentifier: string): Promise<b
 
 // ─── Restore ──────────────────────────────────────────────────────────────────
 export async function restorePurchases(): Promise<boolean> {
+  const Purchases = getPurchases();
+  if (!Purchases) return false;
   try {
     subscriptionStore$.isLoading.set(true);
     const customerInfo = await Purchases.restorePurchases();
