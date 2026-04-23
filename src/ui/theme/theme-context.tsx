@@ -18,6 +18,10 @@ function applyThemeToColors(key: ThemeKey) {
   colors.streak = t.streak;
   colors.xp = t.xp;
   if (t.gold) colors.accent = t.gold;
+  if (t.surfaceLight) colors.surfaceLight = t.surfaceLight;
+  if (t.secondary) colors.secondary = t.secondary;
+  if (t.danger) colors.danger = t.danger;
+  if (t.warning) colors.warning = t.warning;
 }
 
 const THEME_KEY = 'active-theme';

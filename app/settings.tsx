@@ -25,7 +25,7 @@ import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 import { useT, setLang, lang$ } from '../src/lib/i18n';
 
-const THEME_KEYS: ThemeKey[] = ['default', 'medieval', 'cyberpunk', 'nature'];
+const THEME_KEYS: ThemeKey[] = ['default', 'medieval', 'cyberpunk', 'nature', 'lifestyle'];
 
 export default function SettingsScreen() {
   const router = useRouter();

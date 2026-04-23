@@ -1,16 +1,20 @@
-export type ThemeKey = 'default' | 'medieval' | 'cyberpunk' | 'nature';
+export type ThemeKey = 'default' | 'medieval' | 'cyberpunk' | 'nature' | 'lifestyle';
 
 export interface ThemeColors {
   background: string;
   surface: string;
+  surfaceLight?: string;
   border: string;
   text: string;
   textSecondary: string;
   textMuted: string;
   primary: string;
   primaryDark: string;
+  secondary?: string;
   accent: string;
   success: string;
+  warning?: string;
+  danger?: string;
   streak: string;
   xp: string;
   gold: string;
@@ -77,6 +81,25 @@ export const THEMES: Record<ThemeKey, ThemeColors> = {
     xp: '#FFB300',
     gold: '#FFC107',
   },
+  lifestyle: {
+    background: '#0F0F10',
+    surface: '#1A1A1C',
+    surfaceLight: '#252528',
+    border: '#2C2C2E',
+    text: '#F2F2F7',
+    textSecondary: '#AEAEB2',
+    textMuted: '#636366',
+    primary: '#7C6DFA',
+    primaryDark: '#5B4FD0',
+    secondary: '#FF6B9D',
+    accent: '#F5CB5C',
+    success: '#30D158',
+    warning: '#FF9F0A',
+    danger: '#FF453A',
+    streak: '#FF6B35',
+    xp: '#7C6DFA',
+    gold: '#F5CB5C',
+  },
 };
 
 export const THEME_META: Record<ThemeKey, { name: string; emoji: string; description: string }> = {
@@ -84,6 +107,7 @@ export const THEME_META: Record<ThemeKey, { name: string; emoji: string; descrip
   medieval: { name: 'Medieval Kingdom', emoji: '🏰', description: 'Stone, gold, and torchlight.' },
   cyberpunk: { name: 'Cyberpunk City', emoji: '🌆', description: 'Neon lights and dark streets.' },
   nature: { name: 'Forest Temple', emoji: '🌿', description: 'Ancient wood and lush greens.' },
+  lifestyle: { name: 'Lifestyle', emoji: '✨', description: 'Clean, minimal, modern. Moins donjon, plus quotidien.' },
 };
 
 export function getThemeColors(themeKey: string): ThemeColors {
