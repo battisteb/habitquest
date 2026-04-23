@@ -81,7 +81,7 @@ function ThemedApp() {
 
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar style={themeKey === 'lifestyle' ? 'dark' : 'light'} />
       <AuthGuard>
         <Stack
           key={themeKey}

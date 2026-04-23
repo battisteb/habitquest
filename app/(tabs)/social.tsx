@@ -443,7 +443,7 @@ export default function SocialScreen() {
   );
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       <Text style={styles.title}>SOCIAL</Text>
 
       {/* Tab bar */}

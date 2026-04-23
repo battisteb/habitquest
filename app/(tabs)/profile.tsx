@@ -53,7 +53,7 @@ export default function ProfileScreen() {
   const equippedBg = equippedSlots?.background?.item?.sprite_key;
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       {/* Top icon bar */}
       <View style={styles.topBar}>
         <Pressable onPress={() => router.push('/settings')} style={styles.iconBtn} hitSlop={8}>

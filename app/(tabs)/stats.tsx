@@ -34,7 +34,7 @@ export default function StatsScreen() {
 
   return (
     <ScrollView
-      style={[styles.container, { paddingTop: insets.top }]}
+      style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
       <Text style={styles.title}>STATS</Text>

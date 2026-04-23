@@ -166,7 +166,7 @@ export default function ShopScreen() {
   const ownedCount = filteredItems.filter((i) => ownedItemIds.includes(i.id)).length;
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       {/* Header */}
       <View style={styles.header}>
         <View>

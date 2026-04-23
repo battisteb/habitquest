@@ -112,7 +112,7 @@ export default function NotificationsScreen() {
   const keyExtractor = useCallback((item: InboxNotification) => item.id, []);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Text style={styles.backButtonText}>← RETOUR</Text>

@@ -288,7 +288,7 @@ export default function TodayScreen() {
   );
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       {/* XP Toast */}
       <XpToast
         visible={xpToast.visible}

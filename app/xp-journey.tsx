@@ -174,7 +174,7 @@ export default function XpJourneyScreen() {
 
   return (
     <ScrollView
-      style={[styles.container, { paddingTop: insets.top }]}
+      style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
       {/* Header */}
