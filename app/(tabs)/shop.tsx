@@ -242,93 +242,100 @@ export default function ShopScreen() {
   const currentAccessory = equippedSlots.accessory?.item?.sprite_key;
   const currentBg = equippedSlots.background?.item?.sprite_key;
 
-  async function handleItemPress(item: (typeof items)[0]) {
-    const isOwned = ownedItemIds.includes(item.id);
-    const slot = CATEGORY_TO_SLOT[item.category];
-
-    // Already owned → equip/unequip
-    if (isOwned) {
-      if (item.category === 'theme') {
-        await setActiveTheme(item.sprite_key);
-        Alert.alert('Thème appliqué !', `${item.name} est maintenant actif.`);
-        return;
-      }
-      const equipped = equippedSlots[slot];
-      if (equipped?.itemId === item.id) {
-        await unequipSlot(slot);
-      } else {
-        await equipItem(item.id, slot);
-      }
-      return;
-    }
-
-    // Premium lock
-    if (isPremiumLocked_map.get(item.id)) {
-      Alert.alert('Premium requis', 'Cet item est réservé aux membres Premium.', [
-        { text: 'Annuler', style: 'cancel' },
-        { text: 'Voir Premium', onPress: () => router.push('/paywall') },
-      ]);
-      return;
-    }
-
-    // Level lock
-    if (userLevel < item.required_level) {
-      Alert.alert(
-        'Niveau insuffisant',
-        `Cet item nécessite le niveau ${item.required_level}.\nTu es niveau ${userLevel}.`,
-      );
-      return;
-    }
-
-    // Streak/static catalog unlock
-    const staticItem = staticCatalogBySpriteKey.get(item.sprite_key);
-    if (staticItem && !isItemUnlocked(staticItem, userLevel, longestStreak)) {
-      Alert.alert(
-        'Pas encore débloqué',
-        `Condition : ${staticItem.unlockCondition?.label ?? 'Inconnue'}`,
-      );
-      return;
-    }
-
-    // Gold check
-    if (userGold < item.price_gold) {
-      Alert.alert(
-        'Or insuffisant',
-        `Il te manque ${item.price_gold - userGold}g.\nComplete des habitudes pour gagner de l'or !`,
-      );
-      return;
-    }
-
-    // All good — confirm purchase
-    Alert.alert(
-      `Acheter "${item.name}" ?`,
-      `${item.price_gold}g · ${item.rarity.toUpperCase()}\n\nTu as ${userGold}g. Restant : ${userGold - item.price_gold}g`,
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: `Acheter pour ${item.price_gold}g`,
-          onPress: async () => {
-            setPurchasing(item.id);
-            try {
-              await purchaseItem(item.id);
-              if (slot) await equipItem(item.id, slot);
-            } catch (e: any) {
-              Alert.alert('Erreur', e.message ?? 'Achat échoué');
-            } finally {
-              setPurchasing(null);
-            }
-          },
-        },
-      ],
-    );
-  }
-
-  // Build premium-lock map so handleItemPress can check it by item id
+  // Declared before handleItemPress to avoid any closure ordering issues
   const isPremiumLocked_map = useMemo(() => {
     const map = new Map<string, boolean>();
     items.forEach((item) => map.set(item.id, !canViewShopItem(item.rarity)));
     return map;
   }, [items, canViewShopItem]);
+
+  async function handleItemPress(item: (typeof items)[0]) {
+    try {
+      const isOwned = ownedItemIds.includes(item.id);
+      const slot = CATEGORY_TO_SLOT[item.category];
+
+      // Already owned → equip/unequip
+      if (isOwned) {
+        if (item.category === 'theme') {
+          await setActiveTheme(item.sprite_key);
+          Alert.alert('Thème appliqué !', `${item.name} est maintenant actif.`);
+          return;
+        }
+        const equipped = equippedSlots[slot];
+        if (equipped?.itemId === item.id) {
+          await unequipSlot(slot);
+          Alert.alert('Retiré', `${item.name} a été déséquipé.`);
+        } else {
+          await equipItem(item.id, slot);
+          Alert.alert('Équipé !', `${item.name} est maintenant équipé.`);
+        }
+        return;
+      }
+
+      // Premium lock
+      if (isPremiumLocked_map.get(item.id)) {
+        Alert.alert('Premium requis', 'Cet item est réservé aux membres Premium.', [
+          { text: 'Annuler', style: 'cancel' },
+          { text: 'Voir Premium', onPress: () => router.push('/paywall') },
+        ]);
+        return;
+      }
+
+      // Level lock
+      if (userLevel < item.required_level) {
+        Alert.alert(
+          'Niveau insuffisant',
+          `Cet item nécessite le niveau ${item.required_level}.\nTu es niveau ${userLevel}.`,
+        );
+        return;
+      }
+
+      // Streak/static catalog unlock
+      const staticItem = staticCatalogBySpriteKey.get(item.sprite_key);
+      if (staticItem && !isItemUnlocked(staticItem, userLevel, longestStreak)) {
+        Alert.alert(
+          'Pas encore débloqué',
+          `Condition : ${staticItem.unlockCondition?.label ?? 'Inconnue'}`,
+        );
+        return;
+      }
+
+      // Gold check
+      if (userGold < item.price_gold) {
+        Alert.alert(
+          'Or insuffisant',
+          `Il te manque ${item.price_gold - userGold}g.\nComplete des habitudes pour gagner de l'or !`,
+        );
+        return;
+      }
+
+      // All good — confirm purchase
+      Alert.alert(
+        `Acheter "${item.name}" ?`,
+        `${item.price_gold}g · ${item.rarity.toUpperCase()}\n\nTu as ${userGold}g. Restant : ${userGold - item.price_gold}g`,
+        [
+          { text: 'Annuler', style: 'cancel' },
+          {
+            text: `Acheter pour ${item.price_gold}g`,
+            onPress: async () => {
+              setPurchasing(item.id);
+              try {
+                await purchaseItem(item.id);
+                if (slot) await equipItem(item.id, slot);
+                Alert.alert('Acheté !', `${item.name} a été ajouté à ton inventaire.`);
+              } catch (e: any) {
+                Alert.alert('Erreur', e.message ?? 'Achat échoué');
+              } finally {
+                setPurchasing(null);
+              }
+            },
+          },
+        ],
+      );
+    } catch (e: any) {
+      Alert.alert('Erreur', e.message ?? 'Une erreur est survenue');
+    }
+  }
 
   const ownedCount = filteredItems.filter((i) => ownedItemIds.includes(i.id)).length;
 

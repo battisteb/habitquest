@@ -177,8 +177,8 @@ export function ShopItemCard({
       ]}
       onPress={onPress}
     >
-      {/* Avatar preview */}
-      <View style={styles.previewArea}>
+      {/* Avatar preview — pointerEvents="none" so pixel Views don't absorb touches */}
+      <View style={styles.previewArea} pointerEvents="none">
         <PixelAvatar
           size={72}
           hat={previewHat}
