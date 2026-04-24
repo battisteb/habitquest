@@ -155,7 +155,8 @@ export function ShopItemCard({
     alignItems: 'center',
   },
 }), [themeKey]);
-  const disabled = !isOwned && (!canAfford || !canUnlock || !!isPremiumLocked);
+  // Visual dimming only — never block Pressable so onPress always fires and can explain why
+  const dimmed = !isOwned && (!canAfford || !canUnlock || !!isPremiumLocked);
   const borderColor = isEquipped
     ? colors.accent
     : RARITY_BORDER[rarity] ?? colors.border;
@@ -172,10 +173,9 @@ export function ShopItemCard({
         styles.card,
         { borderColor },
         isEquipped && styles.cardEquipped,
-        disabled && styles.cardDisabled,
+        dimmed && styles.cardDisabled,
       ]}
       onPress={onPress}
-      disabled={disabled}
     >
       {/* Avatar preview */}
       <View style={styles.previewArea}>

@@ -246,10 +246,11 @@ export default function ShopScreen() {
     const isOwned = ownedItemIds.includes(item.id);
     const slot = CATEGORY_TO_SLOT[item.category];
 
+    // Already owned → equip/unequip
     if (isOwned) {
       if (item.category === 'theme') {
         await setActiveTheme(item.sprite_key);
-        Alert.alert('Theme Applied', `${item.name} is now active!`);
+        Alert.alert('Thème appliqué !', `${item.name} est maintenant actif.`);
         return;
       }
       const equipped = equippedSlots[slot];
@@ -261,49 +262,58 @@ export default function ShopScreen() {
       return;
     }
 
-    // Not owned — check level lock first
+    // Premium lock
+    if (isPremiumLocked_map.get(item.id)) {
+      Alert.alert('Premium requis', 'Cet item est réservé aux membres Premium.', [
+        { text: 'Annuler', style: 'cancel' },
+        { text: 'Voir Premium', onPress: () => router.push('/paywall') },
+      ]);
+      return;
+    }
+
+    // Level lock
     if (userLevel < item.required_level) {
       Alert.alert(
-        'Level too low',
-        `This item requires level ${item.required_level}.\nYou are level ${userLevel}.`,
+        'Niveau insuffisant',
+        `Cet item nécessite le niveau ${item.required_level}.\nTu es niveau ${userLevel}.`,
       );
       return;
     }
 
-    // Check streak-based unlock from the static catalog (matched by sprite_key)
+    // Streak/static catalog unlock
     const staticItem = staticCatalogBySpriteKey.get(item.sprite_key);
     if (staticItem && !isItemUnlocked(staticItem, userLevel, longestStreak)) {
       Alert.alert(
-        'Not yet unlocked',
-        `Unlock condition: ${staticItem.unlockCondition?.label ?? 'Unknown'}`,
+        'Pas encore débloqué',
+        `Condition : ${staticItem.unlockCondition?.label ?? 'Inconnue'}`,
       );
       return;
     }
 
-    // Check gold
+    // Gold check
     if (userGold < item.price_gold) {
       Alert.alert(
-        'Not enough gold',
-        `You need ${item.price_gold - userGold}g more.\nComplete habits to earn gold!`,
+        'Or insuffisant',
+        `Il te manque ${item.price_gold - userGold}g.\nComplete des habitudes pour gagner de l'or !`,
       );
       return;
     }
 
+    // All good — confirm purchase
     Alert.alert(
-      `Buy "${item.name}"?`,
-      `${item.price_gold}g · ${item.rarity.toUpperCase()}\n\nYou have ${userGold}g. Remaining: ${userGold - item.price_gold}g`,
+      `Acheter "${item.name}" ?`,
+      `${item.price_gold}g · ${item.rarity.toUpperCase()}\n\nTu as ${userGold}g. Restant : ${userGold - item.price_gold}g`,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Annuler', style: 'cancel' },
         {
-          text: `Buy for ${item.price_gold}g`,
+          text: `Acheter pour ${item.price_gold}g`,
           onPress: async () => {
             setPurchasing(item.id);
             try {
               await purchaseItem(item.id);
-              // Auto-equip after purchase
               if (slot) await equipItem(item.id, slot);
             } catch (e: any) {
-              Alert.alert('Error', e.message ?? 'Purchase failed');
+              Alert.alert('Erreur', e.message ?? 'Achat échoué');
             } finally {
               setPurchasing(null);
             }
@@ -312,6 +322,13 @@ export default function ShopScreen() {
       ],
     );
   }
+
+  // Build premium-lock map so handleItemPress can check it by item id
+  const isPremiumLocked_map = useMemo(() => {
+    const map = new Map<string, boolean>();
+    items.forEach((item) => map.set(item.id, !canViewShopItem(item.rarity)));
+    return map;
+  }, [items, canViewShopItem]);
 
   const ownedCount = filteredItems.filter((i) => ownedItemIds.includes(i.id)).length;
 
@@ -464,10 +481,6 @@ export default function ShopScreen() {
                 currentAccessory={currentAccessory}
                 currentBg={currentBg}
                 onPress={() => {
-                  if (premiumLocked) {
-                    router.push('/paywall');
-                    return;
-                  }
                   if (!isItemLoading) handleItemPress(item);
                 }}
               />
