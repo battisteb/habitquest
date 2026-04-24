@@ -42,6 +42,7 @@ import {
 } from '../../src/features/monetization/utils/ad-service';
 import { getMaxFreezeTokens } from '../../src/features/monetization/utils/feature-gates';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 const DAY_NAMES = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 const MONTH_NAMES = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
@@ -55,6 +56,317 @@ const ALL_KEY = 'all';
 const MILESTONES = [7, 14, 30, 60, 100];
 
 export default function TodayScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background },
+
+  // Header
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+  },
+  dateLabel: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    marginTop: 1,
+  },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  headerStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
+  },
+  headerStatGold: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.accent,
+  },
+  headerStatLevel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.xp,
+  },
+  freezeButton: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#4FC3F7',
+  },
+  freezeButtonActive: { backgroundColor: '#4FC3F7' },
+  freezeText: {
+    color: '#4FC3F7',
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  freezeTextActive: { color: colors.background },
+  watchAdButton: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.textMuted,
+  },
+  watchAdText: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  addButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 4,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: colors.primaryDark,
+    borderBottomWidth: 4,
+  },
+  addButtonText: {
+    color: colors.text,
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    marginTop: -2,
+  },
+
+  // List
+  list: { flex: 1 },
+  listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xxl },
+
+  // Mode banner
+  modeBanner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: colors.primary + '18',
+    borderWidth: 2,
+    borderColor: colors.primary,
+    borderRadius: 4,
+    padding: spacing.sm,
+    margin: spacing.md,
+    marginBottom: 0,
+  },
+  modeBannerText: {
+    color: colors.primary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    flex: 1,
+  },
+  modeDeactivate: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    padding: spacing.xs,
+  },
+
+  // All done banner
+  allDoneBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    margin: spacing.md,
+    marginBottom: spacing.sm,
+    backgroundColor: colors.accent + '18',
+    borderWidth: 2,
+    borderColor: colors.accent,
+    borderRadius: 4,
+    borderBottomWidth: 4,
+    padding: spacing.md,
+  },
+  allDoneEmoji: { fontSize: 36 },
+  allDoneTitle: {
+    fontSize: fontSizes.lg,
+    fontWeight: 'bold',
+    color: colors.accent,
+    letterSpacing: 2,
+  },
+  allDoneSub: {
+    fontSize: fontSizes.xs,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+
+  // Habits section header
+  habitsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
+  },
+  habitsHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  habitsTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+  },
+  habitsCounter: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textSecondary,
+    backgroundColor: colors.surface,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 1,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+
+  // Progress bar
+  progressBarWrap: {
+    height: 4,
+    backgroundColor: colors.border,
+    marginHorizontal: spacing.md,
+    marginBottom: spacing.xs,
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    borderRadius: 2,
+  },
+
+  // Category filter
+  filterScroll: { flexGrow: 0, marginBottom: spacing.xs },
+  filterRow: {
+    paddingHorizontal: spacing.md,
+    gap: spacing.xs,
+    paddingBottom: spacing.xs,
+    flexDirection: 'row',
+  },
+  filterChip: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  filterChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  filterChipText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 0.5,
+  },
+  filterChipTextActive: { color: colors.primary },
+
+  // Burnout banner
+  burnoutBanner: {
+    backgroundColor: '#FF6B6B' + '18',
+    borderWidth: 2,
+    borderColor: '#FF6B6B',
+    borderRadius: 4,
+    padding: spacing.sm,
+    margin: spacing.md,
+    marginBottom: 0,
+    gap: 2,
+  },
+  burnoutRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.xs,
+  },
+  burnoutText: { flex: 1, gap: 2 },
+  burnoutMessage: {
+    color: '#FF6B6B',
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  burnoutSuggestion: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    lineHeight: 16,
+  },
+  burnoutClose: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    paddingHorizontal: spacing.xs,
+  },
+  burnoutAction: {
+    marginTop: spacing.xs,
+    borderWidth: 1,
+    borderColor: '#FF6B6B',
+    borderRadius: 3,
+    paddingVertical: spacing.xs,
+    alignItems: 'center',
+  },
+  burnoutActionText: {
+    color: '#FF6B6B',
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+
+  // Habits list padding
+  listPad: { paddingHorizontal: spacing.md },
+
+  // Empty state
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.xl,
+    gap: spacing.sm,
+  },
+  emptyEmoji: { fontSize: 48 },
+  emptyTitle: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.lg,
+    fontWeight: 'bold',
+  },
+  emptySubtitle: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  emptyTips: {
+    marginTop: spacing.md,
+    gap: spacing.xs,
+    alignSelf: 'stretch',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 6,
+    padding: spacing.md,
+  },
+  emptyTip: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    lineHeight: 18,
+  },
+}), [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const habits = use$(habitsStore$.habits);
@@ -389,313 +701,4 @@ export default function TodayScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
 
-  // Header
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.sm,
-    paddingBottom: spacing.xs,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-  },
-  dateLabel: {
-    fontSize: fontSizes.xs,
-    color: colors.textMuted,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-    marginTop: 1,
-  },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  headerStats: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 3,
-  },
-  headerStatGold: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.accent,
-  },
-  headerStatLevel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.xp,
-  },
-  freezeButton: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: '#4FC3F7',
-  },
-  freezeButtonActive: { backgroundColor: '#4FC3F7' },
-  freezeText: {
-    color: '#4FC3F7',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  freezeTextActive: { color: colors.background },
-  watchAdButton: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: colors.textMuted,
-  },
-  watchAdText: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  addButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 4,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: colors.primaryDark,
-    borderBottomWidth: 4,
-  },
-  addButtonText: {
-    color: colors.text,
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    marginTop: -2,
-  },
-
-  // List
-  list: { flex: 1 },
-  listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xxl },
-
-  // Mode banner
-  modeBanner: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: colors.primary + '18',
-    borderWidth: 2,
-    borderColor: colors.primary,
-    borderRadius: 4,
-    padding: spacing.sm,
-    margin: spacing.md,
-    marginBottom: 0,
-  },
-  modeBannerText: {
-    color: colors.primary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-    flex: 1,
-  },
-  modeDeactivate: {
-    color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    padding: spacing.xs,
-  },
-
-  // All done banner
-  allDoneBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    margin: spacing.md,
-    marginBottom: spacing.sm,
-    backgroundColor: colors.accent + '18',
-    borderWidth: 2,
-    borderColor: colors.accent,
-    borderRadius: 4,
-    borderBottomWidth: 4,
-    padding: spacing.md,
-  },
-  allDoneEmoji: { fontSize: 36 },
-  allDoneTitle: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
-    color: colors.accent,
-    letterSpacing: 2,
-  },
-  allDoneSub: {
-    fontSize: fontSizes.xs,
-    color: colors.textSecondary,
-    marginTop: 2,
-  },
-
-  // Habits section header
-  habitsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.sm,
-    paddingBottom: spacing.xs,
-  },
-  habitsHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  habitsTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-  },
-  habitsCounter: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textSecondary,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 1,
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-
-  // Progress bar
-  progressBarWrap: {
-    height: 4,
-    backgroundColor: colors.border,
-    marginHorizontal: spacing.md,
-    marginBottom: spacing.xs,
-    borderRadius: 2,
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: 2,
-  },
-
-  // Category filter
-  filterScroll: { flexGrow: 0, marginBottom: spacing.xs },
-  filterRow: {
-    paddingHorizontal: spacing.md,
-    gap: spacing.xs,
-    paddingBottom: spacing.xs,
-    flexDirection: 'row',
-  },
-  filterChip: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 3,
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  filterChipActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary + '22',
-  },
-  filterChipText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 0.5,
-  },
-  filterChipTextActive: { color: colors.primary },
-
-  // Burnout banner
-  burnoutBanner: {
-    backgroundColor: '#FF6B6B' + '18',
-    borderWidth: 2,
-    borderColor: '#FF6B6B',
-    borderRadius: 4,
-    padding: spacing.sm,
-    margin: spacing.md,
-    marginBottom: 0,
-    gap: 2,
-  },
-  burnoutRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.xs,
-  },
-  burnoutText: { flex: 1, gap: 2 },
-  burnoutMessage: {
-    color: '#FF6B6B',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  burnoutSuggestion: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    lineHeight: 16,
-  },
-  burnoutClose: {
-    color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    paddingHorizontal: spacing.xs,
-  },
-  burnoutAction: {
-    marginTop: spacing.xs,
-    borderWidth: 1,
-    borderColor: '#FF6B6B',
-    borderRadius: 3,
-    paddingVertical: spacing.xs,
-    alignItems: 'center',
-  },
-  burnoutActionText: {
-    color: '#FF6B6B',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-
-  // Habits list padding
-  listPad: { paddingHorizontal: spacing.md },
-
-  // Empty state
-  empty: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: spacing.xl,
-    gap: spacing.sm,
-  },
-  emptyEmoji: { fontSize: 48 },
-  emptyTitle: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
-  },
-  emptySubtitle: {
-    color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  emptyTips: {
-    marginTop: spacing.md,
-    gap: spacing.xs,
-    alignSelf: 'stretch',
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 6,
-    padding: spacing.md,
-  },
-  emptyTip: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    lineHeight: 18,
-  },
-});

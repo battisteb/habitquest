@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, Pressable, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import { saveAvatarConfig } from '../src/features/avatar/stores/avatar-config-st
 import { authStore$ } from '../src/features/auth/stores/auth-store';
 import { storage } from '../src/lib/storage/mmkv';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { useTheme } from '../src/ui/theme/theme-context';
 
 const ONBOARDING_KEY = 'onboarding-completed';
 
@@ -63,6 +64,7 @@ interface SwatchRowProps {
 }
 
 function SwatchRow({ label, swatches, selected, onSelect }: SwatchRowProps) {
+  const styles = createStyles();
   return (
     <View style={swatchStyles.section}>
       <Text style={swatchStyles.label}>{label}</Text>
@@ -96,6 +98,8 @@ const HABIT_STEP = SLIDES.length + 1;
 const TOTAL_STEPS = SLIDES.length + 2;
 
 export default function OnboardingScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(createStyles, [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const [slideIndex, setSlideIndex] = useState(0);
@@ -295,7 +299,8 @@ export default function OnboardingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles() {
+  return StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -405,3 +410,4 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
 });
+}

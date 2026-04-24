@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Pressable, View, Text, StyleSheet, Animated } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
 import { getWeeklyTarget } from '../stores/habits-store';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 interface HabitCardProps {
   name: string;
@@ -62,90 +63,8 @@ export function HabitCard({
   frequency = 'daily',
   weekCompletionCount = 0,
 }: HabitCardProps) {
-  const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
-  const nextXp = calculateXpEarned(streakCount + 1);
-  const flame = streakFlame(streakCount);
-  const [burst, setBurst] = useState(false);
-
-  const isWeekly = frequency !== 'daily';
-  const weeklyTarget = isWeekly ? getWeeklyTarget(frequency) : 1;
-  const isWeeklyDone = isWeekly && weekCompletionCount >= weeklyTarget;
-  const effectiveDone = isWeekly ? isWeeklyDone : isCompletedToday;
-
-  // Entry animation: staggered slide-up + fade
-  const slideY = useRef(new Animated.Value(18)).current;
-  const entryOpacity = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(slideY, {
-        toValue: 0,
-        duration: 280,
-        delay: index * 45,
-        useNativeDriver: true,
-      }),
-      Animated.timing(entryOpacity, {
-        toValue: 1,
-        duration: 280,
-        delay: index * 45,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  const handleComplete = () => {
-    setBurst(true);
-    setTimeout(() => setBurst(false), 700);
-    onComplete();
-  };
-
-  return (
-    <Animated.View style={{ transform: [{ translateY: slideY }], opacity: entryOpacity }}>
-    <Pressable
-      onPress={onPress}
-      style={[styles.container, effectiveDone && styles.containerDone]}
-    >
-      <CompletionBurst visible={burst} />
-      <View style={[styles.categoryBar, { backgroundColor: categoryColor }]} />
-      <View style={styles.content}>
-        <View style={styles.info}>
-          <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
-            {categoryIcon} {name}
-          </Text>
-          <View style={styles.meta}>
-            <Text style={[styles.category, { color: categoryColor }]}>
-              {category.toUpperCase()}
-            </Text>
-            {isWeekly ? (
-              <Text style={styles.weekProgress}>
-                {weekCompletionCount}/{weeklyTarget} week
-              </Text>
-            ) : (
-              streakCount > 0 && (
-                <Text style={styles.streak}>{flame} {streakCount}d</Text>
-              )
-            )}
-            {!effectiveDone && (
-              <Text style={styles.xpPreview}>+{nextXp} XP</Text>
-            )}
-          </View>
-        </View>
-        <Pressable
-          onPress={handleComplete}
-          style={[styles.checkButton, effectiveDone && styles.checkButtonDone]}
-          disabled={effectiveDone}
-          hitSlop={8}
-        >
-          <Text style={[styles.checkText, effectiveDone && styles.checkTextDone]}>
-            {effectiveDone ? '✓' : ''}
-          </Text>
-        </Pressable>
-      </View>
-    </Pressable>
-    </Animated.View>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
@@ -229,4 +148,88 @@ const styles = StyleSheet.create({
   checkTextDone: {
     color: colors.background,
   },
-});
+}), [themeKey]);
+  const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
+  const nextXp = calculateXpEarned(streakCount + 1);
+  const flame = streakFlame(streakCount);
+  const [burst, setBurst] = useState(false);
+
+  const isWeekly = frequency !== 'daily';
+  const weeklyTarget = isWeekly ? getWeeklyTarget(frequency) : 1;
+  const isWeeklyDone = isWeekly && weekCompletionCount >= weeklyTarget;
+  const effectiveDone = isWeekly ? isWeeklyDone : isCompletedToday;
+
+  // Entry animation: staggered slide-up + fade
+  const slideY = useRef(new Animated.Value(18)).current;
+  const entryOpacity = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(slideY, {
+        toValue: 0,
+        duration: 280,
+        delay: index * 45,
+        useNativeDriver: true,
+      }),
+      Animated.timing(entryOpacity, {
+        toValue: 1,
+        duration: 280,
+        delay: index * 45,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  const handleComplete = () => {
+    setBurst(true);
+    setTimeout(() => setBurst(false), 700);
+    onComplete();
+  };
+
+  return (
+    <Animated.View style={{ transform: [{ translateY: slideY }], opacity: entryOpacity }}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.container, effectiveDone && styles.containerDone]}
+    >
+      <CompletionBurst visible={burst} />
+      <View style={[styles.categoryBar, { backgroundColor: categoryColor }]} />
+      <View style={styles.content}>
+        <View style={styles.info}>
+          <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
+            {categoryIcon} {name}
+          </Text>
+          <View style={styles.meta}>
+            <Text style={[styles.category, { color: categoryColor }]}>
+              {category.toUpperCase()}
+            </Text>
+            {isWeekly ? (
+              <Text style={styles.weekProgress}>
+                {weekCompletionCount}/{weeklyTarget} week
+              </Text>
+            ) : (
+              streakCount > 0 && (
+                <Text style={styles.streak}>{flame} {streakCount}d</Text>
+              )
+            )}
+            {!effectiveDone && (
+              <Text style={styles.xpPreview}>+{nextXp} XP</Text>
+            )}
+          </View>
+        </View>
+        <Pressable
+          onPress={handleComplete}
+          style={[styles.checkButton, effectiveDone && styles.checkButtonDone]}
+          disabled={effectiveDone}
+          hitSlop={8}
+        >
+          <Text style={[styles.checkText, effectiveDone && styles.checkTextDone]}>
+            {effectiveDone ? '✓' : ''}
+          </Text>
+        </Pressable>
+      </View>
+    </Pressable>
+    </Animated.View>
+  );
+}
+
+

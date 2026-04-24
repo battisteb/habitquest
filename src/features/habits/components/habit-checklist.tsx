@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import type { ChecklistItem } from '../types/habit-content';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 interface HabitChecklistProps {
   items: ChecklistItem[];
@@ -9,69 +10,8 @@ interface HabitChecklistProps {
 }
 
 export function HabitChecklist({ items, onComplete }: HabitChecklistProps) {
-  const [checked, setChecked] = useState<Set<string>>(new Set());
-  const allDone = checked.size === items.length;
-
-  function toggle(id: string) {
-    setChecked((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  }
-
-  const doneCount = checked.size;
-  const totalCount = items.length;
-  const progress = totalCount > 0 ? doneCount / totalCount : 0;
-
-  return (
-    <View style={styles.container}>
-      {/* Progress header */}
-      <View style={styles.progressHeader}>
-        <Text style={styles.progressLabel}>
-          {doneCount}/{totalCount} steps
-        </Text>
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
-        </View>
-      </View>
-
-      {/* Items */}
-      <View style={styles.list}>
-        {items.map((item) => {
-          const isDone = checked.has(item.id);
-          return (
-            <Pressable
-              key={item.id}
-              style={[styles.item, isDone && styles.itemDone]}
-              onPress={() => toggle(item.id)}
-            >
-              <View style={[styles.checkbox, isDone && styles.checkboxDone]}>
-                {isDone && <Text style={styles.checkmark}>✓</Text>}
-              </View>
-              <Text style={[styles.itemLabel, isDone && styles.itemLabelDone]}>
-                {item.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-
-      {/* Complete button */}
-      {allDone && (
-        <Pressable style={styles.completeButton} onPress={onComplete}>
-          <Text style={styles.completeButtonText}>COMPLETE ✓</Text>
-        </Pressable>
-      )}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   container: {
     gap: spacing.md,
   },
@@ -155,4 +95,67 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 2,
   },
-});
+}), [themeKey]);
+  const [checked, setChecked] = useState<Set<string>>(new Set());
+  const allDone = checked.size === items.length;
+
+  function toggle(id: string) {
+    setChecked((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }
+
+  const doneCount = checked.size;
+  const totalCount = items.length;
+  const progress = totalCount > 0 ? doneCount / totalCount : 0;
+
+  return (
+    <View style={styles.container}>
+      {/* Progress header */}
+      <View style={styles.progressHeader}>
+        <Text style={styles.progressLabel}>
+          {doneCount}/{totalCount} steps
+        </Text>
+        <View style={styles.progressBar}>
+          <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+        </View>
+      </View>
+
+      {/* Items */}
+      <View style={styles.list}>
+        {items.map((item) => {
+          const isDone = checked.has(item.id);
+          return (
+            <Pressable
+              key={item.id}
+              style={[styles.item, isDone && styles.itemDone]}
+              onPress={() => toggle(item.id)}
+            >
+              <View style={[styles.checkbox, isDone && styles.checkboxDone]}>
+                {isDone && <Text style={styles.checkmark}>✓</Text>}
+              </View>
+              <Text style={[styles.itemLabel, isDone && styles.itemLabelDone]}>
+                {item.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      {/* Complete button */}
+      {allDone && (
+        <Pressable style={styles.completeButton} onPress={onComplete}>
+          <Text style={styles.completeButtonText}>COMPLETE ✓</Text>
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
+

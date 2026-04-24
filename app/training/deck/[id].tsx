@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { use$ } from '@legendapp/state/react';
 import { decksStore$, recordReview, getDueCards } from '../../../src/features/training/stores/decks-store';
 import { completeHabit, habitsStore$ } from '../../../src/features/habits/stores/habits-store';
 import { colors, spacing, fontSizes, borderRadius } from '../../../src/ui/theme/tokens';
+import { useTheme } from '../../../src/ui/theme/theme-context';
 
 type Quality = 0 | 1 | 2 | 3;
 
@@ -24,6 +25,162 @@ const QUALITY_BUTTONS: { label: string; sublabel: string; quality: Quality; colo
 ];
 
 export default function DeckReviewScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background },
+  errorText: { color: colors.textMuted, padding: spacing.lg, textAlign: 'center' },
+  backText: { color: colors.textMuted, fontSize: fontSizes.xl, width: 32, textAlign: 'center' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  headerCenter: { flex: 1, alignItems: 'center', gap: 2 },
+  deckTitle: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 1 },
+  deckProgress: { color: colors.textMuted, fontSize: fontSizes.xs },
+  progressBar: {
+    height: 4,
+    backgroundColor: colors.border,
+    marginHorizontal: spacing.md,
+    borderRadius: 2,
+    overflow: 'hidden',
+    marginBottom: spacing.md,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: colors.xp,
+    borderRadius: 2,
+  },
+  cardContainer: {
+    padding: spacing.md,
+    gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  card: {
+    minHeight: 240,
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderBottomWidth: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.lg,
+  },
+  cardFlipped: {
+    borderColor: colors.xp,
+  },
+  cardContent: { alignItems: 'center', gap: spacing.sm, width: '100%' },
+  cardSide: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+  },
+  cardText: {
+    color: colors.text,
+    fontSize: fontSizes.xl + 4,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    lineHeight: 36,
+  },
+  cardHint: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.sm,
+    fontStyle: 'italic',
+    textAlign: 'center',
+  },
+  tapHint: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    marginTop: spacing.md,
+    letterSpacing: 1,
+  },
+  cardFrontSmall: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    textAlign: 'center',
+  },
+  cardAnswer: {
+    color: colors.xp,
+    fontSize: fontSizes.xl + 4,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    lineHeight: 36,
+  },
+  ratingSection: { gap: spacing.sm },
+  ratingLabel: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    textAlign: 'center',
+  },
+  ratingGrid: { flexDirection: 'row', gap: spacing.xs },
+  ratingBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    backgroundColor: colors.surface,
+    gap: 2,
+  },
+  ratingBtnLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  ratingBtnSub: { color: colors.textMuted, fontSize: 9 },
+  // Finish
+  finishContainer: {
+    padding: spacing.lg,
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingTop: spacing.xl,
+  },
+  finishEmoji: { fontSize: 64 },
+  finishTitle: { color: colors.xp, fontSize: fontSizes.xxl, fontWeight: 'bold', letterSpacing: 4 },
+  finishDeck: { color: colors.text, fontSize: fontSizes.lg, fontWeight: 'bold' },
+  finishStats: { color: colors.textSecondary, fontSize: fontSizes.sm },
+  habitLink: { width: '100%', gap: spacing.sm },
+  habitLinkLabel: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    textAlign: 'center',
+  },
+  habitLinkRow: { flexDirection: 'row', gap: spacing.sm, justifyContent: 'center', flexWrap: 'wrap' },
+  habitChip: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  habitChipSelected: { borderColor: colors.xp, backgroundColor: colors.xp + '22' },
+  habitChipText: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', maxWidth: 120 },
+  finishButton: {
+    backgroundColor: colors.xp,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xxl,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: '#5a4ec4',
+    borderBottomWidth: 4,
+    marginTop: spacing.md,
+  },
+  finishButtonText: { color: colors.text, fontWeight: 'bold', fontSize: fontSizes.md, letterSpacing: 2 },
+  // Up to date
+  upToDate: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.md, padding: spacing.lg },
+  upToDateEmoji: { fontSize: 64 },
+  upToDateTitle: { color: colors.success, fontSize: fontSizes.xl, fontWeight: 'bold' },
+  upToDateSub: { color: colors.textSecondary, fontSize: fontSizes.sm, textAlign: 'center' },
+  upToDateNext: { color: colors.textMuted, fontSize: fontSizes.xs, fontStyle: 'italic' },
+}), [themeKey]);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -220,158 +377,4 @@ export default function DeckReviewScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  errorText: { color: colors.textMuted, padding: spacing.lg, textAlign: 'center' },
-  backText: { color: colors.textMuted, fontSize: fontSizes.xl, width: 32, textAlign: 'center' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  headerCenter: { flex: 1, alignItems: 'center', gap: 2 },
-  deckTitle: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 1 },
-  deckProgress: { color: colors.textMuted, fontSize: fontSizes.xs },
-  progressBar: {
-    height: 4,
-    backgroundColor: colors.border,
-    marginHorizontal: spacing.md,
-    borderRadius: 2,
-    overflow: 'hidden',
-    marginBottom: spacing.md,
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: colors.xp,
-    borderRadius: 2,
-  },
-  cardContainer: {
-    padding: spacing.md,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
-  card: {
-    minHeight: 240,
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderBottomWidth: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: spacing.lg,
-  },
-  cardFlipped: {
-    borderColor: colors.xp,
-  },
-  cardContent: { alignItems: 'center', gap: spacing.sm, width: '100%' },
-  cardSide: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-  },
-  cardText: {
-    color: colors.text,
-    fontSize: fontSizes.xl + 4,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    lineHeight: 36,
-  },
-  cardHint: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
-  tapHint: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    marginTop: spacing.md,
-    letterSpacing: 1,
-  },
-  cardFrontSmall: {
-    color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    textAlign: 'center',
-  },
-  cardAnswer: {
-    color: colors.xp,
-    fontSize: fontSizes.xl + 4,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    lineHeight: 36,
-  },
-  ratingSection: { gap: spacing.sm },
-  ratingLabel: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-    textAlign: 'center',
-  },
-  ratingGrid: { flexDirection: 'row', gap: spacing.xs },
-  ratingBtn: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    backgroundColor: colors.surface,
-    gap: 2,
-  },
-  ratingBtnLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  ratingBtnSub: { color: colors.textMuted, fontSize: 9 },
-  // Finish
-  finishContainer: {
-    padding: spacing.lg,
-    alignItems: 'center',
-    gap: spacing.md,
-    paddingTop: spacing.xl,
-  },
-  finishEmoji: { fontSize: 64 },
-  finishTitle: { color: colors.xp, fontSize: fontSizes.xxl, fontWeight: 'bold', letterSpacing: 4 },
-  finishDeck: { color: colors.text, fontSize: fontSizes.lg, fontWeight: 'bold' },
-  finishStats: { color: colors.textSecondary, fontSize: fontSizes.sm },
-  habitLink: { width: '100%', gap: spacing.sm },
-  habitLinkLabel: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-    textAlign: 'center',
-  },
-  habitLinkRow: { flexDirection: 'row', gap: spacing.sm, justifyContent: 'center', flexWrap: 'wrap' },
-  habitChip: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  habitChipSelected: { borderColor: colors.xp, backgroundColor: colors.xp + '22' },
-  habitChipText: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', maxWidth: 120 },
-  finishButton: {
-    backgroundColor: colors.xp,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.xxl,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: '#5a4ec4',
-    borderBottomWidth: 4,
-    marginTop: spacing.md,
-  },
-  finishButtonText: { color: colors.text, fontWeight: 'bold', fontSize: fontSizes.md, letterSpacing: 2 },
-  // Up to date
-  upToDate: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.md, padding: spacing.lg },
-  upToDateEmoji: { fontSize: 64 },
-  upToDateTitle: { color: colors.success, fontSize: fontSizes.xl, fontWeight: 'bold' },
-  upToDateSub: { color: colors.textSecondary, fontSize: fontSizes.sm, textAlign: 'center' },
-  upToDateNext: { color: colors.textMuted, fontSize: fontSizes.xs, fontStyle: 'italic' },
-});
+

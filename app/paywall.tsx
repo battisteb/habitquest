@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ import {
   PRODUCT_ANNUAL,
 } from '../src/features/monetization/stores/subscription-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { useTheme } from '../src/ui/theme/theme-context';
 
 const FEATURES = [
   { icon: '❄️', label: 'Streak Freezes', free: '1 stored · plein tarif', premium: '3 stored · prix /2' },
@@ -31,6 +32,156 @@ const FEATURES = [
 ];
 
 export default function PaywallScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background },
+
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  closeBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeText: { color: colors.textMuted, fontSize: 14, fontWeight: 'bold' },
+  badge: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: gold,
+    letterSpacing: 2,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: gold + '66',
+    borderRadius: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
+  },
+
+  scroll: { padding: spacing.md, gap: spacing.lg, paddingBottom: spacing.xxl },
+
+  hero: { alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.md },
+  heroEmoji: { fontSize: 56 },
+  heroTitle: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    textAlign: 'center',
+    letterSpacing: 0.5,
+    lineHeight: 28,
+  },
+  heroSub: {
+    fontSize: fontSizes.sm,
+    color: colors.textSecondary,
+    textAlign: 'center',
+  },
+
+  // Feature table
+  table: {
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    overflow: 'hidden',
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: colors.background,
+    borderBottomWidth: 2,
+    borderBottomColor: colors.border,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+  },
+  tableCol: {
+    flex: 1,
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  tableColCenter: { textAlign: 'center' },
+  premiumCol: { color: gold },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border + '44',
+    paddingVertical: 8,
+    paddingHorizontal: spacing.sm,
+  },
+  tableCell: { flex: 1, justifyContent: 'center' },
+  tableCellCenter: { alignItems: 'center' },
+  premiumCell: { backgroundColor: gold + '08' },
+  featureIcon: { fontSize: 14 },
+  featureLabel: { fontSize: fontSizes.xs, color: colors.text, fontWeight: 'bold', flex: 1 },
+  freeText: { fontSize: 9, color: colors.textMuted, textAlign: 'center' },
+  premiumText: { fontSize: 9, color: gold, fontWeight: 'bold', textAlign: 'center' },
+
+  // Plans
+  plans: { flexDirection: 'row', gap: spacing.sm },
+  plan: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.md,
+    gap: 4,
+    alignItems: 'center',
+  },
+  planSelected: { borderColor: gold, backgroundColor: gold + '11' },
+  planBadgeRow: { height: 20, justifyContent: 'center' },
+  popularBadge: {
+    backgroundColor: gold,
+    borderRadius: 3,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  popularBadgeText: { fontSize: 8, fontWeight: 'bold', color: '#000', letterSpacing: 1 },
+  planPeriod: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.text, letterSpacing: 1 },
+  planPrice: { fontSize: fontSizes.xl, fontWeight: 'bold', color: gold },
+  planSub: { fontSize: 9, color: colors.textMuted, textAlign: 'center' },
+
+  // CTA
+  cta: {
+    backgroundColor: gold,
+    borderRadius: 4,
+    borderWidth: 3,
+    borderColor: '#B8860B',
+    borderBottomWidth: 5,
+    paddingVertical: spacing.md + 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ctaDisabled: { opacity: 0.6 },
+  ctaText: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: '#000',
+    letterSpacing: 1,
+  },
+
+  legal: {
+    fontSize: 9,
+    color: colors.textMuted,
+    textAlign: 'center',
+    lineHeight: 14,
+  },
+  restoreBtn: { alignItems: 'center', paddingVertical: spacing.sm },
+  restoreText: {
+    fontSize: fontSizes.xs,
+    color: colors.textSecondary,
+    textDecorationLine: 'underline',
+  },
+}), [themeKey]);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const isLoading = use$(subscriptionStore$.isLoading);
@@ -187,152 +338,4 @@ export default function PaywallScreen() {
 const gold = '#FFD700';
 const premiumPurple = '#9B59B6';
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
 
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  closeBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeText: { color: colors.textMuted, fontSize: 14, fontWeight: 'bold' },
-  badge: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: gold,
-    letterSpacing: 2,
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: gold + '66',
-    borderRadius: 4,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 3,
-  },
-
-  scroll: { padding: spacing.md, gap: spacing.lg, paddingBottom: spacing.xxl },
-
-  hero: { alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.md },
-  heroEmoji: { fontSize: 56 },
-  heroTitle: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    textAlign: 'center',
-    letterSpacing: 0.5,
-    lineHeight: 28,
-  },
-  heroSub: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-    textAlign: 'center',
-  },
-
-  // Feature table
-  table: {
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: colors.background,
-    borderBottomWidth: 2,
-    borderBottomColor: colors.border,
-    paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.sm,
-  },
-  tableCol: {
-    flex: 1,
-    fontSize: 9,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  tableColCenter: { textAlign: 'center' },
-  premiumCol: { color: gold },
-  tableRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border + '44',
-    paddingVertical: 8,
-    paddingHorizontal: spacing.sm,
-  },
-  tableCell: { flex: 1, justifyContent: 'center' },
-  tableCellCenter: { alignItems: 'center' },
-  premiumCell: { backgroundColor: gold + '08' },
-  featureIcon: { fontSize: 14 },
-  featureLabel: { fontSize: fontSizes.xs, color: colors.text, fontWeight: 'bold', flex: 1 },
-  freeText: { fontSize: 9, color: colors.textMuted, textAlign: 'center' },
-  premiumText: { fontSize: 9, color: gold, fontWeight: 'bold', textAlign: 'center' },
-
-  // Plans
-  plans: { flexDirection: 'row', gap: spacing.sm },
-  plan: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.md,
-    gap: 4,
-    alignItems: 'center',
-  },
-  planSelected: { borderColor: gold, backgroundColor: gold + '11' },
-  planBadgeRow: { height: 20, justifyContent: 'center' },
-  popularBadge: {
-    backgroundColor: gold,
-    borderRadius: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-  },
-  popularBadgeText: { fontSize: 8, fontWeight: 'bold', color: '#000', letterSpacing: 1 },
-  planPeriod: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.text, letterSpacing: 1 },
-  planPrice: { fontSize: fontSizes.xl, fontWeight: 'bold', color: gold },
-  planSub: { fontSize: 9, color: colors.textMuted, textAlign: 'center' },
-
-  // CTA
-  cta: {
-    backgroundColor: gold,
-    borderRadius: 4,
-    borderWidth: 3,
-    borderColor: '#B8860B',
-    borderBottomWidth: 5,
-    paddingVertical: spacing.md + 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ctaDisabled: { opacity: 0.6 },
-  ctaText: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    color: '#000',
-    letterSpacing: 1,
-  },
-
-  legal: {
-    fontSize: 9,
-    color: colors.textMuted,
-    textAlign: 'center',
-    lineHeight: 14,
-  },
-  restoreBtn: { alignItems: 'center', paddingVertical: spacing.sm },
-  restoreText: {
-    fontSize: fontSizes.xs,
-    color: colors.textSecondary,
-    textDecorationLine: 'underline',
-  },
-});

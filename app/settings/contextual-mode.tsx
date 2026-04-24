@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,117 +13,11 @@ import {
 } from '../../src/features/habits/utils/contextual-mode';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 export default function ContextualModeScreen() {
-  const insets = useSafeAreaInsets();
-  const router = useRouter();
-  const [activeMode, setActiveMode] = useState(() => getActiveMode());
-
-  function handleActivate(key: ContextualModeKey) {
-    activateMode(key);
-    router.back();
-  }
-
-  function handleDeactivate() {
-    deactivateMode();
-    setActiveMode(null);
-  }
-
-  const activeDef = activeMode ? getModeDefinition(activeMode.key) : null;
-
-  return (
-    <ScrollView
-      style={[styles.container, { paddingTop: insets.top }]}
-      contentContainerStyle={styles.content}
-    >
-      {/* Header */}
-      <View style={styles.header}>
-        <PixelButton title="Back" onPress={() => router.back()} variant="ghost" />
-        <Text style={styles.title}>FOCUS MODE</Text>
-        <View style={{ width: 60 }} />
-      </View>
-
-      {/* Active mode banner */}
-      {activeMode && activeDef && (
-        <View style={styles.activeBanner}>
-          <View style={styles.activeBannerInfo}>
-            <Text style={styles.activeBannerEmoji}>{activeDef.emoji}</Text>
-            <View>
-              <Text style={styles.activeBannerName}>{activeDef.name.toUpperCase()}</Text>
-              <Text style={styles.activeBannerDays}>{getRemainingDays(activeMode)} days remaining</Text>
-            </View>
-          </View>
-          <Pressable style={styles.deactivateButton} onPress={handleDeactivate}>
-            <Text style={styles.deactivateButtonText}>DEACTIVATE</Text>
-          </Pressable>
-        </View>
-      )}
-
-      {/* Description */}
-      <Text style={styles.description}>
-        Focus modes temporarily adjust which habit categories are active. Paused categories keep their streaks frozen.
-      </Text>
-
-      {/* Mode cards */}
-      {MODES.map((mode) => {
-        const isActive = activeMode?.key === mode.key;
-        return (
-          <View key={mode.key} style={[styles.card, isActive && styles.cardActive]}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardEmoji}>{mode.emoji}</Text>
-              <View style={styles.cardTitleBlock}>
-                <Text style={[styles.cardName, isActive && styles.cardNameActive]}>
-                  {mode.name.toUpperCase()}
-                </Text>
-                <Text style={styles.cardDuration}>{mode.durationDays} days</Text>
-              </View>
-            </View>
-
-            <Text style={styles.cardDescription}>{mode.description}</Text>
-
-            <View style={styles.categoriesRow}>
-              <View style={styles.categoryGroup}>
-                <Text style={styles.categoryGroupLabel}>FOCUS</Text>
-                <View style={styles.chips}>
-                  {mode.focusCategories.map((cat) => (
-                    <View key={cat} style={styles.chipFocus}>
-                      <Text style={styles.chipFocusText}>{cat}</Text>
-                    </View>
-                  ))}
-                </View>
-              </View>
-              <View style={styles.categoryGroup}>
-                <Text style={styles.categoryGroupLabel}>PAUSE</Text>
-                <View style={styles.chips}>
-                  {mode.pauseCategories.map((cat) => (
-                    <View key={cat} style={styles.chipPause}>
-                      <Text style={styles.chipPauseText}>{cat}</Text>
-                    </View>
-                  ))}
-                </View>
-              </View>
-            </View>
-
-            {!isActive && (
-              <PixelButton
-                title="Activate"
-                onPress={() => handleActivate(mode.key)}
-                variant="primary"
-              />
-            )}
-            {isActive && (
-              <View style={styles.activeTag}>
-                <Text style={styles.activeTagText}>ACTIVE</Text>
-              </View>
-            )}
-          </View>
-        );
-      })}
-    </ScrollView>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -305,4 +199,113 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1,
   },
-});
+}), [themeKey]);
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const [activeMode, setActiveMode] = useState(() => getActiveMode());
+
+  function handleActivate(key: ContextualModeKey) {
+    activateMode(key);
+    router.back();
+  }
+
+  function handleDeactivate() {
+    deactivateMode();
+    setActiveMode(null);
+  }
+
+  const activeDef = activeMode ? getModeDefinition(activeMode.key) : null;
+
+  return (
+    <ScrollView
+      style={[styles.container, { paddingTop: insets.top }]}
+      contentContainerStyle={styles.content}
+    >
+      {/* Header */}
+      <View style={styles.header}>
+        <PixelButton title="Back" onPress={() => router.back()} variant="ghost" />
+        <Text style={styles.title}>FOCUS MODE</Text>
+        <View style={{ width: 60 }} />
+      </View>
+
+      {/* Active mode banner */}
+      {activeMode && activeDef && (
+        <View style={styles.activeBanner}>
+          <View style={styles.activeBannerInfo}>
+            <Text style={styles.activeBannerEmoji}>{activeDef.emoji}</Text>
+            <View>
+              <Text style={styles.activeBannerName}>{activeDef.name.toUpperCase()}</Text>
+              <Text style={styles.activeBannerDays}>{getRemainingDays(activeMode)} days remaining</Text>
+            </View>
+          </View>
+          <Pressable style={styles.deactivateButton} onPress={handleDeactivate}>
+            <Text style={styles.deactivateButtonText}>DEACTIVATE</Text>
+          </Pressable>
+        </View>
+      )}
+
+      {/* Description */}
+      <Text style={styles.description}>
+        Focus modes temporarily adjust which habit categories are active. Paused categories keep their streaks frozen.
+      </Text>
+
+      {/* Mode cards */}
+      {MODES.map((mode) => {
+        const isActive = activeMode?.key === mode.key;
+        return (
+          <View key={mode.key} style={[styles.card, isActive && styles.cardActive]}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardEmoji}>{mode.emoji}</Text>
+              <View style={styles.cardTitleBlock}>
+                <Text style={[styles.cardName, isActive && styles.cardNameActive]}>
+                  {mode.name.toUpperCase()}
+                </Text>
+                <Text style={styles.cardDuration}>{mode.durationDays} days</Text>
+              </View>
+            </View>
+
+            <Text style={styles.cardDescription}>{mode.description}</Text>
+
+            <View style={styles.categoriesRow}>
+              <View style={styles.categoryGroup}>
+                <Text style={styles.categoryGroupLabel}>FOCUS</Text>
+                <View style={styles.chips}>
+                  {mode.focusCategories.map((cat) => (
+                    <View key={cat} style={styles.chipFocus}>
+                      <Text style={styles.chipFocusText}>{cat}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+              <View style={styles.categoryGroup}>
+                <Text style={styles.categoryGroupLabel}>PAUSE</Text>
+                <View style={styles.chips}>
+                  {mode.pauseCategories.map((cat) => (
+                    <View key={cat} style={styles.chipPause}>
+                      <Text style={styles.chipPauseText}>{cat}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </View>
+
+            {!isActive && (
+              <PixelButton
+                title="Activate"
+                onPress={() => handleActivate(mode.key)}
+                variant="primary"
+              />
+            )}
+            {isActive && (
+              <View style={styles.activeTag}>
+                <Text style={styles.activeTagText}>ACTIVE</Text>
+              </View>
+            )}
+          </View>
+        );
+      })}
+    </ScrollView>
+  );
+}
+
+

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, Pressable, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,6 +9,7 @@ import { createHabit } from '../../src/features/habits/stores/habits-store';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 const FREQUENCY_OPTIONS: { value: string; label: string }[] = [
   { value: 'daily', label: 'DAILY' },
@@ -19,6 +20,109 @@ const FREQUENCY_OPTIONS: { value: string; label: string }[] = [
 ];
 
 export default function CreateHabitScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.lg,
+  },
+  header: {
+    gap: spacing.sm,
+  },
+  backButton: {
+    color: colors.primary,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+  },
+  categorySection: {
+    gap: spacing.sm,
+  },
+  categoryLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  categoryGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  categoryChip: {
+    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm + 2,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+  },
+  categoryChipText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  createButton: {
+    marginTop: spacing.md,
+  },
+  trainingShortcut: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 4,
+    padding: spacing.sm,
+    alignItems: 'center',
+  },
+  trainingShortcutText: {
+    fontSize: fontSizes.sm,
+    color: colors.textSecondary,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  frequencySection: {
+    gap: spacing.sm,
+  },
+  frequencyLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  frequencyRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  frequencyChip: {
+    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm + 2,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  frequencyChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  frequencyChipText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    color: colors.textSecondary,
+  },
+  frequencyChipTextActive: {
+    color: colors.primary,
+  },
+}), [themeKey]);
   const [name, setName] = useState('');
   const [category, setCategory] = useState<HabitCategory>('general');
   const [content, setContent] = useState<HabitContent | null>(null);
@@ -140,105 +244,4 @@ export default function CreateHabitScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    padding: spacing.lg,
-    gap: spacing.lg,
-  },
-  header: {
-    gap: spacing.sm,
-  },
-  backButton: {
-    color: colors.primary,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-  },
-  categorySection: {
-    gap: spacing.sm,
-  },
-  categoryLabel: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  categoryChip: {
-    paddingVertical: spacing.xs + 2,
-    paddingHorizontal: spacing.sm + 2,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-  },
-  categoryChipText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  createButton: {
-    marginTop: spacing.md,
-  },
-  trainingShortcut: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 4,
-    padding: spacing.sm,
-    alignItems: 'center',
-  },
-  trainingShortcutText: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  frequencySection: {
-    gap: spacing.sm,
-  },
-  frequencyLabel: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  frequencyRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  frequencyChip: {
-    paddingVertical: spacing.xs + 2,
-    paddingHorizontal: spacing.sm + 2,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  frequencyChipActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary + '22',
-  },
-  frequencyChipText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-    color: colors.textSecondary,
-  },
-  frequencyChipTextActive: {
-    color: colors.primary,
-  },
-});
+

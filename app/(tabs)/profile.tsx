@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,8 +16,147 @@ import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { notificationsStore$ } from '../../src/features/notifications/stores/notifications-store';
 import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 export default function ProfileScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  iconBtn: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  iconBtnText: {
+    fontSize: 22,
+  },
+  notifBadge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+    minWidth: 16,
+    height: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  notifBadgeText: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  content: {
+    padding: spacing.md,
+    gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  avatarSection: {
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingVertical: spacing.md,
+  },
+  username: {
+    fontSize: fontSizes.xxl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 1,
+    marginTop: spacing.sm,
+  },
+  rankBadge: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+  },
+  editHint: {
+    fontSize: 10,
+    color: colors.textMuted,
+    letterSpacing: 1,
+    marginTop: 2,
+  },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.md,
+    gap: spacing.xs,
+  },
+  cardHint: {
+    color: colors.xp,
+    fontSize: 9,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    textAlign: 'right',
+    marginTop: 2,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  miniStat: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.md,
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  miniStatValue: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.accent,
+  },
+  miniStatLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  stageCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  stageInfo: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  stageTitle: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  stageDescription: {
+    fontSize: fontSizes.xs,
+    color: colors.textSecondary,
+  },
+  stageNext: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+    letterSpacing: 0.5,
+  },
+}), [themeKey]);
   const { profile, xpForNextLevel, xpProgress, isLoading } = useProfileStats();
   const equippedSlots = use$(shopStore$.equippedSlots);
   const insets = useSafeAreaInsets();
@@ -171,140 +310,4 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  iconBtn: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  iconBtnText: {
-    fontSize: 22,
-  },
-  notifBadge: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    minWidth: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 3,
-  },
-  notifBadgeText: {
-    fontSize: 9,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  content: {
-    padding: spacing.md,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
-  avatarSection: {
-    alignItems: 'center',
-    gap: spacing.xs,
-    paddingVertical: spacing.md,
-  },
-  username: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 1,
-    marginTop: spacing.sm,
-  },
-  rankBadge: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-  },
-  editHint: {
-    fontSize: 10,
-    color: colors.textMuted,
-    letterSpacing: 1,
-    marginTop: 2,
-  },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.md,
-    gap: spacing.xs,
-  },
-  cardHint: {
-    color: colors.xp,
-    fontSize: 9,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-    textAlign: 'right',
-    marginTop: 2,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  miniStat: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.md,
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  miniStatValue: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.accent,
-  },
-  miniStatLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  stageCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  stageInfo: {
-    flex: 1,
-    gap: spacing.xs,
-  },
-  stageTitle: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  stageDescription: {
-    fontSize: fontSizes.xs,
-    color: colors.textSecondary,
-  },
-  stageNext: {
-    fontSize: fontSizes.xs,
-    color: colors.textMuted,
-    letterSpacing: 0.5,
-  },
-});
+

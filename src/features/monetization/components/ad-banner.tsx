@@ -1,8 +1,10 @@
+import { useMemo } from 'react';
 import { View, StyleSheet, Pressable, Text, Platform } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../stores/subscription-store';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useRouter } from 'expo-router';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 // AdMob is native-only — dynamic import to avoid web crashes
 const isNative = Platform.OS !== 'web';
@@ -29,6 +31,28 @@ interface AdBannerProps {
  * Includes a subtle "GO PREMIUM" dismiss hint.
  */
 export function AdBanner({ position = 'bottom' }: AdBannerProps) {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  bottomContainer: {
+    // Safe area handled by parent screens
+  },
+  premiumHint: {
+    paddingVertical: 3,
+    paddingHorizontal: spacing.sm,
+  },
+  premiumHintText: {
+    fontSize: 8,
+    color: colors.textMuted,
+    letterSpacing: 1,
+    fontWeight: 'bold',
+  },
+}), [themeKey]);
   const isPremium = use$(subscriptionStore$.isPremium);
   const router = useRouter();
 
@@ -50,24 +74,4 @@ export function AdBanner({ position = 'bottom' }: AdBannerProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  bottomContainer: {
-    // Safe area handled by parent screens
-  },
-  premiumHint: {
-    paddingVertical: 3,
-    paddingHorizontal: spacing.sm,
-  },
-  premiumHintText: {
-    fontSize: 8,
-    color: colors.textMuted,
-    letterSpacing: 1,
-    fontWeight: 'bold',
-  },
-});
+

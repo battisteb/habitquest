@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { useTheme } from '../src/ui/theme/theme-context';
 import {
   notificationsStore$,
   fetchNotifications,
@@ -46,6 +47,7 @@ function getRelativeTime(isoDate: string): string {
 }
 
 function NotificationItem({ item }: { item: InboxNotification }) {
+  const styles = createStyles();
   const router = useRouter();
 
   const handlePress = useCallback(async () => {
@@ -81,6 +83,7 @@ function NotificationItem({ item }: { item: InboxNotification }) {
 }
 
 function EmptyState() {
+  const styles = createStyles();
   return (
     <View style={styles.emptyContainer}>
       <Text style={styles.emptyIcon}>🔔</Text>
@@ -92,6 +95,8 @@ function EmptyState() {
 }
 
 export default function NotificationsScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(createStyles, [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const items = use$(notificationsStore$.items);
@@ -143,7 +148,8 @@ export default function NotificationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles() {
+  return StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -279,3 +285,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 });
+}

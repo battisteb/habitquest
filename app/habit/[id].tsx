@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, ScrollView, Pressable, Linking, Modal } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,8 +18,238 @@ import {
   HabitReminder,
 } from '../../src/features/notifications/utils/notification-service';
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 export default function HabitDetailScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  container: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  header: {
+    gap: spacing.xs,
+  },
+  title: {
+    fontSize: fontSizes.xxl,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  category: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.sm,
+    alignItems: 'center',
+    gap: 2,
+  },
+  statValue: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+  },
+  statLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  contentSection: {
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    overflow: 'hidden',
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: spacing.md,
+  },
+  contentHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    flex: 1,
+  },
+  contentIcon: {
+    fontSize: 28,
+  },
+  contentType: {
+    color: colors.text,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  contentSubtitle: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    marginTop: 2,
+  },
+  expandChevron: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    marginLeft: spacing.sm,
+  },
+  contentBody: {
+    borderTopWidth: 2,
+    borderTopColor: colors.border,
+    padding: spacing.md,
+    gap: spacing.md,
+  },
+  linkContent: {
+    gap: spacing.md,
+  },
+  linkUrl: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontStyle: 'italic',
+  },
+  alreadyDone: {
+    color: colors.success,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    letterSpacing: 1,
+  },
+  goalCard: {
+    backgroundColor: colors.xp + '18',
+    borderWidth: 2,
+    borderColor: colors.xp + '66',
+    borderRadius: 4,
+    padding: spacing.md,
+    gap: 4,
+  },
+  goalCardLevelUp: {
+    backgroundColor: colors.accent + '18',
+    borderColor: colors.accent + '88',
+  },
+  goalCardRestart: {
+    backgroundColor: colors.success + '18',
+    borderColor: colors.success + '88',
+  },
+  goalMessage: {
+    color: colors.text,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+  },
+  goalDetail: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    lineHeight: 16,
+  },
+  pausedBanner: {
+    backgroundColor: '#4FC3F7' + '22',
+    borderWidth: 2,
+    borderColor: '#4FC3F7',
+    borderRadius: 4,
+    padding: spacing.sm,
+    alignItems: 'center',
+  },
+  pausedText: {
+    color: '#4FC3F7',
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  quickComplete: {
+    marginTop: spacing.xs,
+  },
+  reminderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 2,
+  },
+  reminderLabel: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  reminderValue: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: '#00000088',
+    justifyContent: 'flex-end',
+  },
+  modalCard: {
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderTopWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.lg,
+    gap: spacing.md,
+  },
+  modalTitle: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+    textAlign: 'center',
+  },
+  hourGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  hourBtn: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.background,
+  },
+  hourBtnActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '33',
+  },
+  hourBtnText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+  },
+  hourBtnTextActive: {
+    color: colors.primary,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: 'auto',
+    marginBottom: spacing.lg,
+  },
+}), [themeKey]);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -318,231 +548,4 @@ export default function HabitDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    padding: spacing.lg,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
-  header: {
-    gap: spacing.xs,
-  },
-  title: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  category: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.sm,
-    alignItems: 'center',
-    gap: 2,
-  },
-  statValue: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-  },
-  statLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  contentSection: {
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-  contentHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: spacing.md,
-  },
-  contentHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    flex: 1,
-  },
-  contentIcon: {
-    fontSize: 28,
-  },
-  contentType: {
-    color: colors.text,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  contentSubtitle: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    marginTop: 2,
-  },
-  expandChevron: {
-    color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    marginLeft: spacing.sm,
-  },
-  contentBody: {
-    borderTopWidth: 2,
-    borderTopColor: colors.border,
-    padding: spacing.md,
-    gap: spacing.md,
-  },
-  linkContent: {
-    gap: spacing.md,
-  },
-  linkUrl: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontStyle: 'italic',
-  },
-  alreadyDone: {
-    color: colors.success,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    letterSpacing: 1,
-  },
-  goalCard: {
-    backgroundColor: colors.xp + '18',
-    borderWidth: 2,
-    borderColor: colors.xp + '66',
-    borderRadius: 4,
-    padding: spacing.md,
-    gap: 4,
-  },
-  goalCardLevelUp: {
-    backgroundColor: colors.accent + '18',
-    borderColor: colors.accent + '88',
-  },
-  goalCardRestart: {
-    backgroundColor: colors.success + '18',
-    borderColor: colors.success + '88',
-  },
-  goalMessage: {
-    color: colors.text,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-  },
-  goalDetail: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    lineHeight: 16,
-  },
-  pausedBanner: {
-    backgroundColor: '#4FC3F7' + '22',
-    borderWidth: 2,
-    borderColor: '#4FC3F7',
-    borderRadius: 4,
-    padding: spacing.sm,
-    alignItems: 'center',
-  },
-  pausedText: {
-    color: '#4FC3F7',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  quickComplete: {
-    marginTop: spacing.xs,
-  },
-  reminderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 2,
-  },
-  reminderLabel: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  reminderValue: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: '#00000088',
-    justifyContent: 'flex-end',
-  },
-  modalCard: {
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    borderTopWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.lg,
-    gap: spacing.md,
-  },
-  modalTitle: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-    textAlign: 'center',
-  },
-  hourGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-  },
-  hourBtn: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
-  },
-  hourBtnActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary + '33',
-  },
-  hourBtnText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-  },
-  hourBtnTextActive: {
-    color: colors.primary,
-  },
-  modalActions: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  bottomRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginTop: 'auto',
-    marginBottom: spacing.lg,
-  },
-});
+

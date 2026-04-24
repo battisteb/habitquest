@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { FlatList, View, Text, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useRouter } from 'expo-router';
@@ -7,8 +7,57 @@ import { HabitCard } from './habit-card';
 import { XpToast } from '../../../ui/animations/xp-toast';
 import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 export function HabitList() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  progress: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    gap: spacing.xs,
+  },
+  progressText: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  progressBar: {
+    height: 6,
+    backgroundColor: colors.border,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: colors.success,
+    borderRadius: 3,
+  },
+  list: {
+    padding: spacing.md,
+    gap: spacing.sm,
+  },
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.lg,
+  },
+  emptyTitle: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.lg,
+    fontWeight: 'bold',
+  },
+  emptySubtitle: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    marginTop: spacing.xs,
+  },
+}), [themeKey]);
   const habits = use$(habitsStore$.habits);
   const streaks = use$(habitsStore$.streaks);
   const todayCompletions = use$(habitsStore$.todayCompletions);
@@ -82,50 +131,4 @@ export function HabitList() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  progress: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    gap: spacing.xs,
-  },
-  progressText: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  progressBar: {
-    height: 6,
-    backgroundColor: colors.border,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: colors.success,
-    borderRadius: 3,
-  },
-  list: {
-    padding: spacing.md,
-    gap: spacing.sm,
-  },
-  empty: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: spacing.lg,
-  },
-  emptyTitle: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
-  },
-  emptySubtitle: {
-    color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    marginTop: spacing.xs,
-  },
-});
+

@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 const CATEGORY_ICONS: Record<string, string> = {
   streak: '🔥',
@@ -31,46 +33,8 @@ export function AchievementCard({
   threshold,
   currentValue,
 }: AchievementCardProps) {
-  const progress = threshold > 0 ? Math.min(currentValue / threshold, 1) : 0;
-  const showProgress = !isUnlocked && threshold > 0 && currentValue > 0;
-
-  return (
-    <View style={[styles.card, !isUnlocked && styles.locked]}>
-      <Text style={styles.icon}>
-        {isUnlocked ? CATEGORY_ICONS[category] ?? '🏅' : '🔒'}
-      </Text>
-      <View style={styles.info}>
-        <Text style={[styles.name, !isUnlocked && styles.lockedText]}>
-          {name}
-        </Text>
-        <Text style={styles.description}>{description}</Text>
-
-        {showProgress && (
-          <View style={styles.progressContainer}>
-            <View style={styles.progressTrack}>
-              <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
-            </View>
-            <Text style={styles.progressLabel}>
-              {currentValue} / {threshold}
-            </Text>
-          </View>
-        )}
-
-        {(xpReward > 0 || goldReward > 0) && (
-          <View style={styles.rewards}>
-            {xpReward > 0 && <Text style={styles.xpReward}>+{xpReward} XP</Text>}
-            {goldReward > 0 && (
-              <Text style={styles.goldReward}>+{goldReward}g</Text>
-            )}
-          </View>
-        )}
-      </View>
-      {isUnlocked && <Text style={styles.checkmark}>✓</Text>}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -152,4 +116,44 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 2,
   },
-});
+}), [themeKey]);
+  const progress = threshold > 0 ? Math.min(currentValue / threshold, 1) : 0;
+  const showProgress = !isUnlocked && threshold > 0 && currentValue > 0;
+
+  return (
+    <View style={[styles.card, !isUnlocked && styles.locked]}>
+      <Text style={styles.icon}>
+        {isUnlocked ? CATEGORY_ICONS[category] ?? '🏅' : '🔒'}
+      </Text>
+      <View style={styles.info}>
+        <Text style={[styles.name, !isUnlocked && styles.lockedText]}>
+          {name}
+        </Text>
+        <Text style={styles.description}>{description}</Text>
+
+        {showProgress && (
+          <View style={styles.progressContainer}>
+            <View style={styles.progressTrack}>
+              <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+            </View>
+            <Text style={styles.progressLabel}>
+              {currentValue} / {threshold}
+            </Text>
+          </View>
+        )}
+
+        {(xpReward > 0 || goldReward > 0) && (
+          <View style={styles.rewards}>
+            {xpReward > 0 && <Text style={styles.xpReward}>+{xpReward} XP</Text>}
+            {goldReward > 0 && (
+              <Text style={styles.goldReward}>+{goldReward}g</Text>
+            )}
+          </View>
+        )}
+      </View>
+      {isUnlocked && <Text style={styles.checkmark}>✓</Text>}
+    </View>
+  );
+}
+
+

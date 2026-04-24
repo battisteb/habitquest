@@ -1,8 +1,10 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { PixelAvatar } from '../../avatar/renderer/pixel-avatar';
 import { RarityBadge } from './rarity-badge';
 import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
 import { PremiumBadge } from '../../monetization/components/premium-gate';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 const RARITY_BORDER: Record<string, string> = {
   common: colors.border,
@@ -56,83 +58,8 @@ export function ShopItemCard({
   currentBg,
   onPress,
 }: ShopItemCardProps) {
-  const disabled = !isOwned && (!canAfford || !canUnlock || !!isPremiumLocked);
-  const borderColor = isEquipped
-    ? colors.accent
-    : RARITY_BORDER[rarity] ?? colors.border;
-
-  // Build preview props: apply this item in its slot, keep everything else
-  const previewHat = category === 'avatar_hat' ? spriteKey : currentHat;
-  const previewOutfit = category === 'avatar_outfit' ? spriteKey : currentOutfit;
-  const previewAccessory = category === 'avatar_accessory' ? spriteKey : currentAccessory;
-  const previewBg = category === 'avatar_background' ? spriteKey : currentBg;
-
-  return (
-    <Pressable
-      style={[
-        styles.card,
-        { borderColor },
-        isEquipped && styles.cardEquipped,
-        disabled && styles.cardDisabled,
-      ]}
-      onPress={onPress}
-      disabled={disabled}
-    >
-      {/* Avatar preview */}
-      <View style={styles.previewArea}>
-        <PixelAvatar
-          size={72}
-          hat={previewHat}
-          outfit={previewOutfit}
-          accessory={previewAccessory}
-          background={previewBg}
-          idleFrame={0}
-        />
-        {isEquipped && (
-          <View style={styles.equippedBadge}>
-            <Text style={styles.equippedBadgeText}>ON</Text>
-          </View>
-        )}
-        {!canUnlock && !isOwned && (
-          <View style={styles.lockOverlay}>
-            <Text style={styles.lockIcon}>🔒</Text>
-          </View>
-        )}
-      </View>
-
-      <Text style={styles.name} numberOfLines={1}>{name}</Text>
-      <View style={styles.badgeRow}>
-        <RarityBadge rarity={rarity} />
-        {isPremiumLocked && <PremiumBadge />}
-      </View>
-
-      {!isOwned && !canUnlock && unlockLabel && (
-        <Text style={styles.unlockLabel} numberOfLines={2}>
-          {unlockLabel}
-        </Text>
-      )}
-
-      {isOwned ? (
-        <Text style={[styles.status, isEquipped && styles.statusEquipped]}>
-          {isEquipped ? '● EQUIPPED' : '○ OWNED'}
-        </Text>
-      ) : (
-        <View style={styles.priceRow}>
-          <Text style={[styles.price, !canAfford && styles.priceLocked]}>
-            {priceGold}g
-          </Text>
-          {requiredLevel > 0 && canUnlock && (
-            <Text style={styles.levelReq}>
-              Lv.{requiredLevel}
-            </Text>
-          )}
-        </View>
-      )}
-    </Pressable>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderWidth: 2,
@@ -227,4 +154,81 @@ const styles = StyleSheet.create({
     gap: 4,
     alignItems: 'center',
   },
-});
+}), [themeKey]);
+  const disabled = !isOwned && (!canAfford || !canUnlock || !!isPremiumLocked);
+  const borderColor = isEquipped
+    ? colors.accent
+    : RARITY_BORDER[rarity] ?? colors.border;
+
+  // Build preview props: apply this item in its slot, keep everything else
+  const previewHat = category === 'avatar_hat' ? spriteKey : currentHat;
+  const previewOutfit = category === 'avatar_outfit' ? spriteKey : currentOutfit;
+  const previewAccessory = category === 'avatar_accessory' ? spriteKey : currentAccessory;
+  const previewBg = category === 'avatar_background' ? spriteKey : currentBg;
+
+  return (
+    <Pressable
+      style={[
+        styles.card,
+        { borderColor },
+        isEquipped && styles.cardEquipped,
+        disabled && styles.cardDisabled,
+      ]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      {/* Avatar preview */}
+      <View style={styles.previewArea}>
+        <PixelAvatar
+          size={72}
+          hat={previewHat}
+          outfit={previewOutfit}
+          accessory={previewAccessory}
+          background={previewBg}
+          idleFrame={0}
+        />
+        {isEquipped && (
+          <View style={styles.equippedBadge}>
+            <Text style={styles.equippedBadgeText}>ON</Text>
+          </View>
+        )}
+        {!canUnlock && !isOwned && (
+          <View style={styles.lockOverlay}>
+            <Text style={styles.lockIcon}>🔒</Text>
+          </View>
+        )}
+      </View>
+
+      <Text style={styles.name} numberOfLines={1}>{name}</Text>
+      <View style={styles.badgeRow}>
+        <RarityBadge rarity={rarity} />
+        {isPremiumLocked && <PremiumBadge />}
+      </View>
+
+      {!isOwned && !canUnlock && unlockLabel && (
+        <Text style={styles.unlockLabel} numberOfLines={2}>
+          {unlockLabel}
+        </Text>
+      )}
+
+      {isOwned ? (
+        <Text style={[styles.status, isEquipped && styles.statusEquipped]}>
+          {isEquipped ? '● EQUIPPED' : '○ OWNED'}
+        </Text>
+      ) : (
+        <View style={styles.priceRow}>
+          <Text style={[styles.price, !canAfford && styles.priceLocked]}>
+            {priceGold}g
+          </Text>
+          {requiredLevel > 0 && canUnlock && (
+            <Text style={styles.levelReq}>
+              Lv.{requiredLevel}
+            </Text>
+          )}
+        </View>
+      )}
+    </Pressable>
+  );
+}
+
+

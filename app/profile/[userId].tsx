@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution
 import { sendFriendRequest, friendsStore$ } from '../../src/features/social/stores/friends-store';
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 interface PublicProfile {
   id: string;
@@ -28,6 +29,96 @@ interface ProfileStats {
 }
 
 export default function PublicProfileScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  container: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  centered: {
+    flex: 1,
+    backgroundColor: colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  notFound: {
+    color: colors.textMuted,
+    fontSize: fontSizes.md,
+  },
+  hero: {
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingVertical: spacing.md,
+  },
+  username: {
+    fontSize: fontSizes.xxl,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginTop: spacing.sm,
+  },
+  rank: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+  },
+  stage: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  memberSince: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.md,
+    alignItems: 'center',
+    gap: 2,
+  },
+  statValue: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+  },
+  statLabel: {
+    fontSize: fontSizes.xs - 1,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  actions: {
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+  },
+  friendChip: {
+    textAlign: 'center',
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.success,
+    letterSpacing: 1,
+  },
+  pendingChip: {
+    textAlign: 'center',
+    fontSize: fontSizes.sm,
+    color: colors.textMuted,
+    fontWeight: 'bold',
+  },
+}), [themeKey]);
   const { userId } = useLocalSearchParams<{ userId: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -210,92 +301,4 @@ export default function PublicProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    padding: spacing.lg,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
-  centered: {
-    flex: 1,
-    backgroundColor: colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: spacing.md,
-  },
-  notFound: {
-    color: colors.textMuted,
-    fontSize: fontSizes.md,
-  },
-  hero: {
-    alignItems: 'center',
-    gap: spacing.xs,
-    paddingVertical: spacing.md,
-  },
-  username: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginTop: spacing.sm,
-  },
-  rank: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-  },
-  stage: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  memberSince: {
-    fontSize: fontSizes.xs,
-    color: colors.textMuted,
-    marginTop: spacing.xs,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.md,
-    alignItems: 'center',
-    gap: 2,
-  },
-  statValue: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-  },
-  statLabel: {
-    fontSize: fontSizes.xs - 1,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  actions: {
-    gap: spacing.sm,
-    marginTop: spacing.sm,
-  },
-  friendChip: {
-    textAlign: 'center',
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    color: colors.success,
-    letterSpacing: 1,
-  },
-  pendingChip: {
-    textAlign: 'center',
-    fontSize: fontSizes.sm,
-    color: colors.textMuted,
-    fontWeight: 'bold',
-  },
-});
+

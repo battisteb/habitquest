@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { avatarConfigStore$, saveAvatarConfig } from '../../src/features/avatar/stores/avatar-config-store';
 import { supabase } from '../../src/lib/supabase/client';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 const SKIN_SWATCHES: string[] = [
   '#f4c98a', '#e8a87c', '#d4845a', '#c46c3c',
@@ -94,6 +95,76 @@ const swatchStyles = StyleSheet.create({
 });
 
 export default function EditProfileScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  container: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  header: {
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  screenLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  field: {
+    gap: spacing.xs,
+  },
+  label: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  input: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 4,
+    color: colors.text,
+    fontSize: fontSizes.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 2,
+  },
+  hint: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+  appearanceCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 4,
+    padding: spacing.md,
+    gap: spacing.md,
+  },
+  appearanceTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+  },
+  previewContainer: {
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+  },
+}), [themeKey]);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { profile, isLoading } = useProfileStats();
@@ -252,72 +323,4 @@ export default function EditProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    padding: spacing.lg,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
-  header: {
-    gap: spacing.xs,
-    marginBottom: spacing.sm,
-  },
-  screenLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  field: {
-    gap: spacing.xs,
-  },
-  label: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  input: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 4,
-    color: colors.text,
-    fontSize: fontSizes.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 2,
-  },
-  hint: {
-    fontSize: fontSizes.xs,
-    color: colors.textMuted,
-    marginTop: 2,
-  },
-  appearanceCard: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 4,
-    padding: spacing.md,
-    gap: spacing.md,
-  },
-  appearanceTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-  },
-  previewContainer: {
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-  },
-});
+

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, Pressable, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import { habitsStore$, updateHabit } from '../../../src/features/habits/stores/h
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../../src/lib/constants/categories';
 import type { HabitContent } from '../../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, borderRadius } from '../../../src/ui/theme/tokens';
+import { useTheme } from '../../../src/ui/theme/theme-context';
 
 const FREQUENCY_OPTIONS: { value: string; label: string }[] = [
   { value: 'daily', label: 'DAILY' },
@@ -20,6 +21,63 @@ const FREQUENCY_OPTIONS: { value: string; label: string }[] = [
 ];
 
 export default function EditHabitScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  scroll: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg },
+  content: { padding: spacing.lg, gap: spacing.lg },
+  header: { gap: spacing.sm },
+  backButton: {
+    color: colors.primary,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+  },
+  categorySection: { gap: spacing.sm },
+  categoryLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  categoryChip: {
+    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm + 2,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+  },
+  categoryChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
+  saveButton: { marginTop: spacing.md },
+  frequencySection: { gap: spacing.sm },
+  frequencyLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  frequencyRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  frequencyChip: {
+    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm + 2,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  frequencyChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  frequencyChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1, color: colors.textSecondary },
+  frequencyChipTextActive: { color: colors.primary },
+}), [themeKey]);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -143,59 +201,4 @@ export default function EditHabitScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg },
-  content: { padding: spacing.lg, gap: spacing.lg },
-  header: { gap: spacing.sm },
-  backButton: {
-    color: colors.primary,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-  },
-  categorySection: { gap: spacing.sm },
-  categoryLabel: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  categoryChip: {
-    paddingVertical: spacing.xs + 2,
-    paddingHorizontal: spacing.sm + 2,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-  },
-  categoryChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
-  saveButton: { marginTop: spacing.md },
-  frequencySection: { gap: spacing.sm },
-  frequencyLabel: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  frequencyRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  frequencyChip: {
-    paddingVertical: spacing.xs + 2,
-    paddingHorizontal: spacing.sm + 2,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  frequencyChipActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary + '22',
-  },
-  frequencyChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1, color: colors.textSecondary },
-  frequencyChipTextActive: { color: colors.primary },
-});
+

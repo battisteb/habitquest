@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import { sessionsStore$, markSessionCompleted } from '../../src/features/trainin
 import { completeHabit, habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
 import type { Exercise } from '../../src/features/training/types/session';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 // ─── Timer hook ───────────────────────────────────────────────────────────────
 function useCountdown(initial: number, onDone: () => void) {
@@ -76,6 +77,7 @@ function ExerciseStep({
   isDone: boolean;
   onDone: () => void;
 }) {
+  const styles = createStyles();
   const [currentSet, setCurrentSet] = useState(1);
   const [phase, setPhase] = useState<'work' | 'rest' | 'done'>('work');
   const [setsCompleted, setSetsCompleted] = useState(0);
@@ -188,6 +190,8 @@ function ExerciseStep({
 
 // ─── Session player screen ────────────────────────────────────────────────────
 export default function SessionPlayerScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(createStyles, [themeKey]);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -316,7 +320,8 @@ export default function SessionPlayerScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles() {
+  return StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   errorText: { color: colors.textMuted, padding: spacing.lg, textAlign: 'center' },
   header: {
@@ -434,3 +439,4 @@ const styles = StyleSheet.create({
   },
   finishButtonText: { color: colors.text, fontWeight: 'bold', fontSize: fontSizes.md, letterSpacing: 2 },
 });
+}

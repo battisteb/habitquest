@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -32,6 +32,7 @@ import type { StreakLeaderEntry } from '../../src/features/social/hooks/use-lead
 import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
 
@@ -39,6 +40,213 @@ const MEDAL = ['🥇', '🥈', '🥉'];
 const MEDAL_COLORS = [colors.accent, '#c0c0c0', '#cd7f32'];
 
 export default function SocialScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+
+  // Leaderboard scope toggle
+  scopeRow: {
+    flexDirection: 'row',
+    marginHorizontal: spacing.md,
+    marginTop: spacing.sm,
+    gap: spacing.sm,
+  },
+  scopeBtn: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  scopeBtnActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  scopeBtnText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  scopeBtnTextActive: {
+    color: colors.primary,
+  },
+
+  // Tabs
+  tabBar: {
+    flexDirection: 'row',
+    borderBottomWidth: 2,
+    borderBottomColor: colors.border,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 3,
+    position: 'relative',
+  },
+  tabActive: { borderBottomWidth: 3, borderBottomColor: colors.primary },
+  tabText: { fontSize: 9, fontWeight: 'bold', color: colors.textMuted, letterSpacing: 0.5 },
+  tabTextActive: { color: colors.primary },
+  tabBadge: {
+    backgroundColor: colors.danger,
+    borderRadius: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    minWidth: 16,
+    alignItems: 'center',
+  },
+  tabBadgeText: { color: colors.text, fontSize: 8, fontWeight: 'bold' },
+
+  // Common
+  list: { padding: spacing.md, gap: spacing.sm, paddingBottom: spacing.xxl },
+  empty: { alignItems: 'center', paddingTop: spacing.xxl, gap: spacing.sm },
+  emptyEmoji: { fontSize: 48 },
+  emptyText: { color: colors.textMuted, textAlign: 'center', fontSize: fontSizes.md },
+
+  // Leaderboard
+  podium: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    gap: spacing.xs,
+    marginBottom: spacing.md,
+    paddingTop: spacing.sm,
+    height: 140,
+  },
+  podiumSlot: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 2,
+  },
+  podiumGold: {},
+  podiumSilver: {},
+  podiumBronze: {},
+  podiumMedal: { fontSize: 28 },
+  podiumName: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 0.5, textAlign: 'center' },
+  podiumXp: { fontSize: 9, fontWeight: 'bold', marginBottom: 4 },
+  podiumBar: { width: '100%', borderTopLeftRadius: 4, borderTopRightRadius: 4 },
+  restLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+    marginBottom: spacing.sm,
+  },
+  lbRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.sm,
+    gap: spacing.sm,
+  },
+  lbRowSelf: { borderColor: colors.primary },
+  lbPos: { fontSize: fontSizes.md, fontWeight: 'bold', color: colors.textMuted, width: 30 },
+  lbInfo: { flex: 1 },
+  lbName: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.text },
+  lbRank: { fontSize: fontSizes.xs, color: colors.textSecondary },
+  lbRight: { alignItems: 'flex-end' },
+  lbXp: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.xp },
+  lbLevel: { fontSize: fontSizes.xs, color: colors.textSecondary },
+
+  // Friends
+  friendCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderBottomWidth: 3,
+    padding: spacing.sm,
+    gap: spacing.sm,
+  },
+  friendCardPending: { borderColor: colors.accent + '88' },
+  friendCardLeft: { flex: 1, gap: 2 },
+  pendingBadge: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: colors.accent,
+    letterSpacing: 1,
+  },
+  friendName: { fontSize: fontSizes.md, fontWeight: 'bold', color: colors.text },
+  friendMeta: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center' },
+  friendRank: { fontSize: fontSizes.xs, fontWeight: 'bold' },
+  friendXp: { fontSize: fontSizes.xs, color: colors.textMuted },
+  friendActions: { flexDirection: 'row', gap: spacing.xs },
+  pendingActions: { flexDirection: 'row', gap: spacing.xs },
+  actionBtn: { paddingHorizontal: spacing.sm, minWidth: 36 },
+
+  // Challenges
+  challengeCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderBottomWidth: 4,
+    padding: spacing.md,
+    gap: spacing.sm,
+  },
+  challengeHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  challengeStatus: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
+  challengeType: { fontSize: fontSizes.xs, color: colors.textMuted, fontWeight: 'bold', letterSpacing: 1 },
+  challengeVs: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  vsName: { fontSize: fontSizes.md, fontWeight: 'bold', color: colors.text, flex: 1 },
+  vsText: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.textMuted, paddingHorizontal: spacing.sm },
+  challengeProgress: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  progressTrack: { flex: 1, height: 6, backgroundColor: colors.border, borderRadius: 3, overflow: 'hidden' },
+  progressFillA: { height: '100%', backgroundColor: colors.primary, borderRadius: 3 },
+  progressFillB: { height: '100%', backgroundColor: colors.accent, borderRadius: 3 },
+  progressVal: { fontSize: 9, color: colors.textMuted, fontWeight: 'bold', minWidth: 28 },
+  challengeActions: { flexDirection: 'row', gap: spacing.sm },
+  wager: { fontSize: fontSizes.xs, color: colors.accent, fontWeight: 'bold' },
+  duelArenaBtn: { marginHorizontal: spacing.md, marginTop: spacing.sm },
+
+  // Search
+  searchContainer: { flex: 1 },
+  searchInput: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 4,
+    padding: spacing.md,
+    margin: spacing.md,
+    marginBottom: 0,
+    color: colors.text,
+    fontSize: fontSizes.md,
+  },
+  streakCount: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.streak,
+  },
+  statusChip: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 3,
+  },
+}), [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>('leaderboard');
@@ -476,209 +684,4 @@ export default function SocialScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
 
-  // Leaderboard scope toggle
-  scopeRow: {
-    flexDirection: 'row',
-    marginHorizontal: spacing.md,
-    marginTop: spacing.sm,
-    gap: spacing.sm,
-  },
-  scopeBtn: {
-    flex: 1,
-    paddingVertical: spacing.sm,
-    alignItems: 'center',
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  scopeBtnActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary + '22',
-  },
-  scopeBtnText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  scopeBtnTextActive: {
-    color: colors.primary,
-  },
-
-  // Tabs
-  tabBar: {
-    flexDirection: 'row',
-    borderBottomWidth: 2,
-    borderBottomColor: colors.border,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: spacing.sm,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 3,
-    position: 'relative',
-  },
-  tabActive: { borderBottomWidth: 3, borderBottomColor: colors.primary },
-  tabText: { fontSize: 9, fontWeight: 'bold', color: colors.textMuted, letterSpacing: 0.5 },
-  tabTextActive: { color: colors.primary },
-  tabBadge: {
-    backgroundColor: colors.danger,
-    borderRadius: 8,
-    paddingHorizontal: 4,
-    paddingVertical: 1,
-    minWidth: 16,
-    alignItems: 'center',
-  },
-  tabBadgeText: { color: colors.text, fontSize: 8, fontWeight: 'bold' },
-
-  // Common
-  list: { padding: spacing.md, gap: spacing.sm, paddingBottom: spacing.xxl },
-  empty: { alignItems: 'center', paddingTop: spacing.xxl, gap: spacing.sm },
-  emptyEmoji: { fontSize: 48 },
-  emptyText: { color: colors.textMuted, textAlign: 'center', fontSize: fontSizes.md },
-
-  // Leaderboard
-  podium: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    gap: spacing.xs,
-    marginBottom: spacing.md,
-    paddingTop: spacing.sm,
-    height: 140,
-  },
-  podiumSlot: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: 2,
-  },
-  podiumGold: {},
-  podiumSilver: {},
-  podiumBronze: {},
-  podiumMedal: { fontSize: 28 },
-  podiumName: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 0.5, textAlign: 'center' },
-  podiumXp: { fontSize: 9, fontWeight: 'bold', marginBottom: 4 },
-  podiumBar: { width: '100%', borderTopLeftRadius: 4, borderTopRightRadius: 4 },
-  restLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-    marginBottom: spacing.sm,
-  },
-  lbRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.sm,
-    gap: spacing.sm,
-  },
-  lbRowSelf: { borderColor: colors.primary },
-  lbPos: { fontSize: fontSizes.md, fontWeight: 'bold', color: colors.textMuted, width: 30 },
-  lbInfo: { flex: 1 },
-  lbName: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.text },
-  lbRank: { fontSize: fontSizes.xs, color: colors.textSecondary },
-  lbRight: { alignItems: 'flex-end' },
-  lbXp: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.xp },
-  lbLevel: { fontSize: fontSizes.xs, color: colors.textSecondary },
-
-  // Friends
-  friendCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderBottomWidth: 3,
-    padding: spacing.sm,
-    gap: spacing.sm,
-  },
-  friendCardPending: { borderColor: colors.accent + '88' },
-  friendCardLeft: { flex: 1, gap: 2 },
-  pendingBadge: {
-    fontSize: 9,
-    fontWeight: 'bold',
-    color: colors.accent,
-    letterSpacing: 1,
-  },
-  friendName: { fontSize: fontSizes.md, fontWeight: 'bold', color: colors.text },
-  friendMeta: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center' },
-  friendRank: { fontSize: fontSizes.xs, fontWeight: 'bold' },
-  friendXp: { fontSize: fontSizes.xs, color: colors.textMuted },
-  friendActions: { flexDirection: 'row', gap: spacing.xs },
-  pendingActions: { flexDirection: 'row', gap: spacing.xs },
-  actionBtn: { paddingHorizontal: spacing.sm, minWidth: 36 },
-
-  // Challenges
-  challengeCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderBottomWidth: 4,
-    padding: spacing.md,
-    gap: spacing.sm,
-  },
-  challengeHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  challengeStatus: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
-  challengeType: { fontSize: fontSizes.xs, color: colors.textMuted, fontWeight: 'bold', letterSpacing: 1 },
-  challengeVs: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  vsName: { fontSize: fontSizes.md, fontWeight: 'bold', color: colors.text, flex: 1 },
-  vsText: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.textMuted, paddingHorizontal: spacing.sm },
-  challengeProgress: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
-  progressTrack: { flex: 1, height: 6, backgroundColor: colors.border, borderRadius: 3, overflow: 'hidden' },
-  progressFillA: { height: '100%', backgroundColor: colors.primary, borderRadius: 3 },
-  progressFillB: { height: '100%', backgroundColor: colors.accent, borderRadius: 3 },
-  progressVal: { fontSize: 9, color: colors.textMuted, fontWeight: 'bold', minWidth: 28 },
-  challengeActions: { flexDirection: 'row', gap: spacing.sm },
-  wager: { fontSize: fontSizes.xs, color: colors.accent, fontWeight: 'bold' },
-  duelArenaBtn: { marginHorizontal: spacing.md, marginTop: spacing.sm },
-
-  // Search
-  searchContainer: { flex: 1 },
-  searchInput: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 4,
-    padding: spacing.md,
-    margin: spacing.md,
-    marginBottom: 0,
-    color: colors.text,
-    fontSize: fontSizes.md,
-  },
-  streakCount: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    color: colors.streak,
-  },
-  statusChip: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 3,
-  },
-});

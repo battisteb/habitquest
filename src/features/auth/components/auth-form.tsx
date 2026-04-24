@@ -1,11 +1,42 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { PixelButton } from '../../../ui/components/pixel-button';
 import { PixelInput } from '../../../ui/components/pixel-input';
 import { signIn, signUp } from '../stores/auth-store';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 export function AuthForm() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: spacing.lg,
+    backgroundColor: colors.background,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: spacing.xxl,
+  },
+  title: {
+    fontSize: fontSizes.title,
+    fontWeight: 'bold',
+    color: colors.primary,
+    letterSpacing: 2,
+  },
+  subtitle: {
+    fontSize: fontSizes.md,
+    color: colors.textSecondary,
+    marginTop: spacing.sm,
+  },
+  form: {
+    gap: spacing.md,
+  },
+  submitButton: {
+    marginTop: spacing.sm,
+  },
+}), [themeKey]);
   const [mode, setMode] = useState<'sign-in' | 'sign-up'>('sign-in');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -92,32 +123,4 @@ export function AuthForm() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: spacing.lg,
-    backgroundColor: colors.background,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: spacing.xxl,
-  },
-  title: {
-    fontSize: fontSizes.title,
-    fontWeight: 'bold',
-    color: colors.primary,
-    letterSpacing: 2,
-  },
-  subtitle: {
-    fontSize: fontSizes.md,
-    color: colors.textSecondary,
-    marginTop: spacing.sm,
-  },
-  form: {
-    gap: spacing.md,
-  },
-  submitButton: {
-    marginTop: spacing.sm,
-  },
-});
+

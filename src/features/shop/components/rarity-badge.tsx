@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { fontSizes, spacing } from '../../../ui/theme/tokens';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 const RARITY_COLORS: Record<string, string> = {
   common: '#aaa',
@@ -10,16 +12,8 @@ const RARITY_COLORS: Record<string, string> = {
 };
 
 export function RarityBadge({ rarity }: { rarity: string }) {
-  const color = RARITY_COLORS[rarity] ?? '#aaa';
-
-  return (
-    <View style={[styles.badge, { borderColor: color }]}>
-      <Text style={[styles.text, { color }]}>{rarity.toUpperCase()}</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   badge: {
     borderWidth: 1,
     borderRadius: 2,
@@ -32,4 +26,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.5,
   },
-});
+}), [themeKey]);
+  const color = RARITY_COLORS[rarity] ?? '#aaa';
+
+  return (
+    <View style={[styles.badge, { borderColor: color }]}>
+      <Text style={[styles.text, { color }]}>{rarity.toUpperCase()}</Text>
+    </View>
+  );
+}
+
+

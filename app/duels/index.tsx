@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,8 +10,90 @@ import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 import { usePremium } from '../../src/features/monetization/hooks/use-premium';
 import { showInterstitial } from '../../src/features/monetization/utils/ad-service';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 export default function DuelsIndexScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
+  backButton: { marginBottom: spacing.sm },
+  backButtonText: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.textSecondary, letterSpacing: 1 },
+  header: { gap: 4, marginBottom: spacing.lg },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  title: { fontSize: fontSizes.xxl, fontWeight: 'bold', color: colors.text, letterSpacing: 2 },
+  weeklyBadge: {
+    borderWidth: 2,
+    borderRadius: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+  },
+  weeklyBadgeText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
+  sub: { fontSize: fontSizes.sm, color: colors.textMuted },
+  resetNote: { fontSize: 10, color: colors.textMuted, fontStyle: 'italic' },
+  section: { marginBottom: spacing.lg },
+  sectionTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+    marginBottom: spacing.sm,
+  },
+  attackChip: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 6,
+    padding: spacing.sm,
+    alignItems: 'center',
+    minWidth: 80,
+    gap: 2,
+  },
+  attackEmoji: { fontSize: 24 },
+  attackName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', textAlign: 'center' },
+  attackStats: { color: colors.textMuted, fontSize: 9, letterSpacing: 0.5 },
+  hint: { color: colors.textMuted, fontSize: fontSizes.xs, fontStyle: 'italic', marginTop: spacing.sm },
+  lockedContainer: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.danger,
+    borderRadius: 6,
+    padding: spacing.md,
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  lockedIcon: { fontSize: 28 },
+  lockedTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.danger,
+    letterSpacing: 2,
+  },
+  lockedMessage: {
+    fontSize: fontSizes.sm,
+    color: colors.textMuted,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  challengeBtn: { marginBottom: spacing.sm },
+  simBtn: { marginBottom: spacing.lg },
+  howItWorks: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 6,
+    padding: spacing.md,
+    gap: spacing.xs,
+  },
+  howTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.accent,
+    letterSpacing: 2,
+    marginBottom: 4,
+  },
+  howText: { color: colors.textSecondary, fontSize: fontSizes.sm, lineHeight: 20 },
+}), [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
@@ -135,83 +217,4 @@ export default function DuelsIndexScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
-  backButton: { marginBottom: spacing.sm },
-  backButtonText: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.textSecondary, letterSpacing: 1 },
-  header: { gap: 4, marginBottom: spacing.lg },
-  titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  title: { fontSize: fontSizes.xxl, fontWeight: 'bold', color: colors.text, letterSpacing: 2 },
-  weeklyBadge: {
-    borderWidth: 2,
-    borderRadius: 4,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
-  },
-  weeklyBadgeText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
-  sub: { fontSize: fontSizes.sm, color: colors.textMuted },
-  resetNote: { fontSize: 10, color: colors.textMuted, fontStyle: 'italic' },
-  section: { marginBottom: spacing.lg },
-  sectionTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-    marginBottom: spacing.sm,
-  },
-  attackChip: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 6,
-    padding: spacing.sm,
-    alignItems: 'center',
-    minWidth: 80,
-    gap: 2,
-  },
-  attackEmoji: { fontSize: 24 },
-  attackName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', textAlign: 'center' },
-  attackStats: { color: colors.textMuted, fontSize: 9, letterSpacing: 0.5 },
-  hint: { color: colors.textMuted, fontSize: fontSizes.xs, fontStyle: 'italic', marginTop: spacing.sm },
-  lockedContainer: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.danger,
-    borderRadius: 6,
-    padding: spacing.md,
-    alignItems: 'center',
-    gap: spacing.xs,
-    marginBottom: spacing.sm,
-  },
-  lockedIcon: { fontSize: 28 },
-  lockedTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.danger,
-    letterSpacing: 2,
-  },
-  lockedMessage: {
-    fontSize: fontSizes.sm,
-    color: colors.textMuted,
-    textAlign: 'center',
-    lineHeight: 18,
-  },
-  challengeBtn: { marginBottom: spacing.sm },
-  simBtn: { marginBottom: spacing.lg },
-  howItWorks: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 6,
-    padding: spacing.md,
-    gap: spacing.xs,
-  },
-  howTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.accent,
-    letterSpacing: 2,
-    marginBottom: 4,
-  },
-  howText: { color: colors.textSecondary, fontSize: fontSizes.sm, lineHeight: 20 },
-});
+

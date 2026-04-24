@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -29,6 +29,7 @@ import { isValidDeckFile } from '../../src/features/training/types/flashcard';
 import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
 import type { StoredSession } from '../../src/features/training/types/session';
 import type { StoredDeck } from '../../src/features/training/types/flashcard';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 type TabKey = 'sessions' | 'decks';
 
@@ -82,6 +83,7 @@ async function pickAndImport(
 function SessionCard({ session, onStart, onDelete }: {
   session: StoredSession; onStart: () => void; onDelete: () => void;
 }) {
+  const styles = createStyles();
   const { data } = session;
   return (
     <View style={styles.card}>
@@ -120,6 +122,7 @@ function SessionCard({ session, onStart, onDelete }: {
 function DeckCard({ deck, onStudy, onDelete }: {
   deck: StoredDeck; onStudy: () => void; onDelete: () => void;
 }) {
+  const styles = createStyles();
   const dueCount = getDueCards(deck).length;
   const totalCards = deck.data.cards.length;
   return (
@@ -161,6 +164,7 @@ function DeckCard({ deck, onStudy, onDelete }: {
 
 // ─── Empty state ──────────────────────────────────────────────────────────────
 function EmptyState({ tab, onImport }: { tab: TabKey; onImport: () => void }) {
+  const styles = createStyles();
   const isSession = tab === 'sessions';
   return (
     <ScrollView contentContainerStyle={styles.emptyContainer}>
@@ -192,6 +196,8 @@ function EmptyState({ tab, onImport }: { tab: TabKey; onImport: () => void }) {
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function TrainingScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(createStyles, [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const sessions = use$(sessionsStore$.sessions);
@@ -297,7 +303,8 @@ export default function TrainingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles() {
+  return StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   header: {
     flexDirection: 'row',
@@ -417,3 +424,4 @@ const styles = StyleSheet.create({
   },
   importButtonLargeText: { color: colors.text, fontWeight: 'bold', fontSize: fontSizes.sm, letterSpacing: 1 },
 });
+}

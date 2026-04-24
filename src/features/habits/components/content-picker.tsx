@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import type { HabitContent, HabitContentType, ChecklistItem } from '../types/habit-content';
 import { CONTENT_TYPE_CONFIG } from '../types/habit-content';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 interface ContentPickerProps {
   value: HabitContent | null;
@@ -39,6 +40,165 @@ function formatDuration(seconds: number): string {
 }
 
 export function ContentPicker({ value, onChange }: ContentPickerProps) {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    gap: spacing.sm,
+  },
+  sectionLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  typeRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  typeChip: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  typeChipSelected: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  typeChipIcon: {
+    fontSize: 20,
+  },
+  typeChipLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  typeChipLabelSelected: {
+    color: colors.primary,
+  },
+  configBox: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: borderRadius.sm,
+    padding: spacing.sm,
+    gap: spacing.sm,
+  },
+  subLabel: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  input: {
+    backgroundColor: colors.surfaceLight,
+    borderColor: colors.border,
+    borderWidth: 2,
+    borderRadius: borderRadius.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs + 2,
+    color: colors.text,
+    fontSize: fontSizes.sm,
+  },
+  presetGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  presetChip: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceLight,
+  },
+  presetChipSelected: {
+    borderColor: colors.xp,
+    backgroundColor: colors.xp + '22',
+  },
+  presetChipText: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+  },
+  presetChipTextSelected: {
+    color: colors.xp,
+  },
+  durationPreview: {
+    color: colors.xp,
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    letterSpacing: 1,
+  },
+  checklistRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingVertical: 2,
+  },
+  checklistBullet: {
+    color: colors.primary,
+    fontSize: fontSizes.xl,
+    lineHeight: fontSizes.xl,
+    width: 12,
+  },
+  checklistItemLabel: {
+    flex: 1,
+    color: colors.text,
+    fontSize: fontSizes.sm,
+  },
+  removeBtn: {
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  removeBtnText: {
+    color: colors.danger,
+    fontSize: fontSizes.lg,
+    fontWeight: 'bold',
+    lineHeight: fontSizes.lg,
+  },
+  addRow: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  addInput: {
+    flex: 1,
+  },
+  addBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: borderRadius.sm,
+    backgroundColor: colors.primary,
+    borderWidth: 2,
+    borderColor: colors.primaryDark,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addBtnDisabled: {
+    opacity: 0.4,
+  },
+  addBtnText: {
+    color: colors.text,
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    marginTop: -2,
+  },
+  emptyHint: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontStyle: 'italic',
+    textAlign: 'center',
+  },
+}), [themeKey]);
   const [selectedType, setSelectedType] = useState<HabitContentType | null>(
     value?.type ?? null,
   );
@@ -262,161 +422,4 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    gap: spacing.sm,
-  },
-  sectionLabel: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  typeRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  typeChip: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 4,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  typeChipSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary + '22',
-  },
-  typeChipIcon: {
-    fontSize: 20,
-  },
-  typeChipLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  typeChipLabelSelected: {
-    color: colors.primary,
-  },
-  configBox: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: borderRadius.sm,
-    padding: spacing.sm,
-    gap: spacing.sm,
-  },
-  subLabel: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  input: {
-    backgroundColor: colors.surfaceLight,
-    borderColor: colors.border,
-    borderWidth: 2,
-    borderRadius: borderRadius.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs + 2,
-    color: colors.text,
-    fontSize: fontSizes.sm,
-  },
-  presetGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-  },
-  presetChip: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surfaceLight,
-  },
-  presetChipSelected: {
-    borderColor: colors.xp,
-    backgroundColor: colors.xp + '22',
-  },
-  presetChipText: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-  },
-  presetChipTextSelected: {
-    color: colors.xp,
-  },
-  durationPreview: {
-    color: colors.xp,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    letterSpacing: 1,
-  },
-  checklistRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    paddingVertical: 2,
-  },
-  checklistBullet: {
-    color: colors.primary,
-    fontSize: fontSizes.xl,
-    lineHeight: fontSizes.xl,
-    width: 12,
-  },
-  checklistItemLabel: {
-    flex: 1,
-    color: colors.text,
-    fontSize: fontSizes.sm,
-  },
-  removeBtn: {
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  removeBtnText: {
-    color: colors.danger,
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
-    lineHeight: fontSizes.lg,
-  },
-  addRow: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  addInput: {
-    flex: 1,
-  },
-  addBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: borderRadius.sm,
-    backgroundColor: colors.primary,
-    borderWidth: 2,
-    borderColor: colors.primaryDark,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  addBtnDisabled: {
-    opacity: 0.4,
-  },
-  addBtnText: {
-    color: colors.text,
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    marginTop: -2,
-  },
-  emptyHint: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
-});
+

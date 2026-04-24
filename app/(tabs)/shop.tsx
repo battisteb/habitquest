@@ -29,6 +29,7 @@ import { SHOP_ITEMS } from '../../src/features/shop/types/shop-item';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { usePremium } from '../../src/features/monetization/hooks/use-premium';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 const CATEGORIES = [
   { key: 'avatar_hat', label: 'HATS', icon: '🎩' },
@@ -53,6 +54,155 @@ const SLOT_LABELS: Record<string, string> = {
 };
 
 export default function ShopScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background },
+
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+  },
+  goldHint: {
+    fontSize: 9,
+    color: colors.textMuted,
+    letterSpacing: 0.5,
+  },
+  goldBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.accent,
+    borderRadius: 4,
+    borderBottomWidth: 3,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  goldIcon: { fontSize: 16 },
+  goldText: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: colors.accent,
+    letterSpacing: 1,
+  },
+
+  // Loadout panel
+  loadoutPanel: {
+    flexDirection: 'row',
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderBottomWidth: 2,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    gap: spacing.md,
+    alignItems: 'center',
+  },
+  loadoutLeft: {
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 4,
+    backgroundColor: colors.background,
+    padding: 2,
+  },
+  loadoutSlots: { flex: 1, gap: 4 },
+  loadoutTitle: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+  },
+  slotsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 4,
+  },
+  slotChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 3,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    maxWidth: '48%',
+  },
+  slotChipFilled: {
+    borderColor: colors.xp + '88',
+    backgroundColor: colors.xp + '11',
+  },
+  slotIcon: { fontSize: 10 },
+  slotName: {
+    fontSize: 9,
+    color: colors.textSecondary,
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  loadoutHint: {
+    fontSize: 8,
+    color: colors.textMuted,
+    letterSpacing: 0.3,
+  },
+
+  // Category tabs
+  categoryScroll: { flexGrow: 0, borderBottomWidth: 2, borderBottomColor: colors.border },
+  categoryBar: {
+    flexDirection: 'row',
+    paddingHorizontal: spacing.sm,
+    gap: 2,
+  },
+  categoryTab: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    borderBottomWidth: 3,
+    borderBottomColor: 'transparent',
+  },
+  categoryTabActive: {
+    borderBottomColor: colors.primary,
+  },
+  categoryIcon: { fontSize: 14 },
+  categoryText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 0.5,
+  },
+  categoryTextActive: { color: colors.primary },
+
+  ownedCounter: {
+    fontSize: 9,
+    color: colors.textMuted,
+    textAlign: 'right',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.xs,
+    letterSpacing: 0.5,
+  },
+
+  grid: { padding: spacing.md, gap: spacing.sm, paddingBottom: spacing.xxl },
+  gridRow: { gap: spacing.sm },
+  emptyText: {
+    color: colors.textMuted,
+    textAlign: 'center',
+    marginTop: spacing.xl,
+    fontSize: fontSizes.md,
+  },
+}), [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const items = use$(shopStore$.items);
@@ -330,151 +480,4 @@ export default function ShopScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
 
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.sm,
-    paddingBottom: spacing.xs,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-  },
-  goldHint: {
-    fontSize: 9,
-    color: colors.textMuted,
-    letterSpacing: 0.5,
-  },
-  goldBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.accent,
-    borderRadius: 4,
-    borderBottomWidth: 3,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  goldIcon: { fontSize: 16 },
-  goldText: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    color: colors.accent,
-    letterSpacing: 1,
-  },
-
-  // Loadout panel
-  loadoutPanel: {
-    flexDirection: 'row',
-    backgroundColor: colors.surface,
-    borderTopWidth: 1,
-    borderBottomWidth: 2,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    gap: spacing.md,
-    alignItems: 'center',
-  },
-  loadoutLeft: {
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 4,
-    backgroundColor: colors.background,
-    padding: 2,
-  },
-  loadoutSlots: { flex: 1, gap: 4 },
-  loadoutTitle: {
-    fontSize: 9,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-  },
-  slotsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 4,
-  },
-  slotChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-    backgroundColor: colors.background,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    maxWidth: '48%',
-  },
-  slotChipFilled: {
-    borderColor: colors.xp + '88',
-    backgroundColor: colors.xp + '11',
-  },
-  slotIcon: { fontSize: 10 },
-  slotName: {
-    fontSize: 9,
-    color: colors.textSecondary,
-    fontWeight: 'bold',
-    flex: 1,
-  },
-  loadoutHint: {
-    fontSize: 8,
-    color: colors.textMuted,
-    letterSpacing: 0.3,
-  },
-
-  // Category tabs
-  categoryScroll: { flexGrow: 0, borderBottomWidth: 2, borderBottomColor: colors.border },
-  categoryBar: {
-    flexDirection: 'row',
-    paddingHorizontal: spacing.sm,
-    gap: 2,
-  },
-  categoryTab: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    borderBottomWidth: 3,
-    borderBottomColor: 'transparent',
-  },
-  categoryTabActive: {
-    borderBottomColor: colors.primary,
-  },
-  categoryIcon: { fontSize: 14 },
-  categoryText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 0.5,
-  },
-  categoryTextActive: { color: colors.primary },
-
-  ownedCounter: {
-    fontSize: 9,
-    color: colors.textMuted,
-    textAlign: 'right',
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.xs,
-    letterSpacing: 0.5,
-  },
-
-  grid: { padding: spacing.md, gap: spacing.sm, paddingBottom: spacing.xxl },
-  gridRow: { gap: spacing.sm },
-  emptyText: {
-    color: colors.textMuted,
-    textAlign: 'center',
-    marginTop: spacing.xl,
-    fontSize: fontSizes.md,
-  },
-});

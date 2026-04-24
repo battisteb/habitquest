@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import {
   fetchAchievements,
 } from '../src/features/gamification/stores/achievements-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { useTheme } from '../src/ui/theme/theme-context';
 
 const CATEGORIES = [
   { key: 'all', label: 'ALL', icon: '🏅' },
@@ -24,6 +25,119 @@ const CATEGORIES = [
 type CategoryKey = (typeof CATEGORIES)[number]['key'];
 
 export default function AchievementsScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: spacing.md,
+    paddingBottom: spacing.sm,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+  },
+  counter: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: colors.accent,
+    width: 60,
+    textAlign: 'right',
+  },
+  summaryBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
+    gap: spacing.sm,
+  },
+  summaryTrack: {
+    flex: 1,
+    height: 6,
+    backgroundColor: colors.border,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  summaryFill: {
+    height: '100%',
+    backgroundColor: colors.accent,
+    borderRadius: 3,
+  },
+  summaryLabel: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    minWidth: 70,
+    textAlign: 'right',
+  },
+  filterScroll: {
+    flexGrow: 0,
+  },
+  filterRow: {
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
+    gap: spacing.xs,
+    flexDirection: 'row',
+  },
+  filterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  filterChipActive: {
+    borderColor: colors.accent,
+    backgroundColor: colors.accent + '22',
+  },
+  filterIcon: { fontSize: 12 },
+  filterLabel: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  filterLabelActive: { color: colors.accent },
+  filterCount: {
+    color: colors.textMuted,
+    fontSize: 9,
+    fontWeight: 'bold',
+    backgroundColor: colors.border,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  filterCountActive: {
+    backgroundColor: colors.accent + '44',
+    color: colors.accent,
+  },
+  list: {
+    padding: spacing.md,
+    gap: spacing.sm,
+    paddingBottom: spacing.xxl,
+  },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+  },
+}), [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const achievements = use$(achievementsStore$.achievements);
@@ -155,115 +269,4 @@ export default function AchievementsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: spacing.md,
-    paddingBottom: spacing.sm,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-  },
-  counter: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    color: colors.accent,
-    width: 60,
-    textAlign: 'right',
-  },
-  summaryBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingBottom: spacing.sm,
-    gap: spacing.sm,
-  },
-  summaryTrack: {
-    flex: 1,
-    height: 6,
-    backgroundColor: colors.border,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  summaryFill: {
-    height: '100%',
-    backgroundColor: colors.accent,
-    borderRadius: 3,
-  },
-  summaryLabel: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    minWidth: 70,
-    textAlign: 'right',
-  },
-  filterScroll: {
-    flexGrow: 0,
-  },
-  filterRow: {
-    paddingHorizontal: spacing.md,
-    paddingBottom: spacing.sm,
-    gap: spacing.xs,
-    flexDirection: 'row',
-  },
-  filterChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  filterChipActive: {
-    borderColor: colors.accent,
-    backgroundColor: colors.accent + '22',
-  },
-  filterIcon: { fontSize: 12 },
-  filterLabel: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  filterLabelActive: { color: colors.accent },
-  filterCount: {
-    color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: 'bold',
-    backgroundColor: colors.border,
-    paddingHorizontal: 4,
-    paddingVertical: 1,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  filterCountActive: {
-    backgroundColor: colors.accent + '44',
-    color: colors.accent,
-  },
-  list: {
-    padding: spacing.md,
-    gap: spacing.sm,
-    paddingBottom: spacing.xxl,
-  },
-  empty: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyText: {
-    color: colors.textMuted,
-    fontSize: fontSizes.sm,
-  },
-});
+

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,8 +13,11 @@ import { getDueCards } from '../../src/features/training/types/flashcard';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { PremiumGate } from '../../src/features/monetization/components/premium-gate';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 export default function StatsScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(createStyles, [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const stats = useStats();
@@ -116,6 +120,7 @@ function StatCard({
   label: string;
   color: string;
 }) {
+  const styles = createStyles();
   return (
     <View style={styles.statCard}>
       <Text style={[styles.statValue, { color }]}>{value}</Text>
@@ -124,7 +129,8 @@ function StatCard({
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles() {
+  return StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -179,3 +185,4 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
   },
 });
+}

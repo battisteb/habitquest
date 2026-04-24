@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable, Vibration, Platform } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 interface HabitTimerProps {
   duration: number; // seconds
@@ -23,6 +24,111 @@ function vibrate() {
 }
 
 export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingVertical: spacing.md,
+  },
+  label: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.textSecondary,
+    letterSpacing: 2,
+  },
+  ringContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ringOuter: {
+    width: 140,
+    height: 140,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ringTrack: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 8,
+  },
+  ringProgress: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 8,
+    borderTopColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'transparent',
+  },
+  ringInner: {
+    alignItems: 'center',
+    gap: 2,
+  },
+  timeText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+    fontVariant: ['tabular-nums'],
+  },
+  timeTextDone: {
+    color: colors.success,
+  },
+  totalTime: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    alignItems: 'center',
+  },
+  mainButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.xl,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.primaryDark,
+    borderBottomWidth: 4,
+  },
+  mainButtonDone: {
+    backgroundColor: colors.success,
+    borderColor: '#2ea87a',
+  },
+  mainButtonText: {
+    color: colors.text,
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+  },
+  resetButton: {
+    width: 40,
+    height: 40,
+    borderRadius: borderRadius.sm,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  resetButtonText: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xl,
+  },
+  doneHint: {
+    color: colors.success,
+    fontSize: fontSizes.xs,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    maxWidth: 240,
+  },
+}), [themeKey]);
   const [remaining, setRemaining] = useState(duration);
   const [state, setState] = useState<TimerState>('idle');
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -148,107 +254,4 @@ export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    gap: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  label: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    color: colors.textSecondary,
-    letterSpacing: 2,
-  },
-  ringContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ringOuter: {
-    width: 140,
-    height: 140,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ringTrack: {
-    position: 'absolute',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 8,
-  },
-  ringProgress: {
-    position: 'absolute',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 8,
-    borderTopColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'transparent',
-  },
-  ringInner: {
-    alignItems: 'center',
-    gap: 2,
-  },
-  timeText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-    fontVariant: ['tabular-nums'],
-  },
-  timeTextDone: {
-    color: colors.success,
-  },
-  totalTime: {
-    fontSize: fontSizes.xs,
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    alignItems: 'center',
-  },
-  mainButton: {
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.xl,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.primaryDark,
-    borderBottomWidth: 4,
-  },
-  mainButtonDone: {
-    backgroundColor: colors.success,
-    borderColor: '#2ea87a',
-  },
-  mainButtonText: {
-    color: colors.text,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-  },
-  resetButton: {
-    width: 40,
-    height: 40,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  resetButtonText: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xl,
-  },
-  doneHint: {
-    color: colors.success,
-    fontSize: fontSizes.xs,
-    fontStyle: 'italic',
-    textAlign: 'center',
-    maxWidth: 240,
-  },
-});
+

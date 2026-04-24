@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { PixelButton } from '../src/ui/components/pixel-button';
 import { supabase } from '../src/lib/supabase/client';
 import { authStore$ } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { useTheme } from '../src/ui/theme/theme-context';
 
 interface DayData {
   label: string;
@@ -52,6 +53,125 @@ function formatDateKey(d: Date): string {
 }
 
 export default function WeeklyRecapScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  container: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  header: {
+    gap: spacing.xs,
+    marginBottom: spacing.xs,
+  },
+  screenLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.sm,
+    alignItems: 'center',
+    gap: 2,
+  },
+  statValue: {
+    fontSize: fontSizes.lg,
+    fontWeight: 'bold',
+  },
+  statLabel: {
+    fontSize: fontSizes.xs - 1,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  chartCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.md,
+    gap: spacing.md,
+  },
+  chartTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+  },
+  chart: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: spacing.xs,
+    height: 140,
+  },
+  bar: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 3,
+    justifyContent: 'flex-end',
+  },
+  barXp: {
+    fontSize: 7,
+    color: colors.xp,
+    fontWeight: 'bold',
+  },
+  barTrack: {
+    width: '100%',
+    height: 80,
+    justifyContent: 'flex-end',
+  },
+  barFill: {
+    width: '100%',
+    borderRadius: 2,
+    minHeight: 4,
+  },
+  barLabel: {
+    fontSize: fontSizes.xs - 1,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+  },
+  barCount: {
+    fontSize: 8,
+    color: colors.textMuted,
+  },
+  motivationCard: {
+    backgroundColor: colors.primary + '18',
+    borderWidth: 2,
+    borderColor: colors.primary + '44',
+    borderRadius: 4,
+    padding: spacing.md,
+    gap: spacing.xs,
+  },
+  motivationText: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  motivationSub: {
+    fontSize: fontSizes.xs,
+    color: colors.textSecondary,
+    lineHeight: 16,
+  },
+}), [themeKey]);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [stats, setStats] = useState<WeekStats | null>(null);
@@ -257,121 +377,4 @@ export default function WeeklyRecapScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    padding: spacing.lg,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
-  header: {
-    gap: spacing.xs,
-    marginBottom: spacing.xs,
-  },
-  screenLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.sm,
-    alignItems: 'center',
-    gap: 2,
-  },
-  statValue: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
-  },
-  statLabel: {
-    fontSize: fontSizes.xs - 1,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  chartCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.md,
-    gap: spacing.md,
-  },
-  chartTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-  },
-  chart: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: spacing.xs,
-    height: 140,
-  },
-  bar: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 3,
-    justifyContent: 'flex-end',
-  },
-  barXp: {
-    fontSize: 7,
-    color: colors.xp,
-    fontWeight: 'bold',
-  },
-  barTrack: {
-    width: '100%',
-    height: 80,
-    justifyContent: 'flex-end',
-  },
-  barFill: {
-    width: '100%',
-    borderRadius: 2,
-    minHeight: 4,
-  },
-  barLabel: {
-    fontSize: fontSizes.xs - 1,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-  },
-  barCount: {
-    fontSize: 8,
-    color: colors.textMuted,
-  },
-  motivationCard: {
-    backgroundColor: colors.primary + '18',
-    borderWidth: 2,
-    borderColor: colors.primary + '44',
-    borderRadius: 4,
-    padding: spacing.md,
-    gap: spacing.xs,
-  },
-  motivationText: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  motivationSub: {
-    fontSize: fontSizes.xs,
-    color: colors.textSecondary,
-    lineHeight: 16,
-  },
-});
+

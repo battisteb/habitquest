@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 interface XpBarProps {
   level: number;
@@ -9,22 +11,8 @@ interface XpBarProps {
 }
 
 export function XpBar({ level, currentXp, nextLevelXp, progress }: XpBarProps) {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.level}>LVL {level}</Text>
-        <Text style={styles.xpText}>
-          {currentXp} / {nextLevelXp} XP
-        </Text>
-      </View>
-      <View style={styles.barTrack}>
-        <View style={[styles.barFill, { width: `${progress * 100}%` }]} />
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   container: {
     gap: spacing.xs,
   },
@@ -56,4 +44,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.xp,
     borderRadius: 2,
   },
-});
+}), [themeKey]);
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.level}>LVL {level}</Text>
+        <Text style={styles.xpText}>
+          {currentXp} / {nextLevelXp} XP
+        </Text>
+      </View>
+      <View style={styles.barTrack}>
+        <View style={[styles.barFill, { width: `${progress * 100}%` }]} />
+      </View>
+    </View>
+  );
+}
+
+

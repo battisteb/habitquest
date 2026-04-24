@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 interface MonthlyHeatmapProps {
   data: { date: string; count: number }[];
@@ -23,40 +25,8 @@ function getDotColor(count: number): string {
 }
 
 export function MonthlyHeatmap({ data }: MonthlyHeatmapProps) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>LAST 30 DAYS</Text>
-      <View style={styles.grid}>
-        {data.map((day) => (
-          <View
-            key={day.date}
-            style={[styles.dot, { backgroundColor: getDotColor(day.count) }]}
-          />
-        ))}
-      </View>
-      <View style={styles.legend}>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.empty }]} />
-          <Text style={styles.legendLabel}>none</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.low }]} />
-          <Text style={styles.legendLabel}>1</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.mid }]} />
-          <Text style={styles.legendLabel}>2</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.high }]} />
-          <Text style={styles.legendLabel}>3+</Text>
-        </View>
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
     borderRadius: 4,
@@ -101,4 +71,38 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     fontWeight: 'bold',
   },
-});
+}), [themeKey]);
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>LAST 30 DAYS</Text>
+      <View style={styles.grid}>
+        {data.map((day) => (
+          <View
+            key={day.date}
+            style={[styles.dot, { backgroundColor: getDotColor(day.count) }]}
+          />
+        ))}
+      </View>
+      <View style={styles.legend}>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.empty }]} />
+          <Text style={styles.legendLabel}>none</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.low }]} />
+          <Text style={styles.legendLabel}>1</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.mid }]} />
+          <Text style={styles.legendLabel}>2</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.high }]} />
+          <Text style={styles.legendLabel}>3+</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+

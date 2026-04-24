@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, Pressable } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { createChallenge } from '../../src/features/social/stores/challenges-store';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 const CHALLENGE_TYPES = [
   { key: 'xp_race', label: 'XP Race', description: 'Earn the most XP' },
@@ -24,6 +25,108 @@ const DURATION_OPTIONS = [
 const WAGER_OPTIONS = [5, 10, 25, 50];
 
 export default function CreateChallengeScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: spacing.md,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+  },
+  opponent: {
+    fontSize: fontSizes.sm,
+    color: colors.primary,
+    fontWeight: 'bold',
+    marginTop: 2,
+  },
+  summary: {
+    marginHorizontal: spacing.md,
+    padding: spacing.md,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    alignItems: 'center',
+  },
+  summaryText: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.sm,
+  },
+  summaryVal: {
+    color: colors.xp,
+    fontWeight: 'bold',
+  },
+  section: {
+    padding: spacing.md,
+    gap: spacing.sm,
+  },
+  sectionTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  optionsRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    flexWrap: 'wrap',
+  },
+  optionCard: {
+    flex: 1,
+    minWidth: 120,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 4,
+    padding: spacing.md,
+    gap: spacing.xs,
+  },
+  optionCardActive: {
+    borderColor: colors.primary,
+  },
+  optionLabel: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  optionLabelActive: {
+    color: colors.primary,
+  },
+  optionDesc: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+  },
+  chip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  chipActive: {
+    borderColor: colors.accent,
+    backgroundColor: colors.accent,
+  },
+  chipText: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.textSecondary,
+  },
+  chipTextActive: {
+    color: colors.background,
+  },
+}), [themeKey]);
   const { opponentId, opponentName } = useLocalSearchParams<{ opponentId: string; opponentName?: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -152,104 +255,4 @@ export default function CreateChallengeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: spacing.md,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-  },
-  opponent: {
-    fontSize: fontSizes.sm,
-    color: colors.primary,
-    fontWeight: 'bold',
-    marginTop: 2,
-  },
-  summary: {
-    marginHorizontal: spacing.md,
-    padding: spacing.md,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    alignItems: 'center',
-  },
-  summaryText: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-  },
-  summaryVal: {
-    color: colors.xp,
-    fontWeight: 'bold',
-  },
-  section: {
-    padding: spacing.md,
-    gap: spacing.sm,
-  },
-  sectionTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  optionsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    flexWrap: 'wrap',
-  },
-  optionCard: {
-    flex: 1,
-    minWidth: 120,
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 4,
-    padding: spacing.md,
-    gap: spacing.xs,
-  },
-  optionCardActive: {
-    borderColor: colors.primary,
-  },
-  optionLabel: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  optionLabelActive: {
-    color: colors.primary,
-  },
-  optionDesc: {
-    fontSize: fontSizes.xs,
-    color: colors.textMuted,
-  },
-  chip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  chipActive: {
-    borderColor: colors.accent,
-    backgroundColor: colors.accent,
-  },
-  chipText: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    color: colors.textSecondary,
-  },
-  chipTextActive: {
-    color: colors.background,
-  },
-});
+

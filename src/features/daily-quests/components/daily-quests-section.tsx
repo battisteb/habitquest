@@ -1,14 +1,60 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import { useDailyQuests } from '../hooks/use-daily-quests';
 import { DailyQuestCard } from './daily-quest-card';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 interface DailyQuestsSectionProps {
   pausedCategories?: string[];
 }
 
 export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSectionProps) {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: {
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  headerTitle: {
+    color: colors.accent,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+  },
+  counterBadge: {
+    backgroundColor: colors.surfaceLight,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+    borderRadius: borderRadius.sm,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  counterText: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+  },
+  refreshHint: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+    fontStyle: 'italic',
+  },
+  questList: {
+    gap: spacing.sm,
+  },
+}), [themeKey]);
   const { quests, isLoading, fetchDailyQuests, claimQuest } = useDailyQuests();
 
   useEffect(() => {
@@ -74,47 +120,4 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: spacing.md,
-    paddingBottom: spacing.sm,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  headerTitle: {
-    color: colors.accent,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-  },
-  counterBadge: {
-    backgroundColor: colors.surfaceLight,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
-    borderRadius: borderRadius.sm,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  counterText: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-  },
-  refreshHint: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontStyle: 'italic',
-  },
-  questList: {
-    gap: spacing.sm,
-  },
-});
+

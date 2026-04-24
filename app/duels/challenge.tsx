@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,8 +8,63 @@ import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { friendsStore$, fetchFriends } from '../../src/features/social/stores/friends-store';
 import { duelStore$, fetchUnlockedCategories, createDuel } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 export default function ChallengeScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+    marginBottom: spacing.md,
+  },
+  stepLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+    marginBottom: spacing.sm,
+    marginTop: spacing.md,
+  },
+  hint: { color: colors.textMuted, fontSize: fontSizes.sm, fontStyle: 'italic' },
+  friendChip: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 6,
+    padding: spacing.sm,
+    alignItems: 'center',
+    minWidth: 80,
+    gap: 2,
+  },
+  friendChipSelected: { borderColor: colors.primary, backgroundColor: colors.primary + '22' },
+  friendEmoji: { fontSize: 28 },
+  friendName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold' },
+  friendNameSelected: { color: colors.primary },
+  friendLevel: { color: colors.textMuted, fontSize: 9 },
+  attackCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: 6,
+    borderBottomWidth: 4,
+    padding: spacing.sm,
+    alignItems: 'center',
+    gap: 3,
+  },
+  attackCardSelected: { borderColor: colors.accent, backgroundColor: colors.accent + '18' },
+  atkEmoji: { fontSize: 32 },
+  atkName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', textAlign: 'center' },
+  atkDesc: { color: colors.textMuted, fontSize: 9, textAlign: 'center', lineHeight: 12 },
+  atkStats: { flexDirection: 'row', gap: spacing.sm },
+  atkStat: { color: colors.textSecondary, fontSize: 9, fontWeight: 'bold' },
+  atkSpecial: { color: colors.accent, fontSize: 9, fontWeight: 'bold', letterSpacing: 0.5 },
+  sendBtn: { marginTop: spacing.md },
+}), [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const friends = use$(friendsStore$.friends);
@@ -132,56 +187,4 @@ export default function ChallengeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-    marginBottom: spacing.md,
-  },
-  stepLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-    marginBottom: spacing.sm,
-    marginTop: spacing.md,
-  },
-  hint: { color: colors.textMuted, fontSize: fontSizes.sm, fontStyle: 'italic' },
-  friendChip: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 6,
-    padding: spacing.sm,
-    alignItems: 'center',
-    minWidth: 80,
-    gap: 2,
-  },
-  friendChipSelected: { borderColor: colors.primary, backgroundColor: colors.primary + '22' },
-  friendEmoji: { fontSize: 28 },
-  friendName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold' },
-  friendNameSelected: { color: colors.primary },
-  friendLevel: { color: colors.textMuted, fontSize: 9 },
-  attackCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 6,
-    borderBottomWidth: 4,
-    padding: spacing.sm,
-    alignItems: 'center',
-    gap: 3,
-  },
-  attackCardSelected: { borderColor: colors.accent, backgroundColor: colors.accent + '18' },
-  atkEmoji: { fontSize: 32 },
-  atkName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', textAlign: 'center' },
-  atkDesc: { color: colors.textMuted, fontSize: 9, textAlign: 'center', lineHeight: 12 },
-  atkStats: { flexDirection: 'row', gap: spacing.sm },
-  atkStat: { color: colors.textSecondary, fontSize: 9, fontWeight: 'bold' },
-  atkSpecial: { color: colors.accent, fontSize: 9, fontWeight: 'bold', letterSpacing: 0.5 },
-  sendBtn: { marginTop: spacing.md },
-});
+

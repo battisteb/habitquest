@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import type { DailyQuestWithTemplate, QuestDifficulty } from '../stores/daily-quests-store';
+import { useTheme } from '../../../ui/theme/theme-context';
 
 interface DailyQuestCardProps {
   quest: DailyQuestWithTemplate;
@@ -21,86 +23,8 @@ const DIFFICULTY_LABELS: Record<QuestDifficulty, string> = {
 };
 
 export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestCardProps) {
-  const { template } = quest;
-  const difficultyColor = DIFFICULTY_COLORS[template.difficulty];
-  const progress = Math.min(quest.current_progress, template.target_value);
-  const progressPercent = template.target_value > 0
-    ? Math.min((progress / template.target_value) * 100, 100)
-    : 0;
-
-  const isClaimed = quest.is_claimed;
-  const isCompleted = quest.is_completed;
-  const canClaim = isCompleted && !isClaimed;
-
-  return (
-    <View style={[styles.card, isClaimed && styles.cardClaimed, isPaused && styles.cardPaused]}>
-      {/* Paused mode badge */}
-      {isPaused && (
-        <View style={styles.pausedBadge}>
-          <Text style={styles.pausedBadgeText}>❄️ PAUSED BY FOCUS MODE</Text>
-        </View>
-      )}
-
-      {/* Header row: difficulty badge + rewards */}
-      <View style={styles.headerRow}>
-        <View style={[styles.difficultyBadge, { backgroundColor: difficultyColor }]}>
-          <Text style={styles.difficultyText}>
-            {DIFFICULTY_LABELS[template.difficulty]}
-          </Text>
-        </View>
-        <View style={styles.rewards}>
-          <Text style={styles.xpReward}>{template.xp_reward} XP</Text>
-          <Text style={styles.goldReward}>{template.gold_reward} G</Text>
-        </View>
-      </View>
-
-      {/* Title and description */}
-      <Text style={[styles.title, isClaimed && styles.textClaimed]}>
-        {isClaimed ? '\u2713 ' : ''}{template.title}
-      </Text>
-      <Text style={[styles.description, isClaimed && styles.textClaimed]}>
-        {template.description}
-      </Text>
-
-      {/* Progress bar */}
-      <View style={styles.progressContainer}>
-        <View style={styles.progressBar}>
-          <View
-            style={[
-              styles.progressFill,
-              {
-                width: `${progressPercent}%`,
-                backgroundColor: isClaimed
-                  ? colors.textMuted
-                  : isCompleted
-                    ? colors.success
-                    : difficultyColor,
-              },
-            ]}
-          />
-        </View>
-        <Text style={styles.progressText}>
-          {progress}/{template.target_value}
-        </Text>
-      </View>
-
-      {/* Claim button */}
-      {canClaim && (
-        <Pressable
-          style={({ pressed }) => [
-            styles.claimButton,
-            pressed && styles.claimButtonPressed,
-          ]}
-          onPress={() => onClaim(quest.id)}
-        >
-          <Text style={styles.claimButtonText}>CLAIM</Text>
-        </Pressable>
-      )}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderWidth: 2,
@@ -217,4 +141,84 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 2,
   },
-});
+}), [themeKey]);
+  const { template } = quest;
+  const difficultyColor = DIFFICULTY_COLORS[template.difficulty];
+  const progress = Math.min(quest.current_progress, template.target_value);
+  const progressPercent = template.target_value > 0
+    ? Math.min((progress / template.target_value) * 100, 100)
+    : 0;
+
+  const isClaimed = quest.is_claimed;
+  const isCompleted = quest.is_completed;
+  const canClaim = isCompleted && !isClaimed;
+
+  return (
+    <View style={[styles.card, isClaimed && styles.cardClaimed, isPaused && styles.cardPaused]}>
+      {/* Paused mode badge */}
+      {isPaused && (
+        <View style={styles.pausedBadge}>
+          <Text style={styles.pausedBadgeText}>❄️ PAUSED BY FOCUS MODE</Text>
+        </View>
+      )}
+
+      {/* Header row: difficulty badge + rewards */}
+      <View style={styles.headerRow}>
+        <View style={[styles.difficultyBadge, { backgroundColor: difficultyColor }]}>
+          <Text style={styles.difficultyText}>
+            {DIFFICULTY_LABELS[template.difficulty]}
+          </Text>
+        </View>
+        <View style={styles.rewards}>
+          <Text style={styles.xpReward}>{template.xp_reward} XP</Text>
+          <Text style={styles.goldReward}>{template.gold_reward} G</Text>
+        </View>
+      </View>
+
+      {/* Title and description */}
+      <Text style={[styles.title, isClaimed && styles.textClaimed]}>
+        {isClaimed ? '\u2713 ' : ''}{template.title}
+      </Text>
+      <Text style={[styles.description, isClaimed && styles.textClaimed]}>
+        {template.description}
+      </Text>
+
+      {/* Progress bar */}
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBar}>
+          <View
+            style={[
+              styles.progressFill,
+              {
+                width: `${progressPercent}%`,
+                backgroundColor: isClaimed
+                  ? colors.textMuted
+                  : isCompleted
+                    ? colors.success
+                    : difficultyColor,
+              },
+            ]}
+          />
+        </View>
+        <Text style={styles.progressText}>
+          {progress}/{template.target_value}
+        </Text>
+      </View>
+
+      {/* Claim button */}
+      {canClaim && (
+        <Pressable
+          style={({ pressed }) => [
+            styles.claimButton,
+            pressed && styles.claimButtonPressed,
+          ]}
+          onPress={() => onClaim(quest.id)}
+        >
+          <Text style={styles.claimButtonText}>CLAIM</Text>
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
+

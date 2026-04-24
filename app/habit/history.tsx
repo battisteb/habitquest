@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +7,7 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { supabase } from '../../src/lib/supabase/client';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 const DOT_SIZE = 28;
 const DOT_GAP = 3;
@@ -60,6 +61,106 @@ function computeCurrentStreak(dates: string[], completedSet: Set<string>): numbe
 }
 
 export default function HabitHistoryScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  container: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  header: {
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  screenLabel: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  monthRow: {
+    flexDirection: 'row',
+    gap: DOT_GAP,
+    marginBottom: 2,
+  },
+  monthCell: {
+    width: DOT_SIZE,
+    alignItems: 'flex-start',
+  },
+  monthLabel: {
+    fontSize: fontSizes.xs - 1,
+    color: colors.textMuted,
+    fontWeight: 'bold',
+  },
+  calendarGrid: {
+    flexDirection: 'row',
+    gap: DOT_GAP,
+    flexWrap: 'wrap',
+  },
+  weekColumn: {
+    flexDirection: 'column',
+    gap: DOT_GAP,
+  },
+  dot: {
+    width: DOT_SIZE,
+    height: DOT_SIZE,
+    borderRadius: 4,
+  },
+  legend: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    flexWrap: 'wrap',
+    marginTop: spacing.xs,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  legendDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 2,
+  },
+  legendText: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.sm,
+    alignItems: 'center',
+    gap: 2,
+  },
+  statValue: {
+    fontSize: fontSizes.lg,
+    fontWeight: 'bold',
+  },
+  statLabel: {
+    fontSize: fontSizes.xs - 1,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+}), [themeKey]);
   const { habitId, habitName } = useLocalSearchParams<{ habitId: string; habitName: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -251,102 +352,4 @@ export default function HabitHistoryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    padding: spacing.lg,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
-  header: {
-    gap: spacing.xs,
-    marginBottom: spacing.sm,
-  },
-  screenLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 2,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  monthRow: {
-    flexDirection: 'row',
-    gap: DOT_GAP,
-    marginBottom: 2,
-  },
-  monthCell: {
-    width: DOT_SIZE,
-    alignItems: 'flex-start',
-  },
-  monthLabel: {
-    fontSize: fontSizes.xs - 1,
-    color: colors.textMuted,
-    fontWeight: 'bold',
-  },
-  calendarGrid: {
-    flexDirection: 'row',
-    gap: DOT_GAP,
-    flexWrap: 'wrap',
-  },
-  weekColumn: {
-    flexDirection: 'column',
-    gap: DOT_GAP,
-  },
-  dot: {
-    width: DOT_SIZE,
-    height: DOT_SIZE,
-    borderRadius: 4,
-  },
-  legend: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    flexWrap: 'wrap',
-    marginTop: spacing.xs,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  legendDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 2,
-  },
-  legendText: {
-    fontSize: fontSizes.xs,
-    color: colors.textMuted,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginTop: spacing.sm,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.sm,
-    alignItems: 'center',
-    gap: 2,
-  },
-  statValue: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
-  },
-  statLabel: {
-    fontSize: fontSizes.xs - 1,
-    fontWeight: 'bold',
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-});
+

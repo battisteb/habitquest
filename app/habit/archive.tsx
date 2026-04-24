@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -16,10 +16,85 @@ import { unarchiveHabit, deleteHabitPermanently } from '../../src/features/habit
 import { getCategoryColor } from '../../src/lib/constants/categories';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import type { Database } from '../../src/lib/supabase/types';
+import { useTheme } from '../../src/ui/theme/theme-context';
 
 type Habit = Database['public']['Tables']['habits']['Row'];
 
 export default function HabitArchiveScreen() {
+  const { themeKey } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  title: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 2,
+  },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+  },
+  emptyEmoji: { fontSize: 48 },
+  emptyText: {
+    color: colors.textMuted,
+    fontSize: fontSizes.md,
+  },
+  list: {
+    padding: spacing.md,
+    gap: spacing.sm,
+    paddingBottom: spacing.xxl,
+  },
+  card: {
+    flexDirection: 'row',
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    overflow: 'hidden',
+    opacity: 0.8,
+  },
+  categoryBar: {
+    width: 4,
+  },
+  cardContent: {
+    flex: 1,
+    padding: spacing.sm,
+    gap: spacing.sm,
+  },
+  cardInfo: {
+    gap: 2,
+  },
+  habitName: {
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    color: colors.textSecondary,
+  },
+  habitCategory: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  cardActions: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  actionBtn: {
+    flex: 1,
+    paddingHorizontal: spacing.sm,
+  },
+}), [themeKey]);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [archived, setArchived] = useState<Habit[]>([]);
@@ -122,76 +197,4 @@ export default function HabitArchiveScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 2,
-  },
-  empty: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-  },
-  emptyEmoji: { fontSize: 48 },
-  emptyText: {
-    color: colors.textMuted,
-    fontSize: fontSizes.md,
-  },
-  list: {
-    padding: spacing.md,
-    gap: spacing.sm,
-    paddingBottom: spacing.xxl,
-  },
-  card: {
-    flexDirection: 'row',
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
-    overflow: 'hidden',
-    opacity: 0.8,
-  },
-  categoryBar: {
-    width: 4,
-  },
-  cardContent: {
-    flex: 1,
-    padding: spacing.sm,
-    gap: spacing.sm,
-  },
-  cardInfo: {
-    gap: 2,
-  },
-  habitName: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
-    color: colors.textSecondary,
-  },
-  habitCategory: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  cardActions: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  actionBtn: {
-    flex: 1,
-    paddingHorizontal: spacing.sm,
-  },
-});
+
