@@ -333,6 +333,7 @@ export default function ShopScreen() {
         ],
       );
     } catch (e: any) {
+      console.error('[SHOP] handleItemPress error:', e);
       Alert.alert('Erreur', e.message ?? 'Une erreur est survenue');
     }
   }
@@ -488,6 +489,7 @@ export default function ShopScreen() {
                 currentAccessory={currentAccessory}
                 currentBg={currentBg}
                 onPress={() => {
+                  console.log('[SHOP] onPress', item.id, item.name);
                   if (!isItemLoading) handleItemPress(item);
                 }}
               />
