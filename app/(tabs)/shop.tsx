@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
   ScrollView,
+  Modal,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -202,6 +203,88 @@ export default function ShopScreen() {
     marginTop: spacing.xl,
     fontSize: fontSizes.md,
   },
+
+  // Purchase confirmation modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: '#000000aa',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.lg,
+  },
+  modalBox: {
+    backgroundColor: colors.surface,
+    borderWidth: 3,
+    borderColor: colors.accent,
+    borderBottomWidth: 5,
+    borderRadius: 4,
+    padding: spacing.lg,
+    width: '100%',
+    maxWidth: 340,
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  modalTitle: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.accent,
+    letterSpacing: 2,
+  },
+  modalItemName: {
+    fontSize: fontSizes.lg,
+    fontWeight: 'bold',
+    color: colors.text,
+    textAlign: 'center',
+  },
+  modalRarity: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  modalPrice: {
+    fontSize: fontSizes.xl,
+    fontWeight: 'bold',
+    color: colors.accent,
+    marginTop: spacing.xs,
+  },
+  modalGoldAfter: {
+    fontSize: fontSizes.sm,
+    color: colors.textSecondary,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+    width: '100%',
+  },
+  modalBtn: {
+    flex: 1,
+    borderWidth: 2,
+    borderBottomWidth: 4,
+    borderRadius: 4,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+  },
+  modalBtnCancel: {
+    borderColor: colors.border,
+    backgroundColor: colors.background,
+  },
+  modalBtnConfirm: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '22',
+  },
+  modalBtnText: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  modalBtnTextConfirm: {
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    color: colors.primary,
+    letterSpacing: 1,
+  },
 }), [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -211,6 +294,7 @@ export default function ShopScreen() {
   const isLoading = use$(shopStore$.isLoading);
   const [activeCategory, setActiveCategory] = useState('avatar_hat');
   const [purchasing, setPurchasing] = useState<string | null>(null);
+  const [pendingPurchase, setPendingPurchase] = useState<(typeof items)[0] | null>(null);
   const { profile } = useProfileStats();
 
   const userGold = profile?.gold ?? 0;
@@ -309,32 +393,27 @@ export default function ShopScreen() {
         return;
       }
 
-      // All good — confirm purchase
-      Alert.alert(
-        `Acheter "${item.name}" ?`,
-        `${item.price_gold}g · ${item.rarity.toUpperCase()}\n\nTu as ${userGold}g. Restant : ${userGold - item.price_gold}g`,
-        [
-          { text: 'Annuler', style: 'cancel' },
-          {
-            text: `Acheter pour ${item.price_gold}g`,
-            onPress: async () => {
-              setPurchasing(item.id);
-              try {
-                await purchaseItem(item.id);
-                if (slot) await equipItem(item.id, slot);
-                Alert.alert('Acheté !', `${item.name} a été ajouté à ton inventaire.`);
-              } catch (e: any) {
-                Alert.alert('Erreur', e.message ?? 'Achat échoué');
-              } finally {
-                setPurchasing(null);
-              }
-            },
-          },
-        ],
-      );
+      // All good — show in-app confirmation modal (avoids browser dialog blocking)
+      setPendingPurchase(item);
     } catch (e: any) {
       console.error('[SHOP] handleItemPress error:', e);
       Alert.alert('Erreur', e.message ?? 'Une erreur est survenue');
+    }
+  }
+
+  async function handleConfirmPurchase() {
+    if (!pendingPurchase) return;
+    const item = pendingPurchase;
+    const slot = CATEGORY_TO_SLOT[item.category];
+    setPendingPurchase(null);
+    setPurchasing(item.id);
+    try {
+      await purchaseItem(item.id);
+      if (slot) await equipItem(item.id, slot);
+    } catch (e: any) {
+      Alert.alert('Erreur', e.message ?? 'Achat échoué');
+    } finally {
+      setPurchasing(null);
     }
   }
 
@@ -498,6 +577,44 @@ export default function ShopScreen() {
         />
       )}
       <AdBanner position="bottom" />
+
+      {/* Purchase confirmation modal — uses React Native Modal to avoid browser dialog blocking on web */}
+      <Modal
+        visible={!!pendingPurchase}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setPendingPurchase(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalTitle}>⚔️ CONFIRMER L'ACHAT</Text>
+            <Text style={styles.modalItemName}>{pendingPurchase?.name}</Text>
+            <Text style={styles.modalRarity}>{pendingPurchase?.rarity?.toUpperCase()}</Text>
+            <Text style={styles.modalPrice}>
+              💰 {pendingPurchase?.price_gold}g
+            </Text>
+            <Text style={styles.modalGoldAfter}>
+              Restant : {(userGold - (pendingPurchase?.price_gold ?? 0)).toLocaleString()}g
+            </Text>
+            <View style={styles.modalButtons}>
+              <Pressable
+                style={[styles.modalBtn, styles.modalBtnCancel]}
+                onPress={() => setPendingPurchase(null)}
+              >
+                <Text style={styles.modalBtnText}>Annuler</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.modalBtn, styles.modalBtnConfirm]}
+                onPress={handleConfirmPurchase}
+              >
+                <Text style={styles.modalBtnTextConfirm}>
+                  Acheter {pendingPurchase?.price_gold}g
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
