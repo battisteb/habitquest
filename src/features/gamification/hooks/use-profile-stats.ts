@@ -1,55 +1,37 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../../../lib/supabase/client';
-import { authStore$ } from '../../auth/stores/auth-store';
+import { useEffect, useMemo } from 'react';
+import { use$ } from '@legendapp/state/react';
+import { profileStore$, fetchProfile } from '../stores/profile-store';
 import { getLevelForXp, getXpForNextLevel } from '../../../lib/constants/game-config';
-import type { Database } from '../../../lib/supabase/types';
 
-type Profile = Database['public']['Tables']['profiles']['Row'];
-
-interface ProfileStats {
-  profile: Profile | null;
-  xpForNextLevel: number;
-  xpProgress: number;
-  isLoading: boolean;
-}
-
-export function useProfileStats(): ProfileStats {
-  const [state, setState] = useState<ProfileStats>({
-    profile: null,
-    xpForNextLevel: 100,
-    xpProgress: 0,
-    isLoading: true,
-  });
+export function useProfileStats() {
+  const profile = use$(profileStore$.profile);
+  const isLoading = use$(profileStore$.isLoading);
 
   useEffect(() => {
     fetchProfile();
   }, []);
 
-  async function fetchProfile() {
-    const userId = authStore$.user.get()?.id;
-    if (!userId) return;
+  const derived = useMemo(() => {
+    if (!profile) return { xpForNextLevel: 100, xpProgress: 0 };
+    const level = getLevelForXp(profile.xp);
+    const nextLevelXp = getXpForNextLevel(level);
+    const currentLevelXp = level > 0 ? getXpForNextLevel(level - 1) : 0;
+    const xpInLevel = profile.xp - currentLevelXp;
+    const xpNeeded = nextLevelXp - currentLevelXp;
+    const progress = xpNeeded > 0 ? Math.min(xpInLevel / xpNeeded, 1) : 0;
+    return { xpForNextLevel: nextLevelXp, xpProgress: progress };
+  }, [profile]);
 
-    const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
+  // Derive level from XP client-side so it's never stale vs the DB level column
+  const profileWithLevel = useMemo(() => {
+    if (!profile) return null;
+    return { ...profile, level: getLevelForXp(profile.xp) };
+  }, [profile]);
 
-    if (data) {
-      // Always derive level from XP client-side — the DB level column can lag
-      const level = getLevelForXp(data.xp);
-      const nextLevelXp = getXpForNextLevel(level);
-      const currentLevelXp = level > 0 ? getXpForNextLevel(level - 1) : 0;
-      const xpInLevel = data.xp - currentLevelXp;
-      const xpNeeded = nextLevelXp - currentLevelXp;
-      const progress = xpNeeded > 0 ? Math.min(xpInLevel / xpNeeded, 1) : 0;
-
-      setState({
-        profile: { ...data, level },
-        xpForNextLevel: nextLevelXp,
-        xpProgress: progress,
-        isLoading: false,
-      });
-    } else {
-      setState((s) => ({ ...s, isLoading: false }));
-    }
-  }
-
-  return state;
+  return {
+    profile: profileWithLevel,
+    xpForNextLevel: derived.xpForNextLevel,
+    xpProgress: derived.xpProgress,
+    isLoading,
+  };
 }
