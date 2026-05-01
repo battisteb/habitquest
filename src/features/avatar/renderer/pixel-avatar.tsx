@@ -5,7 +5,7 @@ const SCALE = 4;
 const GRID = 16; // 16x16 pixel grid
 const SIZE = GRID * SCALE;
 
-interface PixelAvatarProps {
+export interface PixelAvatarProps {
   size?: number;
   skinColor?: string;
   hairColor?: string;

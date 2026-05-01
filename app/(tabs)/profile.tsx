@@ -6,7 +6,7 @@ import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
-import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
+import { EvolvedAvatar } from '../../src/features/avatar/components/evolved-avatar';
 import { AvatarDisplay } from '../../src/features/avatar/components/avatar-display';
 import { getAvatarStage, getNextAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
@@ -217,7 +217,8 @@ export default function ProfileScreen() {
           <>
             {/* Clickable avatar → edit profile */}
             <Pressable style={styles.avatarSection} onPress={() => router.push('/profile/edit')}>
-              <PixelAvatar
+              <EvolvedAvatar
+                level={profile?.level ?? 0}
                 size={180}
                 hat={equippedHat}
                 outfit={equippedOutfit}
