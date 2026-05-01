@@ -19,6 +19,8 @@ import { DailyQuestsSection } from '../../src/features/daily-quests/components/d
 import { habitsStore$, fetchHabits, completeHabit, isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
+import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../src/features/habits/stores/burnout-store';
+import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import {
   getFreezesRemaining,
   isFreezeActiveToday,
@@ -387,7 +389,9 @@ export default function TodayScreen() {
 
   useStreakRiskNotification();
   const burnoutSignal = useBurnoutSignal();
-  const [burnoutDismissed, setBurnoutDismissed] = useState(false);
+  const burnoutLastDismissed = use$(burnoutStore$.lastDismissedAt);
+  const burnoutDismissed = useMemo(() => isDismissalActive(), [burnoutLastDismissed]);
+  const [takeBreakOpen, setTakeBreakOpen] = useState(false);
   const profile = use$(profileStore$.profile);
   const authUser = use$(authStore$.user);
 
@@ -527,17 +531,28 @@ export default function TodayScreen() {
               <Text style={styles.burnoutMessage}>{burnoutSignal.message}</Text>
               <Text style={styles.burnoutSuggestion}>{burnoutSignal.suggestion}</Text>
             </View>
-            <Pressable onPress={() => setBurnoutDismissed(true)} hitSlop={8}>
+            <Pressable onPress={dismissBurnoutBanner} hitSlop={8}>
               <Text style={styles.burnoutClose}>✕</Text>
             </Pressable>
           </View>
           {(burnoutSignal.risk === 'high' || burnoutSignal.risk === 'moderate') && (
-            <Pressable style={styles.burnoutAction} onPress={() => router.push('/settings/contextual-mode')}>
-              <Text style={styles.burnoutActionText}>🌙 ACTIVER MODE FOCUS</Text>
+            <Pressable style={styles.burnoutAction} onPress={() => setTakeBreakOpen(true)}>
+              <Text style={styles.burnoutActionText}>🌙 PRENDRE UNE PAUSE</Text>
             </Pressable>
           )}
         </View>
       )}
+
+      <TakeBreakModal
+        visible={takeBreakOpen}
+        onClose={() => setTakeBreakOpen(false)}
+        onBreakTaken={(count) =>
+          Alert.alert(
+            'Pause activée 🌙',
+            `${count} habitude${count > 1 ? 's' : ''} mise${count > 1 ? 's' : ''} en pause. Reprends-les depuis "Mes habitudes" quand tu seras prêt.`,
+          )
+        }
+      />
 
       {/* All done banner */}
       {allDone && (
