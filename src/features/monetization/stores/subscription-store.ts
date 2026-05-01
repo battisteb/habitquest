@@ -52,7 +52,11 @@ let _initialized = false;
 
 export async function initPurchases(userId: string): Promise<void> {
   if (_initialized) return;
-  if (!isNative || !isRcConfigured()) {
+  if (!isNative) {
+    if (__DEV__) console.log('[RevenueCat] Web platform — skipping init (all users free on web)');
+    return;
+  }
+  if (!isRcConfigured()) {
     if (__DEV__) console.log('[RevenueCat] Not configured — skipping init (all users free)');
     return;
   }
