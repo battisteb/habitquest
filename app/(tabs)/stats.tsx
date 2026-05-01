@@ -12,10 +12,11 @@ import { decksStore$ } from '../../src/features/training/stores/decks-store';
 import { getDueCards } from '../../src/features/training/types/flashcard';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
-import { PremiumGate } from '../../src/features/monetization/components/premium-gate';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 export default function StatsScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
   const insets = useSafeAreaInsets();
@@ -41,13 +42,13 @@ export default function StatsScreen() {
       style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
-      <Text style={styles.title}>STATS</Text>
+      <Text style={styles.title}>{T.stats_title}</Text>
 
       <View style={styles.statRow}>
-        <StatCard value={stats.totalCompletions} label="TOTAL DONE" color={colors.success} />
+        <StatCard value={stats.totalCompletions} label={T.stats_total_done} color={colors.success} />
         <StatCard
           value={`${stats.completionRateThisWeek}%`}
-          label="WEEK RATE"
+          label={T.stats_week_rate}
           color={colors.xp}
         />
       </View>
@@ -55,10 +56,10 @@ export default function StatsScreen() {
       <View style={styles.statRow}>
         <StatCard
           value={stats.currentActiveStreaks}
-          label="ACTIVE STREAKS"
+          label={T.stats_active_streaks}
           color={colors.streak}
         />
-        <StatCard value={stats.bestStreak} label="BEST STREAK" color={colors.accent} />
+        <StatCard value={stats.bestStreak} label={T.stats_best_streak} color={colors.accent} />
       </View>
 
       {stats.weeklyCompletions.length > 0 && <WeeklyChart data={stats.weeklyCompletions} />}
@@ -68,18 +69,18 @@ export default function StatsScreen() {
       {/* Training stats */}
       {(sessions.length > 0 || decks.length > 0) && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>TRAINING</Text>
+          <Text style={styles.sectionTitle}>{T.stats_section_training}</Text>
           <View style={styles.statRow}>
-            <StatCard value={sessions.length} label="SESSIONS" color={colors.accent} />
-            <StatCard value={totalWorkouts} label="WORKOUTS DONE" color={colors.success} />
+            <StatCard value={sessions.length} label={T.stats_sessions} color={colors.accent} />
+            <StatCard value={totalWorkouts} label={T.stats_workouts} color={colors.success} />
           </View>
           {decks.length > 0 && (
             <View style={styles.statRow}>
-              <StatCard value={decks.length} label="DECKS" color={colors.primary} />
-              <StatCard value={totalCardReviews} label="CARDS REVIEWED" color={colors.xp} />
+              <StatCard value={decks.length} label={T.stats_decks} color={colors.primary} />
+              <StatCard value={totalCardReviews} label={T.stats_cards_reviewed} color={colors.xp} />
               <StatCard
                 value={dueCardsTotal}
-                label="DUE TODAY"
+                label={T.stats_due_today}
                 color={dueCardsTotal > 0 ? colors.streak : colors.textMuted}
               />
             </View>
@@ -88,23 +89,15 @@ export default function StatsScreen() {
       )}
 
       <PixelButton
-        title="📊 Weekly Recap"
+        title={T.stats_btn_recap}
         onPress={() => router.push('/weekly-recap')}
         variant="secondary"
       />
       <PixelButton
-        title="View Achievements"
+        title={T.stats_btn_achievements}
         onPress={() => router.push('/achievements')}
         variant="secondary"
       />
-
-      {/* Full history — premium only */}
-      <PremiumGate
-        lockedLabel="Historique complet disponible en Premium"
-        lockedIcon="📈"
-      >
-        <View />
-      </PremiumGate>
 
       <AdBanner position="inline" />
     </ScrollView>

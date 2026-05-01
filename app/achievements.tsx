@@ -11,20 +11,31 @@ import {
 } from '../src/features/gamification/stores/achievements-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
+import { useT } from '../src/lib/i18n';
 
-const CATEGORIES = [
-  { key: 'all', label: 'ALL', icon: '🏅' },
-  { key: 'streak', label: 'STREAK', icon: '🔥' },
-  { key: 'completion', label: 'DONE', icon: '✅' },
-  { key: 'xp', label: 'XP', icon: '⭐' },
-  { key: 'social', label: 'SOCIAL', icon: '👥' },
-  { key: 'shop', label: 'SHOP', icon: '🛒' },
-  { key: 'special', label: 'SPECIAL', icon: '🏆' },
-] as const;
-
-type CategoryKey = (typeof CATEGORIES)[number]['key'];
+const CATEGORY_KEYS = ['all', 'streak', 'completion', 'xp', 'social', 'shop', 'special'] as const;
+type CategoryKey = (typeof CATEGORY_KEYS)[number];
+const CATEGORY_ICONS: Record<CategoryKey, string> = {
+  all: '🏅',
+  streak: '🔥',
+  completion: '✅',
+  xp: '⭐',
+  social: '👥',
+  shop: '🛒',
+  special: '🏆',
+};
 
 export default function AchievementsScreen() {
+  const T = useT();
+  const CATEGORY_LABELS: Record<CategoryKey, string> = {
+    all: T.ach_cat_all,
+    streak: T.ach_cat_streak,
+    completion: T.ach_cat_completion,
+    xp: T.ach_cat_xp,
+    social: T.ach_cat_social,
+    shop: T.ach_cat_shop,
+    special: T.ach_cat_special,
+  };
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -153,8 +164,16 @@ export default function AchievementsScreen() {
       ? achievements
       : achievements.filter((a) => a.category === activeCategory);
 
+  // Sort: unlocked first, then locked sorted by progress descending
+  // (so users see what's "almost done" right after their wins)
   const unlocked = filtered.filter((a) => a.isUnlocked);
-  const locked = filtered.filter((a) => !a.isUnlocked);
+  const locked = filtered
+    .filter((a) => !a.isUnlocked)
+    .sort((a, b) => {
+      const ap = a.threshold > 0 ? (a.currentValue ?? 0) / a.threshold : 0;
+      const bp = b.threshold > 0 ? (b.currentValue ?? 0) / b.threshold : 0;
+      return bp - ap;
+    });
   const sorted = [...unlocked, ...locked];
 
   const totalUnlocked = achievements.filter((a) => a.isUnlocked).length;
@@ -163,8 +182,8 @@ export default function AchievementsScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Header */}
       <View style={styles.header}>
-        <PixelButton title="Back" onPress={() => router.back()} variant="ghost" />
-        <Text style={styles.title}>ACHIEVEMENTS</Text>
+        <PixelButton title={T.ach_back} onPress={() => router.back()} variant="ghost" />
+        <Text style={styles.title}>{T.ach_title}</Text>
         <Text style={styles.counter}>
           {totalUnlocked}/{achievements.length}
         </Text>
@@ -187,7 +206,7 @@ export default function AchievementsScreen() {
         <Text style={styles.summaryLabel}>
           {achievements.length > 0
             ? Math.round((totalUnlocked / achievements.length) * 100)
-            : 0}% complete
+            : 0}{T.ach_progress}
         </Text>
       </View>
 
@@ -198,35 +217,35 @@ export default function AchievementsScreen() {
         style={styles.filterScroll}
         contentContainerStyle={styles.filterRow}
       >
-        {CATEGORIES.map((cat) => {
+        {CATEGORY_KEYS.map((key) => {
           const count =
-            cat.key === 'all'
+            key === 'all'
               ? achievements.length
-              : achievements.filter((a) => a.category === cat.key).length;
-          if (cat.key !== 'all' && count === 0) return null;
+              : achievements.filter((a) => a.category === key).length;
+          if (key !== 'all' && count === 0) return null;
 
           return (
             <Pressable
-              key={cat.key}
+              key={key}
               style={[
                 styles.filterChip,
-                activeCategory === cat.key && styles.filterChipActive,
+                activeCategory === key && styles.filterChipActive,
               ]}
-              onPress={() => setActiveCategory(cat.key)}
+              onPress={() => setActiveCategory(key)}
             >
-              <Text style={styles.filterIcon}>{cat.icon}</Text>
+              <Text style={styles.filterIcon}>{CATEGORY_ICONS[key]}</Text>
               <Text
                 style={[
                   styles.filterLabel,
-                  activeCategory === cat.key && styles.filterLabelActive,
+                  activeCategory === key && styles.filterLabelActive,
                 ]}
               >
-                {cat.label}
+                {CATEGORY_LABELS[key]}
               </Text>
               <Text
                 style={[
                   styles.filterCount,
-                  activeCategory === cat.key && styles.filterCountActive,
+                  activeCategory === key && styles.filterCountActive,
                 ]}
               >
                 {count}
@@ -244,7 +263,7 @@ export default function AchievementsScreen() {
         />
       ) : sorted.length === 0 ? (
         <View style={styles.empty}>
-          <Text style={styles.emptyText}>No achievements in this category.</Text>
+          <Text style={styles.emptyText}>{T.ach_empty}</Text>
         </View>
       ) : (
         <FlatList
