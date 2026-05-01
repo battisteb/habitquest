@@ -11,6 +11,7 @@ import { authStore$ } from '../src/features/auth/stores/auth-store';
 import { storage } from '../src/lib/storage/mmkv';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
+import { useT } from '../src/lib/i18n';
 
 const ONBOARDING_KEY = 'onboarding-completed';
 
@@ -22,32 +23,9 @@ export function markOnboardingComplete(): void {
   storage.set(ONBOARDING_KEY, 'true');
 }
 
-// Visual intro slides shown before the avatar + habit-creation steps
-const SLIDES = [
-  {
-    emoji: '⚔️',
-    title: 'YOUR QUEST BEGINS',
-    body: 'HabitQuest turns your daily habits into epic adventures. Complete quests, earn XP, and level up your life.',
-  },
-  {
-    emoji: '🔥',
-    title: 'BUILD STREAKS',
-    body: "Show up every day to keep your streak alive. Miss a day and your streak resets — but you can freeze it with a rest day.",
-  },
-  {
-    emoji: '🏆',
-    title: 'EARN REWARDS',
-    body: 'Level up your hero, unlock themes and avatar cosmetics, and compete with friends on the leaderboard.',
-  },
-];
+const SLIDE_EMOJIS = ['⚔️', '🔥', '🏆'];
 
-const QUICK_HABITS = [
-  { name: 'Drink 2L of water', category: 'health' },
-  { name: 'Read for 20 minutes', category: 'learning' },
-  { name: 'Exercise 30 minutes', category: 'fitness' },
-  { name: 'Meditate 10 minutes', category: 'mindfulness' },
-  { name: 'No social media before noon', category: 'productivity' },
-];
+const QUICK_HABIT_CATEGORIES = ['health', 'learning', 'fitness', 'mindfulness', 'productivity'] as const;
 
 // Skin tone swatches
 const SKIN_SWATCHES = ['#f4c98a', '#e8a87c', '#d4845a', '#c46c3c', '#a0522d', '#7a3b1e', '#4a2810', '#fce4c8'];
@@ -89,15 +67,14 @@ const swatchStyles = StyleSheet.create({
   swatchSelected: { borderColor: '#ffffff', borderWidth: 3 },
 });
 
-// Step indices:
-// 0..SLIDES.length-1 → intro slides
-// SLIDES.length → avatar customization
-// SLIDES.length+1 → first habit creation
-const AVATAR_STEP = SLIDES.length;
-const HABIT_STEP = SLIDES.length + 1;
-const TOTAL_STEPS = SLIDES.length + 2;
+// Step indices: 0..2 → intro slides, 3 → avatar, 4 → first habit
+const SLIDE_COUNT = 3;
+const AVATAR_STEP = SLIDE_COUNT;
+const HABIT_STEP = SLIDE_COUNT + 1;
+const TOTAL_STEPS = SLIDE_COUNT + 2;
 
 export default function OnboardingScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
   const insets = useSafeAreaInsets();
@@ -112,11 +89,31 @@ export default function OnboardingScreen() {
   const [hairColor, setHairColor] = useState('#4a3728');
   const [eyeColor, setEyeColor] = useState('#1a1a2e');
 
-  const isIntroSlide = slideIndex < SLIDES.length;
+  const slides = useMemo(
+    () => [
+      { emoji: SLIDE_EMOJIS[0], title: T.onb_slide1_title, body: T.onb_slide1_body },
+      { emoji: SLIDE_EMOJIS[1], title: T.onb_slide2_title, body: T.onb_slide2_body },
+      { emoji: SLIDE_EMOJIS[2], title: T.onb_slide3_title, body: T.onb_slide3_body },
+    ],
+    [T],
+  );
+
+  const quickHabits = useMemo(
+    () => [
+      { name: T.onb_quick_water, category: QUICK_HABIT_CATEGORIES[0] },
+      { name: T.onb_quick_read, category: QUICK_HABIT_CATEGORIES[1] },
+      { name: T.onb_quick_exercise, category: QUICK_HABIT_CATEGORIES[2] },
+      { name: T.onb_quick_meditate, category: QUICK_HABIT_CATEGORIES[3] },
+      { name: T.onb_quick_no_social, category: QUICK_HABIT_CATEGORIES[4] },
+    ],
+    [T],
+  );
+
+  const isIntroSlide = slideIndex < SLIDE_COUNT;
   const isAvatarStep = slideIndex === AVATAR_STEP;
   const isHabitStep = slideIndex === HABIT_STEP;
-  const currentSlide = isIntroSlide ? SLIDES[slideIndex] : null;
-  const isLastIntroSlide = slideIndex === SLIDES.length - 1;
+  const currentSlide = isIntroSlide ? slides[slideIndex] : null;
+  const isLastIntroSlide = slideIndex === SLIDE_COUNT - 1;
 
   async function handleFinish() {
     setIsCreating(true);
@@ -127,7 +124,7 @@ export default function OnboardingScreen() {
 
       // Create first habit
       if (selectedQuick !== null) {
-        const h = QUICK_HABITS[selectedQuick];
+        const h = quickHabits[selectedQuick];
         await createHabit(h.name, h.category);
       } else if (customHabit.trim()) {
         await createHabit(customHabit.trim(), 'general');
@@ -176,21 +173,21 @@ export default function OnboardingScreen() {
           <View style={styles.btnRow}>
             {slideIndex > 0 && (
               <PixelButton
-                title="Back"
+                title={T.onb_back}
                 onPress={() => setSlideIndex((s) => s - 1)}
                 variant="ghost"
                 style={{ flex: 1 }}
               />
             )}
             <PixelButton
-              title={isLastIntroSlide ? "MEET YOUR HERO →" : 'Next'}
+              title={isLastIntroSlide ? T.onb_meet_hero : T.onb_next}
               onPress={() => setSlideIndex((s) => s + 1)}
               style={{ flex: 1 }}
             />
           </View>
 
           <Pressable onPress={handleSkip}>
-            <Text style={styles.skip}>Skip intro</Text>
+            <Text style={styles.skip}>{T.onb_skip_intro}</Text>
           </Pressable>
         </View>
       )}
@@ -202,8 +199,8 @@ export default function OnboardingScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.slideTitle}>MEET YOUR HERO</Text>
-          <Text style={styles.body}>Customize your pixel avatar. You can always change this later.</Text>
+          <Text style={styles.slideTitle}>{T.onb_avatar_title}</Text>
+          <Text style={styles.body}>{T.onb_avatar_body}</Text>
 
           {/* Live avatar preview */}
           <View style={styles.avatarPreview}>
@@ -215,19 +212,19 @@ export default function OnboardingScreen() {
             />
           </View>
 
-          <SwatchRow label="SKIN TONE" swatches={SKIN_SWATCHES} selected={skinColor} onSelect={setSkinColor} />
-          <SwatchRow label="HAIR COLOR" swatches={HAIR_SWATCHES} selected={hairColor} onSelect={setHairColor} />
-          <SwatchRow label="EYE COLOR" swatches={EYE_SWATCHES} selected={eyeColor} onSelect={setEyeColor} />
+          <SwatchRow label={T.onb_skin_label} swatches={SKIN_SWATCHES} selected={skinColor} onSelect={setSkinColor} />
+          <SwatchRow label={T.onb_hair_label} swatches={HAIR_SWATCHES} selected={hairColor} onSelect={setHairColor} />
+          <SwatchRow label={T.onb_eye_label} swatches={EYE_SWATCHES} selected={eyeColor} onSelect={setEyeColor} />
 
           <View style={styles.btnRow}>
             <PixelButton
-              title="Back"
+              title={T.onb_back}
               onPress={() => setSlideIndex((s) => s - 1)}
               variant="ghost"
               style={{ flex: 1 }}
             />
             <PixelButton
-              title="FIRST QUEST →"
+              title={T.onb_first_quest}
               onPress={() => setSlideIndex(HABIT_STEP)}
               style={{ flex: 1 }}
             />
@@ -242,14 +239,12 @@ export default function OnboardingScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.title}>Your First Quest</Text>
-          <Text style={styles.body}>
-            {"Let's create your first habit to get started. You can always add more later."}
-          </Text>
+          <Text style={styles.title}>{T.onb_habit_title}</Text>
+          <Text style={styles.body}>{T.onb_habit_body}</Text>
 
           {/* Quick picks */}
-          <Text style={styles.sectionLabel}>QUICK PICK</Text>
-          {QUICK_HABITS.map((h, i) => (
+          <Text style={styles.sectionLabel}>{T.onb_quick_pick}</Text>
+          {quickHabits.map((h, i) => (
             <Pressable
               key={i}
               style={[styles.quickPick, selectedQuick === i && styles.quickPickSelected]}
@@ -269,7 +264,7 @@ export default function OnboardingScreen() {
             </Pressable>
           ))}
 
-          <Text style={[styles.sectionLabel, { marginTop: spacing.md }]}>OR CUSTOM</Text>
+          <Text style={[styles.sectionLabel, { marginTop: spacing.md }]}>{T.onb_or_custom}</Text>
           <PixelInput
             label=""
             value={customHabit}
@@ -277,21 +272,21 @@ export default function OnboardingScreen() {
               setCustomHabit(t);
               setSelectedQuick(null);
             }}
-            placeholder="Type your own habit..."
+            placeholder={T.onb_habit_placeholder}
           />
 
           <View style={styles.actions}>
             <PixelButton
-              title="Back"
+              title={T.onb_back}
               onPress={() => setSlideIndex(AVATAR_STEP)}
               variant="ghost"
             />
             <PixelButton
-              title={isCreating ? 'Creating...' : 'Start Your Quest!'}
+              title={isCreating ? T.onb_creating : T.onb_start_quest}
               onPress={handleFinish}
               disabled={isCreating || (selectedQuick === null && !customHabit.trim())}
             />
-            <PixelButton title="Skip" onPress={handleSkip} variant="ghost" />
+            <PixelButton title={T.onb_skip} onPress={handleSkip} variant="ghost" />
           </View>
         </ScrollView>
       )}

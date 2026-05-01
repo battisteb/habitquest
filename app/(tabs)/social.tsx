@@ -33,6 +33,7 @@ import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
 
@@ -40,6 +41,7 @@ const MEDAL = ['🥇', '🥈', '🥉'];
 const MEDAL_COLORS = [colors.accent, '#c0c0c0', '#cd7f32'];
 
 export default function SocialScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
@@ -280,18 +282,18 @@ export default function SocialScreen() {
   const challengeCount = activeChallenges.length + pendingChallenges.length;
 
   const TABS: { key: Tab; label: string; badge?: number }[] = [
-    { key: 'leaderboard', label: '🏆 RANK' },
-    { key: 'friends', label: '👥 FRIENDS', badge: pendingReceived.length },
-    { key: 'challenges', label: '⚔️ DUELS', badge: pendingChallenges.length },
-    { key: 'streaks', label: '🔥 STREAKS' },
-    { key: 'search', label: '🔍 SEARCH' },
+    { key: 'leaderboard', label: T.social_tab_rank },
+    { key: 'friends', label: T.social_tab_friends, badge: pendingReceived.length },
+    { key: 'challenges', label: T.social_tab_duels, badge: pendingChallenges.length },
+    { key: 'streaks', label: T.social_tab_streaks },
+    { key: 'search', label: T.social_tab_search },
   ];
 
   // ── Leaderboard ────────────────────────────────────────────────────────────
   const renderLeaderboard = () => {
     const emptyText = lbScope === 'friends'
-      ? 'Add friends to see the leaderboard!'
-      : 'No players yet — be the first!';
+      ? T.social_lb_empty_friends
+      : T.social_lb_empty_global;
 
     return (
       <>
@@ -302,7 +304,7 @@ export default function SocialScreen() {
             onPress={() => setLbScope('friends')}
           >
             <Text style={[styles.scopeBtnText, lbScope === 'friends' && styles.scopeBtnTextActive]}>
-              👥 FRIENDS
+              👥 {T.social_scope_friends}
             </Text>
           </Pressable>
           <Pressable
@@ -310,7 +312,7 @@ export default function SocialScreen() {
             onPress={() => setLbScope('global')}
           >
             <Text style={[styles.scopeBtnText, lbScope === 'global' && styles.scopeBtnTextActive]}>
-              🌍 GLOBAL
+              🌍 {T.social_scope_global}
             </Text>
           </Pressable>
         </View>
@@ -372,7 +374,7 @@ export default function SocialScreen() {
                 </View>
               )}
             </View>
-            {rest.length > 0 && <Text style={styles.restLabel}>OTHER RANKINGS</Text>}
+            {rest.length > 0 && <Text style={styles.restLabel}>{T.social_other_rankings}</Text>}
           </View>
         }
         renderItem={({ item, index }) => {
@@ -417,7 +419,7 @@ export default function SocialScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>👥</Text>
-            <Text style={styles.emptyText}>No friends yet.{'\n'}Use SEARCH to find people!</Text>
+            <Text style={styles.emptyText}>{T.social_friends_empty}</Text>
           </View>
         }
         renderItem={({ item }) => {
@@ -428,7 +430,7 @@ export default function SocialScreen() {
             return (
               <View style={[styles.friendCard, styles.friendCardPending]}>
                 <View style={styles.friendCardLeft}>
-                  <Text style={styles.pendingBadge}>REQUEST</Text>
+                  <Text style={styles.pendingBadge}>{T.social_request_badge}</Text>
                   <Text style={styles.friendName}>{profile?.username ?? '—'}</Text>
                   {rank && <Text style={[styles.friendRank, { color: rank.color }]}>{rank.name}</Text>}
                 </View>
@@ -461,10 +463,14 @@ export default function SocialScreen() {
                 />
                 <PixelButton
                   title="✕"
-                  onPress={() => Alert.alert('Remove friend', `Remove ${profile?.username}?`, [
-                    { text: 'Cancel', style: 'cancel' },
-                    { text: 'Remove', style: 'destructive', onPress: () => removeFriend(item.id) },
-                  ])}
+                  onPress={() => Alert.alert(
+                    T.social_remove_friend_title,
+                    T.social_remove_friend_msg.replace('{name}', profile?.username ?? ''),
+                    [
+                      { text: T.social_cancel, style: 'cancel' },
+                      { text: T.social_remove, style: 'destructive', onPress: () => removeFriend(item.id) },
+                    ],
+                  )}
                   variant="ghost"
                   style={styles.actionBtn}
                 />
@@ -499,7 +505,7 @@ export default function SocialScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>⚔️</Text>
-            <Text style={styles.emptyText}>No duels yet.{'\n'}Challenge a friend!</Text>
+            <Text style={styles.emptyText}>{T.social_duels_empty}</Text>
           </View>
         }
         renderItem={({ item }) => {
@@ -524,7 +530,7 @@ export default function SocialScreen() {
               </View>
               <View style={styles.challengeVs}>
                 <Text style={styles.vsName}>{creator?.username ?? '—'}</Text>
-                <Text style={styles.vsText}>VS</Text>
+                <Text style={styles.vsText}>{T.social_duel_vs}</Text>
                 <Text style={styles.vsName}>{opponent?.username ?? '—'}</Text>
               </View>
               <View style={styles.challengeProgress}>
@@ -563,7 +569,7 @@ export default function SocialScreen() {
       return (
         <View style={styles.empty}>
           <Text style={styles.emptyEmoji}>🔥</Text>
-          <Text style={styles.emptyText}>Add friends to compare streaks!</Text>
+          <Text style={styles.emptyText}>{T.social_streaks_empty}</Text>
         </View>
       );
     }
@@ -603,7 +609,7 @@ export default function SocialScreen() {
     <View style={styles.searchContainer}>
       <TextInput
         style={styles.searchInput}
-        placeholder="Search by username..."
+        placeholder={T.social_search_placeholder}
         placeholderTextColor={colors.textMuted}
         value={searchQuery}
         onChangeText={(text) => { setSearchQuery(text); searchUsers(text); }}
@@ -618,7 +624,7 @@ export default function SocialScreen() {
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>{searchQuery.length >= 2 ? '🙈' : '🔍'}</Text>
             <Text style={styles.emptyText}>
-              {searchQuery.length >= 2 ? 'No users found' : 'Type at least 2 characters'}
+              {searchQuery.length >= 2 ? T.social_search_empty_none : T.social_search_empty_short}
             </Text>
           </View>
         }
@@ -637,11 +643,11 @@ export default function SocialScreen() {
                 </View>
               </View>
               {alreadyFriend ? (
-                <Text style={styles.statusChip}>Friends ✓</Text>
+                <Text style={styles.statusChip}>{T.social_already_friend} ✓</Text>
               ) : alreadySent ? (
-                <Text style={styles.statusChip}>Sent ⏳</Text>
+                <Text style={styles.statusChip}>{T.social_request_sent} ⏳</Text>
               ) : (
-                <PixelButton title="+ Add" onPress={() => sendFriendRequest(item.id)} style={styles.actionBtn} />
+                <PixelButton title={`+ ${T.social_send_request}`} onPress={() => sendFriendRequest(item.id)} style={styles.actionBtn} />
               )}
             </View>
           );
@@ -652,7 +658,7 @@ export default function SocialScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
-      <Text style={styles.title}>SOCIAL</Text>
+      <Text style={styles.title}>{T.social_title}</Text>
 
       {/* Tab bar */}
       <View style={styles.tabBar}>

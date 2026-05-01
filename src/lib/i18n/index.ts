@@ -114,6 +114,76 @@ const FR = {
   ach_cat_social: 'SOCIAL',
   ach_cat_shop: 'BOUTIQUE',
   ach_cat_special: 'SPÉCIAUX',
+  // Onboarding — slides
+  onb_slide1_title: 'TA QUÊTE COMMENCE',
+  onb_slide1_body: 'HabitQuest transforme tes habitudes quotidiennes en aventures épiques. Complète tes quêtes, gagne de l\'XP et améliore ta vie.',
+  onb_slide2_title: 'CONSTRUIS TES SÉRIES',
+  onb_slide2_body: 'Reviens chaque jour pour préserver ta série. Si tu manques un jour, ta série retombe à 0 — mais tu peux la geler avec un jour de repos.',
+  onb_slide3_title: 'GAGNE DES RÉCOMPENSES',
+  onb_slide3_body: 'Fais évoluer ton héros, débloque des thèmes et des cosmétiques d\'avatar, et défie tes amis dans le classement.',
+  // Onboarding — buttons & navigation
+  onb_back: 'Retour',
+  onb_next: 'Suivant',
+  onb_meet_hero: 'CRÉER MON HÉROS →',
+  onb_first_quest: 'PREMIÈRE QUÊTE →',
+  onb_skip_intro: 'Passer l\'intro',
+  onb_skip: 'Passer',
+  // Onboarding — avatar step
+  onb_avatar_title: 'CRÉE TON HÉROS',
+  onb_avatar_body: 'Personnalise ton avatar pixel. Tu pourras toujours le modifier plus tard.',
+  onb_skin_label: 'PEAU',
+  onb_hair_label: 'CHEVEUX',
+  onb_eye_label: 'YEUX',
+  // Onboarding — habit step
+  onb_habit_title: 'Ta Première Quête',
+  onb_habit_body: 'Crée ta première habitude pour démarrer. Tu pourras en ajouter d\'autres plus tard.',
+  onb_quick_pick: 'CHOIX RAPIDE',
+  onb_or_custom: 'OU PERSONNALISÉ',
+  onb_habit_placeholder: 'Tape ton habitude…',
+  onb_creating: 'Création…',
+  onb_start_quest: 'Démarrer la quête !',
+  // Onboarding — quick habit suggestions
+  onb_quick_water: 'Boire 2L d\'eau',
+  onb_quick_read: 'Lire 20 minutes',
+  onb_quick_exercise: 'Faire 30 min de sport',
+  onb_quick_meditate: 'Méditer 10 minutes',
+  onb_quick_no_social: 'Pas de réseaux sociaux le matin',
+  // Social screen — title + tabs
+  social_title: 'SOCIAL',
+  social_tab_rank: '🏆 CLASS.',
+  social_tab_friends: '👥 AMIS',
+  social_tab_duels: '⚔️ DUELS',
+  social_tab_streaks: '🔥 SÉRIES',
+  social_tab_search: '🔍 RECHERCHE',
+  // Social — leaderboard
+  social_scope_friends: 'AMIS',
+  social_scope_global: 'GLOBAL',
+  social_other_rankings: 'AUTRES JOUEURS',
+  social_lb_empty_friends: 'Ajoute des amis pour les voir ici !',
+  social_lb_empty_global: 'Aucun joueur trouvé.',
+  // Social — friends
+  social_friends_empty: 'Pas encore d\'amis.\nUtilise RECHERCHE pour en trouver !',
+  social_request_badge: 'DEMANDE',
+  social_accept: 'Accepter',
+  social_decline: 'Refuser',
+  social_remove_friend_title: 'Retirer l\'ami',
+  social_remove_friend_msg: 'Retirer {name} de tes amis ?',
+  social_remove: 'Retirer',
+  social_cancel: 'Annuler',
+  // Social — duels/challenges
+  social_duels_empty: 'Aucun duel.\nDéfie un ami !',
+  social_duel_vs: 'VS',
+  social_duel_accept: 'Accepter',
+  social_duel_decline: 'Refuser',
+  // Social — streaks
+  social_streaks_empty: 'Ajoute des amis pour comparer vos séries !',
+  // Social — search
+  social_search_placeholder: 'Recherche par nom d\'utilisateur…',
+  social_search_empty_short: 'Tape au moins 2 caractères',
+  social_search_empty_none: 'Aucun utilisateur trouvé.',
+  social_send_request: 'Envoyer demande',
+  social_request_sent: 'Demande envoyée',
+  social_already_friend: 'Déjà ami',
 } as const;
 
 const EN = {
@@ -212,6 +282,76 @@ const EN = {
   ach_cat_social: 'SOCIAL',
   ach_cat_shop: 'SHOP',
   ach_cat_special: 'SPECIAL',
+  // Onboarding — slides
+  onb_slide1_title: 'YOUR QUEST BEGINS',
+  onb_slide1_body: 'HabitQuest turns your daily habits into epic adventures. Complete quests, earn XP, and level up your life.',
+  onb_slide2_title: 'BUILD STREAKS',
+  onb_slide2_body: 'Show up every day to keep your streak alive. Miss a day and your streak resets — but you can freeze it with a rest day.',
+  onb_slide3_title: 'EARN REWARDS',
+  onb_slide3_body: 'Level up your hero, unlock themes and avatar cosmetics, and compete with friends on the leaderboard.',
+  // Onboarding — buttons & navigation
+  onb_back: 'Back',
+  onb_next: 'Next',
+  onb_meet_hero: 'MEET YOUR HERO →',
+  onb_first_quest: 'FIRST QUEST →',
+  onb_skip_intro: 'Skip intro',
+  onb_skip: 'Skip',
+  // Onboarding — avatar step
+  onb_avatar_title: 'MEET YOUR HERO',
+  onb_avatar_body: 'Customize your pixel avatar. You can always change this later.',
+  onb_skin_label: 'SKIN TONE',
+  onb_hair_label: 'HAIR COLOR',
+  onb_eye_label: 'EYE COLOR',
+  // Onboarding — habit step
+  onb_habit_title: 'Your First Quest',
+  onb_habit_body: "Let's create your first habit to get started. You can always add more later.",
+  onb_quick_pick: 'QUICK PICK',
+  onb_or_custom: 'OR CUSTOM',
+  onb_habit_placeholder: 'Type your own habit…',
+  onb_creating: 'Creating…',
+  onb_start_quest: 'Start Your Quest!',
+  // Onboarding — quick habit suggestions
+  onb_quick_water: 'Drink 2L of water',
+  onb_quick_read: 'Read for 20 minutes',
+  onb_quick_exercise: 'Exercise 30 minutes',
+  onb_quick_meditate: 'Meditate 10 minutes',
+  onb_quick_no_social: 'No social media before noon',
+  // Social screen — title + tabs
+  social_title: 'SOCIAL',
+  social_tab_rank: '🏆 RANK',
+  social_tab_friends: '👥 FRIENDS',
+  social_tab_duels: '⚔️ DUELS',
+  social_tab_streaks: '🔥 STREAKS',
+  social_tab_search: '🔍 SEARCH',
+  // Social — leaderboard
+  social_scope_friends: 'FRIENDS',
+  social_scope_global: 'GLOBAL',
+  social_other_rankings: 'OTHER RANKINGS',
+  social_lb_empty_friends: 'Add friends to see them here!',
+  social_lb_empty_global: 'No players found.',
+  // Social — friends
+  social_friends_empty: 'No friends yet.\nUse SEARCH to find people!',
+  social_request_badge: 'REQUEST',
+  social_accept: 'Accept',
+  social_decline: 'Decline',
+  social_remove_friend_title: 'Remove friend',
+  social_remove_friend_msg: 'Remove {name} from friends?',
+  social_remove: 'Remove',
+  social_cancel: 'Cancel',
+  // Social — duels/challenges
+  social_duels_empty: 'No duels yet.\nChallenge a friend!',
+  social_duel_vs: 'VS',
+  social_duel_accept: 'Accept',
+  social_duel_decline: 'Decline',
+  // Social — streaks
+  social_streaks_empty: 'Add friends to compare streaks!',
+  // Social — search
+  social_search_placeholder: 'Search by username…',
+  social_search_empty_short: 'Type at least 2 characters',
+  social_search_empty_none: 'No users found.',
+  social_send_request: 'Send request',
+  social_request_sent: 'Request sent',
+  social_already_friend: 'Already friend',
 } as const;
 
 type Strings = Record<keyof typeof FR, string>;
