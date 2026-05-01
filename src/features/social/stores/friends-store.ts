@@ -1,6 +1,8 @@
 import { observable } from '@legendapp/state';
+import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -28,6 +30,13 @@ export const friendsStore$ = observable<FriendsState>({
   pendingSent: [],
   searchResults: [],
   isLoading: false,
+});
+
+syncObservable(friendsStore$, {
+  persist: {
+    name: 'habitquest_friends',
+    plugin: persistPlugin,
+  },
 });
 
 export async function fetchFriends() {

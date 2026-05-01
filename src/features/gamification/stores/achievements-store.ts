@@ -1,6 +1,8 @@
 import { observable } from '@legendapp/state';
+import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
 
 type Achievement = Database['public']['Tables']['achievements']['Row'];
@@ -21,6 +23,13 @@ export const achievementsStore$ = observable<AchievementsState>({
   achievements: [],
   isLoading: false,
   newlyUnlocked: [],
+});
+
+syncObservable(achievementsStore$, {
+  persist: {
+    name: 'habitquest_achievements',
+    plugin: persistPlugin,
+  },
 });
 
 export async function fetchAchievements() {

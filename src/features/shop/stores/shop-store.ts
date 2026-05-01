@@ -1,7 +1,9 @@
 import { observable } from '@legendapp/state';
+import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { refreshProfile } from '../../gamification/stores/profile-store';
+import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
 
 type ShopItem = Database['public']['Tables']['shop_items']['Row'];
@@ -20,6 +22,13 @@ export const shopStore$ = observable<ShopState>({
   equippedSlots: {},
   isLoading: false,
   activeCategory: 'avatar_hat',
+});
+
+syncObservable(shopStore$, {
+  persist: {
+    name: 'habitquest_shop',
+    plugin: persistPlugin,
+  },
 });
 
 export async function fetchShop() {

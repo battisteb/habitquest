@@ -1,5 +1,7 @@
 import { observable, when } from '@legendapp/state';
+import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
+import { persistPlugin } from '../../../lib/storage/persist';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { calculateNewStreak } from '../utils/streak-calculator';
 import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
@@ -31,6 +33,13 @@ export const habitsStore$ = observable<HabitsState>({
   todayCompletions: {},
   weekCompletions: {},
   isLoading: false,
+});
+
+syncObservable(habitsStore$, {
+  persist: {
+    name: 'habitquest_habits',
+    plugin: persistPlugin,
+  },
 });
 
 function todayStart(): string {

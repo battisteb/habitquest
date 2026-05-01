@@ -1,7 +1,9 @@
 import { observable } from '@legendapp/state';
+import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { habitsStore$ } from '../../habits/stores/habits-store';
+import { persistPlugin } from '../../../lib/storage/persist';
 
 export type QuestType = 'complete_habits' | 'complete_category' | 'earn_xp' | 'maintain_streak';
 export type QuestDifficulty = 'easy' | 'normal' | 'hard';
@@ -43,6 +45,13 @@ interface DailyQuestsState {
 export const dailyQuestsStore$ = observable<DailyQuestsState>({
   quests: [],
   isLoading: false,
+});
+
+syncObservable(dailyQuestsStore$, {
+  persist: {
+    name: 'habitquest_daily_quests',
+    plugin: persistPlugin,
+  },
 });
 
 export async function fetchDailyQuests() {

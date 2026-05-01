@@ -1,6 +1,8 @@
 import { observable } from '@legendapp/state';
+import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import { persistPlugin } from '../../../lib/storage/persist';
 import type { Json } from '../../../lib/supabase/types';
 
 export interface InboxNotification {
@@ -23,6 +25,13 @@ export const notificationsStore$ = observable<NotificationsState>({
   items: [],
   unreadCount: 0,
   isLoading: false,
+});
+
+syncObservable(notificationsStore$, {
+  persist: {
+    name: 'habitquest_notifications',
+    plugin: persistPlugin,
+  },
 });
 
 function computeUnreadCount(items: InboxNotification[]): number {
