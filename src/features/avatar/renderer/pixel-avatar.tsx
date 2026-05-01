@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 
 // Pixel scale: each "pixel" is SCALE x SCALE real pixels
@@ -14,7 +15,10 @@ export interface PixelAvatarProps {
   outfit?: string;
   accessory?: string;
   background?: string;
+  /** If provided, locks the bounce frame (use 0 for static previews). Otherwise auto-animates. */
   idleFrame?: number;
+  /** Auto-bounce period in ms (default 700). Ignored when `idleFrame` is set. */
+  idleIntervalMs?: number;
 }
 
 // Format: [x, y, color_key]
@@ -227,8 +231,18 @@ export function PixelAvatar({
   outfit,
   accessory,
   background,
-  idleFrame = 0,
+  idleFrame,
+  idleIntervalMs = 700,
 }: PixelAvatarProps) {
+  // Auto-animate when caller doesn't pin the frame. Static frame for previews.
+  const [autoFrame, setAutoFrame] = useState(0);
+  useEffect(() => {
+    if (idleFrame !== undefined) return;
+    const id = setInterval(() => setAutoFrame((f) => (f + 1) % 2), idleIntervalMs);
+    return () => clearInterval(id);
+  }, [idleFrame, idleIntervalMs]);
+  const frame = idleFrame ?? autoFrame;
+
   const scale = size / SIZE;
   const pixelSize = SCALE * scale;
 
@@ -252,7 +266,7 @@ export function PixelAvatar({
   const bgColors = background && BG_COLORS[background] ? BG_COLORS[background] : BG_COLORS.default;
 
   // Idle bounce offset (in px)
-  const bounceY = idleFrame % 2 === 0 ? 0 : -1 * scale;
+  const bounceY = frame % 2 === 0 ? 0 : -1 * scale;
   // Vertical offset to push body group down (equivalent to translateY: 2 * pixelSize)
   const groupOffsetY = 2 * pixelSize;
 

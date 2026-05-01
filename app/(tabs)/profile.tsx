@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -161,7 +161,6 @@ export default function ProfileScreen() {
   const equippedSlots = use$(shopStore$.equippedSlots);
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const [idleFrame, setIdleFrame] = useState(0);
 
   const skinColor = use$(avatarConfigStore$.skinColor);
   const hairColor = use$(avatarConfigStore$.hairColor);
@@ -176,11 +175,6 @@ export default function ProfileScreen() {
     fetchShop();
     fetchDuels();
     loadAvatarConfig(authStore$.user.get()?.id);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => setIdleFrame((f) => f + 1), 600);
-    return () => clearInterval(interval);
   }, []);
 
   const level = profile?.level ?? 0;
@@ -223,7 +217,6 @@ export default function ProfileScreen() {
                 hat={equippedHat}
                 outfit={equippedOutfit}
                 background={equippedBg}
-                idleFrame={idleFrame}
                 skinColor={skinColor}
                 hairColor={hairColor}
                 eyeColor={eyeColor}

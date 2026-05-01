@@ -444,7 +444,6 @@ export default function ShopScreen() {
             outfit={currentOutfit}
             accessory={currentAccessory}
             background={currentBg}
-            idleFrame={0}
           />
         </View>
         <View style={styles.loadoutSlots}>
