@@ -9,6 +9,7 @@ import { checkAndUnlockAchievements } from '../../gamification/stores/achievemen
 import { updateQuestProgress } from '../../daily-quests/stores/daily-quests-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
+import { triggerStreakMilestone, isMilestone } from '../../gamification/stores/streak-milestone-store';
 import { recordCompletionHour } from '../../notifications/utils/adaptive-timing';
 import { refreshProfile } from '../../gamification/stores/profile-store';
 import { getLevelForXp } from '../../../lib/constants/game-config';
@@ -271,6 +272,12 @@ export async function completeHabit(habitId: string) {
         triggerLevelUp(newLevel);
       }
     }
+  }
+
+  // Check for streak milestone
+  if (isMilestone(newStreak.currentCount) && newStreak.currentCount > currentCount) {
+    const habitName = habit?.name ?? '';
+    triggerStreakMilestone(newStreak.currentCount, habitName);
   }
 
   // Optimistic update

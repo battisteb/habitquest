@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import type { DailyQuestWithTemplate, QuestDifficulty } from '../stores/daily-quests-store';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface DailyQuestCardProps {
   quest: DailyQuestWithTemplate;
@@ -16,14 +17,13 @@ const DIFFICULTY_COLORS: Record<QuestDifficulty, string> = {
   hard: '#9b59b6',
 };
 
-const DIFFICULTY_LABELS: Record<QuestDifficulty, string> = {
-  easy: 'EASY',
-  normal: 'NORMAL',
-  hard: 'HARD',
-};
-
 export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestCardProps) {
+  const T = useT();
   const { themeKey } = useTheme();
+  const DIFFICULTY_LABELS = useMemo<Record<QuestDifficulty, string>>(
+    () => ({ easy: T.dq_diff_easy, normal: T.dq_diff_normal, hard: T.dq_diff_hard }),
+    [T],
+  );
   const styles = useMemo(() => StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
@@ -158,7 +158,7 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
       {/* Paused mode badge */}
       {isPaused && (
         <View style={styles.pausedBadge}>
-          <Text style={styles.pausedBadgeText}>❄️ PAUSED BY FOCUS MODE</Text>
+          <Text style={styles.pausedBadgeText}>{T.dq_paused_label}</Text>
         </View>
       )}
 
@@ -214,7 +214,7 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
           ]}
           onPress={() => onClaim(quest.id)}
         >
-          <Text style={styles.claimButtonText}>CLAIM</Text>
+          <Text style={styles.claimButtonText}>{T.dq_claim_btn}</Text>
         </Pressable>
       )}
     </View>

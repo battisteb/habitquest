@@ -610,6 +610,14 @@ const FR = {
   habit_edit_save: 'Enregistrer',
   habit_edit_error_title: 'Erreur',
   habit_edit_error_msg: "Impossible de modifier l'habitude",
+  // Daily quests section
+  dq_section_title: 'QUÊTES DU JOUR',
+  dq_section_reset_hint: 'Se renouvelle chaque jour',
+  dq_diff_easy: 'FACILE',
+  dq_diff_normal: 'NORMAL',
+  dq_diff_hard: 'DIFFICILE',
+  dq_paused_label: '❄️ EN PAUSE (MODE FOCUS)',
+  dq_claim_btn: 'RÉCLAMER',
 } as const;
 
 const EN = {
@@ -1204,6 +1212,14 @@ const EN = {
   habit_edit_save: 'Save changes',
   habit_edit_error_title: 'Error',
   habit_edit_error_msg: 'Failed to update habit',
+  // Daily quests section
+  dq_section_title: 'DAILY QUESTS',
+  dq_section_reset_hint: 'Resets daily',
+  dq_diff_easy: 'EASY',
+  dq_diff_normal: 'NORMAL',
+  dq_diff_hard: 'HARD',
+  dq_paused_label: '❄️ PAUSED BY FOCUS MODE',
+  dq_claim_btn: 'CLAIM',
 } as const;
 
 type Strings = Record<keyof typeof FR, string>;

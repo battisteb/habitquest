@@ -4,12 +4,14 @@ import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/toke
 import { useDailyQuests } from '../hooks/use-daily-quests';
 import { DailyQuestCard } from './daily-quest-card';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface DailyQuestsSectionProps {
   pausedCategories?: string[];
 }
 
 export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSectionProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -76,7 +78,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>DAILY QUESTS</Text>
+          <Text style={styles.headerTitle}>{T.dq_section_title}</Text>
         </View>
         <ActivityIndicator color={colors.accent} size="small" />
       </View>
@@ -91,14 +93,14 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>DAILY QUESTS</Text>
+          <Text style={styles.headerTitle}>{T.dq_section_title}</Text>
           <View style={styles.counterBadge}>
             <Text style={styles.counterText}>
               {completedCount}/{totalCount}
             </Text>
           </View>
         </View>
-        <Text style={styles.refreshHint}>Resets daily</Text>
+        <Text style={styles.refreshHint}>{T.dq_section_reset_hint}</Text>
       </View>
       <View style={styles.questList}>
         {quests.map((quest) => {

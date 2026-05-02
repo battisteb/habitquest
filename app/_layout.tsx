@@ -7,8 +7,10 @@ import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth, authStore$ } from '../src/features/auth/stores/auth-store';
 import { hasCompletedOnboarding } from './onboarding';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
+import { streakMilestoneStore$, dismissStreakMilestone } from '../src/features/gamification/stores/streak-milestone-store';
 import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';
 import { LevelUpOverlay } from '../src/ui/animations/level-up-overlay';
+import { StreakMilestoneOverlay } from '../src/ui/animations/streak-milestone-overlay';
 import { AchievementToast } from '../src/ui/animations/achievement-toast';
 import {
   configureNotifications,
@@ -59,6 +61,9 @@ function ThemedApp() {
   const { themeKey } = useTheme();
   const showLevelUp = use$(levelUpStore$.showLevelUp);
   const newLevel = use$(levelUpStore$.newLevel);
+  const showStreakMilestone = use$(streakMilestoneStore$.visible);
+  const milestoneStreakCount = use$(streakMilestoneStore$.streakCount);
+  const milestoneHabitName = use$(streakMilestoneStore$.habitName);
   const newlyUnlocked = use$(achievementsStore$.newlyUnlocked);
   const currentToast = newlyUnlocked[0] ?? null;
   const authUserId = use$(authStore$.user)?.id;
@@ -95,6 +100,12 @@ function ThemedApp() {
         visible={showLevelUp}
         newLevel={newLevel}
         onComplete={dismissLevelUp}
+      />
+      <StreakMilestoneOverlay
+        visible={showStreakMilestone}
+        streakCount={milestoneStreakCount}
+        habitName={milestoneHabitName}
+        onComplete={dismissStreakMilestone}
       />
       <OfflineBanner />
       {currentToast && (
