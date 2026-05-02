@@ -16,6 +16,7 @@ import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { notificationsStore$ } from '../../src/features/notifications/stores/notifications-store';
 import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
+import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
@@ -292,6 +293,9 @@ export default function ProfileScreen() {
                 <Text style={styles.miniStatLabel}>{T.profile_stat_win_rate}</Text>
               </View>
             </View>
+
+            {/* Monthly activity heatmap */}
+            <MonthlyHeatmap />
 
             {/* Single action */}
             <PixelButton

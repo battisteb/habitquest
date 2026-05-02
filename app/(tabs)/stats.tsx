@@ -64,7 +64,7 @@ export default function StatsScreen() {
 
       {stats.weeklyCompletions.length > 0 && <WeeklyChart data={stats.weeklyCompletions} />}
 
-      {stats.monthlyCompletions.length > 0 && <MonthlyHeatmap data={stats.monthlyCompletions} />}
+      <MonthlyHeatmap />
 
       {/* Training stats */}
       {(sessions.length > 0 || decks.length > 0) && (

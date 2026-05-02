@@ -1,32 +1,32 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
-import { useTheme } from '../../../ui/theme/theme-context';
+import { use$ } from '@legendapp/state/react';
+import { lang$ } from '../../../lib/i18n';
+import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { useMonthlyCompletions } from '../hooks/use-monthly-completions';
 
-interface MonthlyHeatmapProps {
-  data: { date: string; count: number }[];
+const MONTH_NAMES_FR = [
+  'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
+];
+const MONTH_NAMES_EN = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+const DAY_LABELS_FR = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+const DAY_LABELS_EN = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+function countToColor(count: number): string {
+  if (count === 0) return colors.border;
+  if (count === 1) return '#1a5c3a';
+  if (count === 2) return '#22874f';
+  if (count <= 4) return '#2ecc71';
+  return '#4ecca3';
 }
 
-const DOT_SIZE = 20;
-const DOT_GAP = 3;
+const CELL_SIZE = 34;
 
-const HEAT_COLORS = {
-  empty: '#2D2D4E',
-  low: '#2d5a27',
-  mid: '#4CAF50',
-  high: '#8BC34A',
-} as const;
-
-function getDotColor(count: number): string {
-  if (count === 0) return HEAT_COLORS.empty;
-  if (count === 1) return HEAT_COLORS.low;
-  if (count === 2) return HEAT_COLORS.mid;
-  return HEAT_COLORS.high;
-}
-
-export function MonthlyHeatmap({ data }: MonthlyHeatmapProps) {
-  const { themeKey } = useTheme();
-  const styles = useMemo(() => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
     borderRadius: 4,
@@ -36,73 +36,122 @@ export function MonthlyHeatmap({ data }: MonthlyHeatmapProps) {
     gap: spacing.sm,
   },
   title: {
-    color: colors.textSecondary,
     fontSize: fontSizes.xs,
     fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+  },
+  dayLabelsRow: {
+    flexDirection: 'row',
+    gap: 2,
+  },
+  dayLabel: {
+    width: CELL_SIZE,
+    textAlign: 'center',
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: colors.textMuted,
     letterSpacing: 1,
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: DOT_GAP,
+    gap: 2,
   },
-  dot: {
-    width: DOT_SIZE,
-    height: DOT_SIZE,
+  cell: {
+    width: CELL_SIZE,
+    height: CELL_SIZE,
     borderRadius: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  todayCell: {
+    borderWidth: 2,
+    borderColor: colors.primary,
+  },
+  todayDot: {
+    fontSize: 18,
+    color: colors.primary,
+    lineHeight: 18,
   },
   legend: {
     flexDirection: 'row',
-    gap: spacing.md,
+    gap: 4,
+    alignSelf: 'flex-end',
     alignItems: 'center',
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
   },
   legendDot: {
     width: 10,
     height: 10,
     borderRadius: 2,
   },
-  legendLabel: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
-  },
-}), [themeKey]);
+});
+
+export function MonthlyHeatmap() {
+  const lang = use$(lang$);
+  const { counts, isLoading, year, month } = useMonthlyCompletions();
+
+  const monthName = (lang === 'fr' ? MONTH_NAMES_FR : MONTH_NAMES_EN)[month];
+  const dayLabels = lang === 'fr' ? DAY_LABELS_FR : DAY_LABELS_EN;
+
+  const cells = useMemo(() => {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    // Convert Sun=0…Sat=6 to Mon=0…Sun=6
+    const firstDow = new Date(year, month, 1).getDay();
+    const offset = firstDow === 0 ? 6 : firstDow - 1;
+
+    const result: Array<{ day: number | null; dateStr: string | null }> = [];
+    for (let i = 0; i < offset; i++) result.push({ day: null, dateStr: null });
+    for (let d = 1; d <= daysInMonth; d++) {
+      const mm = String(month + 1).padStart(2, '0');
+      const dd = String(d).padStart(2, '0');
+      result.push({ day: d, dateStr: `${year}-${mm}-${dd}` });
+    }
+    return result;
+  }, [year, month]);
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  if (isLoading) return null;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>LAST 30 DAYS</Text>
-      <View style={styles.grid}>
-        {data.map((day) => (
-          <View
-            key={day.date}
-            style={[styles.dot, { backgroundColor: getDotColor(day.count) }]}
-          />
+      <Text style={styles.title}>
+        {monthName.toUpperCase()} {year}
+      </Text>
+
+      <View style={styles.dayLabelsRow}>
+        {dayLabels.map((l, i) => (
+          <Text key={i} style={styles.dayLabel}>{l}</Text>
         ))}
       </View>
+
+      <View style={styles.grid}>
+        {cells.map((cell, i) => {
+          if (!cell.dateStr) return <View key={i} style={styles.cell} />;
+          const count = counts[cell.dateStr] ?? 0;
+          const isToday = cell.dateStr === today;
+          const isFuture = cell.dateStr > today;
+          return (
+            <View
+              key={i}
+              style={[
+                styles.cell,
+                { backgroundColor: isFuture ? 'transparent' : countToColor(count) },
+                isToday && styles.todayCell,
+              ]}
+            >
+              {isToday && <Text style={styles.todayDot}>·</Text>}
+            </View>
+          );
+        })}
+      </View>
+
       <View style={styles.legend}>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.empty }]} />
-          <Text style={styles.legendLabel}>none</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.low }]} />
-          <Text style={styles.legendLabel}>1</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.mid }]} />
-          <Text style={styles.legendLabel}>2</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: HEAT_COLORS.high }]} />
-          <Text style={styles.legendLabel}>3+</Text>
-        </View>
+        {[0, 1, 2, 4, 5].map((n) => (
+          <View key={n} style={[styles.legendDot, { backgroundColor: countToColor(n) }]} />
+        ))}
       </View>
     </View>
   );
 }
-
-
