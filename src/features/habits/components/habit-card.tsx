@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Pressable, View, Text, StyleSheet, Animated } from 'react-native';
+import { Pressable, View, Text, StyleSheet, Animated as RNAnimated } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  runOnJS,
+  interpolate,
+  Extrapolation,
+} from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
@@ -52,7 +61,6 @@ function getCategoryConfig(category: string) {
   return CATEGORY_CONFIG[category] ?? CATEGORY_CONFIG.general;
 }
 
-/** Fire intensity based on streak length */
 function streakFlame(count: number): string {
   if (count === 0) return '';
   if (count < 3)  return '🔥';
@@ -60,6 +68,8 @@ function streakFlame(count: number): string {
   if (count < 14) return '🔥🔥🔥';
   return '🔥🔥🔥🔥';
 }
+
+const SWIPE_THRESHOLD = 80;
 
 export function HabitCard({
   name,
@@ -77,6 +87,25 @@ export function HabitCard({
 }: HabitCardProps) {
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
+  wrapper: {
+    position: 'relative',
+    borderRadius: borderRadius.sm,
+    overflow: 'hidden',
+  },
+  reveal: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: colors.success,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: spacing.md,
+    gap: spacing.sm,
+  },
+  revealText: {
+    color: colors.background,
+    fontSize: fontSizes.md,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+  },
   container: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
@@ -161,6 +190,7 @@ export function HabitCard({
     color: colors.background,
   },
 }), [themeKey]);
+
   const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
   const nextXp = calculateXpEarned(streakCount + 1);
   const flame = streakFlame(streakCount);
@@ -171,18 +201,18 @@ export function HabitCard({
   const isWeeklyDone = isWeekly && weekCompletionCount >= weeklyTarget;
   const effectiveDone = isWeekly ? isWeeklyDone : isCompletedToday;
 
-  // Entry animation: staggered slide-up + fade
-  const slideY = useRef(new Animated.Value(18)).current;
-  const entryOpacity = useRef(new Animated.Value(0)).current;
+  // Entry animation (RN Animated — staggered slide-up + fade)
+  const slideY = useRef(new RNAnimated.Value(18)).current;
+  const entryOpacity = useRef(new RNAnimated.Value(0)).current;
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(slideY, {
+    RNAnimated.parallel([
+      RNAnimated.timing(slideY, {
         toValue: 0,
         duration: 280,
         delay: index * 45,
         useNativeDriver: true,
       }),
-      Animated.timing(entryOpacity, {
+      RNAnimated.timing(entryOpacity, {
         toValue: 1,
         duration: 280,
         delay: index * 45,
@@ -197,52 +227,88 @@ export function HabitCard({
     onComplete();
   };
 
+  // Swipe-to-complete (Reanimated 3 + Gesture Handler)
+  const swipeX = useSharedValue(0);
+
+  const panGesture = Gesture.Pan()
+    .enabled(!effectiveDone)
+    .activeOffsetX(10)
+    .failOffsetY([-8, 8])
+    .onUpdate((e) => {
+      if (e.translationX > 0) {
+        swipeX.value = Math.min(e.translationX, SWIPE_THRESHOLD + 30);
+      }
+    })
+    .onEnd((e) => {
+      if (e.translationX >= SWIPE_THRESHOLD) {
+        runOnJS(handleComplete)();
+      }
+      swipeX.value = withSpring(0, { damping: 20, stiffness: 300 });
+    });
+
+  const cardSwipeStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: swipeX.value }],
+  }));
+
+  const revealStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(swipeX.value, [0, SWIPE_THRESHOLD], [0, 1], Extrapolation.CLAMP),
+  }));
+
   return (
-    <Animated.View style={{ transform: [{ translateY: slideY }], opacity: entryOpacity }}>
-    <Pressable
-      onPress={onPress}
-      onLongPress={onLongPress}
-      style={[styles.container, effectiveDone && styles.containerDone]}
-    >
-      <CompletionBurst visible={burst} />
-      <View style={[styles.categoryBar, { backgroundColor: categoryColor }]} />
-      <View style={styles.content}>
-        <View style={styles.info}>
-          <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
-            {isPinned ? '📌 ' : ''}{categoryIcon} {name}{contentType ? ` ${CONTENT_TYPE_ICON[contentType]}` : ''}
-          </Text>
-          <View style={styles.meta}>
-            <Text style={[styles.category, { color: categoryColor }]}>
-              {category.toUpperCase()}
-            </Text>
-            {isWeekly ? (
-              <Text style={styles.weekProgress}>
-                {weekCompletionCount}/{weeklyTarget} week
-              </Text>
-            ) : (
-              streakCount > 0 && (
-                <Text style={styles.streak}>{flame} {streakCount}d</Text>
-              )
-            )}
-            {!effectiveDone && (
-              <Text style={styles.xpPreview}>+{nextXp} XP</Text>
-            )}
-          </View>
-        </View>
-        <Pressable
-          onPress={handleComplete}
-          style={[styles.checkButton, effectiveDone && styles.checkButtonDone]}
-          disabled={effectiveDone}
-          hitSlop={8}
-        >
-          <Text style={[styles.checkText, effectiveDone && styles.checkTextDone]}>
-            {effectiveDone ? '✓' : ''}
-          </Text>
-        </Pressable>
+    <RNAnimated.View style={{ transform: [{ translateY: slideY }], opacity: entryOpacity }}>
+      <View style={styles.wrapper}>
+        {/* Green reveal layer behind the card */}
+        <Animated.View style={[styles.reveal, revealStyle]}>
+          <Text style={styles.revealText}>✓ DONE</Text>
+        </Animated.View>
+
+        <GestureDetector gesture={panGesture}>
+          <Animated.View style={cardSwipeStyle}>
+            <Pressable
+              onPress={onPress}
+              onLongPress={onLongPress}
+              style={[styles.container, effectiveDone && styles.containerDone]}
+            >
+              <CompletionBurst visible={burst} />
+              <View style={[styles.categoryBar, { backgroundColor: categoryColor }]} />
+              <View style={styles.content}>
+                <View style={styles.info}>
+                  <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
+                    {isPinned ? '📌 ' : ''}{categoryIcon} {name}{contentType ? ` ${CONTENT_TYPE_ICON[contentType]}` : ''}
+                  </Text>
+                  <View style={styles.meta}>
+                    <Text style={[styles.category, { color: categoryColor }]}>
+                      {category.toUpperCase()}
+                    </Text>
+                    {isWeekly ? (
+                      <Text style={styles.weekProgress}>
+                        {weekCompletionCount}/{weeklyTarget} week
+                      </Text>
+                    ) : (
+                      streakCount > 0 && (
+                        <Text style={styles.streak}>{flame} {streakCount}d</Text>
+                      )
+                    )}
+                    {!effectiveDone && (
+                      <Text style={styles.xpPreview}>+{nextXp} XP</Text>
+                    )}
+                  </View>
+                </View>
+                <Pressable
+                  onPress={handleComplete}
+                  style={[styles.checkButton, effectiveDone && styles.checkButtonDone]}
+                  disabled={effectiveDone}
+                  hitSlop={8}
+                >
+                  <Text style={[styles.checkText, effectiveDone && styles.checkTextDone]}>
+                    {effectiveDone ? '✓' : ''}
+                  </Text>
+                </Pressable>
+              </View>
+            </Pressable>
+          </Animated.View>
+        </GestureDetector>
       </View>
-    </Pressable>
-    </Animated.View>
+    </RNAnimated.View>
   );
 }
-
-
