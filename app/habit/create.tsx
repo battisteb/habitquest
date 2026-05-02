@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, Pressable, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { PixelInput } from '../../src/ui/components/pixel-input';
@@ -10,7 +10,9 @@ import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
-import { useT } from '../../src/lib/i18n';
+import { useT, lang$ } from '../../src/lib/i18n';
+import { use$ } from '@legendapp/state/react';
+import { HABIT_TEMPLATES } from '../../src/lib/constants/habit-templates';
 
 export default function CreateHabitScreen() {
   const T = useT();
@@ -126,14 +128,35 @@ export default function CreateHabitScreen() {
   frequencyChipTextActive: {
     color: colors.primary,
   },
+  templateLink: {
+    alignSelf: 'flex-end',
+  },
+  templateLinkText: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.primary,
+    letterSpacing: 1,
+    textDecorationLine: 'underline',
+  },
 }), [themeKey]);
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState<HabitCategory>('general');
-  const [content, setContent] = useState<HabitContent | null>(null);
-  const [frequency, setFrequency] = useState('daily');
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const lang = use$(lang$);
+  const { templateId } = useLocalSearchParams<{ templateId?: string }>();
+
+  const prefilledTemplate = templateId
+    ? HABIT_TEMPLATES.find((t) => t.id === templateId)
+    : null;
+
+  const [name, setName] = useState(
+    prefilledTemplate ? (lang === 'fr' ? prefilledTemplate.name_fr : prefilledTemplate.name_en) : '',
+  );
+  const [category, setCategory] = useState<HabitCategory>(
+    (prefilledTemplate?.category as HabitCategory) ?? 'general',
+  );
+  const [content, setContent] = useState<HabitContent | null>(null);
+  const [frequency, setFrequency] = useState<string>(prefilledTemplate?.frequency ?? 'daily');
+  const [loading, setLoading] = useState(false);
 
   const handleCreate = async () => {
     if (!name.trim()) return;
@@ -156,9 +179,16 @@ export default function CreateHabitScreen() {
       contentContainerStyle={styles.content}
     >
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()}>
-          <Text style={styles.backButton}>{T.habit_create_back}</Text>
-        </Pressable>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Pressable onPress={() => router.back()}>
+            <Text style={styles.backButton}>{T.habit_create_back}</Text>
+          </Pressable>
+          <Pressable style={styles.templateLink} onPress={() => router.push('/habit/templates')}>
+            <Text style={styles.templateLinkText}>
+              {lang === 'fr' ? '📋 Modèles' : '📋 Templates'}
+            </Text>
+          </Pressable>
+        </View>
         <Text style={styles.title}>{T.habit_create_title}</Text>
       </View>
 
