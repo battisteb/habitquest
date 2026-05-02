@@ -717,6 +717,7 @@ export default function TodayScreen() {
               index={index}
               frequency={item.frequency ?? 'daily'}
               weekCompletionCount={weekCompletions[item.id] ?? 0}
+              contentType={(item.content as { type?: string } | null)?.type as 'timer' | 'checklist' | 'link' | null ?? null}
             />
           )}
           ItemSeparatorComponent={() => <View style={{ height: spacing.sm }} />}

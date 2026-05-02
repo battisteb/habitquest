@@ -13,10 +13,17 @@ interface HabitCardProps {
   isCompletedToday: boolean;
   onComplete: () => void;
   onPress: () => void;
-  index?: number; // for staggered entry animation
+  index?: number;
   frequency?: string;
   weekCompletionCount?: number;
+  contentType?: 'timer' | 'checklist' | 'link' | null;
 }
+
+const CONTENT_TYPE_ICON: Record<string, string> = {
+  timer: '⏱️',
+  checklist: '✅',
+  link: '🔗',
+};
 
 const CATEGORY_CONFIG: Record<string, { color: string; icon: string }> = {
   health:       { color: '#4ecca3', icon: '💚' },
@@ -62,6 +69,7 @@ export function HabitCard({
   index = 0,
   frequency = 'daily',
   weekCompletionCount = 0,
+  contentType = null,
 }: HabitCardProps) {
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
@@ -196,7 +204,7 @@ export function HabitCard({
       <View style={styles.content}>
         <View style={styles.info}>
           <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
-            {categoryIcon} {name}
+            {categoryIcon} {name}{contentType ? ` ${CONTENT_TYPE_ICON[contentType]}` : ''}
           </Text>
           <View style={styles.meta}>
             <Text style={[styles.category, { color: categoryColor }]}>
