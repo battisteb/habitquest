@@ -11,17 +11,19 @@ import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../../
 import type { HabitContent } from '../../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, borderRadius } from '../../../src/ui/theme/tokens';
 import { useTheme } from '../../../src/ui/theme/theme-context';
-
-const FREQUENCY_OPTIONS: { value: string; label: string }[] = [
-  { value: 'daily', label: 'DAILY' },
-  { value: '2x_week', label: '2×/WK' },
-  { value: '3x_week', label: '3×/WK' },
-  { value: '4x_week', label: '4×/WK' },
-  { value: '5x_week', label: '5×/WK' },
-];
+import { useT } from '../../../src/lib/i18n';
 
 export default function EditHabitScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
+  const FREQUENCY_OPTIONS = useMemo(() => [
+    { value: 'daily', label: T.habit_edit_freq_daily },
+    { value: '2x_week', label: T.habit_edit_freq_2x },
+    { value: '3x_week', label: T.habit_edit_freq_3x },
+    { value: '4x_week', label: T.habit_edit_freq_4x },
+    { value: '5x_week', label: T.habit_edit_freq_5x },
+  ], [T]);
+
   const styles = useMemo(() => StyleSheet.create({
   scroll: { flex: 1, backgroundColor: colors.background },
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg },
@@ -78,6 +80,7 @@ export default function EditHabitScreen() {
   frequencyChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1, color: colors.textSecondary },
   frequencyChipTextActive: { color: colors.primary },
 }), [themeKey]);
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -97,7 +100,7 @@ export default function EditHabitScreen() {
   if (!habit) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Text style={styles.title}>Habit not found</Text>
+        <Text style={styles.title}>{T.habit_edit_not_found}</Text>
       </View>
     );
   }
@@ -109,7 +112,7 @@ export default function EditHabitScreen() {
       await updateHabit(habit.id, { name: name.trim(), category, content, frequency });
       router.back();
     } catch (e: unknown) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Failed to update habit');
+      Alert.alert(T.habit_edit_error_title, e instanceof Error ? e.message : T.habit_edit_error_msg);
     } finally {
       setLoading(false);
     }
@@ -122,19 +125,19 @@ export default function EditHabitScreen() {
     >
       <View style={styles.header}>
         <Pressable onPress={() => router.back()}>
-          <Text style={styles.backButton}>{'< BACK'}</Text>
+          <Text style={styles.backButton}>{T.habit_edit_back}</Text>
         </Pressable>
-        <Text style={styles.title}>EDIT QUEST</Text>
+        <Text style={styles.title}>{T.habit_edit_title}</Text>
       </View>
 
       <PixelInput
-        label="Quest name"
+        label={T.habit_edit_name_label}
         value={name}
         onChangeText={setName}
       />
 
       <View style={styles.categorySection}>
-        <Text style={styles.categoryLabel}>CATEGORY</Text>
+        <Text style={styles.categoryLabel}>{T.habit_edit_category}</Text>
         <View style={styles.categoryGrid}>
           {HABIT_CATEGORIES.map((cat) => {
             const config = CATEGORY_CONFIG[cat];
@@ -165,7 +168,7 @@ export default function EditHabitScreen() {
       </View>
 
       <View style={styles.frequencySection}>
-        <Text style={styles.frequencyLabel}>FREQUENCY</Text>
+        <Text style={styles.frequencyLabel}>{T.habit_edit_frequency}</Text>
         <View style={styles.frequencyRow}>
           {FREQUENCY_OPTIONS.map((opt) => (
             <Pressable
@@ -192,7 +195,7 @@ export default function EditHabitScreen() {
       <ContentPicker value={content} onChange={setContent} />
 
       <PixelButton
-        title="Save changes"
+        title={T.habit_edit_save}
         onPress={handleSave}
         disabled={loading || !name.trim()}
         style={styles.saveButton}
@@ -200,5 +203,3 @@ export default function EditHabitScreen() {
     </ScrollView>
   );
 }
-
-
