@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface XpBarProps {
   level: number;
@@ -11,6 +12,7 @@ interface XpBarProps {
 }
 
 export function XpBar({ level, currentXp, nextLevelXp, progress }: XpBarProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -48,7 +50,7 @@ export function XpBar({ level, currentXp, nextLevelXp, progress }: XpBarProps) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.level}>LVL {level}</Text>
+        <Text style={styles.level}>{T.xp_level_prefix} {level}</Text>
         <Text style={styles.xpText}>
           {currentXp} / {nextLevelXp} XP
         </Text>

@@ -537,8 +537,16 @@ export default function TodayScreen() {
         <View style={styles.burnoutBanner}>
           <View style={styles.burnoutRow}>
             <View style={styles.burnoutText}>
-              <Text style={styles.burnoutMessage}>{burnoutSignal.message}</Text>
-              <Text style={styles.burnoutSuggestion}>{burnoutSignal.suggestion}</Text>
+              <Text style={styles.burnoutMessage}>
+                {burnoutSignal.risk === 'high' ? T.burnout_high_message
+                  : burnoutSignal.risk === 'moderate' ? T.burnout_moderate_message
+                  : T.burnout_mild_message}
+              </Text>
+              <Text style={styles.burnoutSuggestion}>
+                {burnoutSignal.risk === 'high' ? T.burnout_high_suggestion
+                  : burnoutSignal.risk === 'moderate' ? T.burnout_moderate_suggestion
+                  : T.burnout_mild_suggestion}
+              </Text>
             </View>
             <Pressable onPress={dismissBurnoutBanner} hitSlop={8}>
               <Text style={styles.burnoutClose}>✕</Text>

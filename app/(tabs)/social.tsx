@@ -390,7 +390,7 @@ export default function SocialScreen() {
               </View>
               <View style={styles.lbRight}>
                 <Text style={styles.lbXp}>{item.xp} XP</Text>
-                <Text style={styles.lbLevel}>Lv.{item.level}</Text>
+                <Text style={styles.lbLevel}>{T.social_lv_prefix}{item.level}</Text>
               </View>
             </View>
           );
@@ -451,7 +451,7 @@ export default function SocialScreen() {
                 <Text style={styles.friendName}>{profile?.username ?? '—'}</Text>
                 <View style={styles.friendMeta}>
                   {rank && <Text style={[styles.friendRank, { color: rank.color }]}>{rank.name}</Text>}
-                  <Text style={styles.friendXp}>{profile?.xp ?? 0} XP · Lv.{profile?.level ?? 0}</Text>
+                  <Text style={styles.friendXp}>{profile?.xp ?? 0} XP · {T.social_lv_prefix}{profile?.level ?? 0}</Text>
                 </View>
               </View>
               <View style={styles.friendActions}>
@@ -493,7 +493,7 @@ export default function SocialScreen() {
     return (
       <>
       <PixelButton
-        title="⚔️ DUEL ARENA — Turn-Based Combat"
+        title={T.social_duel_arena_btn}
         onPress={() => router.push('/duels')}
         style={styles.duelArenaBtn}
       />
@@ -545,12 +545,12 @@ export default function SocialScreen() {
               </View>
               {section === 'pending' && (
                 <View style={styles.challengeActions}>
-                  <PixelButton title="Accept" onPress={() => respondToChallenge(challenge.id, true)} style={{ flex: 1 }} />
-                  <PixelButton title="Decline" onPress={() => respondToChallenge(challenge.id, false)} variant="ghost" style={{ flex: 1 }} />
+                  <PixelButton title={T.social_duel_accept} onPress={() => respondToChallenge(challenge.id, true)} style={{ flex: 1 }} />
+                  <PixelButton title={T.social_duel_decline} onPress={() => respondToChallenge(challenge.id, false)} variant="ghost" style={{ flex: 1 }} />
                 </View>
               )}
               {challenge.gold_wager > 0 && (
-                <Text style={styles.wager}>💰 {challenge.gold_wager}g wager</Text>
+                <Text style={styles.wager}>💰 {challenge.gold_wager}g {T.social_wager_label}</Text>
               )}
             </View>
           );
@@ -592,11 +592,11 @@ export default function SocialScreen() {
               </Text>
               <View style={styles.lbInfo}>
                 <Text style={styles.lbName}>
-                  {item.username}{item.isCurrentUser ? ' YOU ★' : ''}
+                  {item.username}{item.isCurrentUser ? ` ${T.social_you_marker}` : ''}
                 </Text>
-                <Text style={styles.lbLevel}>Lv.{item.level}</Text>
+                <Text style={styles.lbLevel}>{T.social_lv_prefix}{item.level}</Text>
               </View>
-              <Text style={styles.streakCount}>🔥 {item.bestStreak} days</Text>
+              <Text style={styles.streakCount}>🔥 {item.bestStreak} {T.social_streak_days_label}</Text>
             </View>
           );
         }}
@@ -639,7 +639,7 @@ export default function SocialScreen() {
                 <Text style={styles.friendName}>{item.username}</Text>
                 <View style={styles.friendMeta}>
                   <Text style={[styles.friendRank, { color: rank.color }]}>{rank.name}</Text>
-                  <Text style={styles.friendXp}>{item.xp ?? 0} XP · Lv.{item.level ?? 0}</Text>
+                  <Text style={styles.friendXp}>{item.xp ?? 0} XP · {T.social_lv_prefix}{item.level ?? 0}</Text>
                 </View>
               </View>
               {alreadyFriend ? (

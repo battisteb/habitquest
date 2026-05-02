@@ -4,6 +4,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { observable } from '@legendapp/state';
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing } from '../theme/tokens';
+import { useT } from '../../lib/i18n';
 
 const networkState$ = observable({ isConnected: true, initialized: false });
 
@@ -25,7 +26,7 @@ function ensureSubscribed() {
 
 export function OfflineBanner() {
   ensureSubscribed();
-
+  const T = useT();
   const isConnected = use$(networkState$.isConnected);
   const initialized = use$(networkState$.initialized);
 
@@ -65,7 +66,7 @@ export function OfflineBanner() {
       style={[styles.banner, { transform: [{ translateY: slideY }] }]}
       pointerEvents="none"
     >
-      <Text style={styles.text}>⚠ NO CONNECTION — changes saved locally</Text>
+      <Text style={styles.text}>{T.offline_banner_msg}</Text>
     </Animated.View>
   );
 }

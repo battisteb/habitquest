@@ -9,7 +9,8 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../src/ui/components/pixel-button';
-import { useT } from '../src/lib/i18n';
+import { useT, lang$ } from '../src/lib/i18n';
+import { use$ } from '@legendapp/state/react';
 import { useProfileStats } from '../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../src/features/gamification/components/xp-bar';
 import { supabase } from '../src/lib/supabase/client';
@@ -26,7 +27,8 @@ import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 
 interface DayXp {
-  date: string;       // 'Mon', 'Tue', etc.
+  date: string;       // 'YYYY-MM-DD'
+  dayIndex: number;   // 0=Sun … 6=Sat
   xp: number;
 }
 
@@ -44,7 +46,8 @@ interface XpJourneyData {
   isLoading: boolean;
 }
 
-const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_LABELS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_LABELS_FR = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
 async function fetchXpJourneyData(): Promise<Omit<XpJourneyData, 'isLoading'>> {
   const userId = authStore$.user.get()?.id;
@@ -85,7 +88,7 @@ async function fetchXpJourneyData(): Promise<Omit<XpJourneyData, 'isLoading'>> {
     const d = new Date();
     d.setDate(d.getDate() - i);
     const key = d.toISOString().slice(0, 10);
-    dayMap.set(key, { xp: 0, label: DAY_LABELS[d.getDay()] });
+    dayMap.set(key, { xp: 0, label: String(d.getDay()) });
   }
 
   completionsRes.data?.forEach((c) => {
@@ -95,7 +98,7 @@ async function fetchXpJourneyData(): Promise<Omit<XpJourneyData, 'isLoading'>> {
   });
 
   const dailyXp: DayXp[] = [];
-  dayMap.forEach(({ xp, label }) => dailyXp.push({ date: label, xp }));
+  dayMap.forEach(({ xp, label }, key) => dailyXp.push({ date: key, dayIndex: parseInt(label, 10), xp }));
 
   // Recent gains (last 15)
   const recentGains: RecentGain[] = (completionsRes.data ?? [])
@@ -382,6 +385,8 @@ export default function XpJourneyScreen() {
 }), [themeKey]);
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const lang = use$(lang$);
+  const dayLabels = lang === 'fr' ? DAY_LABELS_FR : DAY_LABELS_EN;
   const { profile, xpForNextLevel, xpProgress } = useProfileStats();
   const [data, setData] = useState<XpJourneyData>({
     dailyXp: [],
@@ -430,7 +435,7 @@ export default function XpJourneyScreen() {
       <View style={styles.heroCard}>
         <View style={styles.heroTop}>
           <View>
-            <Text style={styles.heroLevel}>LEVEL {level}</Text>
+            <Text style={styles.heroLevel}>{T.xp_level_prefix} {level}</Text>
             <Text style={[styles.heroRank, { color: rank.color }]}>{rank.name}</Text>
           </View>
           <View style={styles.heroXpTotal}>
@@ -478,7 +483,7 @@ export default function XpJourneyScreen() {
                       />
                     </View>
                     <Text style={[styles.chartLabel, isToday && styles.chartLabelToday]}>
-                      {d.date}
+                      {dayLabels[d.dayIndex]}
                     </Text>
                   </View>
                 );

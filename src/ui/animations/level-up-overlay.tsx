@@ -10,6 +10,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { colors, fontSizes, spacing } from '../theme/tokens';
+import { useT } from '../../lib/i18n';
 
 interface LevelUpOverlayProps {
   visible: boolean;
@@ -18,6 +19,7 @@ interface LevelUpOverlayProps {
 }
 
 export function LevelUpOverlay({ visible, newLevel, onComplete }: LevelUpOverlayProps) {
+  const T = useT();
   const overlayOpacity = useSharedValue(0);
   const badgeScale = useSharedValue(0);
   const badgeY = useSharedValue(30);
@@ -90,7 +92,7 @@ export function LevelUpOverlay({ visible, newLevel, onComplete }: LevelUpOverlay
         <View style={styles.levelBadge}>
           <Text style={styles.levelNumber}>{newLevel}</Text>
         </View>
-        <Text style={styles.subtitle}>Keep going, adventurer!</Text>
+        <Text style={styles.subtitle}>{T.level_up_subtitle}</Text>
       </Animated.View>
     </Animated.View>
   );

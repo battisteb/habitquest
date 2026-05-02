@@ -184,6 +184,11 @@ const FR = {
   social_send_request: 'Envoyer demande',
   social_request_sent: 'Demande envoyée',
   social_already_friend: 'Déjà ami',
+  social_duel_arena_btn: '⚔️ ARÈNE DES DUELS — Combat au Tour par Tour',
+  social_wager_label: 'en jeu',
+  social_you_marker: 'VOUS ★',
+  social_lv_prefix: 'Nv.',
+  social_streak_days_label: 'jours',
   // Common
   common_back: '< Retour',
   common_cancel: 'Annuler',
@@ -635,6 +640,18 @@ const FR = {
   timer_resume: 'REPRENDRE',
   timer_complete: 'TERMINÉ ✓',
   timer_done_hint: 'Minuteur terminé ! Marque comme fait pour gagner des XP.',
+  // UI components
+  achievement_unlocked: 'SUCCÈS DÉBLOQUÉ',
+  level_up_subtitle: 'Continue, aventurier !',
+  xp_level_prefix: 'NIV',
+  offline_banner_msg: '⚠ HORS LIGNE — modifications sauvegardées localement',
+  // Burnout detector
+  burnout_high_message: '⚠️ Burnout détecté',
+  burnout_high_suggestion: 'Envisage de faire une pause ou de mettre des habitudes en pause.',
+  burnout_moderate_message: '😓 Élan qui baisse',
+  burnout_moderate_suggestion: 'Essaie de réduire à 3–4 habitudes pendant une semaine.',
+  burnout_mild_message: '📉 Légère baisse',
+  burnout_mild_suggestion: 'Continue — quelques jours manqués, c\'est normal.',
 } as const;
 
 const EN = {
@@ -803,6 +820,11 @@ const EN = {
   social_send_request: 'Send request',
   social_request_sent: 'Request sent',
   social_already_friend: 'Already friend',
+  social_duel_arena_btn: '⚔️ DUEL ARENA — Turn-Based Combat',
+  social_wager_label: 'wager',
+  social_you_marker: 'YOU ★',
+  social_lv_prefix: 'Lv.',
+  social_streak_days_label: 'days',
   // Common
   common_back: '< Back',
   common_cancel: 'Cancel',
@@ -1254,6 +1276,18 @@ const EN = {
   timer_resume: 'RESUME',
   timer_complete: 'COMPLETE ✓',
   timer_done_hint: 'Timer complete! Mark as done to earn XP.',
+  // UI components
+  achievement_unlocked: 'ACHIEVEMENT UNLOCKED',
+  level_up_subtitle: 'Keep going, adventurer!',
+  xp_level_prefix: 'LVL',
+  offline_banner_msg: '⚠ NO CONNECTION — changes saved locally',
+  // Burnout detector
+  burnout_high_message: '⚠️ Burnout detected',
+  burnout_high_suggestion: 'Consider taking a rest day or pausing some habits.',
+  burnout_moderate_message: '😓 Momentum dropping',
+  burnout_moderate_suggestion: 'Try reducing to 3–4 habits for a week.',
+  burnout_mild_message: '📉 Slight decline',
+  burnout_mild_suggestion: 'Keep going — a few missed days is normal.',
 } as const;
 
 type Strings = Record<keyof typeof FR, string>;

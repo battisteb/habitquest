@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Pressable } from 'react-native';
 import { colors, fontSizes, spacing } from '../theme/tokens';
+import { useT } from '../../lib/i18n';
 
 const CATEGORY_ICONS: Record<string, string> = {
   streak: '🔥',
@@ -28,6 +29,7 @@ export function AchievementToast({
   goldReward,
   onDismiss,
 }: AchievementToastProps) {
+  const T = useT();
   const translateY = useRef(new Animated.Value(-120)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -74,7 +76,7 @@ export function AchievementToast({
           <Text style={styles.badgeIcon}>🏅</Text>
         </View>
         <View style={styles.content}>
-          <Text style={styles.label}>ACHIEVEMENT UNLOCKED</Text>
+          <Text style={styles.label}>{T.achievement_unlocked}</Text>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.description} numberOfLines={1}>{description}</Text>
           {(xpReward > 0 || goldReward > 0) && (
