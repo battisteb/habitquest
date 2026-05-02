@@ -47,7 +47,7 @@ describe('DailyQuestCard', () => {
       <DailyQuestCard quest={quest} onClaim={jest.fn()} />,
     );
 
-    expect(getByText('NORMAL')).toBeTruthy();
+    expect(getByText(/NORMAL/i)).toBeTruthy();
   });
 
   it('shows rewards', () => {
@@ -71,11 +71,11 @@ describe('DailyQuestCard', () => {
 
   it('does not show CLAIM button when not completed', () => {
     const quest = makeQuest({ is_completed: false });
-    const { queryByText } = render(
+    const { queryByTestId } = render(
       <DailyQuestCard quest={quest} onClaim={jest.fn()} />,
     );
 
-    expect(queryByText('CLAIM')).toBeNull();
+    expect(queryByTestId('claim-button')).toBeNull();
   });
 
   it('shows CLAIM button when completed and not claimed', () => {
@@ -83,11 +83,11 @@ describe('DailyQuestCard', () => {
       current_progress: 2,
       is_completed: true,
     });
-    const { getByText } = render(
+    const { getByTestId } = render(
       <DailyQuestCard quest={quest} onClaim={jest.fn()} />,
     );
 
-    expect(getByText('CLAIM')).toBeTruthy();
+    expect(getByTestId('claim-button')).toBeTruthy();
   });
 
   it('calls onClaim when CLAIM button is pressed', () => {
@@ -96,11 +96,11 @@ describe('DailyQuestCard', () => {
       current_progress: 2,
       is_completed: true,
     });
-    const { getByText } = render(
+    const { getByTestId } = render(
       <DailyQuestCard quest={quest} onClaim={onClaim} />,
     );
 
-    fireEvent.press(getByText('CLAIM'));
+    fireEvent.press(getByTestId('claim-button'));
     expect(onClaim).toHaveBeenCalledWith('quest-1');
   });
 
@@ -110,11 +110,11 @@ describe('DailyQuestCard', () => {
       is_completed: true,
       is_claimed: true,
     });
-    const { queryByText } = render(
+    const { queryByTestId } = render(
       <DailyQuestCard quest={quest} onClaim={jest.fn()} />,
     );
 
-    expect(queryByText('CLAIM')).toBeNull();
+    expect(queryByTestId('claim-button')).toBeNull();
   });
 
   it('shows checkmark in title when claimed', () => {

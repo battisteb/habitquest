@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable, Vibration, Platform } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface HabitTimerProps {
   duration: number; // seconds
@@ -24,6 +25,7 @@ function vibrate() {
 }
 
 export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -192,10 +194,10 @@ export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
   }
 
   const buttonLabel =
-    state === 'idle' ? 'START' :
-    state === 'running' ? 'PAUSE' :
-    state === 'paused' ? 'RESUME' :
-    'COMPLETE ✓';
+    state === 'idle' ? T.timer_start :
+    state === 'running' ? T.timer_pause :
+    state === 'paused' ? T.timer_resume :
+    T.timer_complete;
 
   const ringColor =
     state === 'done' ? colors.success :
@@ -248,7 +250,7 @@ export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
       </View>
 
       {state === 'done' && (
-        <Text style={styles.doneHint}>Timer complete! Mark as done to earn XP.</Text>
+        <Text style={styles.doneHint}>{T.timer_done_hint}</Text>
       )}
     </View>
   );

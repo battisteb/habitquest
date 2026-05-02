@@ -629,6 +629,12 @@ const FR = {
   cp_timer_placeholder: 'Nom (ex. Gainage, Cardio…)',
   cp_step_placeholder: 'Ajouter une étape…',
   cp_link_label_placeholder: 'Nom (ex. Regarder le tutoriel)',
+  // Habit timer
+  timer_start: 'DÉMARRER',
+  timer_pause: 'PAUSE',
+  timer_resume: 'REPRENDRE',
+  timer_complete: 'TERMINÉ ✓',
+  timer_done_hint: 'Minuteur terminé ! Marque comme fait pour gagner des XP.',
 } as const;
 
 const EN = {
@@ -1242,6 +1248,12 @@ const EN = {
   cp_timer_placeholder: 'Label (e.g. Plank, Cardio…)',
   cp_step_placeholder: 'Add a step…',
   cp_link_label_placeholder: 'Label (e.g. Watch tutorial)',
+  // Habit timer
+  timer_start: 'START',
+  timer_pause: 'PAUSE',
+  timer_resume: 'RESUME',
+  timer_complete: 'COMPLETE ✓',
+  timer_done_hint: 'Timer complete! Mark as done to earn XP.',
 } as const;
 
 type Strings = Record<keyof typeof FR, string>;

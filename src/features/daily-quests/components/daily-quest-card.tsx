@@ -208,6 +208,7 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
       {/* Claim button */}
       {canClaim && (
         <Pressable
+          testID="claim-button"
           style={({ pressed }) => [
             styles.claimButton,
             pressed && styles.claimButtonPressed,
