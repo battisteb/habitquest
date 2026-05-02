@@ -164,6 +164,36 @@ export default function HabitHistoryScreen() {
     color: colors.textMuted,
     letterSpacing: 1,
   },
+  notesSection: {
+    backgroundColor: colors.surface,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: spacing.md,
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+  },
+  notesSectionTitle: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    letterSpacing: 2,
+  },
+  noteRow: {
+    gap: 2,
+    paddingVertical: spacing.xs,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  noteDate: {
+    fontSize: fontSizes.xs,
+    color: colors.textMuted,
+    letterSpacing: 0.5,
+  },
+  noteText: {
+    fontSize: fontSizes.sm,
+    color: colors.text,
+  },
 }), [themeKey]);
   const { habitId, habitName } = useLocalSearchParams<{ habitId: string; habitName: string }>();
   const router = useRouter();
@@ -173,6 +203,7 @@ export default function HabitHistoryScreen() {
   const streaks = use$(habitsStore$.streaks);
 
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
+  const [notesByDate, setNotesByDate] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   const dates = buildDates();
@@ -186,16 +217,21 @@ export default function HabitHistoryScreen() {
 
     supabase
       .from('completions')
-      .select('completed_at')
+      .select('completed_at, note')
       .eq('habit_id', habitId)
       .gte('completed_at', `${ninetyDaysAgo}T00:00:00.000Z`)
+      .order('completed_at', { ascending: false })
       .then(({ data }) => {
         const set = new Set<string>();
+        const notes: Record<string, string> = {};
         data?.forEach((c) => {
           const d = new Date(c.completed_at);
-          set.add(formatDate(d));
+          const dateStr = formatDate(d);
+          set.add(dateStr);
+          if (c.note) notes[dateStr] = c.note;
         });
         setCompletedSet(set);
+        setNotesByDate(notes);
         setLoading(false);
       });
   }, [habitId]);
@@ -352,6 +388,22 @@ export default function HabitHistoryScreen() {
               <Text style={styles.statLabel}>{T.habit_history_stat_rate}</Text>
             </View>
           </View>
+
+          {/* Notes journal */}
+          {Object.keys(notesByDate).length > 0 && (
+            <View style={styles.notesSection}>
+              <Text style={styles.notesSectionTitle}>{T.habit_history_notes_title}</Text>
+              {Object.entries(notesByDate)
+                .sort((a, b) => b[0].localeCompare(a[0]))
+                .slice(0, 10)
+                .map(([date, note]) => (
+                  <View key={date} style={styles.noteRow}>
+                    <Text style={styles.noteDate}>{date}</Text>
+                    <Text style={styles.noteText}>{note}</Text>
+                  </View>
+                ))}
+            </View>
+          )}
         </>
       )}
     </ScrollView>

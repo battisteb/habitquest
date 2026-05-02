@@ -678,6 +678,8 @@ const FR = {
   note_modal_placeholder: 'ex. Couru 5km, Lu 30 pages…',
   note_modal_skip: 'Passer',
   note_modal_save: 'Enregistrer',
+  // Habit history notes
+  habit_history_notes_title: 'JOURNAL',
 } as const;
 
 const EN = {
@@ -1340,6 +1342,8 @@ const EN = {
   note_modal_placeholder: 'e.g. Ran 5km, Read 30 pages…',
   note_modal_skip: 'Skip',
   note_modal_save: 'Save',
+  // Habit history notes
+  habit_history_notes_title: 'JOURNAL',
 } as const;
 
 type Strings = Record<keyof typeof FR, string>;
