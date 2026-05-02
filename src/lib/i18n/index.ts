@@ -618,6 +618,17 @@ const FR = {
   dq_diff_hard: 'DIFFICILE',
   dq_paused_label: '❄️ EN PAUSE (MODE FOCUS)',
   dq_claim_btn: 'RÉCLAMER',
+  // Content picker
+  cp_label: 'CONTENU (OPTIONNEL)',
+  cp_type_timer: 'Minuteur',
+  cp_type_checklist: 'Étapes',
+  cp_type_link: 'Lien',
+  cp_duration_label: 'DURÉE',
+  cp_steps_label: 'ÉTAPES',
+  cp_steps_empty: 'Ajoute au moins une étape',
+  cp_timer_placeholder: 'Nom (ex. Gainage, Cardio…)',
+  cp_step_placeholder: 'Ajouter une étape…',
+  cp_link_label_placeholder: 'Nom (ex. Regarder le tutoriel)',
 } as const;
 
 const EN = {
@@ -1220,6 +1231,17 @@ const EN = {
   dq_diff_hard: 'HARD',
   dq_paused_label: '❄️ PAUSED BY FOCUS MODE',
   dq_claim_btn: 'CLAIM',
+  // Content picker
+  cp_label: 'CONTENT (OPTIONAL)',
+  cp_type_timer: 'Timer',
+  cp_type_checklist: 'Checklist',
+  cp_type_link: 'Link',
+  cp_duration_label: 'DURATION',
+  cp_steps_label: 'STEPS',
+  cp_steps_empty: 'Add at least one step',
+  cp_timer_placeholder: 'Label (e.g. Plank, Cardio…)',
+  cp_step_placeholder: 'Add a step…',
+  cp_link_label_placeholder: 'Label (e.g. Watch tutorial)',
 } as const;
 
 type Strings = Record<keyof typeof FR, string>;

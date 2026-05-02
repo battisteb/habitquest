@@ -11,6 +11,7 @@ import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/toke
 import type { HabitContent, HabitContentType, ChecklistItem } from '../types/habit-content';
 import { CONTENT_TYPE_CONFIG } from '../types/habit-content';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface ContentPickerProps {
   value: HabitContent | null;
@@ -40,6 +41,7 @@ function formatDuration(seconds: number): string {
 }
 
 export function ContentPicker({ value, onChange }: ContentPickerProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -297,11 +299,12 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
   return (
     <View style={styles.container}>
       {/* Type selector */}
-      <Text style={styles.sectionLabel}>CONTENT (OPTIONAL)</Text>
+      <Text style={styles.sectionLabel}>{T.cp_label}</Text>
       <View style={styles.typeRow}>
         {(Object.keys(CONTENT_TYPE_CONFIG) as HabitContentType[]).map((type) => {
           const cfg = CONTENT_TYPE_CONFIG[type];
           const isSelected = selectedType === type;
+          const typeLabel = type === 'timer' ? T.cp_type_timer : type === 'checklist' ? T.cp_type_checklist : T.cp_type_link;
           return (
             <Pressable
               key={type}
@@ -310,7 +313,7 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
             >
               <Text style={styles.typeChipIcon}>{cfg.icon}</Text>
               <Text style={[styles.typeChipLabel, isSelected && styles.typeChipLabelSelected]}>
-                {cfg.label}
+                {typeLabel}
               </Text>
             </Pressable>
           );
@@ -324,10 +327,10 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
             style={styles.input}
             value={timerLabel}
             onChangeText={onTimerLabelChange}
-            placeholder="Label (e.g. Plank, Cardio…)"
+            placeholder={T.cp_timer_placeholder}
             placeholderTextColor={colors.textMuted}
           />
-          <Text style={styles.subLabel}>DURATION</Text>
+          <Text style={styles.subLabel}>{T.cp_duration_label}</Text>
           <View style={styles.presetGrid}>
             {DURATION_PRESETS.map((p) => (
               <Pressable
@@ -356,7 +359,7 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
       {/* Checklist config */}
       {selectedType === 'checklist' && (
         <View style={styles.configBox}>
-          <Text style={styles.subLabel}>STEPS</Text>
+          <Text style={styles.subLabel}>{T.cp_steps_label}</Text>
           {checklistItems.map((item) => (
             <View key={item.id} style={styles.checklistRow}>
               <Text style={styles.checklistBullet}>·</Text>
@@ -371,7 +374,7 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
               style={[styles.input, styles.addInput]}
               value={newItemLabel}
               onChangeText={setNewItemLabel}
-              placeholder="Add a step…"
+              placeholder={T.cp_step_placeholder}
               placeholderTextColor={colors.textMuted}
               onSubmitEditing={addChecklistItem}
               returnKeyType="done"
@@ -385,7 +388,7 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
             </Pressable>
           </View>
           {checklistItems.length === 0 && (
-            <Text style={styles.emptyHint}>Add at least one step</Text>
+            <Text style={styles.emptyHint}>{T.cp_steps_empty}</Text>
           )}
         </View>
       )}
@@ -413,7 +416,7 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
               setLinkLabel(label);
               onLinkChange(linkUrl, label);
             }}
-            placeholder="Label (e.g. Watch tutorial)"
+            placeholder={T.cp_link_label_placeholder}
             placeholderTextColor={colors.textMuted}
           />
         </View>
