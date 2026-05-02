@@ -19,6 +19,7 @@ import { getUnlockedAttacks, ATTACKS, Attack } from '../../src/features/duels/ut
 import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
 import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-store';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
+import { useT } from '../../src/lib/i18n';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -140,7 +141,7 @@ const char_s = StyleSheet.create({
 
 // ─── Player info panel ────────────────────────────────────────────────────────
 
-function PlayerPanel({ player, align }: { player: LivePlayer; align: 'left' | 'right' }) {
+function PlayerPanel({ player, align, hpLabel }: { player: LivePlayer; align: 'left' | 'right'; hpLabel: string }) {
   const stage = getAvatarStage(player.level);
   const isRight = align === 'right';
   return (
@@ -153,7 +154,7 @@ function PlayerPanel({ player, align }: { player: LivePlayer; align: 'left' | 'r
       </View>
       <HpBar hp={player.hp} maxHp={player.maxHp} />
       <Text style={[panel_s.hpNum, isRight && panel_s.hpNumRight]}>
-        {player.hp}/{player.maxHp} HP
+        {hpLabel}
       </Text>
     </View>
   );
@@ -244,6 +245,7 @@ const log_s = StyleSheet.create({
 // ─── Main screen ──────────────────────────────────────────────────────────────
 
 export default function BattleScreen() {
+  const T = useT();
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const params = useLocalSearchParams<{
@@ -251,6 +253,8 @@ export default function BattleScreen() {
     myName?: string; myLevel?: string; openingAttackId?: string;
     duelId?: string; opponentId?: string;
   }>();
+  const formatHp = (hp: number, max: number) =>
+    T.duels_battle_hp.replace('{hp}', String(hp)).replace('{max}', String(max));
 
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
   const allAttacks = getUnlockedAttacks(unlockedCategories).slice(0, 4);
@@ -263,11 +267,11 @@ export default function BattleScreen() {
 
   const [round, setRound] = useState(1);
   const [me, setMe] = useState<LivePlayer>({
-    id: ME_ID, name: params.myName ?? 'You',
+    id: ME_ID, name: params.myName ?? T.duels_battle_default_you,
     level: myLevel, hp: 100, maxHp: 100, shield: false,
   });
   const [opp, setOpp] = useState<LivePlayer>({
-    id: OPP_ID, name: params.opponentName ?? 'Rival',
+    id: OPP_ID, name: params.opponentName ?? T.duels_battle_default_rival,
     level: oppLevel, hp: 100, maxHp: 100, shield: false,
   });
 
@@ -275,7 +279,7 @@ export default function BattleScreen() {
   const [selectedAttackId, setSelectedAttackId] = useState<string | null>(
     params.openingAttackId ?? null,
   );
-  const [log, setLog] = useState<LogEntry[]>([mkLog('⚔️ Battle start! Choose your attack.', 'round')]);
+  const [log, setLog] = useState<LogEntry[]>([mkLog(T.duels_battle_start, 'round')]);
   const [attackingId, setAttackingId] = useState<string | null>(null);
   const [hitId, setHitId] = useState<string | null>(null);
   const [winnerId, setWinnerId] = useState<string | null | 'draw'>('draw'); // initial dummy
@@ -301,9 +305,15 @@ export default function BattleScreen() {
     const oppAtk = ATTACKS[Math.floor(Math.random() * ATTACKS.length)];
 
     setPhase('resolving');
-    pushLog(`🤔 ${oppRef.current.name} is choosing...`, 'info');
+    pushLog(T.duels_battle_opp_thinking.replace('{name}', oppRef.current.name), 'info');
     await delay(900);
-    pushLog(`${oppRef.current.name} chose ${oppAtk.emoji} ${oppAtk.name}!`, 'info');
+    pushLog(
+      T.duels_battle_opp_chose
+        .replace('{name}', oppRef.current.name)
+        .replace('{emoji}', oppAtk.emoji)
+        .replace('{attack}', oppAtk.name),
+      'info',
+    );
     await delay(500);
 
     // Work on mutable local copies
@@ -325,7 +335,7 @@ export default function BattleScreen() {
       if (result.hit) {
         if (defender.shield) {
           result.damage = 0;
-          result.effect += ' (blocked by shield!)';
+          result.effect += T.duels_battle_blocked;
           if (defenderId === ME_ID) curMe = { ...curMe, shield: false };
           else curOpp = { ...curOpp, shield: false };
         } else {
@@ -343,12 +353,17 @@ export default function BattleScreen() {
       if (result.shieldApplied) {
         if (attackerId === ME_ID) curMe = { ...curMe, shield: true };
         else curOpp = { ...curOpp, shield: true };
-        pushLog(`🛡️ ${attacker.name} raised a shield!`, 'special');
+        pushLog(T.duels_battle_shield_up.replace('{name}', attacker.name), 'special');
       }
       if (result.healAmount) {
         if (attackerId === ME_ID) curMe = { ...curMe, hp: Math.min(curMe.maxHp, curMe.hp + result.healAmount) };
         else curOpp = { ...curOpp, hp: Math.min(curOpp.maxHp, curOpp.hp + result.healAmount) };
-        pushLog(`💚 ${attacker.name} recovered ${result.healAmount} HP!`, 'special');
+        pushLog(
+          T.duels_battle_healed
+            .replace('{name}', attacker.name)
+            .replace('{n}', String(result.healAmount)),
+          'special',
+        );
       }
 
       setMe({ ...curMe });
@@ -368,7 +383,7 @@ export default function BattleScreen() {
 
     if (!ko) {
       setRound(r => r + 1);
-      pushLog(`── Round over. Choose your next attack! ──`, 'round');
+      pushLog(T.duels_battle_round_over, 'round');
       setSelectedAttackId(null);
       setPhase('pick');
       return;
@@ -393,13 +408,13 @@ export default function BattleScreen() {
     }
 
     const endMsg =
-      winner === ME_ID ? '🏆 YOU WIN!'
-      : winner === 'draw' ? '🤝 DRAW!'
-      : '💀 DEFEATED!';
+      winner === ME_ID ? T.duels_battle_msg_win
+      : winner === 'draw' ? T.duels_battle_msg_draw
+      : T.duels_battle_msg_lose;
     pushLog(endMsg, 'end');
     await delay(600);
     setPhase('end');
-  }, [selectedAttackId, phase, myAttacks, myLevel, oppLevel, pushLog]);
+  }, [selectedAttackId, phase, myAttacks, myLevel, oppLevel, pushLog, T]);
 
   const isPickPhase = phase === 'pick';
   const isEnd = phase === 'end';
@@ -409,9 +424,9 @@ export default function BattleScreen() {
 
       {/* ── Top bar: round counter ── */}
       <View style={s.topBar}>
-        <Text style={s.roundLabel}>ROUND {round}</Text>
+        <Text style={s.roundLabel}>{T.duels_battle_round.replace('{n}', String(round))}</Text>
         <Text style={s.roundSub}>
-          {phase === 'pick' ? 'Your turn' : phase === 'resolving' ? 'Resolving...' : isEnd ? 'Battle over' : ''}
+          {phase === 'pick' ? T.duels_battle_phase_pick : phase === 'resolving' ? T.duels_battle_phase_resolving : isEnd ? T.duels_battle_phase_end : ''}
         </Text>
       </View>
 
@@ -419,7 +434,7 @@ export default function BattleScreen() {
       <View style={s.arena}>
         {/* Opponent left */}
         <View style={s.arenaSlot}>
-          <PlayerPanel player={opp} align="left" />
+          <PlayerPanel player={opp} align="left" hpLabel={formatHp(opp.hp, opp.maxHp)} />
           <Character
             player={opp}
             flip={false}
@@ -440,7 +455,7 @@ export default function BattleScreen() {
             isAttacking={attackingId === ME_ID}
             isHit={hitId === ME_ID}
           />
-          <PlayerPanel player={me} align="right" />
+          <PlayerPanel player={me} align="right" hpLabel={formatHp(me.hp, me.maxHp)} />
         </View>
       </View>
 
@@ -460,7 +475,7 @@ export default function BattleScreen() {
       {!isEnd ? (
         <View style={s.bottomPanel}>
           <Text style={s.panelHeader}>
-            {isPickPhase ? 'CHOOSE YOUR ATTACK' : '⏳  OPPONENT IS THINKING...'}
+            {isPickPhase ? T.duels_battle_panel_pick : T.duels_battle_panel_thinking}
           </Text>
           <View style={s.attackGrid}>
             {myAttacks.map(atk => (
@@ -479,34 +494,36 @@ export default function BattleScreen() {
             disabled={!selectedAttackId || !isPickPhase}
           >
             <Text style={s.fightBtnText}>
-              {isPickPhase ? '⚔️  FIGHT!' : '⏳  Resolving...'}
+              {isPickPhase ? T.duels_battle_btn_fight : T.duels_battle_btn_resolving}
             </Text>
           </Pressable>
         </View>
       ) : (
         <View style={s.endPanel}>
           <Text style={s.endTitle}>
-            {winnerId === ME_ID ? '🏆 VICTORY!'
-              : winnerId === 'draw' ? '🤝 DRAW'
-              : '💀 DEFEAT'}
+            {winnerId === ME_ID ? T.duels_battle_end_victory
+              : winnerId === 'draw' ? T.duels_battle_end_draw
+              : T.duels_battle_end_defeat}
           </Text>
           <View style={s.rewardBox}>
             {winnerId === ME_ID ? (
               <>
-                <Text style={s.rewardLine}>🎨 Cosmetic unlocked in Shop</Text>
-                <Text style={s.rewardLine}>🏅 Victory achievement earned</Text>
+                <Text style={s.rewardLine}>{T.duels_battle_reward_cosmetic}</Text>
+                <Text style={s.rewardLine}>{T.duels_battle_reward_achievement}</Text>
               </>
             ) : winnerId === 'draw' ? (
-              <Text style={s.rewardLine}>⚡ +{Math.round(xpBonus * 0.5)} XP — well fought!</Text>
+              <Text style={s.rewardLine}>
+                {T.duels_battle_reward_draw.replace('{n}', String(Math.round(xpBonus * 0.5)))}
+              </Text>
             ) : (
               <>
-                <Text style={s.rewardLine}>📈 +{xpBonus} XP catch-up bonus</Text>
-                <Text style={s.rewardLine}>💪 Defeat makes you stronger!</Text>
+                <Text style={s.rewardLine}>{T.duels_battle_reward_xp.replace('{n}', String(xpBonus))}</Text>
+                <Text style={s.rewardLine}>{T.duels_battle_reward_stronger}</Text>
               </>
             )}
           </View>
           <Pressable style={s.exitBtn} onPress={() => router.replace('/duels')}>
-            <Text style={s.exitBtnText}>← Back to Arena</Text>
+            <Text style={s.exitBtnText}>{T.duels_battle_back_arena}</Text>
           </Pressable>
         </View>
       )}

@@ -21,6 +21,7 @@ import { avatarConfigStore$, saveAvatarConfig } from '../../src/features/avatar/
 import { supabase } from '../../src/lib/supabase/client';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 const SKIN_SWATCHES: string[] = [
   '#f4c98a', '#e8a87c', '#d4845a', '#c46c3c',
@@ -95,6 +96,7 @@ const swatchStyles = StyleSheet.create({
 });
 
 export default function EditProfileScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   scroll: {
@@ -193,15 +195,15 @@ export default function EditProfileScreen() {
   const handleSave = async () => {
     const trimmed = username.trim();
     if (!trimmed) {
-      Alert.alert('Invalid username', 'Username cannot be empty.');
+      Alert.alert(T.profile_edit_invalid_title, T.profile_edit_invalid_empty);
       return;
     }
     if (trimmed.length < 3) {
-      Alert.alert('Invalid username', 'Username must be at least 3 characters.');
+      Alert.alert(T.profile_edit_invalid_title, T.profile_edit_invalid_short);
       return;
     }
     if (!/^[a-zA-Z0-9_]+$/.test(trimmed)) {
-      Alert.alert('Invalid username', 'Only letters, numbers, and underscores allowed.');
+      Alert.alert(T.profile_edit_invalid_title, T.profile_edit_invalid_chars);
       return;
     }
 
@@ -225,9 +227,9 @@ export default function EditProfileScreen() {
 
     if (error) {
       if (error.code === '23505') {
-        Alert.alert('Username taken', 'This username is already in use. Choose another.');
+        Alert.alert(T.profile_edit_taken_title, T.profile_edit_taken_msg);
       } else {
-        Alert.alert('Error', error.message);
+        Alert.alert(T.common_error, error.message);
       }
       return;
     }
@@ -245,25 +247,25 @@ export default function EditProfileScreen() {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
-        <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
+        <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
 
         <View style={styles.header}>
-          <Text style={styles.screenLabel}>PROFILE</Text>
-          <Text style={styles.title}>Edit Profile</Text>
+          <Text style={styles.screenLabel}>{T.profile_edit_label}</Text>
+          <Text style={styles.title}>{T.profile_edit_title}</Text>
         </View>
 
         {isLoading ? (
-          <Text style={styles.hint}>Loading...</Text>
+          <Text style={styles.hint}>{T.common_loading}</Text>
         ) : (
           <>
             {/* Username field */}
             <View style={styles.field}>
-              <Text style={styles.label}>USERNAME</Text>
+              <Text style={styles.label}>{T.profile_edit_username_label}</Text>
               <TextInput
                 style={styles.input}
                 value={username}
                 onChangeText={setUsername}
-                placeholder="Enter username"
+                placeholder={T.profile_edit_username_placeholder}
                 placeholderTextColor={colors.textMuted}
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -272,13 +274,13 @@ export default function EditProfileScreen() {
                 onSubmitEditing={handleSave}
               />
               <Text style={styles.hint}>
-                3-20 chars · letters, numbers, underscores only
+                {T.profile_edit_username_hint}
               </Text>
             </View>
 
             {/* Avatar appearance section */}
             <View style={styles.appearanceCard}>
-              <Text style={styles.appearanceTitle}>AVATAR APPEARANCE</Text>
+              <Text style={styles.appearanceTitle}>{T.profile_edit_appearance}</Text>
 
               {/* Live preview */}
               <View style={styles.previewContainer}>
@@ -292,19 +294,19 @@ export default function EditProfileScreen() {
 
               {/* Color pickers */}
               <SwatchRow
-                label="SKIN"
+                label={T.profile_edit_skin}
                 swatches={SKIN_SWATCHES}
                 selected={localSkin}
                 onSelect={setLocalSkin}
               />
               <SwatchRow
-                label="HAIR"
+                label={T.profile_edit_hair}
                 swatches={HAIR_SWATCHES}
                 selected={localHair}
                 onSelect={setLocalHair}
               />
               <SwatchRow
-                label="EYES"
+                label={T.profile_edit_eyes}
                 swatches={EYE_SWATCHES}
                 selected={localEye}
                 onSelect={setLocalEye}
@@ -312,7 +314,7 @@ export default function EditProfileScreen() {
             </View>
 
             <PixelButton
-              title={saving ? 'Saving...' : 'Save Changes'}
+              title={saving ? T.common_saving : T.profile_edit_save}
               onPress={handleSave}
               disabled={saving}
             />

@@ -19,8 +19,10 @@ import {
 } from '../../src/features/notifications/utils/notification-service';
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 export default function HabitDetailScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   scroll: {
@@ -273,7 +275,7 @@ export default function HabitDetailScreen() {
   if (!habit) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Text style={styles.title}>Habit not found</Text>
+        <Text style={styles.title}>{T.habit_detail_not_found}</Text>
       </View>
     );
   }
@@ -281,32 +283,40 @@ export default function HabitDetailScreen() {
   const isPaused = !!(habit as any).is_paused;
 
   const handleArchive = () => {
-    Alert.alert('Archive quest', `Remove "${habit.name}" from your active quests?`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Archive',
-        style: 'destructive',
-        onPress: async () => {
-          await archiveHabit(habit.id);
-          router.back();
+    Alert.alert(
+      T.habit_detail_archive_title,
+      T.habit_detail_archive_msg.replace('{name}', habit.name),
+      [
+        { text: T.common_cancel, style: 'cancel' },
+        {
+          text: T.habit_detail_archive_confirm,
+          style: 'destructive',
+          onPress: async () => {
+            await archiveHabit(habit.id);
+            router.back();
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   const handlePauseResume = () => {
     if (isPaused) {
-      Alert.alert('Resume Quest', `Resume "${habit.name}"? Streak tracking will restart.`, [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Resume', onPress: () => resumeHabit(habit.id) },
-      ]);
+      Alert.alert(
+        T.habit_detail_resume_title,
+        T.habit_detail_resume_msg.replace('{name}', habit.name),
+        [
+          { text: T.common_cancel, style: 'cancel' },
+          { text: T.habit_detail_resume_confirm, onPress: () => resumeHabit(habit.id) },
+        ],
+      );
     } else {
       Alert.alert(
-        'Pause Quest',
-        `Pause "${habit.name}"? Your streak is preserved — you won't be penalised while paused.`,
+        T.habit_detail_pause_title,
+        T.habit_detail_pause_msg.replace('{name}', habit.name),
         [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Pause', onPress: () => pauseHabit(habit.id) },
+          { text: T.common_cancel, style: 'cancel' },
+          { text: T.habit_detail_pause_confirm, onPress: () => pauseHabit(habit.id) },
         ],
       );
     }
@@ -324,7 +334,7 @@ export default function HabitDetailScreen() {
     if (canOpen) {
       await Linking.openURL(url);
     } else {
-      Alert.alert('Cannot open link', url);
+      Alert.alert(T.habit_detail_link_cant_open, url);
     }
   };
 
@@ -335,7 +345,7 @@ export default function HabitDetailScreen() {
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
 
       {/* Header */}
       <View style={styles.header}>
@@ -351,19 +361,19 @@ export default function HabitDetailScreen() {
           <Text style={[styles.statValue, { color: colors.streak }]}>
             {streak?.current_count ?? 0}
           </Text>
-          <Text style={styles.statLabel}>STREAK</Text>
+          <Text style={styles.statLabel}>{T.habit_detail_stat_streak}</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={[styles.statValue, { color: colors.accent }]}>
             {streak?.longest_count ?? 0}
           </Text>
-          <Text style={styles.statLabel}>BEST</Text>
+          <Text style={styles.statLabel}>{T.habit_detail_stat_best}</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={[styles.statValue, { color: isCompletedToday ? colors.success : colors.textMuted }]}>
             {isCompletedToday ? '✓' : '—'}
           </Text>
-          <Text style={styles.statLabel}>TODAY</Text>
+          <Text style={styles.statLabel}>{T.habit_detail_stat_today}</Text>
         </View>
       </View>
 
@@ -384,7 +394,7 @@ export default function HabitDetailScreen() {
                 </Text>
                 <Text style={styles.contentSubtitle} numberOfLines={1}>
                   {content.type === 'timer' && `${content.label} — ${Math.floor(content.duration / 60)}min${content.duration % 60 > 0 ? ` ${content.duration % 60}s` : ''}`}
-                  {content.type === 'checklist' && `${content.items.length} steps`}
+                  {content.type === 'checklist' && T.habit_detail_steps.replace('{n}', String(content.items.length))}
                   {content.type === 'link' && content.label}
                 </Text>
               </View>
@@ -411,20 +421,20 @@ export default function HabitDetailScreen() {
                 <View style={styles.linkContent}>
                   <Text style={styles.linkUrl} numberOfLines={2}>{content.url}</Text>
                   <PixelButton
-                    title={`Open: ${content.label}`}
+                    title={T.habit_detail_open_link.replace('{label}', content.label)}
                     onPress={handleLinkOpen}
                     variant="secondary"
                   />
                   {!isCompletedToday && (
                     <PixelButton
-                      title="Mark as done"
+                      title={T.habit_detail_mark_done}
                       onPress={handleComplete}
                     />
                   )}
                 </View>
               )}
               {isCompletedToday && (
-                <Text style={styles.alreadyDone}>Already completed today ✓</Text>
+                <Text style={styles.alreadyDone}>{T.habit_detail_already_done}</Text>
               )}
             </View>
           )}
@@ -434,7 +444,7 @@ export default function HabitDetailScreen() {
       {/* Quick complete (no content, or no content set) */}
       {!content && !isCompletedToday && (
         <PixelButton
-          title="Mark as done"
+          title={T.habit_detail_mark_done}
           onPress={handleComplete}
           style={styles.quickComplete}
         />
@@ -454,25 +464,25 @@ export default function HabitDetailScreen() {
 
       {isPaused && (
         <View style={styles.pausedBanner}>
-          <Text style={styles.pausedText}>❄️ PAUSED — streak protected</Text>
+          <Text style={styles.pausedText}>{T.habit_detail_paused}</Text>
         </View>
       )}
 
       <View style={styles.bottomRow}>
         <PixelButton
-          title="Edit"
+          title={T.habit_detail_btn_edit}
           onPress={() => router.push(`/habit/edit/${habit.id}`)}
           variant="ghost"
           style={{ flex: 1 }}
         />
         <PixelButton
-          title={isPaused ? '▶ Resume' : '⏸ Pause'}
+          title={isPaused ? T.habit_detail_btn_resume : T.habit_detail_btn_pause}
           onPress={handlePauseResume}
           variant="secondary"
           style={{ flex: 1 }}
         />
         <PixelButton
-          title="Archive"
+          title={T.habit_detail_btn_archive}
           onPress={handleArchive}
           variant="ghost"
           style={{ flex: 1 }}
@@ -483,14 +493,14 @@ export default function HabitDetailScreen() {
         style={styles.reminderRow}
         onPress={() => setShowReminderPicker(true)}
       >
-        <Text style={styles.reminderLabel}>🔔 Daily reminder</Text>
+        <Text style={styles.reminderLabel}>{T.habit_detail_reminder}</Text>
         <Text style={[styles.reminderValue, reminder && { color: colors.primary }]}>
-          {reminder ? `${String(reminder.hour).padStart(2, '0')}:${String(reminder.minute).padStart(2, '0')}` : 'OFF'}
+          {reminder ? `${String(reminder.hour).padStart(2, '0')}:${String(reminder.minute).padStart(2, '0')}` : T.habit_detail_reminder_off}
         </Text>
       </Pressable>
 
       <PixelButton
-        title="📅 History"
+        title={T.habit_detail_btn_history}
         onPress={() => router.push({ pathname: '/habit/history', params: { habitId: habit.id, habitName: habit.name } })}
         variant="ghost"
       />
@@ -504,7 +514,7 @@ export default function HabitDetailScreen() {
       >
         <Pressable style={styles.modalOverlay} onPress={() => setShowReminderPicker(false)}>
           <Pressable style={styles.modalCard} onPress={() => {}}>
-            <Text style={styles.modalTitle}>SET REMINDER</Text>
+            <Text style={styles.modalTitle}>{T.habit_detail_reminder_modal_title}</Text>
             <View style={styles.hourGrid}>
               {[6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22].map((h) => (
                 <Pressable
@@ -520,7 +530,7 @@ export default function HabitDetailScreen() {
             </View>
             <View style={styles.modalActions}>
               <PixelButton
-                title="Set Reminder"
+                title={T.habit_detail_reminder_set}
                 onPress={async () => {
                   await scheduleHabitReminder(habit.id, habit.name, pickerHour, 0);
                   setReminder({ hour: pickerHour, minute: 0 });
@@ -530,7 +540,7 @@ export default function HabitDetailScreen() {
               />
               {reminder && (
                 <PixelButton
-                  title="Remove"
+                  title={T.habit_detail_reminder_remove}
                   onPress={async () => {
                     await cancelHabitReminder(habit.id);
                     setReminder(null);

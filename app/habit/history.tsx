@@ -8,6 +8,7 @@ import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { supabase } from '../../src/lib/supabase/client';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 const DOT_SIZE = 28;
 const DOT_GAP = 3;
@@ -61,6 +62,7 @@ function computeCurrentStreak(dates: string[], completedSet: Set<string>): numbe
 }
 
 export default function HabitHistoryScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   scroll: {
@@ -255,12 +257,12 @@ export default function HabitHistoryScreen() {
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
 
       <View style={styles.header}>
-        <Text style={styles.screenLabel}>HISTORY</Text>
+        <Text style={styles.screenLabel}>{T.habit_history_label}</Text>
         <Text style={styles.title} numberOfLines={2}>
-          {habitName ?? 'Habit'}
+          {habitName ?? T.habit_history_default_name}
         </Text>
       </View>
 
@@ -306,15 +308,15 @@ export default function HabitHistoryScreen() {
           <View style={styles.legend}>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: '#4CAF50' }]} />
-              <Text style={styles.legendText}>Done</Text>
+              <Text style={styles.legendText}>{T.habit_history_legend_done}</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: '#F44336', opacity: 0.4 }]} />
-              <Text style={styles.legendText}>Missed</Text>
+              <Text style={styles.legendText}>{T.habit_history_legend_missed}</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: colors.border }]} />
-              <Text style={styles.legendText}>Future</Text>
+              <Text style={styles.legendText}>{T.habit_history_legend_future}</Text>
             </View>
             <View style={styles.legendItem}>
               <View
@@ -323,7 +325,7 @@ export default function HabitHistoryScreen() {
                   { backgroundColor: colors.border, borderWidth: 2, borderColor: colors.primary },
                 ]}
               />
-              <Text style={styles.legendText}>Today</Text>
+              <Text style={styles.legendText}>{T.habit_history_legend_today}</Text>
             </View>
           </View>
 
@@ -331,19 +333,19 @@ export default function HabitHistoryScreen() {
           <View style={styles.statsRow}>
             <View style={styles.statCard}>
               <Text style={[styles.statValue, { color: '#4CAF50' }]}>{totalCompletions}</Text>
-              <Text style={styles.statLabel}>TOTAL</Text>
+              <Text style={styles.statLabel}>{T.habit_history_stat_total}</Text>
             </View>
             <View style={styles.statCard}>
               <Text style={[styles.statValue, { color: colors.streak }]}>{currentStreak}</Text>
-              <Text style={styles.statLabel}>STREAK</Text>
+              <Text style={styles.statLabel}>{T.habit_history_stat_streak}</Text>
             </View>
             <View style={styles.statCard}>
               <Text style={[styles.statValue, { color: colors.accent }]}>{longestStreak}</Text>
-              <Text style={styles.statLabel}>BEST</Text>
+              <Text style={styles.statLabel}>{T.habit_history_stat_best}</Text>
             </View>
             <View style={styles.statCard}>
               <Text style={[styles.statValue, { color: colors.primary }]}>{completionRate}%</Text>
-              <Text style={styles.statLabel}>RATE</Text>
+              <Text style={styles.statLabel}>{T.habit_history_stat_rate}</Text>
             </View>
           </View>
         </>

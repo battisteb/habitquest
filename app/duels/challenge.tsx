@@ -9,8 +9,10 @@ import { friendsStore$, fetchFriends } from '../../src/features/social/stores/fr
 import { duelStore$, fetchUnlockedCategories, createDuel } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 export default function ChallengeScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
@@ -82,14 +84,14 @@ export default function ChallengeScreen() {
 
   const handleChallenge = async () => {
     if (!selectedFriendId || !selectedAttackId) {
-      Alert.alert('Sélection incomplète', 'Choisis un ami et une attaque d\'ouverture.');
+      Alert.alert(T.duels_challenge_incomplete_title, T.duels_challenge_incomplete_msg);
       return;
     }
 
     const friend = (friends as any[]).find(
       (f: any) => (f.id ?? f.friend_id) === selectedFriendId,
     );
-    const friendName = friend?.username ?? friend?.friend_profile?.username ?? 'Rival';
+    const friendName = friend?.username ?? friend?.friend_profile?.username ?? T.duels_battle_default_rival;
     const friendLevel = friend?.level ?? friend?.friend_profile?.level ?? 5;
 
     // Navigate to battle screen immediately with the selected attack pre-loaded
@@ -109,7 +111,7 @@ export default function ChallengeScreen() {
     } catch (err) {
       const message = err instanceof Error ? err.message : '';
       if (message.toLowerCase().includes('limit')) {
-        Alert.alert('Limite hebdomadaire', 'Tu as utilisé tes 2 duels cette semaine. Reviens lundi !');
+        Alert.alert(T.duels_challenge_limit_title, T.duels_challenge_limit_msg);
       }
       // other errors silently ignored — battle is local demo
     } finally {
@@ -119,12 +121,12 @@ export default function ChallengeScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
-      <Text style={styles.title}>CHALLENGE</Text>
+      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+      <Text style={styles.title}>{T.duels_challenge_title}</Text>
 
-      <Text style={styles.stepLabel}>1. CHOOSE YOUR OPPONENT</Text>
+      <Text style={styles.stepLabel}>{T.duels_challenge_step1}</Text>
       {friends.length === 0 ? (
-        <Text style={styles.hint}>No friends yet — add friends in the Social tab first.</Text>
+        <Text style={styles.hint}>{T.duels_challenge_no_friends}</Text>
       ) : (
         <FlatList
           data={friends}
@@ -142,7 +144,7 @@ export default function ChallengeScreen() {
               >
                 <Text style={styles.friendEmoji}>🧙</Text>
                 <Text style={[styles.friendName, isSelected && styles.friendNameSelected]}>
-                  {f.profile?.username ?? 'Hero'}
+                  {f.profile?.username ?? T.duels_challenge_default_hero}
                 </Text>
                 <Text style={styles.friendLevel}>Lv.{f.profile?.level ?? 1}</Text>
               </Pressable>
@@ -151,7 +153,7 @@ export default function ChallengeScreen() {
         />
       )}
 
-      <Text style={styles.stepLabel}>2. CHOOSE YOUR OPENING ATTACK</Text>
+      <Text style={styles.stepLabel}>{T.duels_challenge_step2}</Text>
       <FlatList
         data={attacks}
         keyExtractor={(a) => a.id}
@@ -169,8 +171,8 @@ export default function ChallengeScreen() {
               <Text style={styles.atkName}>{a.name}</Text>
               <Text style={styles.atkDesc}>{a.description}</Text>
               <View style={styles.atkStats}>
-                <Text style={styles.atkStat}>DMG {a.baseDamage}</Text>
-                <Text style={styles.atkStat}>HIT {Math.round(a.hitChance * 100)}%</Text>
+                <Text style={styles.atkStat}>{T.duels_challenge_dmg.replace('{n}', String(a.baseDamage))}</Text>
+                <Text style={styles.atkStat}>{T.duels_challenge_hit.replace('{n}', String(Math.round(a.hitChance * 100)))}</Text>
               </View>
               {a.special && <Text style={styles.atkSpecial}>{a.special.toUpperCase()}</Text>}
             </Pressable>
@@ -179,7 +181,7 @@ export default function ChallengeScreen() {
       />
 
       <PixelButton
-        title={isSending ? 'Sending...' : 'SEND CHALLENGE'}
+        title={isSending ? T.duels_challenge_sending : T.duels_challenge_send}
         onPress={handleChallenge}
         style={styles.sendBtn}
       />

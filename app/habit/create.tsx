@@ -10,17 +10,21 @@ import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
-
-const FREQUENCY_OPTIONS: { value: string; label: string }[] = [
-  { value: 'daily', label: 'DAILY' },
-  { value: '2x_week', label: '2×/WK' },
-  { value: '3x_week', label: '3×/WK' },
-  { value: '4x_week', label: '4×/WK' },
-  { value: '5x_week', label: '5×/WK' },
-];
+import { useT } from '../../src/lib/i18n';
 
 export default function CreateHabitScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
+  const FREQUENCY_OPTIONS = useMemo<{ value: string; label: string }[]>(
+    () => [
+      { value: 'daily', label: T.habit_create_freq_daily },
+      { value: '2x_week', label: T.habit_create_freq_2x },
+      { value: '3x_week', label: T.habit_create_freq_3x },
+      { value: '4x_week', label: T.habit_create_freq_4x },
+      { value: '5x_week', label: T.habit_create_freq_5x },
+    ],
+    [T],
+  );
   const styles = useMemo(() => StyleSheet.create({
   container: {
     flex: 1,
@@ -139,8 +143,8 @@ export default function CreateHabitScreen() {
       await createHabit(name.trim(), category, content, frequency);
       router.back();
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Failed to create habit';
-      Alert.alert('Error', message);
+      const message = error instanceof Error ? error.message : T.habit_create_error;
+      Alert.alert(T.common_error, message);
     } finally {
       setLoading(false);
     }
@@ -153,20 +157,20 @@ export default function CreateHabitScreen() {
     >
       <View style={styles.header}>
         <Pressable onPress={() => router.back()}>
-          <Text style={styles.backButton}>{'< BACK'}</Text>
+          <Text style={styles.backButton}>{T.habit_create_back}</Text>
         </Pressable>
-        <Text style={styles.title}>NEW QUEST</Text>
+        <Text style={styles.title}>{T.habit_create_title}</Text>
       </View>
 
       <PixelInput
-        label="Quest name"
-        placeholder="e.g. Morning run, Read 30 min..."
+        label={T.habit_create_name_label}
+        placeholder={T.habit_create_name_placeholder}
         value={name}
         onChangeText={setName}
       />
 
       <View style={styles.categorySection}>
-        <Text style={styles.categoryLabel}>CATEGORY</Text>
+        <Text style={styles.categoryLabel}>{T.habit_create_category}</Text>
         <View style={styles.categoryGrid}>
           {HABIT_CATEGORIES.map((cat) => {
             const config = CATEGORY_CONFIG[cat];
@@ -197,7 +201,7 @@ export default function CreateHabitScreen() {
       </View>
 
       <View style={styles.frequencySection}>
-        <Text style={styles.frequencyLabel}>FREQUENCY</Text>
+        <Text style={styles.frequencyLabel}>{T.habit_create_frequency}</Text>
         <View style={styles.frequencyRow}>
           {FREQUENCY_OPTIONS.map((opt) => (
             <Pressable
@@ -229,13 +233,13 @@ export default function CreateHabitScreen() {
           style={styles.trainingShortcut}
         >
           <Text style={styles.trainingShortcutText}>
-            {category === 'fitness' ? '🏋️ Gérer mes séances →' : '📚 Gérer mes decks Anki →'}
+            {category === 'fitness' ? T.habit_create_training_fitness : T.habit_create_training_learning}
           </Text>
         </Pressable>
       )}
 
       <PixelButton
-        title="Create quest"
+        title={T.habit_create_submit}
         onPress={handleCreate}
         disabled={loading || !name.trim()}
         style={styles.createButton}

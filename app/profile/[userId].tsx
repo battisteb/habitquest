@@ -11,6 +11,7 @@ import { sendFriendRequest, friendsStore$ } from '../../src/features/social/stor
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT, lang$ } from '../../src/lib/i18n';
 
 interface PublicProfile {
   id: string;
@@ -29,6 +30,7 @@ interface ProfileStats {
 }
 
 export default function PublicProfileScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   scroll: {
@@ -201,25 +203,25 @@ export default function PublicProfileScreen() {
   if (!profile) {
     return (
       <View style={[styles.centered, { paddingTop: insets.top }]}>
-        <Text style={styles.notFound}>Profile not found</Text>
-        <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
+        <Text style={styles.notFound}>{T.profile_pub_not_found}</Text>
+        <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
       </View>
     );
   }
 
   const rank = getRankForLevel(profile.level);
   const avatarStage = getAvatarStage(profile.level);
-  const memberSince = new Date(profile.created_at).toLocaleDateString('en-US', {
-    month: 'long',
-    year: 'numeric',
-  });
+  const memberSince = new Date(profile.created_at).toLocaleDateString(
+    lang$.get() === 'fr' ? 'fr-FR' : 'en-US',
+    { month: 'long', year: 'numeric' },
+  );
 
   return (
     <ScrollView
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
 
       {/* Hero */}
       <View style={styles.hero}>
@@ -229,22 +231,22 @@ export default function PublicProfileScreen() {
         <Text style={[styles.stage, { color: avatarStage.aura }]}>
           {avatarStage.title}
         </Text>
-        <Text style={styles.memberSince}>Member since {memberSince}</Text>
+        <Text style={styles.memberSince}>{T.profile_pub_member_since.replace('{date}', memberSince)}</Text>
       </View>
 
       {/* Stats */}
       <View style={styles.statsRow}>
         <View style={styles.statCard}>
           <Text style={[styles.statValue, { color: colors.xp }]}>{profile.level}</Text>
-          <Text style={styles.statLabel}>LEVEL</Text>
+          <Text style={styles.statLabel}>{T.profile_pub_stat_level}</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={[styles.statValue, { color: colors.xp }]}>{profile.xp}</Text>
-          <Text style={styles.statLabel}>XP</Text>
+          <Text style={styles.statLabel}>{T.profile_pub_stat_xp}</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={[styles.statValue, { color: colors.accent }]}>{profile.gold}</Text>
-          <Text style={styles.statLabel}>GOLD</Text>
+          <Text style={styles.statLabel}>{T.profile_pub_stat_gold}</Text>
         </View>
       </View>
 
@@ -254,13 +256,13 @@ export default function PublicProfileScreen() {
             <Text style={[styles.statValue, { color: colors.success }]}>
               {stats.totalCompletions}
             </Text>
-            <Text style={styles.statLabel}>COMPLETIONS</Text>
+            <Text style={styles.statLabel}>{T.profile_pub_stat_completions}</Text>
           </View>
           <View style={styles.statCard}>
             <Text style={[styles.statValue, { color: colors.streak }]}>
               {stats.bestStreak}🔥
             </Text>
-            <Text style={styles.statLabel}>BEST STREAK</Text>
+            <Text style={styles.statLabel}>{T.profile_pub_stat_best_streak}</Text>
           </View>
         </View>
       )}
@@ -269,9 +271,9 @@ export default function PublicProfileScreen() {
       <View style={styles.actions}>
         {alreadyFriend ? (
           <>
-            <Text style={styles.friendChip}>👥 Friends</Text>
+            <Text style={styles.friendChip}>{T.profile_pub_friends}</Text>
             <PixelButton
-              title="⚔️ Challenge"
+              title={T.profile_pub_challenge}
               onPress={() =>
                 router.push(
                   `/challenge/create?opponentId=${profile.id}&opponentName=${profile.username}`,
@@ -280,7 +282,7 @@ export default function PublicProfileScreen() {
               variant="secondary"
             />
             <PixelButton
-              title="⚔️ Quick Duel"
+              title={T.profile_pub_quick_duel}
               onPress={() =>
                 router.push(
                   `/duels/battle?opponentId=${profile.id}&opponentName=${profile.username}&opponentLevel=${profile.level}`,
@@ -289,10 +291,10 @@ export default function PublicProfileScreen() {
             />
           </>
         ) : alreadySent ? (
-          <Text style={styles.pendingChip}>Request sent ⏳</Text>
+          <Text style={styles.pendingChip}>{T.profile_pub_request_sent}</Text>
         ) : (
           <PixelButton
-            title="+ Add Friend"
+            title={T.profile_pub_add_friend}
             onPress={() => sendFriendRequest(profile.id)}
           />
         )}

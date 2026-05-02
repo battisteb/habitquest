@@ -17,10 +17,12 @@ import { getCategoryColor } from '../../src/lib/constants/categories';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import type { Database } from '../../src/lib/supabase/types';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 type Habit = Database['public']['Tables']['habits']['Row'];
 
 export default function HabitArchiveScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   screen: {
@@ -125,12 +127,12 @@ export default function HabitArchiveScreen() {
 
   async function handleDelete(habit: Habit) {
     Alert.alert(
-      'Delete permanently',
-      `Delete "${habit.name}" and all its completion history? This cannot be undone.`,
+      T.habit_archive_delete_title,
+      T.habit_archive_delete_msg.replace('{name}', habit.name),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: T.common_cancel, style: 'cancel' },
         {
-          text: 'Delete',
+          text: T.common_delete,
           style: 'destructive',
           onPress: async () => {
             await deleteHabitPermanently(habit.id);
@@ -144,8 +146,8 @@ export default function HabitArchiveScreen() {
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <PixelButton title="< Back" onPress={() => router.back()} variant="ghost" />
-        <Text style={styles.title}>ARCHIVE</Text>
+        <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+        <Text style={styles.title}>{T.habit_archive_title}</Text>
         <View style={{ width: 60 }} />
       </View>
 
@@ -154,7 +156,7 @@ export default function HabitArchiveScreen() {
       ) : archived.length === 0 ? (
         <View style={styles.empty}>
           <Text style={styles.emptyEmoji}>📦</Text>
-          <Text style={styles.emptyText}>No archived habits</Text>
+          <Text style={styles.emptyText}>{T.habit_archive_empty}</Text>
         </View>
       ) : (
         <FlatList
@@ -175,13 +177,13 @@ export default function HabitArchiveScreen() {
                   </View>
                   <View style={styles.cardActions}>
                     <PixelButton
-                      title="Restore"
+                      title={T.habit_archive_restore}
                       onPress={() => handleRestore(item)}
                       variant="secondary"
                       style={styles.actionBtn}
                     />
                     <PixelButton
-                      title="Delete"
+                      title={T.common_delete}
                       onPress={() => handleDelete(item)}
                       variant="ghost"
                       style={styles.actionBtn}

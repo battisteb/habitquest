@@ -11,8 +11,10 @@ import { usePremium } from '../../src/features/monetization/hooks/use-premium';
 import { showInterstitial } from '../../src/features/monetization/utils/ad-service';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 export default function DuelsIndexScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
@@ -135,23 +137,25 @@ export default function DuelsIndexScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Pressable onPress={() => router.back()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>← RETOUR</Text>
+        <Text style={styles.backButtonText}>{T.duels_back}</Text>
       </Pressable>
       <View style={styles.header}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>DUELS</Text>
+          <Text style={styles.title}>{T.duels_title}</Text>
           <View style={[styles.weeklyBadge, { borderColor: badgeColor }]}>
             <Text style={[styles.weeklyBadgeText, { color: badgeColor }]}>
-              {isPremium ? `${weeklyUsed} this week` : `${weeklyUsed}/3 this week`}
+              {isPremium
+                ? T.duels_week_count.replace('{n}', String(weeklyUsed))
+                : T.duels_week_count_limit.replace('{n}', String(weeklyUsed))}
             </Text>
           </View>
         </View>
-        <Text style={styles.sub}>Challenge friends to turn-based combat</Text>
-        <Text style={styles.resetNote}>Resets every Monday</Text>
+        <Text style={styles.sub}>{T.duels_subtitle}</Text>
+        <Text style={styles.resetNote}>{T.duels_reset_note}</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>YOUR ATTACKS ({attacks.length})</Text>
+        <Text style={styles.sectionTitle}>{T.duels_section_attacks.replace('{n}', String(attacks.length))}</Text>
         <FlatList
           data={attacks}
           keyExtractor={(a) => a.id}
@@ -167,7 +171,7 @@ export default function DuelsIndexScreen() {
           )}
         />
         {attacks.length <= 1 && (
-          <Text style={styles.hint}>Complete habits (7+ times) to unlock more attacks!</Text>
+          <Text style={styles.hint}>{T.duels_attacks_hint}</Text>
         )}
       </View>
 
@@ -175,16 +179,18 @@ export default function DuelsIndexScreen() {
         <View style={styles.lockedContainer}>
           <Text style={styles.lockedIcon}>🔒</Text>
           <Text style={styles.lockedTitle}>
-            {weeklyLimitReached ? 'LIMITE HEBDO ATTEINTE' : 'COOLDOWN EN COURS'}
+            {weeklyLimitReached ? T.duels_locked_weekly : T.duels_locked_cooldown}
           </Text>
           <Text style={styles.lockedMessage}>
             {weeklyLimitReached
-              ? 'Reviens lundi — 3 duels utilisés cette semaine'
-              : `Prochain duel disponible dans ${cooldownHours}h\n(${duelCooldownHours}h entre chaque duel)`}
+              ? T.duels_locked_weekly_msg
+              : T.duels_locked_cooldown_msg
+                  .replace('{h}', String(cooldownHours))
+                  .replace('{hh}', String(duelCooldownHours))}
           </Text>
           {!isPremium && (
             <PixelButton
-              title="👑 Premium : 1 duel/jour"
+              title={T.duels_premium_cta}
               onPress={openPaywall}
               variant="secondary"
               style={{ marginTop: spacing.sm }}
@@ -193,25 +199,25 @@ export default function DuelsIndexScreen() {
         </View>
       ) : (
         <PixelButton
-          title="Challenge a Friend"
+          title={T.duels_btn_challenge}
           onPress={handleChallengeFriend}
           style={styles.challengeBtn}
         />
       )}
 
       <PixelButton
-        title="⚔️ Quick Battle (Demo)"
+        title={T.duels_btn_quick}
         onPress={handleQuickBattle}
         variant="ghost"
         style={styles.simBtn}
       />
 
       <View style={styles.howItWorks}>
-        <Text style={styles.howTitle}>HOW IT WORKS</Text>
-        <Text style={styles.howText}>1. Challenge a friend to a duel</Text>
-        <Text style={styles.howText}>2. Each player picks an attack (daily)</Text>
-        <Text style={styles.howText}>3. Attacks resolve — higher level has better odds</Text>
-        <Text style={styles.howText}>4. First to 0 HP loses — both get rewards!</Text>
+        <Text style={styles.howTitle}>{T.duels_how_title}</Text>
+        <Text style={styles.howText}>{T.duels_how_1}</Text>
+        <Text style={styles.howText}>{T.duels_how_2}</Text>
+        <Text style={styles.howText}>{T.duels_how_3}</Text>
+        <Text style={styles.howText}>{T.duels_how_4}</Text>
       </View>
     </View>
   );

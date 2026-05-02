@@ -14,9 +14,20 @@ import {
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { useT } from '../../src/lib/i18n';
 
 export default function ContextualModeScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
+  const modeNames = useMemo<Record<ContextualModeKey, { name: string; desc: string }>>(
+    () => ({
+      exam: { name: T.ctx_mode_exam_name, desc: T.ctx_mode_exam_desc },
+      competition: { name: T.ctx_mode_competition_name, desc: T.ctx_mode_competition_desc },
+      vacation: { name: T.ctx_mode_vacation_name, desc: T.ctx_mode_vacation_desc },
+      none: { name: '', desc: '' },
+    }),
+    [T],
+  );
   const styles = useMemo(() => StyleSheet.create({
   container: {
     flex: 1,
@@ -223,8 +234,8 @@ export default function ContextualModeScreen() {
     >
       {/* Header */}
       <View style={styles.header}>
-        <PixelButton title="Back" onPress={() => router.back()} variant="ghost" />
-        <Text style={styles.title}>FOCUS MODE</Text>
+        <PixelButton title={T.ctx_back} onPress={() => router.back()} variant="ghost" />
+        <Text style={styles.title}>{T.ctx_title}</Text>
         <View style={{ width: 60 }} />
       </View>
 
@@ -234,41 +245,42 @@ export default function ContextualModeScreen() {
           <View style={styles.activeBannerInfo}>
             <Text style={styles.activeBannerEmoji}>{activeDef.emoji}</Text>
             <View>
-              <Text style={styles.activeBannerName}>{activeDef.name.toUpperCase()}</Text>
-              <Text style={styles.activeBannerDays}>{getRemainingDays(activeMode)} days remaining</Text>
+              <Text style={styles.activeBannerName}>{modeNames[activeDef.key].name.toUpperCase()}</Text>
+              <Text style={styles.activeBannerDays}>{T.ctx_remaining.replace('{n}', String(getRemainingDays(activeMode)))}</Text>
             </View>
           </View>
           <Pressable style={styles.deactivateButton} onPress={handleDeactivate}>
-            <Text style={styles.deactivateButtonText}>DEACTIVATE</Text>
+            <Text style={styles.deactivateButtonText}>{T.ctx_deactivate}</Text>
           </Pressable>
         </View>
       )}
 
       {/* Description */}
       <Text style={styles.description}>
-        Focus modes temporarily adjust which habit categories are active. Paused categories keep their streaks frozen.
+        {T.ctx_description}
       </Text>
 
       {/* Mode cards */}
       {MODES.map((mode) => {
         const isActive = activeMode?.key === mode.key;
+        const labels = modeNames[mode.key];
         return (
           <View key={mode.key} style={[styles.card, isActive && styles.cardActive]}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardEmoji}>{mode.emoji}</Text>
               <View style={styles.cardTitleBlock}>
                 <Text style={[styles.cardName, isActive && styles.cardNameActive]}>
-                  {mode.name.toUpperCase()}
+                  {labels.name.toUpperCase()}
                 </Text>
-                <Text style={styles.cardDuration}>{mode.durationDays} days</Text>
+                <Text style={styles.cardDuration}>{T.ctx_duration_days.replace('{n}', String(mode.durationDays))}</Text>
               </View>
             </View>
 
-            <Text style={styles.cardDescription}>{mode.description}</Text>
+            <Text style={styles.cardDescription}>{labels.desc}</Text>
 
             <View style={styles.categoriesRow}>
               <View style={styles.categoryGroup}>
-                <Text style={styles.categoryGroupLabel}>FOCUS</Text>
+                <Text style={styles.categoryGroupLabel}>{T.ctx_focus}</Text>
                 <View style={styles.chips}>
                   {mode.focusCategories.map((cat) => (
                     <View key={cat} style={styles.chipFocus}>
@@ -278,7 +290,7 @@ export default function ContextualModeScreen() {
                 </View>
               </View>
               <View style={styles.categoryGroup}>
-                <Text style={styles.categoryGroupLabel}>PAUSE</Text>
+                <Text style={styles.categoryGroupLabel}>{T.ctx_pause}</Text>
                 <View style={styles.chips}>
                   {mode.pauseCategories.map((cat) => (
                     <View key={cat} style={styles.chipPause}>
@@ -291,14 +303,14 @@ export default function ContextualModeScreen() {
 
             {!isActive && (
               <PixelButton
-                title="Activate"
+                title={T.ctx_activate}
                 onPress={() => handleActivate(mode.key)}
                 variant="primary"
               />
             )}
             {isActive && (
               <View style={styles.activeTag}>
-                <Text style={styles.activeTagText}>ACTIVE</Text>
+                <Text style={styles.activeTagText}>{T.ctx_active_tag}</Text>
               </View>
             )}
           </View>
