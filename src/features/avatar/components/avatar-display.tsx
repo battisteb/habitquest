@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Platform, View, Text, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -28,11 +28,12 @@ export function AvatarDisplay({ level, size = 'md' }: AvatarDisplayProps) {
 
   const auraStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pulse.value }],
-    shadowColor: stage.aura,
-    shadowOpacity: 0.8,
-    shadowRadius: 12,
-    elevation: 8,
   }));
+
+  const auraShadow = Platform.select({
+    native: { shadowColor: stage.aura, shadowOpacity: 0.8, shadowRadius: 12, elevation: 8 },
+    web: { boxShadow: `0 0 12px ${stage.aura}` },
+  });
 
   return (
     <View style={[styles.container, { width: dim, height: dim }]}>
@@ -47,6 +48,7 @@ export function AvatarDisplay({ level, size = 'md' }: AvatarDisplayProps) {
             backgroundColor: stage.aura + '22',
           },
           auraStyle,
+          auraShadow,
         ]}
       />
       <Text style={[styles.emoji, { fontSize }]}>{stage.emoji}</Text>

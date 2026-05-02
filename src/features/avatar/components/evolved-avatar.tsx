@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Platform, View, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -84,12 +84,17 @@ export function EvolvedAvatar({
               borderColor: auraColor,
               borderWidth: 2,
               backgroundColor: hasGlow ? auraColor + '22' : 'transparent',
-              shadowColor: auraColor,
-              shadowOpacity: hasGlow ? 0.7 : 0,
-              shadowRadius: hasGlow ? 14 : 0,
-              shadowOffset: { width: 0, height: 0 },
-              elevation: hasGlow ? 10 : 0,
             },
+            Platform.select({
+              native: {
+                shadowColor: auraColor,
+                shadowOpacity: hasGlow ? 0.7 : 0,
+                shadowRadius: hasGlow ? 14 : 0,
+                shadowOffset: { width: 0, height: 0 },
+                elevation: hasGlow ? 10 : 0,
+              },
+              web: hasGlow ? { boxShadow: `0 0 14px ${auraColor}` } : undefined,
+            }),
             auraAnimatedStyle,
           ]}
         />
@@ -97,7 +102,6 @@ export function EvolvedAvatar({
 
       {hasParticles && (
         <Animated.View
-          pointerEvents="none"
           style={[
             styles.particlesContainer,
             { width: containerSize, height: containerSize },
@@ -119,8 +123,8 @@ export function EvolvedAvatar({
                     left: x,
                     top: y,
                     backgroundColor: auraColor,
-                    shadowColor: auraColor,
                   },
+                  Platform.OS !== 'web' ? { shadowColor: auraColor } : { boxShadow: `0 0 4px ${auraColor}` },
                 ]}
               />
             );
@@ -149,15 +153,16 @@ const styles = StyleSheet.create({
   },
   particlesContainer: {
     position: 'absolute',
+    pointerEvents: 'none',
   },
   particle: {
     position: 'absolute',
     width: 4,
     height: 4,
     borderRadius: 2,
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 0 },
-    elevation: 4,
+    ...Platform.select({
+      native: { shadowOpacity: 0.8, shadowRadius: 4, shadowOffset: { width: 0, height: 0 }, elevation: 4 },
+      web: {},
+    }),
   },
 });

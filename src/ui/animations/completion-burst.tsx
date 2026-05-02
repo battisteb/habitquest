@@ -62,7 +62,7 @@ interface CompletionBurstProps {
 
 export function CompletionBurst({ visible }: CompletionBurstProps) {
   return (
-    <View style={styles.container} pointerEvents="none">
+    <View style={styles.container}>
       {PARTICLES.map((p, i) => (
         <ParticleDot key={i} {...p} visible={visible} />
       ))}
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 100,
+    pointerEvents: 'none',
   },
   particle: {
     position: 'absolute',

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -93,7 +93,7 @@ export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComp
   const config = getMilestoneConfig(streakCount);
 
   return (
-    <Animated.View style={[styles.overlay, overlayStyle]} pointerEvents="none">
+    <Animated.View style={[styles.overlay, overlayStyle]}>
       <Animated.View style={[styles.card, badgeStyle, { borderColor: config.color }]}>
         <Text style={styles.emoji}>{config.emoji}</Text>
         <Text style={[styles.milestoneLabel, { color: config.color }]}>{config.label} STREAK!</Text>
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 99,
+    pointerEvents: 'none',
   },
   card: {
     backgroundColor: colors.surface,
@@ -125,11 +126,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     minWidth: 240,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
-    shadowRadius: 16,
-    elevation: 12,
+    ...Platform.select({
+      native: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.5,
+        shadowRadius: 16,
+        elevation: 12,
+      },
+      web: { boxShadow: '0 8px 16px rgba(0,0,0,0.5)' },
+    }),
   },
   emoji: {
     fontSize: 56,

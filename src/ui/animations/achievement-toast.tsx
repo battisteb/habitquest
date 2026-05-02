@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Pressable } from 'react-native';
+import { Platform, View, Text, StyleSheet, Animated, Pressable } from 'react-native';
 import { colors, fontSizes, spacing } from '../theme/tokens';
 import { useT } from '../../lib/i18n';
 
@@ -116,11 +116,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 4,
     padding: spacing.sm,
     gap: spacing.sm,
-    shadowColor: colors.accent,
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 8,
+    ...Platform.select({
+      native: {
+        shadowColor: colors.accent,
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 8,
+      },
+      web: { boxShadow: `0 4px 8px ${colors.accent}4d` },
+    }),
   },
   badge: {
     width: 44,

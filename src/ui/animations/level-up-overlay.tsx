@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -81,7 +81,7 @@ export function LevelUpOverlay({ visible, newLevel, onComplete }: LevelUpOverlay
   if (!visible) return null;
 
   return (
-    <Animated.View style={[styles.overlay, overlayStyle]} pointerEvents="none">
+    <Animated.View style={[styles.overlay, overlayStyle]}>
       <Animated.View style={[styles.badge, badgeStyle]}>
         <Animated.View style={[styles.starsRow, starsStyle]}>
           <Text style={styles.star}>★</Text>
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 100,
+    pointerEvents: 'none',
   },
   badge: {
     alignItems: 'center',
@@ -123,9 +124,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.accent,
     letterSpacing: 4,
-    textShadowColor: 'rgba(218, 165, 32, 0.5)',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 16,
+    ...Platform.select({
+      native: {
+        textShadowColor: 'rgba(218, 165, 32, 0.5)',
+        textShadowOffset: { width: 0, height: 0 },
+        textShadowRadius: 16,
+      },
+      web: { textShadow: '0 0 16px rgba(218, 165, 32, 0.5)' },
+    }),
   },
   levelBadge: {
     width: 80,

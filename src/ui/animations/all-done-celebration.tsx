@@ -39,7 +39,7 @@ export function AllDoneCelebration({ visible }: AllDoneCelebrationProps) {
   if (!visible) return null;
 
   return (
-    <Animated.View style={[styles.banner, style]} pointerEvents="none">
+    <Animated.View style={[styles.banner, style]}>
       <Text style={styles.text}>🏆 ALL QUESTS COMPLETE!</Text>
     </Animated.View>
   );
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     alignItems: 'center',
     zIndex: 998,
+    pointerEvents: 'none',
   },
   text: {
     color: colors.background,

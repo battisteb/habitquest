@@ -64,7 +64,6 @@ export function OfflineBanner() {
   return (
     <Animated.View
       style={[styles.banner, { transform: [{ translateY: slideY }] }]}
-      pointerEvents="none"
     >
       <Text style={styles.text}>{T.offline_banner_msg}</Text>
     </Animated.View>
@@ -82,6 +81,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     alignItems: 'center',
     zIndex: 9999,
+    pointerEvents: 'none',
   },
   text: {
     color: '#fff',
