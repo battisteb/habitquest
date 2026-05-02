@@ -2,7 +2,6 @@ import { observable } from '@legendapp/state';
 import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
-import { habitsStore$ } from '../../habits/stores/habits-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 
 export type QuestType = 'complete_habits' | 'complete_category' | 'earn_xp' | 'maintain_streak';
@@ -102,10 +101,16 @@ export async function fetchDailyQuests() {
   }
 }
 
+export interface HabitsSnapshot {
+  todayCompletions: Record<string, boolean>;
+  habits: { id: string }[];
+}
+
 export async function updateQuestProgress(
   questType: QuestType,
   category?: string,
   value?: number,
+  habitsSnapshot?: HabitsSnapshot,
 ) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
@@ -133,8 +138,8 @@ export async function updateQuestProgress(
       newProgress = quest.current_progress + (value ?? 0);
     } else if (questType === 'maintain_streak') {
       // For streak quests, check if all habits have been completed today
-      const todayCompletions = habitsStore$.todayCompletions.get();
-      const habits = habitsStore$.habits.get();
+      const todayCompletions = habitsSnapshot?.todayCompletions ?? {};
+      const habits = habitsSnapshot?.habits ?? [];
       const allCompleted = habits.length > 0 && habits.every((h) => todayCompletions[h.id]);
       newProgress = allCompleted ? 1 : 0;
     } else {

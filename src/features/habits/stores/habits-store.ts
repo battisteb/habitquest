@@ -315,10 +315,14 @@ export async function completeHabit(habitId: string) {
   checkAndUnlockAchievements().catch(() => {});
 
   // Update daily quest progress (non-blocking)
-  updateQuestProgress('complete_habits').catch(() => {});
+  const snapshot = {
+    todayCompletions: habitsStore$.todayCompletions.get(),
+    habits: habitsStore$.habits.get(),
+  };
+  updateQuestProgress('complete_habits', undefined, undefined, snapshot).catch(() => {});
   if (habit?.category) {
-    updateQuestProgress('complete_category', habit.category).catch(() => {});
+    updateQuestProgress('complete_category', habit.category, undefined, snapshot).catch(() => {});
   }
-  updateQuestProgress('earn_xp', undefined, xpEarned).catch(() => {});
-  updateQuestProgress('maintain_streak').catch(() => {});
+  updateQuestProgress('earn_xp', undefined, xpEarned, snapshot).catch(() => {});
+  updateQuestProgress('maintain_streak', undefined, undefined, snapshot).catch(() => {});
 }
