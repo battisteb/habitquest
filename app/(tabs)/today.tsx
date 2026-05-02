@@ -22,6 +22,7 @@ import { useStreakRiskNotification } from '../../src/features/notifications/hook
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../src/features/habits/stores/burnout-store';
 import { brokenStreakStore$, dismissBrokenStreak, clearBrokenStreakForHabit } from '../../src/features/habits/stores/broken-streak-store';
+import { pinnedHabitsStore$, togglePinHabit, isHabitPinned } from '../../src/features/habits/stores/pinned-habits-store';
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import {
   getFreezesRemaining,
@@ -448,6 +449,7 @@ export default function TodayScreen() {
   const burnoutLastDismissed = use$(burnoutStore$.lastDismissedAt);
   const burnoutDismissed = useMemo(() => isDismissalActive(), [burnoutLastDismissed]);
   const brokenStreaks = use$(brokenStreakStore$.items);
+  const pinnedIds = use$(pinnedHabitsStore$.pinnedIds);
   const [takeBreakOpen, setTakeBreakOpen] = useState(false);
   const profile = use$(profileStore$.profile);
   const authUser = use$(authStore$.user);
@@ -502,19 +504,22 @@ export default function TodayScreen() {
     return Array.from(seen);
   }, [habits]);
 
-  // Filter + sort: exclude mode-paused, exclude paused, incomplete first, then completed
+  // Filter + sort: pinned first, then incomplete, then completed
   const displayedHabits = useMemo(() => {
     const filtered = (activeCategory === ALL_KEY
       ? habits
       : habits.filter((h) => h.category === activeCategory)
     ).filter((h) => isHabitActiveInMode(h.category, activeMode)).filter((h) => !(h as any).is_paused);
     return [...filtered].sort((a, b) => {
+      const aPinned = pinnedIds.includes(a.id);
+      const bPinned = pinnedIds.includes(b.id);
+      if (aPinned !== bPinned) return aPinned ? -1 : 1;
       const aDone = isHabitCompletedEnough(a.id);
       const bDone = isHabitCompletedEnough(b.id);
       if (aDone === bDone) return 0;
       return aDone ? 1 : -1;
     });
-  }, [habits, activeCategory, todayCompletions, weekCompletions]);
+  }, [habits, activeCategory, todayCompletions, weekCompletions, pinnedIds]);
 
   const activeHabits = habits.filter((h) => !(h as any).is_paused);
   const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
@@ -781,20 +786,39 @@ export default function TodayScreen() {
           }
           contentContainerStyle={styles.listContent}
           style={styles.list}
-          renderItem={({ item, index }) => (
-            <HabitCard
-              name={item.name}
-              category={item.category}
-              streakCount={streaks[item.id]?.current_count ?? 0}
-              isCompletedToday={!!todayCompletions[item.id]}
-              onComplete={() => handleComplete(item.id)}
-              onPress={() => router.push(`/habit/${item.id}`)}
-              index={index}
-              frequency={item.frequency ?? 'daily'}
-              weekCompletionCount={weekCompletions[item.id] ?? 0}
-              contentType={(item.content as { type?: string } | null)?.type as 'timer' | 'checklist' | 'link' | null ?? null}
-            />
-          )}
+          renderItem={({ item, index }) => {
+            const pinned = pinnedIds.includes(item.id);
+            return (
+              <HabitCard
+                name={item.name}
+                category={item.category}
+                streakCount={streaks[item.id]?.current_count ?? 0}
+                isCompletedToday={!!todayCompletions[item.id]}
+                onComplete={() => handleComplete(item.id)}
+                onPress={() => router.push(`/habit/${item.id}`)}
+                onLongPress={() =>
+                  Alert.alert(
+                    T.habit_pin_title,
+                    pinned
+                      ? T.habit_unpin_msg.replace('{name}', item.name)
+                      : T.habit_pin_msg.replace('{name}', item.name),
+                    [
+                      { text: T.common_cancel, style: 'cancel' },
+                      {
+                        text: pinned ? T.habit_unpin_confirm : T.habit_pin_confirm,
+                        onPress: () => togglePinHabit(item.id),
+                      },
+                    ],
+                  )
+                }
+                index={index}
+                frequency={item.frequency ?? 'daily'}
+                weekCompletionCount={weekCompletions[item.id] ?? 0}
+                contentType={(item.content as { type?: string } | null)?.type as 'timer' | 'checklist' | 'link' | null ?? null}
+                isPinned={pinned}
+              />
+            );
+          }}
           ItemSeparatorComponent={() => <View style={{ height: spacing.sm }} />}
         />
       )}

@@ -13,10 +13,12 @@ interface HabitCardProps {
   isCompletedToday: boolean;
   onComplete: () => void;
   onPress: () => void;
+  onLongPress?: () => void;
   index?: number;
   frequency?: string;
   weekCompletionCount?: number;
   contentType?: 'timer' | 'checklist' | 'link' | null;
+  isPinned?: boolean;
 }
 
 const CONTENT_TYPE_ICON: Record<string, string> = {
@@ -66,10 +68,12 @@ export function HabitCard({
   isCompletedToday,
   onComplete,
   onPress,
+  onLongPress,
   index = 0,
   frequency = 'daily',
   weekCompletionCount = 0,
   contentType = null,
+  isPinned = false,
 }: HabitCardProps) {
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
@@ -197,6 +201,7 @@ export function HabitCard({
     <Animated.View style={{ transform: [{ translateY: slideY }], opacity: entryOpacity }}>
     <Pressable
       onPress={onPress}
+      onLongPress={onLongPress}
       style={[styles.container, effectiveDone && styles.containerDone]}
     >
       <CompletionBurst visible={burst} />
@@ -204,7 +209,7 @@ export function HabitCard({
       <View style={styles.content}>
         <View style={styles.info}>
           <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
-            {categoryIcon} {name}{contentType ? ` ${CONTENT_TYPE_ICON[contentType]}` : ''}
+            {isPinned ? '📌 ' : ''}{categoryIcon} {name}{contentType ? ` ${CONTENT_TYPE_ICON[contentType]}` : ''}
           </Text>
           <View style={styles.meta}>
             <Text style={[styles.category, { color: categoryColor }]}>

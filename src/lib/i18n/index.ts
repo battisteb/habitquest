@@ -640,6 +640,12 @@ const FR = {
   timer_resume: 'REPRENDRE',
   timer_complete: 'TERMINÉ ✓',
   timer_done_hint: 'Minuteur terminé ! Marque comme fait pour gagner des XP.',
+  // Habit pinning
+  habit_pin_title: 'Épingler',
+  habit_pin_msg: 'Épingler « {name} » en haut de la liste ?',
+  habit_unpin_msg: 'Désépingler « {name} » ?',
+  habit_pin_confirm: '📌 Épingler',
+  habit_unpin_confirm: 'Désépingler',
   // Streak recovery
   streak_broken_title: '💔 Série brisée',
   streak_broken_msg: 'Ta série de {n} jours pour « {name} » est terminée. Recommence aujourd\'hui !',
@@ -1287,6 +1293,12 @@ const EN = {
   timer_resume: 'RESUME',
   timer_complete: 'COMPLETE ✓',
   timer_done_hint: 'Timer complete! Mark as done to earn XP.',
+  // Habit pinning
+  habit_pin_title: 'Pin habit',
+  habit_pin_msg: 'Pin "{name}" to the top of your list?',
+  habit_unpin_msg: 'Unpin "{name}"?',
+  habit_pin_confirm: '📌 Pin',
+  habit_unpin_confirm: 'Unpin',
   // Streak recovery
   streak_broken_title: '💔 Streak broken',
   streak_broken_msg: 'Your {n}-day streak for "{name}" is gone. Start a new one today!',
