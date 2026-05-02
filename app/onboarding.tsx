@@ -9,6 +9,7 @@ import { createHabit } from '../src/features/habits/stores/habits-store';
 import { saveAvatarConfig } from '../src/features/avatar/stores/avatar-config-store';
 import { authStore$ } from '../src/features/auth/stores/auth-store';
 import { storage } from '../src/lib/storage/mmkv';
+import { requestPermissions, applyNotificationPrefs } from '../src/features/notifications/utils/notification-service';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 import { useT } from '../src/lib/i18n';
@@ -130,6 +131,8 @@ export default function OnboardingScreen() {
         await createHabit(customHabit.trim(), 'general');
       }
       markOnboardingComplete();
+      // Request notification permissions at the end of onboarding (non-blocking)
+      requestPermissions().then((granted) => { if (granted) applyNotificationPrefs(); }).catch(() => {});
       router.replace('/(tabs)/today');
     } catch {
       markOnboardingComplete();
