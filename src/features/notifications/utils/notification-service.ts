@@ -3,6 +3,7 @@ import { storage } from '../../../lib/storage/mmkv';
 import { getRandomMessage } from './notification-messages';
 import { getOptimalNotificationHour } from './adaptive-timing';
 import { supabase } from '../../../lib/supabase/client';
+import { lang$ } from '../../../lib/i18n';
 
 const DAILY_REMINDER_ID = 'daily-reminder';
 const STREAK_RISK_ID = 'streak-risk';
@@ -134,7 +135,7 @@ export async function scheduleStreakRiskReminder(
   await Notifications.scheduleNotificationAsync({
     identifier: STREAK_RISK_ID,
     content: {
-      title: '🔥 Streak at risk!',
+      title: lang$.get() === 'fr' ? '🔥 Série en danger !' : '🔥 Streak at risk!',
       body: getRandomMessage('streak_at_risk'),
       sound: true,
       data: { route: '/(tabs)/today' },
@@ -161,19 +162,20 @@ export async function scheduleWeeklyRecap(
   await cancelWeeklyRecap();
 
   const { completions, bestStreak, xpEarned } = weekStats;
+  const isFr = lang$.get() === 'fr';
 
   const lines: string[] = [];
-  if (completions > 0) lines.push(`${completions} habits done`);
+  if (completions > 0) lines.push(isFr ? `${completions} habitudes faites` : `${completions} habits done`);
   if (xpEarned > 0) lines.push(`+${xpEarned} XP`);
-  if (bestStreak > 0) lines.push(`🔥 ${bestStreak}-day best streak`);
+  if (bestStreak > 0) lines.push(isFr ? `🔥 Série de ${bestStreak} jours` : `🔥 ${bestStreak}-day best streak`);
 
   await Notifications.scheduleNotificationAsync({
     identifier: WEEKLY_RECAP_ID,
     content: {
-      title: '📊 Weekly Recap',
+      title: isFr ? '📊 Récap de la semaine' : '📊 Weekly Recap',
       body: lines.length > 0
-        ? lines.join(' · ') + ' — Keep it up!'
-        : 'A new week starts now. Make it count! ⚔️',
+        ? lines.join(' · ') + (isFr ? ' — Continue !' : ' — Keep it up!')
+        : (isFr ? 'Une nouvelle semaine commence. Fais-en une bonne ! ⚔️' : 'A new week starts now. Make it count! ⚔️'),
       sound: true,
       data: { route: '/weekly-recap' },
     },
@@ -231,7 +233,9 @@ export async function scheduleHabitReminder(
     identifier: getHabitReminderKey(habitId),
     content: {
       title: `⚔️ ${habitName}`,
-      body: `Time to work on your habit! Don't break the streak 🔥`,
+      body: lang$.get() === 'fr'
+        ? `C'est l'heure de travailler sur ton habitude ! Ne brise pas la série 🔥`
+        : `Time to work on your habit! Don't break the streak 🔥`,
       sound: true,
       data: { route: `/habit/${habitId}` },
     },

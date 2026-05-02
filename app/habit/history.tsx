@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
+import { lang$ } from '../../src/lib/i18n';
 import { supabase } from '../../src/lib/supabase/client';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
@@ -14,7 +15,8 @@ const DOT_SIZE = 28;
 const DOT_GAP = 3;
 const DAYS = 90;
 
-const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_ABBR_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_ABBR_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
 
 function formatDate(d: Date): string {
   const y = d.getFullYear();
@@ -166,6 +168,8 @@ export default function HabitHistoryScreen() {
   const { habitId, habitName } = useLocalSearchParams<{ habitId: string; habitName: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const lang = use$(lang$);
+  const MONTH_ABBR = lang === 'fr' ? MONTH_ABBR_FR : MONTH_ABBR_EN;
   const streaks = use$(habitsStore$.streaks);
 
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
