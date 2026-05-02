@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
+import { useT } from '../../src/lib/i18n';
 import { HabitCard } from '../../src/features/habits/components/habit-card';
 import { XpToast } from '../../src/ui/animations/xp-toast';
 import { StreakMilestone } from '../../src/ui/animations/streak-milestone';
@@ -46,18 +47,26 @@ import { getMaxFreezeTokens } from '../../src/features/monetization/utils/featur
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
-const DAY_NAMES = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-const MONTH_NAMES = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+const DAY_NAMES_FR = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+const DAY_NAMES_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTH_NAMES_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+import { lang$ } from '../../src/lib/i18n';
 
 function todayLabel(): string {
   const d = new Date();
-  return `${DAY_NAMES[d.getDay()].toUpperCase()} · ${d.getDate()} ${MONTH_NAMES[d.getMonth()].toUpperCase()}`;
+  const lang = lang$.get();
+  const dayNames = lang === 'fr' ? DAY_NAMES_FR : DAY_NAMES_EN;
+  const monthNames = lang === 'fr' ? MONTH_NAMES_FR : MONTH_NAMES_EN;
+  return `${dayNames[d.getDay()].toUpperCase()} · ${d.getDate()} ${monthNames[d.getMonth()].toUpperCase()}`;
 }
 
 const ALL_KEY = 'all';
 const MILESTONES = [7, 14, 30, 60, 100];
 
 export default function TodayScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
@@ -489,12 +498,12 @@ export default function TodayScreen() {
   const handleFreeze = () => {
     if (freezeActive) return;
     Alert.alert(
-      'Jour de repos',
-      'Utiliser ton jour de repos ? Toutes tes séries seront protégées aujourd\'hui. Tu en as 1 par semaine.',
+      T.today_freeze_alert_title,
+      T.today_freeze_alert_msg,
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: T.today_freeze_alert_cancel, style: 'cancel' },
         {
-          text: 'Activer',
+          text: T.today_freeze_alert_confirm,
           onPress: () => {
             const ok = activateFreeze();
             if (ok) {
@@ -515,7 +524,7 @@ export default function TodayScreen() {
         const days = getRemainingDays(activeMode);
         return def ? (
           <View style={styles.modeBanner}>
-            <Text style={styles.modeBannerText}>{def.emoji} {def.name.toUpperCase()} — {days}j restants</Text>
+            <Text style={styles.modeBannerText}>{def.emoji} {def.name.toUpperCase()} — {T.today_mode_days.replace('{n}', String(days))}</Text>
             <Pressable onPress={() => { deactivateMode(); setActiveMode(null); }}>
               <Text style={styles.modeDeactivate}>✕</Text>
             </Pressable>
@@ -537,7 +546,7 @@ export default function TodayScreen() {
           </View>
           {(burnoutSignal.risk === 'high' || burnoutSignal.risk === 'moderate') && (
             <Pressable style={styles.burnoutAction} onPress={() => setTakeBreakOpen(true)}>
-              <Text style={styles.burnoutActionText}>🌙 PRENDRE UNE PAUSE</Text>
+              <Text style={styles.burnoutActionText}>{T.today_burnout_action}</Text>
             </Pressable>
           )}
         </View>
@@ -548,8 +557,11 @@ export default function TodayScreen() {
         onClose={() => setTakeBreakOpen(false)}
         onBreakTaken={(count) =>
           Alert.alert(
-            'Pause activée 🌙',
-            `${count} habitude${count > 1 ? 's' : ''} mise${count > 1 ? 's' : ''} en pause. Reprends-les depuis "Mes habitudes" quand tu seras prêt.`,
+            T.today_break_taken_title,
+            T.today_break_taken_msg
+              .replace('{n}', String(count))
+              .replace('{s}', count > 1 ? 's' : '')
+              .replace('{ss}', count > 1 ? 's' : ''),
           )
         }
       />
@@ -559,8 +571,8 @@ export default function TodayScreen() {
         <View style={styles.allDoneBanner}>
           <Text style={styles.allDoneEmoji}>🏆</Text>
           <View>
-            <Text style={styles.allDoneTitle}>TOUT FAIT !</Text>
-            <Text style={styles.allDoneSub}>Journée parfaite. À demain !</Text>
+            <Text style={styles.allDoneTitle}>{T.today_all_done_title}</Text>
+            <Text style={styles.allDoneSub}>{T.today_all_done_sub}</Text>
           </View>
         </View>
       )}
@@ -568,7 +580,7 @@ export default function TodayScreen() {
       {/* Habits header */}
       <View style={styles.habitsHeader}>
         <View style={styles.habitsHeaderLeft}>
-          <Text style={styles.habitsTitle}>HABITUDES</Text>
+          <Text style={styles.habitsTitle}>{T.today_habits_label}</Text>
           <Text style={styles.habitsCounter}>
             {completedCount}/{totalCount}
           </Text>
@@ -605,7 +617,7 @@ export default function TodayScreen() {
               <Text
                 style={[styles.filterChipText, activeCategory === cat && styles.filterChipTextActive]}
               >
-                {cat === ALL_KEY ? 'TOUT' : cat.toUpperCase()}
+                {cat === ALL_KEY ? T.today_filter_all : cat.toUpperCase()}
               </Text>
             </Pressable>
           ))}
@@ -633,7 +645,7 @@ export default function TodayScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>AUJOURD'HUI</Text>
+          <Text style={styles.title}>{T.today_title}</Text>
           <Text style={styles.dateLabel}>{todayLabel()}</Text>
         </View>
         <View style={styles.headerRight}>
@@ -650,13 +662,13 @@ export default function TodayScreen() {
               disabled={freezeActive}
             >
               <Text style={[styles.freezeText, freezeActive && styles.freezeTextActive]}>
-                {freezeActive ? '❄️ REPOS' : `❄️ REPOS (${freezesLeft})`}
+                {freezeActive ? T.today_freeze_active : T.today_freeze_available.replace('{n}', String(freezesLeft))}
               </Text>
             </Pressable>
           )}
           {showWatchAdButton && (
             <Pressable style={styles.watchAdButton} onPress={handleWatchAd}>
-              <Text style={styles.watchAdText}>📺 +1 FREEZE</Text>
+              <Text style={styles.watchAdText}>{T.today_watch_ad}</Text>
             </Pressable>
           )}
           <Pressable style={styles.addButton} onPress={() => router.push('/habit/create')}>
@@ -670,14 +682,12 @@ export default function TodayScreen() {
         <View>
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>⚔️</Text>
-            <Text style={styles.emptyTitle}>Aucune habitude</Text>
-            <Text style={styles.emptySubtitle}>
-              Toute légende commence quelque part.{'\n'}Appuie sur <Text style={{ color: colors.primary, fontWeight: 'bold' }}>+</Text> pour créer ta première quête.
-            </Text>
+            <Text style={styles.emptyTitle}>{T.today_empty_title}</Text>
+            <Text style={styles.emptySubtitle}>{T.today_empty_subtitle}</Text>
             <View style={styles.emptyTips}>
-              <Text style={styles.emptyTip}>💡 Commence avec 1–3 habitudes max</Text>
-              <Text style={styles.emptyTip}>🔥 Les séries démarrent après 3 jours</Text>
-              <Text style={styles.emptyTip}>⚡ Chaque complétion rapporte de l'XP</Text>
+              <Text style={styles.emptyTip}>{T.today_empty_tip1}</Text>
+              <Text style={styles.emptyTip}>{T.today_empty_tip2}</Text>
+              <Text style={styles.emptyTip}>{T.today_empty_tip3}</Text>
             </View>
           </View>
           <DailyQuestsSection

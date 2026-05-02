@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
+import { useT } from '../src/lib/i18n';
 import {
   notificationsStore$,
   fetchNotifications,
@@ -35,18 +36,19 @@ function getIcon(type: string): string {
   return TYPE_ICONS[type] ?? '🔔';
 }
 
-function getRelativeTime(isoDate: string): string {
+function getRelativeTime(isoDate: string, T: { notif_just_now: string; notif_minutes_ago: string; notif_hours_ago: string; notif_days_ago: string }): string {
   const diff = Date.now() - new Date(isoDate).getTime();
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return 'à l\'instant';
-  if (minutes < 60) return `il y a ${minutes}min`;
+  if (minutes < 1) return T.notif_just_now;
+  if (minutes < 60) return T.notif_minutes_ago.replace('{n}', String(minutes));
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `il y a ${hours}h`;
+  if (hours < 24) return T.notif_hours_ago.replace('{n}', String(hours));
   const days = Math.floor(hours / 24);
-  return `il y a ${days}j`;
+  return T.notif_days_ago.replace('{n}', String(days));
 }
 
 function NotificationItem({ item }: { item: InboxNotification }) {
+  const T = useT();
   const styles = createStyles();
   const router = useRouter();
 
@@ -75,7 +77,7 @@ function NotificationItem({ item }: { item: InboxNotification }) {
         <Text style={styles.itemBody} numberOfLines={2}>
           {item.body}
         </Text>
-        <Text style={styles.itemTime}>{getRelativeTime(item.createdAt)}</Text>
+        <Text style={styles.itemTime}>{getRelativeTime(item.createdAt, T)}</Text>
       </View>
       {!item.isRead && <View style={styles.unreadDot} />}
     </Pressable>
@@ -83,18 +85,18 @@ function NotificationItem({ item }: { item: InboxNotification }) {
 }
 
 function EmptyState() {
+  const T = useT();
   const styles = createStyles();
   return (
     <View style={styles.emptyContainer}>
       <Text style={styles.emptyIcon}>🔔</Text>
-      <Text style={styles.emptyText}>
-        {'Aucune notification\nRevenez apres vos prochains duels et defis !'}
-      </Text>
+      <Text style={styles.emptyText}>{T.notif_empty}</Text>
     </View>
   );
 }
 
 export default function NotificationsScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
   const insets = useSafeAreaInsets();
@@ -120,12 +122,12 @@ export default function NotificationsScreen() {
     <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>← RETOUR</Text>
+          <Text style={styles.backButtonText}>{T.notif_back}</Text>
         </Pressable>
-        <Text style={styles.headerTitle}>NOTIFICATIONS</Text>
+        <Text style={styles.headerTitle}>{T.notif_title}</Text>
         {unreadCount > 0 ? (
           <Pressable onPress={markAllAsRead} style={styles.markAllButton}>
-            <Text style={styles.markAllText}>TOUT LIRE</Text>
+            <Text style={styles.markAllText}>{T.notif_mark_all}</Text>
           </Pressable>
         ) : (
           <View style={styles.headerSpacer} />

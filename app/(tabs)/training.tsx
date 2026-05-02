@@ -8,6 +8,7 @@ import {
   Alert,
   Platform,
 } from 'react-native';
+import { useT } from '../../src/lib/i18n';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
@@ -38,8 +39,8 @@ const CATEGORY_ICONS: Record<string, string> = {
   learning: '📚', general: '⭐',
 };
 
-function formatDate(iso: string | null): string {
-  if (!iso) return 'Never';
+function formatDate(iso: string | null, neverLabel: string): string {
+  if (!iso) return neverLabel;
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
@@ -47,6 +48,8 @@ function formatDate(iso: string | null): string {
 async function pickAndImport(
   onSession: (s: StoredSession) => void,
   onDeck: (d: StoredDeck) => void,
+  errorTitle: string,
+  invalidMsg: string,
 ) {
   try {
     const DocumentPicker = await import('expo-document-picker');
@@ -72,10 +75,10 @@ async function pickAndImport(
     } else if (isValidDeckFile(json)) {
       onDeck(importDeck(json));
     } else {
-      Alert.alert('Import failed', 'File is not a valid session or flashcard deck.');
+      Alert.alert(errorTitle, invalidMsg);
     }
   } catch (e: unknown) {
-    Alert.alert('Import failed', e instanceof Error ? e.message : 'Could not import file');
+    Alert.alert(errorTitle, e instanceof Error ? e.message : invalidMsg);
   }
 }
 
@@ -83,6 +86,7 @@ async function pickAndImport(
 function SessionCard({ session, onStart, onDelete }: {
   session: StoredSession; onStart: () => void; onDelete: () => void;
 }) {
+  const T = useT();
   const styles = createStyles();
   const { data } = session;
   return (
@@ -92,12 +96,12 @@ function SessionCard({ session, onStart, onDelete }: {
         <View style={styles.cardInfo}>
           <Text style={styles.cardTitle} numberOfLines={1}>{data.title}</Text>
           <Text style={styles.cardMeta}>
-            {data.exercises.length} exercises
-            {data.estimated_duration ? `  ·  ~${data.estimated_duration} min` : ''}
-            {session.completedCount > 0 ? `  ·  ×${session.completedCount}` : ''}
+            {T.training_exercises.replace('{n}', String(data.exercises.length))}
+            {data.estimated_duration ? `  ·  ${T.training_duration_min.replace('{n}', String(data.estimated_duration))}` : ''}
+            {session.completedCount > 0 ? `  ·  ${T.training_times.replace('{n}', String(session.completedCount))}` : ''}
           </Text>
           {session.lastCompletedAt && (
-            <Text style={styles.cardLast}>Last: {formatDate(session.lastCompletedAt)}</Text>
+            <Text style={styles.cardLast}>{T.training_last.replace('{date}', formatDate(session.lastCompletedAt, T.training_never))}</Text>
           )}
         </View>
         <Pressable onPress={onDelete} hitSlop={8}>
@@ -112,7 +116,7 @@ function SessionCard({ session, onStart, onDelete }: {
         {data.exercises.length > 4 && <Text style={styles.chipMore}>+{data.exercises.length - 4}</Text>}
       </View>
       <Pressable style={styles.startButton} onPress={onStart}>
-        <Text style={styles.startButtonText}>▶  START</Text>
+        <Text style={styles.startButtonText}>{T.training_start_btn}</Text>
       </Pressable>
     </View>
   );
@@ -122,6 +126,7 @@ function SessionCard({ session, onStart, onDelete }: {
 function DeckCard({ deck, onStudy, onDelete }: {
   deck: StoredDeck; onStudy: () => void; onDelete: () => void;
 }) {
+  const T = useT();
   const styles = createStyles();
   const dueCount = getDueCards(deck).length;
   const totalCards = deck.data.cards.length;
@@ -132,10 +137,10 @@ function DeckCard({ deck, onStudy, onDelete }: {
         <View style={styles.cardInfo}>
           <Text style={styles.cardTitle} numberOfLines={1}>{deck.data.title}</Text>
           <Text style={styles.cardMeta}>
-            {totalCards} cards
-            {deck.totalReviews > 0 ? `  ·  ${deck.totalReviews} reviews` : ''}
+            {T.training_cards.replace('{n}', String(totalCards))}
+            {deck.totalReviews > 0 ? `  ·  ${T.training_reviews.replace('{n}', String(deck.totalReviews))}` : ''}
           </Text>
-          <Text style={styles.cardLast}>Last studied: {formatDate(deck.lastStudiedAt)}</Text>
+          <Text style={styles.cardLast}>{T.training_last_studied.replace('{date}', formatDate(deck.lastStudiedAt, T.training_never))}</Text>
         </View>
         <Pressable onPress={onDelete} hitSlop={8}>
           <Text style={styles.deleteBtnText}>✕</Text>
@@ -145,7 +150,7 @@ function DeckCard({ deck, onStudy, onDelete }: {
       <View style={styles.dueRow}>
         <View style={[styles.dueBadge, dueCount === 0 && styles.dueBadgeDone]}>
           <Text style={[styles.dueBadgeText, dueCount === 0 && styles.dueBadgeTextDone]}>
-            {dueCount === 0 ? '✓ Up to date' : `${dueCount} due today`}
+            {dueCount === 0 ? T.training_up_to_date : T.training_due_today.replace('{n}', String(dueCount))}
           </Text>
         </View>
       </View>
@@ -155,7 +160,7 @@ function DeckCard({ deck, onStudy, onDelete }: {
         disabled={dueCount === 0}
       >
         <Text style={styles.startButtonText}>
-          {dueCount === 0 ? 'NOTHING DUE' : `▶  STUDY (${dueCount})`}
+          {dueCount === 0 ? T.training_nothing_due : T.training_study_btn.replace('{n}', String(dueCount))}
         </Text>
       </Pressable>
     </View>
@@ -164,22 +169,21 @@ function DeckCard({ deck, onStudy, onDelete }: {
 
 // ─── Empty state ──────────────────────────────────────────────────────────────
 function EmptyState({ tab, onImport }: { tab: TabKey; onImport: () => void }) {
+  const T = useT();
   const styles = createStyles();
   const isSession = tab === 'sessions';
   return (
     <ScrollView contentContainerStyle={styles.emptyContainer}>
       <Text style={styles.emptyIcon}>{isSession ? '🏋️' : '🃏'}</Text>
       <Text style={styles.emptyTitle}>
-        {isSession ? 'No sessions yet' : 'No decks yet'}
+        {isSession ? T.training_empty_sessions_title : T.training_empty_decks_title}
       </Text>
       <Text style={styles.emptyText}>
-        {isSession
-          ? 'Create a JSON file with your workout and import it here.'
-          : 'Create a JSON flashcard deck on your PC and import it here.'}
+        {isSession ? T.training_empty_sessions_text : T.training_empty_decks_text}
       </Text>
       <View style={styles.exampleBox}>
         <Text style={styles.exampleTitle}>
-          {isSession ? 'SESSION FORMAT' : 'DECK FORMAT'}
+          {isSession ? T.training_empty_sessions_format : T.training_empty_decks_format}
         </Text>
         <Text style={styles.exampleCode}>
           {isSession
@@ -188,7 +192,7 @@ function EmptyState({ tab, onImport }: { tab: TabKey; onImport: () => void }) {
         </Text>
       </View>
       <Pressable style={styles.importButtonLarge} onPress={onImport}>
-        <Text style={styles.importButtonLargeText}>+ IMPORT</Text>
+        <Text style={styles.importButtonLargeText}>{T.training_import_btn}</Text>
       </Pressable>
     </ScrollView>
   );
@@ -196,6 +200,7 @@ function EmptyState({ tab, onImport }: { tab: TabKey; onImport: () => void }) {
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function TrainingScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
   const insets = useSafeAreaInsets();
@@ -215,20 +220,22 @@ export default function TrainingScreen() {
     await pickAndImport(
       (s) => {
         setTab('sessions');
-        Alert.alert('Session imported!', `"${s.data.title}" added.`);
+        Alert.alert(T.training_session_imported, T.training_session_imported_msg.replace('{title}', s.data.title));
       },
       (d) => {
         setTab('decks');
-        Alert.alert('Deck imported!', `"${d.data.title}" — ${d.data.cards.length} cards.`);
+        Alert.alert(T.training_deck_imported, T.training_deck_imported_msg.replace('{title}', d.data.title).replace('{n}', String(d.data.cards.length)));
       },
+      T.training_import_failed,
+      T.training_import_invalid,
     );
     setImporting(false);
   };
 
   const confirmDelete = (title: string, onConfirm: () => void) => {
-    Alert.alert('Delete?', `Remove "${title}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: onConfirm },
+    Alert.alert(T.training_delete_title, T.training_delete_msg.replace('{title}', title), [
+      { text: T.training_delete_cancel, style: 'cancel' },
+      { text: T.training_delete_confirm, style: 'destructive', onPress: onConfirm },
     ]);
   };
 
@@ -239,10 +246,14 @@ export default function TrainingScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>TRAINING</Text>
+          <Text style={styles.title}>{T.training_title}</Text>
           <Text style={styles.subtitle}>
-            {totalItems === 0 ? 'Nothing imported yet' :
-              `${sessions.length} session${sessions.length !== 1 ? 's' : ''}  ·  ${decks.length} deck${decks.length !== 1 ? 's' : ''}`}
+            {totalItems === 0 ? T.training_subtitle_empty :
+              T.training_subtitle
+                .replace('{sessions}', String(sessions.length))
+                .replace('{ss}', sessions.length !== 1 ? 's' : '')
+                .replace('{decks}', String(decks.length))
+                .replace('{ds}', decks.length !== 1 ? 's' : '')}
           </Text>
         </View>
         <Pressable
@@ -250,7 +261,7 @@ export default function TrainingScreen() {
           onPress={handleImport}
           disabled={importing}
         >
-          <Text style={styles.importButtonText}>{importing ? '…' : '+ IMPORT'}</Text>
+          <Text style={styles.importButtonText}>{importing ? T.training_importing : T.training_import_btn}</Text>
         </Pressable>
       </View>
 
@@ -263,7 +274,7 @@ export default function TrainingScreen() {
             onPress={() => setTab(t)}
           >
             <Text style={[styles.tabLabel, tab === t && styles.tabLabelActive]}>
-              {t === 'sessions' ? `💪 SESSIONS (${sessions.length})` : `🃏 DECKS (${decks.length})`}
+              {t === 'sessions' ? T.training_tab_sessions.replace('{n}', String(sessions.length)) : T.training_tab_decks.replace('{n}', String(decks.length))}
             </Text>
           </Pressable>
         ))}

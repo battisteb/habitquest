@@ -3,29 +3,27 @@ import { View, Text, StyleSheet, Alert, Pressable } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
+import { useT } from '../../src/lib/i18n';
 import { createChallenge } from '../../src/features/social/stores/challenges-store';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
-const CHALLENGE_TYPES = [
-  { key: 'xp_race', label: 'XP Race', description: 'Earn the most XP' },
-  {
-    key: 'completion_count',
-    label: 'Completions',
-    description: 'Complete the most habits',
-  },
-];
-
-const DURATION_OPTIONS = [
-  { days: 3, label: '3 days' },
-  { days: 7, label: '1 week' },
-  { days: 14, label: '2 weeks' },
-];
-
 const WAGER_OPTIONS = [5, 10, 25, 50];
 
 export default function CreateChallengeScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
+
+  const CHALLENGE_TYPES = [
+    { key: 'xp_race', label: T.challenge_type_xp_label, description: T.challenge_type_xp_desc },
+    { key: 'completion_count', label: T.challenge_type_completion_label, description: T.challenge_type_completion_desc },
+  ];
+
+  const DURATION_OPTIONS = [
+    { days: 3, label: T.challenge_duration_3d },
+    { days: 7, label: T.challenge_duration_1w },
+    { days: 14, label: T.challenge_duration_2w },
+  ];
   const styles = useMemo(() => StyleSheet.create({
   container: {
     flex: 1,
@@ -149,7 +147,7 @@ export default function CreateChallengeScreen() {
       await createChallenge(opponentId, type, getTarget(), wager, duration);
       router.back();
     } catch (e: any) {
-      Alert.alert('Error', e.message ?? 'Failed to create challenge');
+      Alert.alert(T.common_error, e.message ?? T.challenge_create_error);
     } finally {
       setIsSubmitting(false);
     }
@@ -158,11 +156,11 @@ export default function CreateChallengeScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <PixelButton title="Back" onPress={() => router.back()} variant="ghost" />
+        <PixelButton title={T.challenge_create_back} onPress={() => router.back()} variant="ghost" />
         <View style={{ alignItems: 'center' }}>
-          <Text style={styles.title}>NEW CHALLENGE</Text>
+          <Text style={styles.title}>{T.challenge_create_title}</Text>
           {opponentName && (
-            <Text style={styles.opponent}>vs {opponentName}</Text>
+            <Text style={styles.opponent}>{T.challenge_create_vs.replace('{name}', opponentName)}</Text>
           )}
         </View>
         <View style={{ width: 60 }} />
@@ -170,7 +168,7 @@ export default function CreateChallengeScreen() {
 
       {/* Challenge type */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>TYPE</Text>
+        <Text style={styles.sectionTitle}>{T.challenge_create_section_type}</Text>
         <View style={styles.optionsRow}>
           {CHALLENGE_TYPES.map((ct) => (
             <Pressable
@@ -194,7 +192,7 @@ export default function CreateChallengeScreen() {
 
       {/* Duration */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>DURATION</Text>
+        <Text style={styles.sectionTitle}>{T.challenge_create_section_duration}</Text>
         <View style={styles.optionsRow}>
           {DURATION_OPTIONS.map((d) => (
             <Pressable
@@ -220,7 +218,7 @@ export default function CreateChallengeScreen() {
 
       {/* Wager */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>GOLD WAGER</Text>
+        <Text style={styles.sectionTitle}>{T.challenge_create_section_wager}</Text>
         <View style={styles.optionsRow}>
           {WAGER_OPTIONS.map((w) => (
             <Pressable
@@ -240,13 +238,15 @@ export default function CreateChallengeScreen() {
 
       <View style={styles.summary}>
         <Text style={styles.summaryText}>
-          Target: <Text style={styles.summaryVal}>{getTarget()} {type === 'xp_race' ? 'XP' : 'habits'}</Text>
-          {'  ·  '}Wager: <Text style={[styles.summaryVal, { color: colors.accent }]}>{wager}g</Text>
+          {T.challenge_create_summary
+            .replace('{target}', String(getTarget()))
+            .replace('{unit}', type === 'xp_race' ? T.challenge_create_unit_xp : T.challenge_create_unit_habits)
+            .replace('{wager}', String(wager))}
         </Text>
       </View>
 
       <PixelButton
-        title={isSubmitting ? 'Sending...' : '⚔️ Send Challenge'}
+        title={isSubmitting ? T.challenge_create_sending : T.challenge_create_send}
         onPress={handleCreate}
         disabled={isSubmitting}
         style={{ margin: spacing.md }}

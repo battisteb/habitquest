@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { useT } from '../src/lib/i18n';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
@@ -22,17 +23,19 @@ import {
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 
-const FEATURES = [
-  { icon: '❄️', label: 'Streak Freezes', free: '1 stored · plein tarif', premium: '3 stored · prix /2' },
-  { icon: '⚔️', label: 'Duels PvP', free: '3×/semaine max', premium: '1×/jour max' },
-  { icon: '📊', label: 'Statistiques', free: 'Dernier mois', premium: 'Historique complet' },
-  { icon: '🛍️', label: 'Boutique', free: 'Catalogue de base', premium: 'Catalogue complet + exclusifs' },
-  { icon: '🚫', label: 'Publicités', free: 'Oui', premium: 'Non' },
-  { icon: '⚡', label: 'Support', free: 'Standard', premium: 'Prioritaire' },
-];
 
 export default function PaywallScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
+
+  const FEATURES = [
+    { icon: '❄️', label: T.paywall_feat_freezes_label, free: T.paywall_feat_freezes_free, premium: T.paywall_feat_freezes_premium },
+    { icon: '⚔️', label: T.paywall_feat_duels_label, free: T.paywall_feat_duels_free, premium: T.paywall_feat_duels_premium },
+    { icon: '📊', label: T.paywall_feat_stats_label, free: T.paywall_feat_stats_free, premium: T.paywall_feat_stats_premium },
+    { icon: '🛍️', label: T.paywall_feat_shop_label, free: T.paywall_feat_shop_free, premium: T.paywall_feat_shop_premium },
+    { icon: '🚫', label: T.paywall_feat_ads_label, free: T.paywall_feat_ads_free, premium: T.paywall_feat_ads_premium },
+    { icon: '⚡', label: T.paywall_feat_support_label, free: T.paywall_feat_support_free, premium: T.paywall_feat_support_premium },
+  ];
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
 
@@ -218,9 +221,9 @@ export default function PaywallScreen() {
     const success = await purchaseSubscription(productId);
     if (success) {
       Alert.alert(
-        '🎉 Bienvenue en Premium !',
-        'Toutes les fonctionnalités sont maintenant débloquées.',
-        [{ text: 'Super !', onPress: () => router.back() }],
+        T.paywall_welcome_title,
+        T.paywall_welcome_msg,
+        [{ text: T.paywall_welcome_ok, onPress: () => router.back() }],
       );
     }
   }
@@ -228,9 +231,9 @@ export default function PaywallScreen() {
   async function handleRestore() {
     const success = await restorePurchases();
     if (success) {
-      Alert.alert('Achats restaurés', 'Ton abonnement Premium est actif.');
+      Alert.alert(T.paywall_restored_title, T.paywall_restored_msg);
     } else {
-      Alert.alert('Aucun achat trouvé', 'Aucun abonnement actif associé à ce compte.');
+      Alert.alert(T.paywall_no_purchase_title, T.paywall_no_purchase_msg);
     }
   }
 
@@ -241,26 +244,24 @@ export default function PaywallScreen() {
         <Pressable onPress={() => router.back()} style={styles.closeBtn}>
           <Text style={styles.closeText}>✕</Text>
         </Pressable>
-        <Text style={styles.badge}>⚡ PREMIUM</Text>
+        <Text style={styles.badge}>{T.paywall_badge}</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Hero */}
         <View style={styles.hero}>
           <Text style={styles.heroEmoji}>👑</Text>
-          <Text style={styles.heroTitle}>Passe ton aventure{'\n'}au niveau supérieur</Text>
-          <Text style={styles.heroSub}>
-            Rejoins les héros qui n'ont aucune limite
-          </Text>
+          <Text style={styles.heroTitle}>{T.paywall_hero_title}</Text>
+          <Text style={styles.heroSub}>{T.paywall_hero_sub}</Text>
         </View>
 
         {/* Feature comparison */}
         <View style={styles.table}>
           <View style={styles.tableHeader}>
-            <Text style={[styles.tableCol, { flex: 2 }]}>Feature</Text>
-            <Text style={[styles.tableCol, styles.tableColCenter]}>Gratuit</Text>
+            <Text style={[styles.tableCol, { flex: 2 }]}>{T.paywall_table_feature}</Text>
+            <Text style={[styles.tableCol, styles.tableColCenter]}>{T.paywall_table_free}</Text>
             <Text style={[styles.tableCol, styles.tableColCenter, styles.premiumCol]}>
-              Premium
+              {T.paywall_table_premium}
             </Text>
           </View>
           {FEATURES.map((f) => (
@@ -288,12 +289,12 @@ export default function PaywallScreen() {
           >
             <View style={styles.planBadgeRow}>
               <View style={styles.popularBadge}>
-                <Text style={styles.popularBadgeText}>⭐ POPULAIRE</Text>
+                <Text style={styles.popularBadgeText}>{T.paywall_popular_badge}</Text>
               </View>
             </View>
-            <Text style={styles.planPeriod}>Annuel</Text>
+            <Text style={styles.planPeriod}>{T.paywall_plan_annual}</Text>
             <Text style={styles.planPrice}>{annualPrice}</Text>
-            <Text style={styles.planSub}>soit {annualMonthly} · économise 42%</Text>
+            <Text style={styles.planSub}>{T.paywall_plan_annual_sub.replace('{monthly}', annualMonthly)}</Text>
           </Pressable>
 
           {/* Monthly */}
@@ -301,9 +302,9 @@ export default function PaywallScreen() {
             style={[styles.plan, selected === 'monthly' && styles.planSelected]}
             onPress={() => setSelected('monthly')}
           >
-            <Text style={styles.planPeriod}>Mensuel</Text>
+            <Text style={styles.planPeriod}>{T.paywall_plan_monthly}</Text>
             <Text style={styles.planPrice}>{monthlyPrice}</Text>
-            <Text style={styles.planSub}>par mois · sans engagement</Text>
+            <Text style={styles.planSub}>{T.paywall_plan_monthly_sub}</Text>
           </Pressable>
         </View>
 
@@ -317,18 +318,15 @@ export default function PaywallScreen() {
             <ActivityIndicator color="#000" />
           ) : (
             <Text style={styles.ctaText}>
-              Commencer · {selected === 'annual' ? annualPrice + '/an' : monthlyPrice + '/mois'}
+              {T.paywall_cta_start.replace('{price}', selected === 'annual' ? annualPrice : monthlyPrice)}
             </Text>
           )}
         </Pressable>
 
-        <Text style={styles.legal}>
-          Renouvellement automatique. Annulable à tout moment depuis les réglages de ton
-          compte {'\n'}Apple ID / Google Play. Prix TTC.
-        </Text>
+        <Text style={styles.legal}>{T.paywall_legal}</Text>
 
         <Pressable onPress={handleRestore} style={styles.restoreBtn}>
-          <Text style={styles.restoreText}>Restaurer les achats</Text>
+          <Text style={styles.restoreText}>{T.paywall_restore}</Text>
         </Pressable>
       </ScrollView>
     </View>

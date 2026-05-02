@@ -9,6 +9,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../src/ui/components/pixel-button';
+import { useT } from '../src/lib/i18n';
 import { useProfileStats } from '../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../src/features/gamification/components/xp-bar';
 import { supabase } from '../src/lib/supabase/client';
@@ -127,18 +128,19 @@ async function fetchXpJourneyData(): Promise<Omit<XpJourneyData, 'isLoading'>> {
   };
 }
 
-function formatRelativeDate(isoString: string): string {
+function formatRelativeDate(isoString: string, T: { xp_date_today: string; xp_date_yesterday: string; xp_date_days_ago: string }): string {
   const date = new Date(isoString);
   const today = new Date();
   const diffDays = Math.floor(
     (today.setHours(0, 0, 0, 0) - date.setHours(0, 0, 0, 0)) / 86400000,
   );
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return 'Yesterday';
-  return `${diffDays}d ago`;
+  if (diffDays === 0) return T.xp_date_today;
+  if (diffDays === 1) return T.xp_date_yesterday;
+  return T.xp_date_days_ago.replace('{n}', String(diffDays));
 }
 
 export default function XpJourneyScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
@@ -419,8 +421,8 @@ export default function XpJourneyScreen() {
     >
       {/* Header */}
       <View style={styles.header}>
-        <PixelButton title="Back" onPress={() => router.back()} variant="ghost" />
-        <Text style={styles.title}>XP JOURNEY</Text>
+        <PixelButton title={T.xp_back} onPress={() => router.back()} variant="ghost" />
+        <Text style={styles.title}>{T.xp_title}</Text>
         <View style={{ width: 60 }} />
       </View>
 
@@ -433,7 +435,7 @@ export default function XpJourneyScreen() {
           </View>
           <View style={styles.heroXpTotal}>
             <Text style={styles.heroXpValue}>{totalXp.toLocaleString()}</Text>
-            <Text style={styles.heroXpLabel}>TOTAL XP</Text>
+            <Text style={styles.heroXpLabel}>{T.xp_total_xp_label}</Text>
           </View>
         </View>
         <XpBar
@@ -443,13 +445,13 @@ export default function XpJourneyScreen() {
           progress={xpProgress}
         />
         <Text style={styles.xpDetail}>
-          {xpInLevel} / {xpNeeded} XP to level {level + 1}
+          {T.xp_to_level.replace('{current}', String(xpInLevel)).replace('{needed}', String(xpNeeded)).replace('{next}', String(level + 1))}
         </Text>
       </View>
 
       {/* Daily XP chart */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>XP LAST 14 DAYS</Text>
+        <Text style={styles.sectionTitle}>{T.xp_section_last14}</Text>
         <View style={styles.chartCard}>
           {data.isLoading ? (
             <ActivityIndicator color={colors.xp} />
@@ -488,26 +490,26 @@ export default function XpJourneyScreen() {
 
       {/* Streak multiplier */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>STREAK BONUS</Text>
+        <Text style={styles.sectionTitle}>{T.xp_section_streak_bonus}</Text>
         <View style={styles.multiplierCard}>
           <View style={styles.multiplierRow}>
             <View style={styles.multiplierItem}>
               <Text style={styles.multiplierValue}>🔥 {data.bestStreak}</Text>
-              <Text style={styles.multiplierLabel}>BEST STREAK</Text>
+              <Text style={styles.multiplierLabel}>{T.xp_best_streak_label}</Text>
             </View>
             <View style={styles.multiplierArrow}><Text style={styles.arrowText}>→</Text></View>
             <View style={styles.multiplierItem}>
               <Text style={[styles.multiplierValue, { color: colors.xp }]}>
                 ×{multiplier.toFixed(1)}
               </Text>
-              <Text style={styles.multiplierLabel}>MULTIPLIER</Text>
+              <Text style={styles.multiplierLabel}>{T.xp_multiplier_label}</Text>
             </View>
             <View style={styles.multiplierArrow}><Text style={styles.arrowText}>→</Text></View>
             <View style={styles.multiplierItem}>
               <Text style={[styles.multiplierValue, { color: colors.accent }]}>
                 {calculateXpEarned(data.bestStreak)} XP
               </Text>
-              <Text style={styles.multiplierLabel}>PER HABIT</Text>
+              <Text style={styles.multiplierLabel}>{T.xp_per_habit_label}</Text>
             </View>
           </View>
           <View style={styles.multiplierBar}>
@@ -519,14 +521,16 @@ export default function XpJourneyScreen() {
             />
           </View>
           <Text style={styles.multiplierHint}>
-            Max ×{XP_CONFIG.STREAK_MULTIPLIER_CAP} at streak {Math.round((XP_CONFIG.STREAK_MULTIPLIER_CAP - 1) / XP_CONFIG.STREAK_MULTIPLIER_STEP)}+
+            {T.xp_multiplier_hint
+              .replace('{max}', String(XP_CONFIG.STREAK_MULTIPLIER_CAP))
+              .replace('{threshold}', String(Math.round((XP_CONFIG.STREAK_MULTIPLIER_CAP - 1) / XP_CONFIG.STREAK_MULTIPLIER_STEP)))}
           </Text>
         </View>
       </View>
 
       {/* Level roadmap */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>LEVEL ROADMAP</Text>
+        <Text style={styles.sectionTitle}>{T.xp_section_roadmap}</Text>
         <View style={styles.roadmapCard}>
           {RANKS.map((r, i) => {
             const nextRank = RANKS[i + 1];
@@ -540,10 +544,10 @@ export default function XpJourneyScreen() {
                 <View style={[styles.roadmapDot, { backgroundColor: isPast ? r.color : colors.border }]} />
                 <View style={styles.roadmapInfo}>
                   <Text style={[styles.roadmapRank, { color: isPast ? r.color : colors.textMuted }]}>
-                    {r.name} {isCurrentRank ? '← YOU' : ''}
+                    {r.name} {isCurrentRank ? T.xp_roadmap_you : ''}
                   </Text>
                   <Text style={styles.roadmapReq}>
-                    Level {r.minLevel} · {rankLevelXp.toLocaleString()} XP
+                    {T.xp_roadmap_req.replace('{level}', String(r.minLevel)).replace('{xp}', rankLevelXp.toLocaleString())}
                   </Text>
                 </View>
                 {isPast && !isCurrentRank && (
@@ -551,7 +555,7 @@ export default function XpJourneyScreen() {
                 )}
                 {isCurrentRank && nextRank && (
                   <Text style={styles.roadmapNext}>
-                    Next: lv {nextRank.minLevel}
+                    {T.xp_roadmap_next.replace('{level}', String(nextRank.minLevel))}
                   </Text>
                 )}
               </View>
@@ -563,14 +567,14 @@ export default function XpJourneyScreen() {
       {/* Recent XP gains */}
       {data.recentGains.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>RECENT GAINS</Text>
+          <Text style={styles.sectionTitle}>{T.xp_section_recent}</Text>
           <View style={styles.gainsCard}>
             {data.recentGains.map((g, i) => (
               <View key={i} style={[styles.gainRow, i < data.recentGains.length - 1 && styles.gainDivider]}>
                 <Text style={styles.gainHabit} numberOfLines={1}>{g.habitName}</Text>
                 <View style={styles.gainRight}>
                   <Text style={styles.gainXp}>+{g.xpEarned} XP</Text>
-                  <Text style={styles.gainDate}>{formatRelativeDate(g.completedAt)}</Text>
+                  <Text style={styles.gainDate}>{formatRelativeDate(g.completedAt, T)}</Text>
                 </View>
               </View>
             ))}

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
+import { useT } from '../../src/lib/i18n';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
@@ -19,6 +20,7 @@ import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
 export default function ProfileScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -223,7 +225,7 @@ export default function ProfileScreen() {
               />
               <Text style={styles.username}>{profile?.username ?? 'Adventurer'}</Text>
               <Text style={[styles.rankBadge, { color: rank.color }]}>{rank.name}</Text>
-              <Text style={styles.editHint}>Appuie pour modifier →</Text>
+              <Text style={styles.editHint}>{T.profile_edit_hint}</Text>
             </Pressable>
 
             {/* Avatar evolution stage */}
@@ -236,7 +238,7 @@ export default function ProfileScreen() {
                 <Text style={styles.stageDescription}>{avatarStage.description}</Text>
                 {nextAvatarStage !== null && (
                   <Text style={styles.stageNext}>
-                    {'Prochain : ' + nextAvatarStage.title + ' au Niveau ' + nextAvatarStage.minLevel}
+                    {T.profile_next_stage.replace('{title}', nextAvatarStage.title).replace('{level}', String(nextAvatarStage.minLevel))}
                   </Text>
                 )}
               </View>
@@ -250,24 +252,24 @@ export default function ProfileScreen() {
                 nextLevelXp={xpForNextLevel}
                 progress={xpProgress}
               />
-              <Text style={styles.cardHint}>VOIR MON PARCOURS XP →</Text>
+              <Text style={styles.cardHint}>{T.profile_xp_journey_hint}</Text>
             </Pressable>
 
             {/* Stats row */}
             <View style={styles.statsRow}>
               <View style={styles.miniStat}>
                 <Text style={styles.miniStatValue}>{profile?.xp ?? 0}</Text>
-                <Text style={styles.miniStatLabel}>XP</Text>
+                <Text style={styles.miniStatLabel}>{T.profile_stat_xp}</Text>
               </View>
               <View style={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: colors.xp }]}>{level}</Text>
-                <Text style={styles.miniStatLabel}>LEVEL</Text>
+                <Text style={styles.miniStatLabel}>{T.profile_stat_level}</Text>
               </View>
               <View style={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: colors.accent }]}>
                   {profile?.gold ?? 0}
                 </Text>
-                <Text style={styles.miniStatLabel}>GOLD</Text>
+                <Text style={styles.miniStatLabel}>{T.profile_stat_gold}</Text>
               </View>
             </View>
 
@@ -275,11 +277,11 @@ export default function ProfileScreen() {
             <View style={styles.statsRow}>
               <View style={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: '#4CAF50' }]}>{duelsWon}</Text>
-                <Text style={styles.miniStatLabel}>⚔️ WINS</Text>
+                <Text style={styles.miniStatLabel}>{T.profile_stat_wins}</Text>
               </View>
               <View style={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: '#F44336' }]}>{duelsLost}</Text>
-                <Text style={styles.miniStatLabel}>💀 LOSSES</Text>
+                <Text style={styles.miniStatLabel}>{T.profile_stat_losses}</Text>
               </View>
               <View style={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: colors.streak }]}>
@@ -287,13 +289,13 @@ export default function ProfileScreen() {
                     ? Math.round((duelsWon / (duelsWon + duelsLost)) * 100)
                     : 0}%
                 </Text>
-                <Text style={styles.miniStatLabel}>WIN RATE</Text>
+                <Text style={styles.miniStatLabel}>{T.profile_stat_win_rate}</Text>
               </View>
             </View>
 
             {/* Single action */}
             <PixelButton
-              title="🏆 Succès"
+              title={T.profile_achievements_btn}
               onPress={() => router.push('/achievements')}
               variant="secondary"
             />

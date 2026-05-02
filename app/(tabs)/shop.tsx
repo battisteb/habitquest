@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
+import { useT } from '../../src/lib/i18n';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { use$ } from '@legendapp/state/react';
@@ -56,6 +57,7 @@ const SLOT_LABELS: Record<string, string> = {
 };
 
 export default function ShopScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
@@ -343,25 +345,25 @@ export default function ShopScreen() {
       if (isOwned) {
         if (item.category === 'theme') {
           await setActiveTheme(item.sprite_key);
-          Alert.alert('Thème appliqué !', `${item.name} est maintenant actif.`);
+          Alert.alert(T.shop_theme_applied_title, T.shop_theme_applied_msg.replace('{name}', item.name));
           return;
         }
         const equipped = equippedSlots[slot];
         if (equipped?.itemId === item.id) {
           await unequipSlot(slot);
-          Alert.alert('Retiré', `${item.name} a été déséquipé.`);
+          Alert.alert(T.shop_unequipped_title, T.shop_unequipped_msg.replace('{name}', item.name));
         } else {
           await equipItem(item.id, slot);
-          Alert.alert('Équipé !', `${item.name} est maintenant équipé.`);
+          Alert.alert(T.shop_equipped_title, T.shop_equipped_msg.replace('{name}', item.name));
         }
         return;
       }
 
       // Premium lock
       if (isPremiumLocked_map.get(item.id)) {
-        Alert.alert('Premium requis', 'Cet item est réservé aux membres Premium.', [
-          { text: 'Annuler', style: 'cancel' },
-          { text: 'Voir Premium', onPress: () => router.push('/paywall') },
+        Alert.alert(T.shop_premium_required_title, T.shop_premium_required_msg, [
+          { text: T.shop_premium_cancel, style: 'cancel' },
+          { text: T.shop_premium_see, onPress: () => router.push('/paywall') },
         ]);
         return;
       }
@@ -369,8 +371,8 @@ export default function ShopScreen() {
       // Level lock
       if (userLevel < item.required_level) {
         Alert.alert(
-          'Niveau insuffisant',
-          `Cet item nécessite le niveau ${item.required_level}.\nTu es niveau ${userLevel}.`,
+          T.shop_level_required_title,
+          T.shop_level_required_msg.replace('{required}', String(item.required_level)).replace('{current}', String(userLevel)),
         );
         return;
       }
@@ -379,8 +381,8 @@ export default function ShopScreen() {
       const staticItem = staticCatalogBySpriteKey.get(item.sprite_key);
       if (staticItem && !isItemUnlocked(staticItem, userLevel, longestStreak)) {
         Alert.alert(
-          'Pas encore débloqué',
-          `Condition : ${staticItem.unlockCondition?.label ?? 'Inconnue'}`,
+          T.shop_not_unlocked_title,
+          T.shop_not_unlocked_msg.replace('{condition}', staticItem.unlockCondition?.label ?? T.shop_not_unlocked_unknown),
         );
         return;
       }
@@ -388,8 +390,8 @@ export default function ShopScreen() {
       // Gold check
       if (userGold < item.price_gold) {
         Alert.alert(
-          'Or insuffisant',
-          `Il te manque ${item.price_gold - userGold}g.\nComplete des habitudes pour gagner de l'or !`,
+          T.shop_gold_insufficient_title,
+          T.shop_gold_insufficient_msg.replace('{n}', String(item.price_gold - userGold)),
         );
         return;
       }
@@ -398,7 +400,7 @@ export default function ShopScreen() {
       setPendingPurchase(item);
     } catch (e: any) {
       if (__DEV__) console.error('[SHOP] handleItemPress error:', e);
-      Alert.alert('Erreur', e.message ?? 'Une erreur est survenue');
+      Alert.alert(T.shop_error_title, e.message ?? T.shop_error_purchase);
     }
   }
 
@@ -412,7 +414,7 @@ export default function ShopScreen() {
       await purchaseItem(item.id);
       if (slot) await equipItem(item.id, slot);
     } catch (e: any) {
-      Alert.alert('Erreur', e.message ?? 'Achat échoué');
+      Alert.alert(T.shop_error_title, e.message ?? T.shop_error_purchase);
     } finally {
       setPurchasing(null);
     }
@@ -425,8 +427,8 @@ export default function ShopScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>SHOP</Text>
-          <Text style={styles.goldHint}>Complete habits → earn gold</Text>
+          <Text style={styles.title}>{T.shop_title}</Text>
+          <Text style={styles.goldHint}>{T.shop_gold_hint}</Text>
         </View>
         <View style={styles.goldBadge}>
           <Text style={styles.goldIcon}>💰</Text>
@@ -447,7 +449,7 @@ export default function ShopScreen() {
           />
         </View>
         <View style={styles.loadoutSlots}>
-          <Text style={styles.loadoutTitle}>EQUIPPED</Text>
+          <Text style={styles.loadoutTitle}>{T.shop_equipped_label}</Text>
           <View style={styles.slotsGrid}>
             {Object.entries(SLOT_LABELS).map(([slot, icon]) => {
               const eq = equippedSlots[slot];
@@ -466,7 +468,7 @@ export default function ShopScreen() {
               );
             })}
           </View>
-          <Text style={styles.loadoutHint}>Tap slot to unequip</Text>
+          <Text style={styles.loadoutHint}>{T.shop_tap_unequip}</Text>
         </View>
       </View>
 
@@ -506,7 +508,7 @@ export default function ShopScreen() {
       {/* Owned counter */}
       {!isLoading && (
         <Text style={styles.ownedCounter}>
-          {ownedCount}/{filteredItems.length} owned
+          {T.shop_owned_counter.replace('{owned}', String(ownedCount)).replace('{total}', String(filteredItems.length))}
         </Text>
       )}
 
@@ -524,7 +526,7 @@ export default function ShopScreen() {
           contentContainerStyle={styles.grid}
           columnWrapperStyle={styles.gridRow}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>No items in this category</Text>
+            <Text style={styles.emptyText}>{T.shop_empty_category}</Text>
           }
           renderItem={({ item }) => {
             const slot = CATEGORY_TO_SLOT[item.category];
@@ -562,7 +564,7 @@ export default function ShopScreen() {
                 isEquipped={isEquipped}
                 canAfford={userGold >= item.price_gold}
                 canUnlock={canUnlock && !premiumLocked}
-                unlockLabel={premiumLocked ? '👑 Premium requis' : unlockLabel}
+                unlockLabel={premiumLocked ? T.shop_premium_locked_label : unlockLabel}
                 isPremiumLocked={premiumLocked}
                 currentHat={currentHat}
                 currentOutfit={currentOutfit}
@@ -587,28 +589,28 @@ export default function ShopScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
-            <Text style={styles.modalTitle}>⚔️ CONFIRMER L'ACHAT</Text>
+            <Text style={styles.modalTitle}>{T.shop_confirm_title}</Text>
             <Text style={styles.modalItemName}>{pendingPurchase?.name}</Text>
             <Text style={styles.modalRarity}>{pendingPurchase?.rarity?.toUpperCase()}</Text>
             <Text style={styles.modalPrice}>
               💰 {pendingPurchase?.price_gold}g
             </Text>
             <Text style={styles.modalGoldAfter}>
-              Restant : {(userGold - (pendingPurchase?.price_gold ?? 0)).toLocaleString()}g
+              {T.shop_confirm_gold_after.replace('{n}', (userGold - (pendingPurchase?.price_gold ?? 0)).toLocaleString())}
             </Text>
             <View style={styles.modalButtons}>
               <Pressable
                 style={[styles.modalBtn, styles.modalBtnCancel]}
                 onPress={() => setPendingPurchase(null)}
               >
-                <Text style={styles.modalBtnText}>Annuler</Text>
+                <Text style={styles.modalBtnText}>{T.shop_confirm_cancel}</Text>
               </Pressable>
               <Pressable
                 style={[styles.modalBtn, styles.modalBtnConfirm]}
                 onPress={handleConfirmPurchase}
               >
                 <Text style={styles.modalBtnTextConfirm}>
-                  Acheter {pendingPurchase?.price_gold}g
+                  {T.shop_confirm_buy.replace('{n}', String(pendingPurchase?.price_gold ?? 0))}
                 </Text>
               </Pressable>
             </View>

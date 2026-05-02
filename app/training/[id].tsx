@@ -9,6 +9,7 @@ import {
   Vibration,
   Platform,
 } from 'react-native';
+import { useT } from '../../src/lib/i18n';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
@@ -77,6 +78,7 @@ function ExerciseStep({
   isDone: boolean;
   onDone: () => void;
 }) {
+  const T = useT();
   const styles = createStyles();
   const [currentSet, setCurrentSet] = useState(1);
   const [phase, setPhase] = useState<'work' | 'rest' | 'done'>('work');
@@ -125,7 +127,7 @@ function ExerciseStep({
       <Text style={styles.activeStepProgress}>{index + 1} / {total}</Text>
       <Text style={styles.activeStepName}>{exercise.name}</Text>
       <Text style={styles.activeStepMeta}>
-        Set {currentSet} of {exercise.sets}
+        {T.training_player_set.replace('{current}', String(currentSet)).replace('{total}', String(exercise.sets))}
         {exercise.notes ? `  ·  ${exercise.notes}` : ''}
       </Text>
 
@@ -138,24 +140,24 @@ function ExerciseStep({
               <View style={styles.timerButtons}>
                 {!workTimer.running ? (
                   <Pressable style={styles.actionBtn} onPress={workTimer.start}>
-                    <Text style={styles.actionBtnText}>START</Text>
+                    <Text style={styles.actionBtnText}>{T.training_player_start}</Text>
                   </Pressable>
                 ) : (
                   <Pressable style={styles.actionBtn} onPress={workTimer.pause}>
-                    <Text style={styles.actionBtnText}>PAUSE</Text>
+                    <Text style={styles.actionBtnText}>{T.training_player_pause}</Text>
                   </Pressable>
                 )}
                 <Pressable style={styles.skipBtn} onPress={handleTimerDone}>
-                  <Text style={styles.skipBtnText}>SKIP ›</Text>
+                  <Text style={styles.skipBtnText}>{T.training_player_skip}</Text>
                 </Pressable>
               </View>
             </View>
           ) : (
             <View style={styles.repsBlock}>
               <Text style={styles.repsCount}>{(exercise as { reps: number }).reps}</Text>
-              <Text style={styles.repsLabel}>REPS</Text>
+              <Text style={styles.repsLabel}>{T.training_player_reps}</Text>
               <Pressable style={styles.actionBtn} onPress={handleTimerDone}>
-                <Text style={styles.actionBtnText}>DONE ✓</Text>
+                <Text style={styles.actionBtnText}>{T.training_player_done}</Text>
               </Pressable>
             </View>
           )}
@@ -164,24 +166,24 @@ function ExerciseStep({
 
       {phase === 'rest' && (
         <View style={styles.restBlock}>
-          <Text style={styles.restTitle}>REST</Text>
+          <Text style={styles.restTitle}>{T.training_player_rest}</Text>
           <Text style={styles.bigTime}>{fmt(restTimer.remaining)}</Text>
           <Pressable style={styles.skipBtn} onPress={() => {
             restTimer.reset();
             setPhase('work');
             setCurrentSet((s) => s + 1);
           }}>
-            <Text style={styles.skipBtnText}>SKIP REST ›</Text>
+            <Text style={styles.skipBtnText}>{T.training_player_skip_rest}</Text>
           </Pressable>
           {!restTimer.running && <Pressable style={styles.actionBtn} onPress={restTimer.start}>
-            <Text style={styles.actionBtnText}>START REST</Text>
+            <Text style={styles.actionBtnText}>{T.training_player_start_rest}</Text>
           </Pressable>}
         </View>
       )}
 
       {phase === 'done' && (
         <View style={styles.exerciseDone}>
-          <Text style={styles.exerciseDoneText}>Exercise complete!</Text>
+          <Text style={styles.exerciseDoneText}>{T.training_player_exercise_done}</Text>
         </View>
       )}
     </View>
@@ -190,6 +192,7 @@ function ExerciseStep({
 
 // ─── Session player screen ────────────────────────────────────────────────────
 export default function SessionPlayerScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -216,7 +219,7 @@ export default function SessionPlayerScreen() {
   if (!session) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Text style={styles.errorText}>Session not found.</Text>
+        <Text style={styles.errorText}>{T.training_player_not_found}</Text>
       </View>
     );
   }
@@ -247,9 +250,9 @@ export default function SessionPlayerScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={() => {
-          Alert.alert('Quit session?', 'Progress will be lost.', [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Quit', style: 'destructive', onPress: () => router.back() },
+          Alert.alert(T.training_player_quit_title, T.training_player_quit_msg, [
+            { text: T.training_player_quit_cancel, style: 'cancel' },
+            { text: T.training_player_quit_confirm, style: 'destructive', onPress: () => router.back() },
           ]);
         }}>
           <Text style={styles.backText}>✕</Text>
@@ -257,7 +260,7 @@ export default function SessionPlayerScreen() {
         <View style={styles.headerCenter}>
           <Text style={styles.sessionTitle} numberOfLines={1}>{session.data.title}</Text>
           <Text style={styles.sessionProgress}>
-            {completedIndices.size}/{exercises.length} exercises
+            {T.training_player_progress.replace('{done}', String(completedIndices.size)).replace('{total}', String(exercises.length))}
           </Text>
         </View>
         <View style={{ width: 32 }} />
@@ -281,16 +284,16 @@ export default function SessionPlayerScreen() {
         ) : (
           <View style={styles.finishScreen}>
             <Text style={styles.finishEmoji}>🏆</Text>
-            <Text style={styles.finishTitle}>SESSION COMPLETE!</Text>
+            <Text style={styles.finishTitle}>{T.training_player_finish_title}</Text>
             <Text style={styles.finishSubtitle}>{session.data.title}</Text>
             <Text style={styles.finishStats}>
-              {exercises.length} exercises · #{session.completedCount + 1} completed
+              {T.training_player_finish_stats.replace('{exercises}', String(exercises.length)).replace('{count}', String(session.completedCount + 1))}
             </Text>
 
             {/* Optional: link to a habit for XP */}
             {fitHabits.length > 0 && (
               <View style={styles.habitLink}>
-                <Text style={styles.habitLinkLabel}>AWARD XP TO A HABIT?</Text>
+                <Text style={styles.habitLinkLabel}>{T.training_player_award_label}</Text>
                 <View style={styles.habitLinkRow}>
                   {fitHabits.slice(0, 3).map((h) => (
                     <Pressable
@@ -310,7 +313,7 @@ export default function SessionPlayerScreen() {
 
             <Pressable style={styles.finishButton} onPress={handleFinish}>
               <Text style={styles.finishButtonText}>
-                {linkedHabitId ? 'FINISH & EARN XP' : 'FINISH'}
+                {linkedHabitId ? T.training_player_finish_xp : T.training_player_finish}
               </Text>
             </Pressable>
           </View>
