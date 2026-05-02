@@ -19,20 +19,17 @@ function savePunishedSet(set: Set<string>): void {
   storage.set(PUNISHED_KEY, JSON.stringify([...set]));
 }
 
-/**
- * Check for broken streaks and apply punishment.
- * A streak is "broken" if last_completed_at is more than 1 day ago
- * and current_count was > 0.
- * We track which streaks we've already punished by habit_id + date
- * to avoid double punishment.
- */
+export interface BrokenStreakInfo {
+  habitId: string;
+  wasCount: number;
+}
+
 export async function checkAndApplyPunishments(
   userId: string,
   streaks: Record<string, { current_count: number; longest_count: number; last_completed_at: string | null; habit_id: string }>,
-): Promise<{ totalXpLoss: number; totalGoldLoss: number; brokenCount: number }> {
-  // If streak freeze is active today, skip all punishments
+): Promise<{ totalXpLoss: number; totalGoldLoss: number; brokenCount: number; brokenStreaks: BrokenStreakInfo[] }> {
   if (isFreezeActiveToday()) {
-    return { totalXpLoss: 0, totalGoldLoss: 0, brokenCount: 0 };
+    return { totalXpLoss: 0, totalGoldLoss: 0, brokenCount: 0, brokenStreaks: [] };
   }
 
   const now = new Date();
@@ -42,6 +39,7 @@ export async function checkAndApplyPunishments(
   let totalXpLoss = 0;
   let totalGoldLoss = 0;
   let brokenCount = 0;
+  const brokenStreaks: BrokenStreakInfo[] = [];
 
   for (const streak of Object.values(streaks)) {
     if (!streak.last_completed_at || streak.current_count === 0) continue;
@@ -51,7 +49,6 @@ export async function checkAndApplyPunishments(
       (now.getTime() - lastCompleted.getTime()) / (1000 * 60 * 60 * 24),
     );
 
-    // Streak is broken if last completion was more than 1 day ago
     if (daysSince <= 1) continue;
 
     const punishKey = `${streak.habit_id}:${today}`;
@@ -61,11 +58,10 @@ export async function checkAndApplyPunishments(
     totalXpLoss += xpLoss;
     totalGoldLoss += goldLoss;
     brokenCount++;
+    brokenStreaks.push({ habitId: streak.habit_id, wasCount: streak.current_count });
 
-    // Mark as punished for today
     punished.add(punishKey);
 
-    // Reset the streak in DB
     await supabase
       .from('streaks')
       .update({ current_count: 0 })
@@ -82,5 +78,5 @@ export async function checkAndApplyPunishments(
 
   savePunishedSet(punished);
 
-  return { totalXpLoss, totalGoldLoss, brokenCount };
+  return { totalXpLoss, totalGoldLoss, brokenCount, brokenStreaks };
 }

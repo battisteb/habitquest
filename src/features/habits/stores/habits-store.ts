@@ -16,6 +16,7 @@ import { refreshProfile } from '../../gamification/stores/profile-store';
 import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { HabitContent } from '../types/habit-content';
 import type { Database, Json } from '../../../lib/supabase/types';
+import { reportBrokenStreaks } from './broken-streak-store';
 
 type Habit = Omit<Database['public']['Tables']['habits']['Row'], 'content'> & { content?: HabitContent | null };
 type Streak = Database['public']['Tables']['streaks']['Row'];
@@ -133,7 +134,18 @@ export async function fetchHabits() {
       habitsStore$.weekCompletions.set(weekCompletionMap);
 
       // Check for broken streaks and apply punishment (non-blocking)
-      checkAndApplyPunishments(userId, streakMap).catch(() => {});
+      checkAndApplyPunishments(userId, streakMap).then(({ brokenStreaks }) => {
+        if (brokenStreaks.length > 0) {
+          const habitsArr = habitsStore$.habits.get();
+          reportBrokenStreaks(
+            brokenStreaks.map((b) => ({
+              habitId: b.habitId,
+              wasCount: b.wasCount,
+              habitName: habitsArr.find((h) => h.id === b.habitId)?.name ?? '',
+            })),
+          );
+        }
+      }).catch(() => {});
     }
   } finally {
     habitsStore$.isLoading.set(false);

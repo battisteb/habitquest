@@ -21,6 +21,7 @@ import { habitsStore$, fetchHabits, completeHabit, isHabitCompletedEnough } from
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../src/features/habits/stores/burnout-store';
+import { brokenStreakStore$, dismissBrokenStreak, clearBrokenStreakForHabit } from '../../src/features/habits/stores/broken-streak-store';
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import {
   getFreezesRemaining,
@@ -290,6 +291,52 @@ export default function TodayScreen() {
   },
   filterChipTextActive: { color: colors.primary },
 
+  // Streak recovery banner
+  streakRecoveryBanner: {
+    backgroundColor: colors.streak + '18',
+    borderWidth: 2,
+    borderColor: colors.streak,
+    borderRadius: 4,
+    padding: spacing.sm,
+    margin: spacing.md,
+    marginBottom: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  streakRecoveryText: { flex: 1, gap: 2 },
+  streakRecoveryTitle: {
+    color: colors.streak,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  streakRecoveryMsg: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.xs,
+    lineHeight: 16,
+  },
+  streakRecoveryBtn: {
+    backgroundColor: colors.streak + '22',
+    borderWidth: 1,
+    borderColor: colors.streak,
+    borderRadius: 3,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+  },
+  streakRecoveryBtnText: {
+    color: colors.streak,
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  streakRecoveryClose: {
+    color: colors.textMuted,
+    fontSize: fontSizes.sm,
+    fontWeight: 'bold',
+    paddingHorizontal: spacing.xs,
+  },
+
   // Burnout banner
   burnoutBanner: {
     backgroundColor: '#FF6B6B' + '18',
@@ -400,6 +447,7 @@ export default function TodayScreen() {
   const burnoutSignal = useBurnoutSignal();
   const burnoutLastDismissed = use$(burnoutStore$.lastDismissedAt);
   const burnoutDismissed = useMemo(() => isDismissalActive(), [burnoutLastDismissed]);
+  const brokenStreaks = use$(brokenStreakStore$.items);
   const [takeBreakOpen, setTakeBreakOpen] = useState(false);
   const profile = use$(profileStore$.profile);
   const authUser = use$(authStore$.user);
@@ -479,6 +527,7 @@ export default function TodayScreen() {
     const xp = calculateXpEarned(currentCount + 1);
     const gold = calculateGoldEarned(xp);
     await completeHabit(habitId);
+    clearBrokenStreakForHabit(habitId);
     setXpToast({ visible: true, xp, gold });
 
     const newStreak = currentCount + 1;
@@ -531,6 +580,24 @@ export default function TodayScreen() {
           </View>
         ) : null;
       })()}
+
+      {/* Streak recovery banners */}
+      {brokenStreaks.map((b) => (
+        <View key={b.habitId} style={styles.streakRecoveryBanner}>
+          <View style={styles.streakRecoveryText}>
+            <Text style={styles.streakRecoveryTitle}>{T.streak_broken_title}</Text>
+            <Text style={styles.streakRecoveryMsg}>
+              {T.streak_broken_msg.replace('{n}', String(b.wasCount)).replace('{name}', b.habitName)}
+            </Text>
+          </View>
+          <Pressable style={styles.streakRecoveryBtn} onPress={() => handleComplete(b.habitId)} hitSlop={4}>
+            <Text style={styles.streakRecoveryBtnText}>{T.streak_broken_restart}</Text>
+          </Pressable>
+          <Pressable onPress={() => dismissBrokenStreak(b.habitId)} hitSlop={8}>
+            <Text style={styles.streakRecoveryClose}>✕</Text>
+          </Pressable>
+        </View>
+      ))}
 
       {/* Burnout banner */}
       {burnoutSignal.risk !== 'none' && !burnoutDismissed && (
