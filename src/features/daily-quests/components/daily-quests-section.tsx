@@ -5,6 +5,7 @@ import { useDailyQuests } from '../hooks/use-daily-quests';
 import { DailyQuestCard } from './daily-quest-card';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+import { hapticMedium } from '../../../lib/haptics';
 
 interface DailyQuestsSectionProps {
   pausedCategories?: string[];
@@ -64,6 +65,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
   }, []);
 
   const handleClaim = useCallback(async (questId: string) => {
+    hapticMedium();
     try {
       await claimQuest(questId);
     } catch {

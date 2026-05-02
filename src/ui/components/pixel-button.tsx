@@ -1,5 +1,6 @@
 import { Pressable, Text, StyleSheet, type ViewStyle } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../theme/tokens';
+import { hapticLight } from '../../lib/haptics';
 
 interface PixelButtonProps {
   title: string;
@@ -16,9 +17,14 @@ export function PixelButton({
   disabled = false,
   style,
 }: PixelButtonProps) {
+  const handlePress = () => {
+    hapticLight();
+    onPress();
+  };
+
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       disabled={disabled}
       style={({ pressed }) => [
         styles.base,

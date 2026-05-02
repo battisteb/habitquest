@@ -11,6 +11,7 @@ import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { triggerStreakMilestone, isMilestone } from '../../gamification/stores/streak-milestone-store';
 import { recordCompletionHour } from '../../notifications/utils/adaptive-timing';
+import { hapticSuccess, hapticHeavy } from '../../../lib/haptics';
 import { refreshProfile } from '../../gamification/stores/profile-store';
 import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { HabitContent } from '../types/habit-content';
@@ -278,6 +279,9 @@ export async function completeHabit(habitId: string) {
   if (isMilestone(newStreak.currentCount) && newStreak.currentCount > currentCount) {
     const habitName = habit?.name ?? '';
     triggerStreakMilestone(newStreak.currentCount, habitName);
+    hapticHeavy();
+  } else {
+    hapticSuccess();
   }
 
   // Optimistic update
