@@ -214,7 +214,7 @@ export async function resumeHabit(id: string) {
   await fetchHabits();
 }
 
-export async function completeHabit(habitId: string) {
+export async function completeHabit(habitId: string, note?: string) {
   const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
   const frequency = habit?.frequency ?? 'daily';
 
@@ -243,6 +243,7 @@ export async function completeHabit(habitId: string) {
   await supabase.from('completions').insert({
     habit_id: habitId,
     xp_earned: xpEarned,
+    ...(note ? { note } : {}),
   });
 
   // Update streak

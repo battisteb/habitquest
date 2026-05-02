@@ -128,18 +128,21 @@ export type Database = {
           completed_at: string
           habit_id: string
           id: string
+          note: string | null
           xp_earned: number
         }
         Insert: {
           completed_at?: string
           habit_id: string
           id?: string
+          note?: string | null
           xp_earned?: number
         }
         Update: {
           completed_at?: string
           habit_id?: string
           id?: string
+          note?: string | null
           xp_earned?: number
         }
         Relationships: [

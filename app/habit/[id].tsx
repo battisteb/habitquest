@@ -6,6 +6,7 @@ import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { HabitTimer } from '../../src/features/habits/components/habit-timer';
 import { HabitChecklist } from '../../src/features/habits/components/habit-checklist';
+import { CompletionNoteModal } from '../../src/features/habits/components/completion-note-modal';
 import { habitsStore$, archiveHabit, completeHabit, pauseHabit, resumeHabit } from '../../src/features/habits/stores/habits-store';
 import { useDynamicGoal } from '../../src/features/habits/hooks/use-dynamic-goal';
 import { CONTENT_TYPE_CONFIG } from '../../src/features/habits/types/habit-content';
@@ -264,6 +265,8 @@ export default function HabitDetailScreen() {
   );
   const [showReminderPicker, setShowReminderPicker] = useState(false);
   const [pickerHour, setPickerHour] = useState(9);
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [pendingComplete, setPendingComplete] = useState(false);
 
   const habit = habits.find((h) => h.id === id);
   const streak = id ? streaks[id] : undefined;
@@ -322,9 +325,26 @@ export default function HabitDetailScreen() {
     }
   };
 
-  const handleComplete = async () => {
-    await completeHabit(habit.id);
+  const handleComplete = () => {
+    setPendingComplete(true);
+    setShowNoteModal(true);
     setContentExpanded(false);
+  };
+
+  const handleNoteSave = async (note: string) => {
+    setShowNoteModal(false);
+    if (pendingComplete) {
+      await completeHabit(habit.id, note || undefined);
+      setPendingComplete(false);
+    }
+  };
+
+  const handleNoteSkip = async () => {
+    setShowNoteModal(false);
+    if (pendingComplete) {
+      await completeHabit(habit.id);
+      setPendingComplete(false);
+    }
   };
 
   const handleLinkOpen = async () => {
@@ -566,6 +586,13 @@ export default function HabitDetailScreen() {
           </Pressable>
         </Pressable>
       </Modal>
+
+      <CompletionNoteModal
+        visible={showNoteModal}
+        habitName={habit.name}
+        onSave={handleNoteSave}
+        onSkip={handleNoteSkip}
+      />
     </ScrollView>
   );
 }

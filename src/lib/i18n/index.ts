@@ -673,6 +673,11 @@ const FR = {
   burnout_moderate_suggestion: 'Essaie de réduire à 3–4 habitudes pendant une semaine.',
   burnout_mild_message: '📉 Légère baisse',
   burnout_mild_suggestion: 'Continue — quelques jours manqués, c\'est normal.',
+  // Completion note modal
+  note_modal_title: 'Note rapide',
+  note_modal_placeholder: 'ex. Couru 5km, Lu 30 pages…',
+  note_modal_skip: 'Passer',
+  note_modal_save: 'Enregistrer',
 } as const;
 
 const EN = {
@@ -1330,6 +1335,11 @@ const EN = {
   burnout_moderate_suggestion: 'Try reducing to 3–4 habits for a week.',
   burnout_mild_message: '📉 Slight decline',
   burnout_mild_suggestion: 'Keep going — a few missed days is normal.',
+  // Completion note modal
+  note_modal_title: 'Quick note',
+  note_modal_placeholder: 'e.g. Ran 5km, Read 30 pages…',
+  note_modal_skip: 'Skip',
+  note_modal_save: 'Save',
 } as const;
 
 type Strings = Record<keyof typeof FR, string>;
