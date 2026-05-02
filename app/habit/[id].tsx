@@ -451,16 +451,28 @@ export default function HabitDetailScreen() {
       )}
 
       {/* Dynamic goal suggestion */}
-      {goalSuggestion.type !== 'none' && (
-        <View style={[
-          styles.goalCard,
-          goalSuggestion.type === 'level_up' && styles.goalCardLevelUp,
-          goalSuggestion.type === 'restart' && styles.goalCardRestart,
-        ]}>
-          <Text style={styles.goalMessage}>{goalSuggestion.message}</Text>
-          <Text style={styles.goalDetail}>{goalSuggestion.detail}</Text>
-        </View>
-      )}
+      {goalSuggestion.type !== 'none' && (() => {
+        const n = String(goalSuggestion.completions);
+        const total = String(goalSuggestion.total);
+        const msgKey = goalSuggestion.type === 'level_up' ? 'goal_level_up_msg'
+          : goalSuggestion.type === 'restart' ? 'goal_restart_msg'
+          : 'goal_keep_going_msg';
+        const detailKey = goalSuggestion.type === 'level_up' ? 'goal_level_up_detail'
+          : goalSuggestion.type === 'restart' ? 'goal_restart_detail'
+          : 'goal_keep_going_detail';
+        return (
+          <View style={[
+            styles.goalCard,
+            goalSuggestion.type === 'level_up' && styles.goalCardLevelUp,
+            goalSuggestion.type === 'restart' && styles.goalCardRestart,
+          ]}>
+            <Text style={styles.goalMessage}>{T[msgKey]}</Text>
+            <Text style={styles.goalDetail}>
+              {T[detailKey].replace('{n}', n).replace('{total}', total)}
+            </Text>
+          </View>
+        );
+      })()}
 
       {isPaused && (
         <View style={styles.pausedBanner}>

@@ -640,6 +640,13 @@ const FR = {
   timer_resume: 'REPRENDRE',
   timer_complete: 'TERMINÉ ✓',
   timer_done_hint: 'Minuteur terminé ! Marque comme fait pour gagner des XP.',
+  // Dynamic goal suggestions
+  goal_level_up_msg: '🚀 Prêt à passer au niveau supérieur ?',
+  goal_level_up_detail: '{n}/{total} jours — tu assures. Augmente la difficulté ou ajoute une nouvelle habitude.',
+  goal_keep_going_msg: '🔥 Belle régularité !',
+  goal_keep_going_detail: '{n}/{total} jours. Garde ce rythme — tu construis une vraie habitude.',
+  goal_restart_msg: '🌱 Nouveau départ',
+  goal_restart_detail: '{n}/{total} jours. Essaie de rendre cette habitude plus simple pour réduire la friction.',
   // UI components
   achievement_unlocked: 'SUCCÈS DÉBLOQUÉ',
   level_up_subtitle: 'Continue, aventurier !',
@@ -1276,6 +1283,13 @@ const EN = {
   timer_resume: 'RESUME',
   timer_complete: 'COMPLETE ✓',
   timer_done_hint: 'Timer complete! Mark as done to earn XP.',
+  // Dynamic goal suggestions
+  goal_level_up_msg: '🚀 Ready to level up?',
+  goal_level_up_detail: '{n}/{total} days done — you\'re crushing it. Consider increasing difficulty or adding a new habit.',
+  goal_keep_going_msg: '🔥 Great consistency!',
+  goal_keep_going_detail: '{n}/{total} days done. Keep this rhythm — you\'re building a solid habit.',
+  goal_restart_msg: '🌱 Fresh start',
+  goal_restart_detail: '{n}/{total} days done. Consider making this habit smaller or easier to reduce friction.',
   // UI components
   achievement_unlocked: 'ACHIEVEMENT UNLOCKED',
   level_up_subtitle: 'Keep going, adventurer!',
