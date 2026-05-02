@@ -640,6 +640,10 @@ const FR = {
   timer_resume: 'REPRENDRE',
   timer_complete: 'TERMINÉ ✓',
   timer_done_hint: 'Minuteur terminé ! Marque comme fait pour gagner des XP.',
+  // Habit sort modes
+  habit_sort_smart: 'Intelligent',
+  habit_sort_streak: 'Série',
+  habit_sort_az: 'A→Z',
   // Habit pinning
   habit_pin_title: 'Épingler',
   habit_pin_msg: 'Épingler « {name} » en haut de la liste ?',
@@ -1293,6 +1297,10 @@ const EN = {
   timer_resume: 'RESUME',
   timer_complete: 'COMPLETE ✓',
   timer_done_hint: 'Timer complete! Mark as done to earn XP.',
+  // Habit sort modes
+  habit_sort_smart: 'Smart',
+  habit_sort_streak: 'Streak',
+  habit_sort_az: 'A→Z',
   // Habit pinning
   habit_pin_title: 'Pin habit',
   habit_pin_msg: 'Pin "{name}" to the top of your list?',

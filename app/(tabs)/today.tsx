@@ -232,6 +232,18 @@ export default function TodayScreen() {
     paddingBottom: spacing.xs,
   },
   habitsHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  sortRow: { flexDirection: 'row', gap: spacing.xs },
+  sortChip: {
+    paddingHorizontal: spacing.xs + 2,
+    paddingVertical: 2,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  sortChipActive: { borderColor: colors.primary, backgroundColor: colors.primary + '22' },
+  sortChipText: { fontSize: 9, fontWeight: 'bold', color: colors.textMuted, letterSpacing: 0.5 },
+  sortChipTextActive: { color: colors.primary },
   habitsTitle: {
     fontSize: fontSizes.xs,
     fontWeight: 'bold',
@@ -437,6 +449,7 @@ export default function TodayScreen() {
   const [freezeActive, setFreezeActive] = useState(isFreezeActiveToday());
   const [freezesLeft, setFreezesLeft] = useState(getFreezesRemaining());
   const [activeCategory, setActiveCategory] = useState(ALL_KEY);
+  const [sortMode, setSortMode] = useState<'smart' | 'streak' | 'az'>('smart');
   const [xpToast, setXpToast] = useState<{ visible: boolean; xp: number; gold: number }>({
     visible: false, xp: 0, gold: 0,
   });
@@ -504,22 +517,33 @@ export default function TodayScreen() {
     return Array.from(seen);
   }, [habits]);
 
-  // Filter + sort: pinned first, then incomplete, then completed
+  // Filter + sort
   const displayedHabits = useMemo(() => {
     const filtered = (activeCategory === ALL_KEY
       ? habits
       : habits.filter((h) => h.category === activeCategory)
     ).filter((h) => isHabitActiveInMode(h.category, activeMode)).filter((h) => !(h as any).is_paused);
     return [...filtered].sort((a, b) => {
+      // Pinned always first regardless of sort mode
       const aPinned = pinnedIds.includes(a.id);
       const bPinned = pinnedIds.includes(b.id);
       if (aPinned !== bPinned) return aPinned ? -1 : 1;
+
+      if (sortMode === 'az') {
+        return a.name.localeCompare(b.name);
+      }
+      if (sortMode === 'streak') {
+        const aStreak = streaks[a.id]?.current_count ?? 0;
+        const bStreak = streaks[b.id]?.current_count ?? 0;
+        return bStreak - aStreak;
+      }
+      // smart: incomplete first
       const aDone = isHabitCompletedEnough(a.id);
       const bDone = isHabitCompletedEnough(b.id);
       if (aDone === bDone) return 0;
       return aDone ? 1 : -1;
     });
-  }, [habits, activeCategory, todayCompletions, weekCompletions, pinnedIds]);
+  }, [habits, activeCategory, todayCompletions, weekCompletions, pinnedIds, sortMode, streaks]);
 
   const activeHabits = habits.filter((h) => !(h as any).is_paused);
   const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
@@ -664,6 +688,17 @@ export default function TodayScreen() {
           <Text style={styles.habitsCounter}>
             {completedCount}/{totalCount}
           </Text>
+        </View>
+        <View style={styles.sortRow}>
+          {(['smart', 'streak', 'az'] as const).map((mode) => {
+            const label = mode === 'smart' ? T.habit_sort_smart : mode === 'streak' ? T.habit_sort_streak : T.habit_sort_az;
+            const active = sortMode === mode;
+            return (
+              <Pressable key={mode} style={[styles.sortChip, active && styles.sortChipActive]} onPress={() => setSortMode(mode)}>
+                <Text style={[styles.sortChipText, active && styles.sortChipTextActive]}>{label}</Text>
+              </Pressable>
+            );
+          })}
         </View>
       </View>
 
