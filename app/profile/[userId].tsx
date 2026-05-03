@@ -145,45 +145,17 @@ export default function PublicProfileScreen() {
     try {
       const { data: p } = await supabase
         .from('profiles')
-        .select('id, username, xp, level, gold, created_at')
+        .select('id, username, xp, level, gold, best_streak, created_at')
         .eq('id', userId)
         .single();
 
       if (!p) return;
       setProfile(p as PublicProfile);
 
-      // Load public stats
-      const { data: habits } = await supabase
-        .from('habits')
-        .select('id')
-        .eq('user_id', userId)
-        .eq('is_archived', false);
-
-      const habitIds = (habits ?? []).map((h) => h.id);
-
-      const [completionRes, streakRes] = await Promise.all([
-        habitIds.length > 0
-          ? supabase
-              .from('completions')
-              .select('*', { count: 'exact', head: true })
-              .in('habit_id', habitIds)
-          : Promise.resolve({ count: 0 }),
-        habitIds.length > 0
-          ? supabase
-              .from('streaks')
-              .select('longest_count')
-              .in('habit_id', habitIds)
-          : Promise.resolve({ data: [] }),
-      ]);
-
-      const bestStreak = (streakRes.data ?? []).reduce(
-        (max: number, s: { longest_count: number }) => Math.max(max, s.longest_count),
-        0,
-      );
-
+      // Use denormalized best_streak from profiles (no RLS bypass needed)
       setStats({
-        totalCompletions: (completionRes as any).count ?? 0,
-        bestStreak,
+        totalCompletions: 0,
+        bestStreak: (p as any).best_streak ?? 0,
         duelsWon: 0,
         duelsTotal: 0,
       });
