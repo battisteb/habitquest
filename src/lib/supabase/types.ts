@@ -433,6 +433,7 @@ export type Database = {
       profiles: {
         Row: {
           active_theme: string
+          best_streak: number
           created_at: string
           email: string
           eye_color: string
@@ -453,6 +454,7 @@ export type Database = {
         }
         Insert: {
           active_theme?: string
+          best_streak?: number
           created_at?: string
           email: string
           eye_color?: string
@@ -473,6 +475,7 @@ export type Database = {
         }
         Update: {
           active_theme?: string
+          best_streak?: number
           created_at?: string
           email?: string
           eye_color?: string

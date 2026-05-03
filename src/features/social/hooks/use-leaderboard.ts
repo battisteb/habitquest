@@ -95,7 +95,6 @@ export function useStreakLeaderboard() {
 
     setIsLoading(true);
     try {
-      // Get friend IDs (both sides of friendships)
       const { data: asRequester } = await supabase
         .from('friendships')
         .select('addressee_id')
@@ -114,67 +113,23 @@ export function useStreakLeaderboard() {
         userId,
       ];
 
-      // Get profiles for all friend IDs
+      // Use denormalized best_streak on profiles — no habits RLS bypass needed
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, username, level')
-        .in('id', friendIds);
+        .select('id, username, level, best_streak')
+        .in('id', friendIds)
+        .order('best_streak', { ascending: false })
+        .limit(10) as unknown as { data: Array<{ id: string; username: string; level: number; best_streak: number }> | null };
 
-      if (!profiles || profiles.length === 0) {
-        setEntries([]);
-        return;
-      }
-
-      const profileIds = profiles.map((p) => p.id);
-
-      // Get all habits for these users in one query
-      const { data: habits } = await supabase
-        .from('habits')
-        .select('id, user_id')
-        .in('user_id', profileIds)
-        .eq('is_archived', false);
-
-      const allHabitIds = (habits ?? []).map((h) => h.id);
-
-      // Map habit_id -> user_id for aggregation
-      const habitToUser: Record<string, string> = {};
-      (habits ?? []).forEach((h) => {
-        habitToUser[h.id] = h.user_id;
-      });
-
-      // Get all streaks for those habits in one query
-      const streaksByUser: Record<string, number> = {};
-
-      if (allHabitIds.length > 0) {
-        const { data: streaks } = await supabase
-          .from('streaks')
-          .select('habit_id, current_count')
-          .in('habit_id', allHabitIds);
-
-        (streaks ?? []).forEach((s) => {
-          const uid = habitToUser[s.habit_id];
-          if (uid !== undefined) {
-            const current = streaksByUser[uid] ?? 0;
-            if (s.current_count > current) {
-              streaksByUser[uid] = s.current_count;
-            }
-          }
-        });
-      }
-
-      // Build sorted leaderboard (top 10)
-      const result: StreakLeaderEntry[] = profiles
-        .map((p) => ({
+      setEntries(
+        (profiles ?? []).map((p) => ({
           id: p.id,
           username: p.username,
           level: p.level,
-          bestStreak: streaksByUser[p.id] ?? 0,
+          bestStreak: p.best_streak ?? 0,
           isCurrentUser: p.id === userId,
-        }))
-        .sort((a, b) => b.bestStreak - a.bestStreak)
-        .slice(0, 10);
-
-      setEntries(result);
+        })),
+      );
     } finally {
       setIsLoading(false);
     }

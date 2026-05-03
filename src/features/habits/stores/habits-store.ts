@@ -291,6 +291,15 @@ export async function completeHabit(habitId: string, note?: string) {
         triggerLevelUp(newLevel);
       }
     }
+
+    // Maintain denormalized best_streak on profile for cross-user leaderboard
+    if (newStreak.longestCount > longestCount) {
+      void supabase
+        .from('profiles')
+        .update({ best_streak: newStreak.longestCount })
+        .eq('id', userId)
+        .lt('best_streak', newStreak.longestCount);
+    }
   }
 
   // Check for streak milestone
