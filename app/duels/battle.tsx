@@ -62,7 +62,7 @@ function HpBar({ hp, maxHp }: { hp: number; maxHp: number }) {
   );
 }
 const hp_s = StyleSheet.create({
-  track: { height: 10, backgroundColor: '#0a0a16', borderRadius: 5, overflow: 'hidden', borderWidth: 1, borderColor: '#2a2a4a' },
+  track: { height: 10, backgroundColor: '#0a0a16', borderRadius: 5, overflow: 'hidden', borderWidth: 1, borderColor: '#2a2a4a', alignSelf: 'stretch' },
   fill: { height: '100%', borderRadius: 5 },
 });
 
