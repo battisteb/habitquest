@@ -7,6 +7,7 @@ import { calculateNewStreak } from '../utils/streak-calculator';
 import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
 import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 import { updateQuestProgress } from '../../daily-quests/stores/daily-quests-store';
+import { updateChallengeProgress } from '../../social/stores/challenges-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { triggerStreakMilestone, isMilestone } from '../../gamification/stores/streak-milestone-store';
@@ -318,6 +319,11 @@ export async function completeHabit(habitId: string, note?: string) {
 
   // Check achievements in background (non-blocking)
   checkAndUnlockAchievements().catch(() => {});
+
+  // Update challenge progress (non-blocking)
+  if (userId) {
+    updateChallengeProgress(userId, xpEarned, 1).catch(() => {});
+  }
 
   // Update daily quest progress (non-blocking)
   const snapshot = {

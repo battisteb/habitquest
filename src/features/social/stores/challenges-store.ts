@@ -89,6 +89,47 @@ export async function createChallenge(
   await fetchChallenges();
 }
 
+export async function updateChallengeProgress(
+  userId: string,
+  xpEarned: number,
+  completionCount: number = 1,
+): Promise<void> {
+  const { data: challenges } = await supabase
+    .from('challenges')
+    .select('id, type, target, creator_id, creator_progress, opponent_id, opponent_progress, gold_wager')
+    .or(`creator_id.eq.${userId},opponent_id.eq.${userId}`)
+    .eq('status', 'active');
+
+  if (!challenges?.length) return;
+
+  for (const challenge of challenges) {
+    const isCreator = challenge.creator_id === userId;
+    const currentProgress = isCreator ? challenge.creator_progress : challenge.opponent_progress;
+    const increment = challenge.type === 'xp_race' ? xpEarned : completionCount;
+    const newProgress = currentProgress + increment;
+    const progressField = isCreator ? 'creator_progress' : 'opponent_progress';
+
+    const updates: Record<string, unknown> = { [progressField]: newProgress };
+
+    if (newProgress >= challenge.target) {
+      const opponentProgress = isCreator ? challenge.opponent_progress : challenge.creator_progress;
+      const opponentAlreadyWon = opponentProgress >= challenge.target;
+      if (!opponentAlreadyWon) {
+        updates.status = 'completed';
+        updates.winner_id = userId;
+        const loserId = isCreator ? challenge.opponent_id : challenge.creator_id;
+        const wager = challenge.gold_wager ?? 0;
+        if (wager > 0) {
+          await supabase.rpc('add_gold', { p_user_id: userId, p_amount: wager });
+          await supabase.rpc('add_gold', { p_user_id: loserId, p_amount: -wager });
+        }
+      }
+    }
+
+    await supabase.from('challenges').update(updates).eq('id', challenge.id);
+  }
+}
+
 export async function respondToChallenge(challengeId: string, accept: boolean) {
   if (accept) {
     const { error } = await supabase
