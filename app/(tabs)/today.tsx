@@ -109,6 +109,11 @@ export default function TodayScreen() {
     paddingHorizontal: spacing.sm,
     paddingVertical: 3,
   },
+  headerStatXp: {
+    fontSize: fontSizes.xs,
+    fontWeight: 'bold',
+    color: colors.success,
+  },
   headerStatGold: {
     fontSize: fontSizes.xs,
     fontWeight: 'bold',
@@ -453,6 +458,7 @@ export default function TodayScreen() {
   const [xpToast, setXpToast] = useState<{ visible: boolean; xp: number; gold: number }>({
     visible: false, xp: 0, gold: 0,
   });
+  const [todayXp, setTodayXp] = useState(0);
   const [milestoneSeen, setMilestoneSeen] = useState<number | null>(null);
   const [showAllDone, setShowAllDone] = useState(false);
   const allDoneTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -558,6 +564,7 @@ export default function TodayScreen() {
     await completeHabit(habitId);
     clearBrokenStreakForHabit(habitId);
     setXpToast({ visible: true, xp, gold });
+    setTodayXp((prev) => prev + xp);
 
     const newStreak = currentCount + 1;
     if (MILESTONES.includes(newStreak)) {
@@ -766,6 +773,9 @@ export default function TodayScreen() {
         <View style={styles.headerRight}>
           {profile && (
             <View style={styles.headerStats}>
+              {todayXp > 0 && (
+                <Text style={styles.headerStatXp}>+{todayXp} XP</Text>
+              )}
               <Text style={styles.headerStatGold}>💰{profile.gold}</Text>
               <Text style={styles.headerStatLevel}>Lv.{profile.level}</Text>
             </View>
