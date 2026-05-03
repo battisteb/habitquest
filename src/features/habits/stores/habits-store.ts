@@ -239,12 +239,16 @@ export async function completeHabit(habitId: string, note?: string) {
 
   const now = new Date().toISOString();
 
-  // Insert completion
-  await supabase.from('completions').insert({
-    habit_id: habitId,
-    xp_earned: xpEarned,
-    ...(note ? { note } : {}),
-  });
+  // Insert completion (retry without note if column doesn't exist yet)
+  const baseInsert = { habit_id: habitId, xp_earned: xpEarned };
+  if (note) {
+    const { error: insertErr } = await supabase.from('completions').insert({ ...baseInsert, note });
+    if (insertErr) {
+      await supabase.from('completions').insert(baseInsert);
+    }
+  } else {
+    await supabase.from('completions').insert(baseInsert);
+  }
 
   // Update streak
   await supabase

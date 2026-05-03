@@ -217,18 +217,23 @@ export default function HabitHistoryScreen() {
 
     supabase
       .from('completions')
-      .select('completed_at, note')
+      .select('*')
       .eq('habit_id', habitId)
       .gte('completed_at', `${ninetyDaysAgo}T00:00:00.000Z`)
       .order('completed_at', { ascending: false })
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          setLoading(false);
+          return;
+        }
         const set = new Set<string>();
         const notes: Record<string, string> = {};
         data?.forEach((c) => {
           const d = new Date(c.completed_at);
           const dateStr = formatDate(d);
           set.add(dateStr);
-          if (c.note) notes[dateStr] = c.note;
+          const note = (c as Record<string, unknown>).note;
+          if (note && typeof note === 'string') notes[dateStr] = note;
         });
         setCompletedSet(set);
         setNotesByDate(notes);
