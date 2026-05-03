@@ -94,6 +94,9 @@ export async function updateChallengeProgress(
   xpEarned: number,
   completionCount: number = 1,
 ): Promise<void> {
+  // Skip DB query if no active challenges in local store
+  if (challengesStore$.active.get().length === 0) return;
+
   const { data: challenges } = await supabase
     .from('challenges')
     .select('id, type, target, creator_id, creator_progress, opponent_id, opponent_progress, gold_wager')
