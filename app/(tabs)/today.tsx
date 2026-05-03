@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { storage } from '../../src/lib/storage/mmkv';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { useT } from '../../src/lib/i18n';
@@ -454,7 +455,9 @@ export default function TodayScreen() {
   const [freezeActive, setFreezeActive] = useState(isFreezeActiveToday());
   const [freezesLeft, setFreezesLeft] = useState(getFreezesRemaining());
   const [activeCategory, setActiveCategory] = useState(ALL_KEY);
-  const [sortMode, setSortMode] = useState<'smart' | 'streak' | 'az'>('smart');
+  const [sortMode, setSortMode] = useState<'smart' | 'streak' | 'az'>(
+    () => (storage.getString('habit_sort_mode') as 'smart' | 'streak' | 'az') ?? 'smart',
+  );
   const [xpToast, setXpToast] = useState<{ visible: boolean; xp: number; gold: number }>({
     visible: false, xp: 0, gold: 0,
   });
@@ -701,7 +704,7 @@ export default function TodayScreen() {
             const label = mode === 'smart' ? T.habit_sort_smart : mode === 'streak' ? T.habit_sort_streak : T.habit_sort_az;
             const active = sortMode === mode;
             return (
-              <Pressable key={mode} style={[styles.sortChip, active && styles.sortChipActive]} onPress={() => setSortMode(mode)}>
+              <Pressable key={mode} style={[styles.sortChip, active && styles.sortChipActive]} onPress={() => { setSortMode(mode); storage.set('habit_sort_mode', mode); }}>
                 <Text style={[styles.sortChipText, active && styles.sortChipTextActive]}>{label}</Text>
               </Pressable>
             );
