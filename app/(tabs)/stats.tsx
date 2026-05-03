@@ -7,6 +7,7 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useStats } from '../../src/features/habits/hooks/use-stats';
 import { WeeklyChart } from '../../src/features/habits/components/weekly-chart';
 import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
+import { CategoryBreakdown } from '../../src/features/habits/components/category-breakdown';
 import { sessionsStore$ } from '../../src/features/training/stores/sessions-store';
 import { decksStore$ } from '../../src/features/training/stores/decks-store';
 import { getDueCards } from '../../src/features/training/types/flashcard';
@@ -65,6 +66,8 @@ export default function StatsScreen() {
       {stats.weeklyCompletions.length > 0 && <WeeklyChart data={stats.weeklyCompletions} />}
 
       <MonthlyHeatmap />
+
+      <CategoryBreakdown />
 
       {/* Training stats */}
       {(sessions.length > 0 || decks.length > 0) && (
