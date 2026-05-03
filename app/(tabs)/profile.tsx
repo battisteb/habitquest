@@ -171,8 +171,9 @@ export default function ProfileScreen() {
   const unreadNotifications = use$(notificationsStore$.unreadCount);
 
   const resolvedDuels = use$(duelStore$.resolvedDuels);
-  const duelsWon = resolvedDuels.filter(d => d.winnerId === 'me').length;
-  const duelsLost = resolvedDuels.filter(d => d.winnerId !== 'me' && d.winnerId !== null).length;
+  const currentUserId = use$(authStore$.user)?.id;
+  const duelsWon = resolvedDuels.filter(d => d.winnerId === currentUserId).length;
+  const duelsLost = resolvedDuels.filter(d => d.winnerId !== currentUserId && d.winnerId !== null).length;
 
   useEffect(() => {
     fetchShop();
