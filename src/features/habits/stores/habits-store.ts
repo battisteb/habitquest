@@ -153,13 +153,13 @@ export async function fetchHabits() {
   }
 }
 
-export async function createHabit(name: string, category: string, content?: HabitContent | null, frequency?: string) {
+export async function createHabit(name: string, category: string, content?: HabitContent | null, frequency?: string, emoji?: string | null) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
   const { data: habit, error } = await supabase
     .from('habits')
-    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily' })
+    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily', emoji: emoji ?? null })
     .select()
     .single();
 
@@ -171,7 +171,7 @@ export async function createHabit(name: string, category: string, content?: Habi
   await fetchHabits();
 }
 
-export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string }) {
+export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null }) {
   const { error } = await supabase.from('habits').update({ ...updates, content: updates.content as Json | null | undefined }).eq('id', id);
   if (error) throw error;
   await fetchHabits();

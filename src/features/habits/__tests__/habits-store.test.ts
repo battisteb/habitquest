@@ -70,6 +70,7 @@ describe('habitsStore$', () => {
         is_paused: false,
         paused_at: null,
         content: null,
+        emoji: null,
         created_at: new Date().toISOString(),
       },
     ]);

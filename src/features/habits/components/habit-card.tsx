@@ -28,6 +28,7 @@ interface HabitCardProps {
   weekCompletionCount?: number;
   contentType?: 'timer' | 'checklist' | 'link' | null;
   isPinned?: boolean;
+  emoji?: string | null;
 }
 
 const CONTENT_TYPE_ICON: Record<string, string> = {
@@ -84,6 +85,7 @@ export function HabitCard({
   weekCompletionCount = 0,
   contentType = null,
   isPinned = false,
+  emoji = null,
 }: HabitCardProps) {
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
@@ -192,6 +194,7 @@ export function HabitCard({
 }), [themeKey]);
 
   const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
+  const displayIcon = emoji ?? categoryIcon;
   const nextXp = calculateXpEarned(streakCount + 1);
   const flame = streakFlame(streakCount);
   const [burst, setBurst] = useState(false);
@@ -274,7 +277,7 @@ export function HabitCard({
               <View style={styles.content}>
                 <View style={styles.info}>
                   <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
-                    {isPinned ? '📌 ' : ''}{categoryIcon} {name}{contentType ? ` ${CONTENT_TYPE_ICON[contentType]}` : ''}
+                    {isPinned ? '📌 ' : ''}{displayIcon} {name}{contentType ? ` ${CONTENT_TYPE_ICON[contentType]}` : ''}
                   </Text>
                   <View style={styles.meta}>
                     <Text style={[styles.category, { color: categoryColor }]}>

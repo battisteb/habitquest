@@ -864,6 +864,7 @@ export default function TodayScreen() {
                 weekCompletionCount={weekCompletions[item.id] ?? 0}
                 contentType={(item.content as { type?: string } | null)?.type as 'timer' | 'checklist' | 'link' | null ?? null}
                 isPinned={pinned}
+                emoji={(item as any).emoji ?? null}
               />
             );
           }}

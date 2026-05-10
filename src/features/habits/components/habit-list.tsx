@@ -124,6 +124,7 @@ export function HabitList() {
             isCompletedToday={!!todayCompletions[item.id]}
             onComplete={() => handleComplete(item.id)}
             onPress={() => router.push(`/habit/${item.id}`)}
+            emoji={(item as any).emoji ?? null}
           />
         )}
       />

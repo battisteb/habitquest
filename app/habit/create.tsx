@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { PixelInput } from '../../src/ui/components/pixel-input';
 import { ContentPicker } from '../../src/features/habits/components/content-picker';
+import { EmojiPicker } from '../../src/features/habits/components/emoji-picker';
 import { createHabit } from '../../src/features/habits/stores/habits-store';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
@@ -156,6 +157,7 @@ export default function CreateHabitScreen() {
   );
   const [content, setContent] = useState<HabitContent | null>(null);
   const [frequency, setFrequency] = useState<string>(prefilledTemplate?.frequency ?? 'daily');
+  const [emoji, setEmoji] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleCreate = async () => {
@@ -163,7 +165,7 @@ export default function CreateHabitScreen() {
 
     setLoading(true);
     try {
-      await createHabit(name.trim(), category, content, frequency);
+      await createHabit(name.trim(), category, content, frequency, emoji);
       router.back();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : T.habit_create_error;
@@ -254,6 +256,8 @@ export default function CreateHabitScreen() {
           ))}
         </View>
       </View>
+
+      <EmojiPicker value={emoji} onChange={setEmoji} label={T.habit_create_emoji} />
 
       <ContentPicker value={content} onChange={setContent} />
 

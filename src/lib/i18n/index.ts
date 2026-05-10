@@ -247,6 +247,7 @@ const FR = {
   habit_create_freq_5x: '5×/SEM',
   habit_create_training_fitness: '🏋️ Gérer mes séances →',
   habit_create_training_learning: '📚 Gérer mes decks Anki →',
+  habit_create_emoji: 'EMOJI',
   habit_create_submit: 'Créer la quête',
   habit_create_error: 'Impossible de créer l\'habitude',
   // Habit history
@@ -613,6 +614,7 @@ const FR = {
   habit_edit_freq_3x: '3×/SEM',
   habit_edit_freq_4x: '4×/SEM',
   habit_edit_freq_5x: '5×/SEM',
+  habit_edit_emoji: 'EMOJI',
   habit_edit_save: 'Enregistrer',
   habit_edit_error_title: 'Erreur',
   habit_edit_error_msg: "Impossible de modifier l'habitude",
@@ -912,6 +914,7 @@ const EN = {
   habit_create_freq_5x: '5×/WK',
   habit_create_training_fitness: '🏋️ Manage workouts →',
   habit_create_training_learning: '📚 Manage Anki decks →',
+  habit_create_emoji: 'EMOJI',
   habit_create_submit: 'Create quest',
   habit_create_error: 'Failed to create habit',
   // Habit history
@@ -1278,6 +1281,7 @@ const EN = {
   habit_edit_freq_3x: '3×/WK',
   habit_edit_freq_4x: '4×/WK',
   habit_edit_freq_5x: '5×/WK',
+  habit_edit_emoji: 'EMOJI',
   habit_edit_save: 'Save changes',
   habit_edit_error_title: 'Error',
   habit_edit_error_msg: 'Failed to update habit',

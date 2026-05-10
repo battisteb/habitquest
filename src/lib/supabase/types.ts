@@ -347,6 +347,7 @@ export type Database = {
           category: string
           content: Json | null
           created_at: string
+          emoji: string | null
           frequency: string
           id: string
           is_archived: boolean
@@ -359,6 +360,7 @@ export type Database = {
           category?: string
           content?: Json | null
           created_at?: string
+          emoji?: string | null
           frequency?: string
           id?: string
           is_archived?: boolean
@@ -371,6 +373,7 @@ export type Database = {
           category?: string
           content?: Json | null
           created_at?: string
+          emoji?: string | null
           frequency?: string
           id?: string
           is_archived?: boolean

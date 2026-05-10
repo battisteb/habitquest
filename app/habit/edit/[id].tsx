@@ -6,6 +6,7 @@ import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../../src/ui/components/pixel-button';
 import { PixelInput } from '../../../src/ui/components/pixel-input';
 import { ContentPicker } from '../../../src/features/habits/components/content-picker';
+import { EmojiPicker } from '../../../src/features/habits/components/emoji-picker';
 import { habitsStore$, updateHabit } from '../../../src/features/habits/stores/habits-store';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../../src/lib/constants/categories';
 import type { HabitContent } from '../../../src/features/habits/types/habit-content';
@@ -95,6 +96,7 @@ export default function EditHabitScreen() {
     (habit?.content as HabitContent | null) ?? null,
   );
   const [frequency, setFrequency] = useState(habit?.frequency ?? 'daily');
+  const [emoji, setEmoji] = useState<string | null>((habit as any)?.emoji ?? null);
   const [loading, setLoading] = useState(false);
 
   if (!habit) {
@@ -109,7 +111,7 @@ export default function EditHabitScreen() {
     if (!name.trim()) return;
     setLoading(true);
     try {
-      await updateHabit(habit.id, { name: name.trim(), category, content, frequency });
+      await updateHabit(habit.id, { name: name.trim(), category, content, frequency, emoji });
       router.back();
     } catch (e: unknown) {
       Alert.alert(T.habit_edit_error_title, e instanceof Error ? e.message : T.habit_edit_error_msg);
@@ -191,6 +193,8 @@ export default function EditHabitScreen() {
           ))}
         </View>
       </View>
+
+      <EmojiPicker value={emoji} onChange={setEmoji} label={T.habit_edit_emoji} />
 
       <ContentPicker value={content} onChange={setContent} />
 
