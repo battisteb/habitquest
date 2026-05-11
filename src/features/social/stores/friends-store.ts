@@ -2,6 +2,7 @@ import { observable } from '@legendapp/state';
 import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import { profileStore$ } from '../../gamification/stores/profile-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
 
@@ -119,16 +120,49 @@ export async function sendFriendRequest(addresseeId: string) {
   });
 
   if (error) throw error;
+
+  const senderName = profileStore$.profile.get()?.username ?? 'A player';
+  void supabase.rpc('create_notification', {
+    p_user_id: addresseeId,
+    p_type: 'friend_request',
+    p_title: '👥 Friend request',
+    p_body: `${senderName} wants to be your friend.`,
+    p_data: { route: '/(tabs)/social', requesterId: userId },
+  });
+
   await fetchFriends();
 }
 
 export async function respondToRequest(friendshipId: string, accept: boolean) {
+  // Look up the requester to notify them on acceptance
+  let requesterId: string | null = null;
+  if (accept) {
+    const { data } = await supabase
+      .from('friendships')
+      .select('requester_id')
+      .eq('id', friendshipId)
+      .single();
+    requesterId = data?.requester_id ?? null;
+  }
+
   const { error } = await supabase
     .from('friendships')
     .update({ status: accept ? 'accepted' : 'rejected' })
     .eq('id', friendshipId);
 
   if (error) throw error;
+
+  if (accept && requesterId) {
+    const responderName = profileStore$.profile.get()?.username ?? 'Your friend';
+    void supabase.rpc('create_notification', {
+      p_user_id: requesterId,
+      p_type: 'friend_accepted',
+      p_title: '🤝 Friend request accepted',
+      p_body: `${responderName} accepted your friend request!`,
+      p_data: { route: '/(tabs)/social' },
+    });
+  }
+
   await fetchFriends();
 }
 
