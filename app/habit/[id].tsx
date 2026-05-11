@@ -372,7 +372,9 @@ export default function HabitDetailScreen() {
         <Text style={[styles.category, { color: categoryColor }]}>
           {habit.category.toUpperCase()}
         </Text>
-        <Text style={styles.title}>{habit.name}</Text>
+        <Text style={styles.title}>
+          {(habit as any).emoji ? `${(habit as any).emoji} ` : ''}{habit.name}
+        </Text>
       </View>
 
       {/* Stats */}
