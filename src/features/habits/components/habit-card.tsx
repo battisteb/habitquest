@@ -162,6 +162,17 @@ export function HabitCard({
     color: '#ff9500',
     fontWeight: 'bold',
   },
+  weekBarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  weekDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 1,
+    borderWidth: 1,
+  },
   xpPreview: {
     fontSize: fontSizes.xs,
     color: colors.xp,
@@ -284,9 +295,26 @@ export function HabitCard({
                       {category.toUpperCase()}
                     </Text>
                     {isWeekly ? (
-                      <Text style={styles.weekProgress}>
-                        {weekCompletionCount}/{weeklyTarget} week
-                      </Text>
+                      <View style={styles.weekBarRow}>
+                        {Array.from({ length: weeklyTarget }).map((_, i) => {
+                          const filled = i < weekCompletionCount;
+                          return (
+                            <View
+                              key={i}
+                              style={[
+                                styles.weekDot,
+                                {
+                                  backgroundColor: filled ? '#ff9500' : 'transparent',
+                                  borderColor: filled ? '#ff9500' : colors.border,
+                                },
+                              ]}
+                            />
+                          );
+                        })}
+                        <Text style={[styles.weekProgress, { marginLeft: 4 }]}>
+                          {weekCompletionCount}/{weeklyTarget}
+                        </Text>
+                      </View>
                     ) : (
                       streakCount > 0 && (
                         <Text style={styles.streak}>{flame} {streakCount}d</Text>
