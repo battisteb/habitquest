@@ -87,9 +87,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export function MonthlyHeatmap() {
+interface MonthlyHeatmapProps {
+  habitId?: string;
+}
+
+export function MonthlyHeatmap({ habitId }: MonthlyHeatmapProps = {}) {
   const lang = use$(lang$);
-  const { counts, isLoading, year, month } = useMonthlyCompletions();
+  const { counts, isLoading, year, month } = useMonthlyCompletions(undefined, undefined, habitId);
 
   const monthName = (lang === 'fr' ? MONTH_NAMES_FR : MONTH_NAMES_EN)[month];
   const dayLabels = lang === 'fr' ? DAY_LABELS_FR : DAY_LABELS_EN;

@@ -8,6 +8,7 @@ import { HabitTimer } from '../../src/features/habits/components/habit-timer';
 import { HabitChecklist } from '../../src/features/habits/components/habit-checklist';
 import { CompletionNoteModal } from '../../src/features/habits/components/completion-note-modal';
 import { habitsStore$, archiveHabit, completeHabit, pauseHabit, resumeHabit } from '../../src/features/habits/stores/habits-store';
+import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
 import { useDynamicGoal } from '../../src/features/habits/hooks/use-dynamic-goal';
 import { CONTENT_TYPE_CONFIG } from '../../src/features/habits/types/habit-content';
 import { getCategoryColor } from '../../src/lib/constants/categories';
@@ -398,6 +399,8 @@ export default function HabitDetailScreen() {
           <Text style={styles.statLabel}>{T.habit_detail_stat_today}</Text>
         </View>
       </View>
+
+      <MonthlyHeatmap habitId={habit.id} />
 
       {/* Content section */}
       {content && (

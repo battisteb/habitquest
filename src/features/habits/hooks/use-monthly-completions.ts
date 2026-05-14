@@ -10,7 +10,7 @@ export interface MonthlyCompletionData {
   month: number; // 0-indexed
 }
 
-export function useMonthlyCompletions(year?: number, month?: number): MonthlyCompletionData {
+export function useMonthlyCompletions(year?: number, month?: number, habitId?: string): MonthlyCompletionData {
   const now = new Date();
   const y = year ?? now.getFullYear();
   const m = month ?? now.getMonth();
@@ -21,7 +21,9 @@ export function useMonthlyCompletions(year?: number, month?: number): MonthlyCom
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const habitIds = habitsStore$.habits.get().map((h) => h.id);
+      const habitIds = habitId
+        ? [habitId]
+        : habitsStore$.habits.get().map((h) => h.id);
       if (habitIds.length === 0) {
         if (!cancelled) { setCounts({}); setIsLoading(false); }
         return;
@@ -50,7 +52,7 @@ export function useMonthlyCompletions(year?: number, month?: number): MonthlyCom
     setIsLoading(true);
     load();
     return () => { cancelled = true; };
-  }, [y, m]);
+  }, [y, m, habitId]);
 
   return { counts, isLoading, year: y, month: m };
 }
