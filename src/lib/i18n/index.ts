@@ -396,6 +396,7 @@ const FR = {
   today_empty_tip1: '💡 Commence avec 1–3 habitudes max',
   today_empty_tip2: '🔥 Les séries démarrent après 3 jours',
   today_empty_tip3: "⚡ Chaque complétion rapporte de l'XP",
+  today_empty_cta: '+ CRÉER MA PREMIÈRE QUÊTE',
   // Profile screen
   profile_edit_hint: 'Appuie pour modifier →',
   profile_next_stage: 'Prochain : {title} au Niveau {level}',
@@ -1063,6 +1064,7 @@ const EN = {
   today_empty_tip1: '💡 Start with 1–3 habits max',
   today_empty_tip2: '🔥 Streaks start after 3 days',
   today_empty_tip3: '⚡ Every completion earns XP',
+  today_empty_cta: '+ CREATE YOUR FIRST QUEST',
   // Profile screen
   profile_edit_hint: 'Tap to edit →',
   profile_next_stage: 'Next: {title} at Level {level}',

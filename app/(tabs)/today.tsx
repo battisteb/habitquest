@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { useT } from '../../src/lib/i18n';
 import { HabitCard } from '../../src/features/habits/components/habit-card';
+import { PixelButton } from '../../src/ui/components/pixel-button';
 import { XpToast } from '../../src/ui/animations/xp-toast';
 import { StreakMilestone } from '../../src/ui/animations/streak-milestone';
 import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
@@ -828,6 +829,11 @@ export default function TodayScreen() {
               <Text style={styles.emptyTip}>{T.today_empty_tip2}</Text>
               <Text style={styles.emptyTip}>{T.today_empty_tip3}</Text>
             </View>
+            <PixelButton
+              title={T.today_empty_cta}
+              onPress={() => router.push('/habit/create')}
+              style={{ marginTop: spacing.lg, alignSelf: 'stretch' }}
+            />
           </View>
           <DailyQuestsSection
             pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
