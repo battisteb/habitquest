@@ -7,6 +7,7 @@ import {
   Alert,
   FlatList,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { storage } from '../../src/lib/storage/mmkv';
@@ -478,6 +479,16 @@ export default function TodayScreen() {
 
   useEffect(() => { fetchHabits(); fetchProfile(); }, []);
 
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([fetchHabits(), fetchProfile()]);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+
   // Preload rewarded ad once on mount (only for free users)
   useEffect(() => {
     if (shouldShowAds()) {
@@ -831,6 +842,9 @@ export default function TodayScreen() {
             <DailyQuestsSection
               pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
             />
+          }
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
           }
           contentContainerStyle={styles.listContent}
           style={styles.list}
