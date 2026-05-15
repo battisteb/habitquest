@@ -201,6 +201,9 @@ export default function HabitHistoryScreen() {
   const lang = use$(lang$);
   const MONTH_ABBR = lang === 'fr' ? MONTH_ABBR_FR : MONTH_ABBR_EN;
   const streaks = use$(habitsStore$.streaks);
+  const habits = use$(habitsStore$.habits);
+  const habit = habits.find((h) => h.id === habitId);
+  const emoji = (habit as any)?.emoji ?? null;
 
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
   const [notesByDate, setNotesByDate] = useState<Record<string, string>>({});
@@ -307,7 +310,7 @@ export default function HabitHistoryScreen() {
       <View style={styles.header}>
         <Text style={styles.screenLabel}>{T.habit_history_label}</Text>
         <Text style={styles.title} numberOfLines={2}>
-          {habitName ?? T.habit_history_default_name}
+          {emoji ? `${emoji} ` : ''}{habitName ?? T.habit_history_default_name}
         </Text>
       </View>
 
