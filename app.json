@@ -4,8 +4,19 @@
     "slug": "habitquest",
     "version": "1.0.0",
     "description": "Level up your habits with pixel art gamification. Build streaks, earn XP, and become a legend.",
-    "keywords": ["habits", "gamification", "productivity", "pixel art", "streaks", "RPG"],
-    "platforms": ["ios", "android", "web"],
+    "keywords": [
+      "habits",
+      "gamification",
+      "productivity",
+      "pixel art",
+      "streaks",
+      "RPG"
+    ],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -21,8 +32,12 @@
       "buildNumber": "1",
       "infoPlist": {
         "SKAdNetworkItems": [
-          { "SKAdNetworkIdentifier": "cstr6suwn9.skadnetwork" },
-          { "SKAdNetworkIdentifier": "4fzdc2evr5.skadnetwork" }
+          {
+            "SKAdNetworkIdentifier": "cstr6suwn9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "4fzdc2evr5.skadnetwork"
+          }
         ],
         "NSUserTrackingUsageDescription": "This identifier will be used to show you personalized ads."
       }
@@ -56,7 +71,8 @@
           "iosAppId": "ca-app-pub-3756522162472324~3680871118",
           "userTrackingUsageDescription": "This identifier will be used to show you personalized ads."
         }
-      ]
+      ],
+      "expo-audio"
     ],
     "scheme": "habitquest"
   }

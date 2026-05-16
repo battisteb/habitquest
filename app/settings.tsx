@@ -24,6 +24,12 @@ import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 import { useT, setLang, lang$ } from '../src/lib/i18n';
+import {
+  isSfxEnabled,
+  isMusicEnabled,
+  setSfxEnabled,
+  setMusicEnabled,
+} from '../src/lib/audio/sound-service';
 
 const THEME_KEYS: ThemeKey[] = ['default', 'medieval', 'cyberpunk', 'nature', 'lifestyle'];
 
@@ -35,6 +41,8 @@ export default function SettingsScreen() {
   const currentLang = use$(lang$);
 
   const [prefs, setPrefs] = useState<NotificationPrefs>(() => getNotificationPrefs());
+  const [sfxOn, setSfxOn] = useState<boolean>(() => isSfxEnabled());
+  const [musicOn, setMusicOn] = useState<boolean>(() => isMusicEnabled());
   const isPremium = use$(subscriptionStore$.isPremium);
 
   function updatePref<K extends keyof NotificationPrefs>(key: K, value: NotificationPrefs[K]) {
@@ -176,6 +184,37 @@ export default function SettingsScreen() {
           <Switch
             value={prefs.weeklyRecapEnabled}
             onValueChange={(v) => updatePref('weeklyRecapEnabled', v)}
+            trackColor={{ false: colors.border, true: colors.primary }}
+            thumbColor={colors.text}
+          />
+        </View>
+      </View>
+
+      {/* Audio section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{T.settings_audio}</Text>
+
+        <View style={styles.prefRow}>
+          <View style={styles.prefInfo}>
+            <Text style={styles.prefLabel}>{T.settings_sfx}</Text>
+            <Text style={styles.prefSub}>{T.settings_sfx_sub}</Text>
+          </View>
+          <Switch
+            value={sfxOn}
+            onValueChange={(v) => { setSfxOn(v); setSfxEnabled(v); }}
+            trackColor={{ false: colors.border, true: colors.primary }}
+            thumbColor={colors.text}
+          />
+        </View>
+
+        <View style={styles.prefRow}>
+          <View style={styles.prefInfo}>
+            <Text style={styles.prefLabel}>{T.settings_music}</Text>
+            <Text style={styles.prefSub}>{T.settings_music_sub}</Text>
+          </View>
+          <Switch
+            value={musicOn}
+            onValueChange={(v) => { setMusicOn(v); setMusicEnabled(v); }}
             trackColor={{ false: colors.border, true: colors.primary }}
             thumbColor={colors.text}
           />

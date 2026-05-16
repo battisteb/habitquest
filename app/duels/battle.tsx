@@ -18,6 +18,7 @@ import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { getUnlockedAttacks, ATTACKS, Attack } from '../../src/features/duels/utils/attacks';
 import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
 import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-store';
+import { playMusic, stopMusic, playSfx } from '../../src/lib/audio/sound-service';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { useT } from '../../src/lib/i18n';
 
@@ -293,6 +294,12 @@ export default function BattleScreen() {
   useEffect(() => { meRef.current = me; }, [me]);
   useEffect(() => { oppRef.current = opp; }, [opp]);
 
+  // Duel music: start on mount, stop on unmount
+  useEffect(() => {
+    void playMusic('duel');
+    return () => { stopMusic(); };
+  }, []);
+
   const pushLog = useCallback((text: string, type: LogEntry['type'] = 'info') => {
     setLog(prev => [...prev, mkLog(text, type)]);
     setTimeout(() => logScrollRef.current?.scrollToEnd({ animated: true }), 80);
@@ -329,6 +336,7 @@ export default function BattleScreen() {
       const result = resolveAttack(atk, attacker.level - defender.level);
 
       setAttackingId(attackerId);
+      void playSfx('attack', 0.7);
       await delay(320);
       setAttackingId(null);
 
@@ -412,6 +420,11 @@ export default function BattleScreen() {
       : winner === 'draw' ? T.duels_battle_msg_draw
       : T.duels_battle_msg_lose;
     pushLog(endMsg, 'end');
+
+    stopMusic();
+    if (winner === ME_ID) void playSfx('victory');
+    else if (winner === OPP_ID) void playSfx('defeat');
+
     await delay(600);
     setPhase('end');
   }, [selectedAttackId, phase, myAttacks, myLevel, oppLevel, pushLog, T]);

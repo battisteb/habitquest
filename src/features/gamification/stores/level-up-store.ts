@@ -1,4 +1,5 @@
 import { observable } from '@legendapp/state';
+import { playSfx } from '../../../lib/audio/sound-service';
 
 interface LevelUpState {
   showLevelUp: boolean;
@@ -13,6 +14,7 @@ export const levelUpStore$ = observable<LevelUpState>({
 export function triggerLevelUp(newLevel: number) {
   levelUpStore$.newLevel.set(newLevel);
   levelUpStore$.showLevelUp.set(true);
+  void playSfx('level_up');
 }
 
 export function dismissLevelUp() {

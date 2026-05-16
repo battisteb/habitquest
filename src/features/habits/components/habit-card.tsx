@@ -4,6 +4,8 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  withSequence,
+  withTiming,
   runOnJS,
   interpolate,
   Extrapolation,
@@ -235,8 +237,18 @@ export function HabitCard({
     ]).start();
   }, []);
 
+  // Tap-pop on check button
+  const checkScale = useSharedValue(1);
+  const checkPopStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: checkScale.value }],
+  }));
+
   const handleComplete = () => {
     setBurst(true);
+    checkScale.value = withSequence(
+      withTiming(1.35, { duration: 120 }),
+      withSpring(1, { damping: 8, stiffness: 220 }),
+    );
     setTimeout(() => setBurst(false), 700);
     onComplete();
   };
@@ -325,6 +337,7 @@ export function HabitCard({
                     )}
                   </View>
                 </View>
+                <Animated.View style={checkPopStyle}>
                 <Pressable
                   onPress={handleComplete}
                   style={[styles.checkButton, effectiveDone && styles.checkButtonDone]}
@@ -335,6 +348,7 @@ export function HabitCard({
                     {effectiveDone ? '✓' : ''}
                   </Text>
                 </Pressable>
+                </Animated.View>
               </View>
             </Pressable>
           </Animated.View>

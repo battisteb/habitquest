@@ -13,6 +13,7 @@ import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { triggerStreakMilestone, isMilestone } from '../../gamification/stores/streak-milestone-store';
 import { recordCompletionHour } from '../../notifications/utils/adaptive-timing';
 import { hapticSuccess, hapticHeavy } from '../../../lib/haptics';
+import { playSfx } from '../../../lib/audio/sound-service';
 import { refreshProfile } from '../../gamification/stores/profile-store';
 import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { HabitContent } from '../types/habit-content';
@@ -307,8 +308,14 @@ export async function completeHabit(habitId: string, note?: string) {
     const habitName = habit?.name ?? '';
     triggerStreakMilestone(newStreak.currentCount, habitName);
     hapticHeavy();
+    void playSfx('streak_milestone');
   } else {
     hapticSuccess();
+    void playSfx('complete', 0.6);
+  }
+
+  if (goldEarned > 0) {
+    void playSfx('coin', 0.5);
   }
 
   // Optimistic update
