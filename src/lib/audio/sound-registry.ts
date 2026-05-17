@@ -1,29 +1,28 @@
 /**
  * Audio asset registry.
  *
- * To enable a sound, drop the corresponding .mp3/.wav file in assets/sounds/
- * and uncomment the matching require() line.
+ * All sounds are CC0 (public domain).
  *
- * Recommended sources for free chiptune/8-bit SFX:
- *   - https://freesound.org (search "8-bit", "chiptune")
- *   - https://pixabay.com/sound-effects/
- *   - https://opengameart.org
+ * Sources:
+ *   - SFX (complete, coin, attack): Kenney UI / RPG packs (https://kenney.nl)
+ *   - Jingles (level-up, victory, defeat, streak-milestone): Kenney Music Jingles
+ *   - Duel music: "Chiptune Battle Music" by oglsdl on OpenGameArt.org (CC0)
  *
- * Keep files small (< 100 KB for SFX, < 500 KB for music).
+ * To add or change a sound, drop the file in assets/sounds/ and add a line below.
  */
 
 import type { SfxKey, MusicKey } from './sound-service';
 
 export const SFX_ASSETS: Partial<Record<SfxKey, number>> = {
-  // complete: require('../../../assets/sounds/complete.mp3'),
-  // level_up: require('../../../assets/sounds/level-up.mp3'),
-  // streak_milestone: require('../../../assets/sounds/streak-milestone.mp3'),
-  // coin: require('../../../assets/sounds/coin.mp3'),
-  // attack: require('../../../assets/sounds/attack.mp3'),
-  // victory: require('../../../assets/sounds/victory.mp3'),
-  // defeat: require('../../../assets/sounds/defeat.mp3'),
+  complete: require('../../../assets/sounds/complete.ogg'),
+  level_up: require('../../../assets/sounds/level-up.ogg'),
+  streak_milestone: require('../../../assets/sounds/streak-milestone.ogg'),
+  coin: require('../../../assets/sounds/coin.ogg'),
+  attack: require('../../../assets/sounds/attack.ogg'),
+  victory: require('../../../assets/sounds/victory.ogg'),
+  defeat: require('../../../assets/sounds/defeat.ogg'),
 };
 
 export const MUSIC_ASSETS: Partial<Record<MusicKey, number>> = {
-  // duel: require('../../../assets/sounds/duel-music.mp3'),
+  duel: require('../../../assets/sounds/duel-music.ogg'),
 };

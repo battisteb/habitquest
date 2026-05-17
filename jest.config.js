@@ -13,5 +13,6 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^expo-audio$': '<rootDir>/src/lib/audio/__mocks__/expo-audio.ts',
+    '\\.(ogg|mp3|wav|m4a)$': '<rootDir>/src/lib/audio/__mocks__/audio-asset.js',
   },
 };
