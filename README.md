@@ -14,16 +14,12 @@
 
 Every habit can be personalized with a custom emoji, an assigned category and a target frequency (daily or weekly), and each completion is rewarded with visible progression --- animated XP gains, streak counters, heatmaps, cosmetics.
 
-<!-- Screenshots — décommenter quand tu as les captures d'écran -->
-<!--
 <p align="center">
   <img src="docs/screenshots/today.png" width="230" alt="Today"/>
   <img src="docs/screenshots/habit-detail.png" width="230" alt="Habit detail"/>
   <img src="docs/screenshots/duel.png" width="230" alt="Duel"/>
 </p>
--->
 
-> Screenshots coming soon.
 
 ---
 
