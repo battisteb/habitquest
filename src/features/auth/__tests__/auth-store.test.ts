@@ -10,6 +10,9 @@ jest.mock('../../../lib/supabase/client', () => ({
       signInWithPassword: jest.fn(),
       signOut: jest.fn(),
     },
+    functions: {
+      invoke: jest.fn(),
+    },
   },
 }));
 
@@ -76,6 +79,33 @@ describe('authStore$', () => {
       email: 'test@test.com',
       password: 'password',
       options: { data: { username: 'hero123' } },
+    });
+  });
+
+  describe('deleteAccount', () => {
+    it('calls the delete-account function then clears the local session', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.functions.invoke.mockResolvedValue({ data: { deleted: true }, error: null });
+      supabase.auth.signOut.mockResolvedValue({ error: null });
+
+      const { deleteAccount } = require('../stores/auth-store');
+      await deleteAccount();
+
+      expect(supabase.functions.invoke).toHaveBeenCalledWith('delete-account', { method: 'POST' });
+      expect(supabase.auth.signOut).toHaveBeenCalledWith({ scope: 'local' });
+      expect(authStore$.isLoading.get()).toBe(false);
+    });
+
+    it('keeps the session and rethrows when the server fails', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.functions.invoke.mockResolvedValue({ data: null, error: new Error('boom') });
+      supabase.auth.signOut.mockClear();
+
+      const { deleteAccount } = require('../stores/auth-store');
+      await expect(deleteAccount()).rejects.toThrow('boom');
+
+      expect(supabase.auth.signOut).not.toHaveBeenCalled();
+      expect(authStore$.isLoading.get()).toBe(false);
     });
   });
 });

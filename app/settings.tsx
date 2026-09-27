@@ -19,7 +19,7 @@ import {
   applyNotificationPrefs,
   NotificationPrefs,
 } from '../src/features/notifications/utils/notification-service';
-import { signOut } from '../src/features/auth/stores/auth-store';
+import { signOut, deleteAccount } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
@@ -64,6 +64,28 @@ export default function SettingsScreen() {
           onPress: async () => {
             await signOut();
             router.replace('/(auth)/sign-in');
+          },
+        },
+      ],
+    );
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      T.settings_delete_account_title,
+      T.settings_delete_account_msg,
+      [
+        { text: T.settings_sign_out_cancel, style: 'cancel' },
+        {
+          text: T.settings_delete_account_confirm,
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteAccount();
+              router.replace('/(auth)/sign-in');
+            } catch {
+              Alert.alert(T.settings_delete_account_error);
+            }
           },
         },
       ],
@@ -261,6 +283,11 @@ export default function SettingsScreen() {
         <PixelButton
           title={T.settings_sign_out}
           onPress={handleSignOut}
+          variant="ghost"
+        />
+        <PixelButton
+          title={T.settings_delete_account}
+          onPress={handleDeleteAccount}
           variant="ghost"
         />
       </View>

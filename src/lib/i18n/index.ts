@@ -52,6 +52,11 @@ const FR = {
   settings_sign_out_confirm_title: 'Déconnexion',
   settings_sign_out_confirm_msg: 'Es-tu sûr de vouloir te déconnecter ?',
   settings_sign_out_cancel: 'Annuler',
+  settings_delete_account: 'Supprimer mon compte',
+  settings_delete_account_title: 'Supprimer ton compte ?',
+  settings_delete_account_msg: "Ton héros, tes habitudes, tes séries, ton or et tes objets seront définitivement effacés. C'est irréversible. Un abonnement actif doit être résilié séparément dans les réglages de l'App Store.",
+  settings_delete_account_confirm: 'Supprimer définitivement',
+  settings_delete_account_error: 'La suppression a échoué. Vérifie ta connexion et réessaie.',
   settings_version: 'HabitQuest v1.0.0',
   settings_tagline: 'Fait avec ⚔️ et pixel art',
   // Language section
@@ -725,6 +730,11 @@ const EN = {
   settings_sign_out_confirm_title: 'Sign out',
   settings_sign_out_confirm_msg: 'Are you sure you want to sign out?',
   settings_sign_out_cancel: 'Cancel',
+  settings_delete_account: 'Delete my account',
+  settings_delete_account_title: 'Delete your account?',
+  settings_delete_account_msg: 'Your hero, habits, streaks, gold and items will be permanently erased. This cannot be undone. An active subscription must be cancelled separately in your App Store settings.',
+  settings_delete_account_confirm: 'Delete permanently',
+  settings_delete_account_error: 'Deletion failed. Check your connection and try again.',
   settings_version: 'HabitQuest v1.0.0',
   settings_tagline: 'Built with ⚔️ and pixel art',
   // Language section
