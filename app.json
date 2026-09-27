@@ -50,7 +50,12 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "package": "com.battiste.habitquest",
-      "versionCode": 1
+      "versionCode": 1,
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -72,7 +77,14 @@
           "userTrackingUsageDescription": "This identifier will be used to show you personalized ads."
         }
       ],
-      "expo-audio"
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": false
+        }
+      ]
     ],
     "scheme": "habitquest"
   }

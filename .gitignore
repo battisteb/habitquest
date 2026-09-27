@@ -56,3 +56,6 @@ Thumbs.db
 # Supabase local
 supabase/.temp/
 .VSCodeCounter/
+
+# Google Play service account key (eas submit)
+google-service-account.json
