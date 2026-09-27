@@ -59,3 +59,6 @@ supabase/.temp/
 
 # Google Play service account key (eas submit)
 google-service-account.json
+
+# Output of npm run check:bundle
+.bundle-check/

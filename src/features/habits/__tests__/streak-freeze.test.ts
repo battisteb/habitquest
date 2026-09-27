@@ -16,9 +16,16 @@ jest.mock('../../../lib/storage/mmkv', () => ({
   },
 }));
 
+const mockRpc = jest.fn();
+jest.mock('../../../lib/supabase/client', () => ({
+  supabase: { rpc: (...args: unknown[]) => mockRpc(...args) },
+}));
+
 describe('streak-freeze', () => {
   beforeEach(() => {
     Object.keys(mockStorage).forEach((k) => delete mockStorage[k]);
+    mockRpc.mockReset();
+    mockRpc.mockResolvedValue({ data: { success: true, source: 'weekly' }, error: null });
   });
 
   it('should have 1 freeze per week by default', () => {
@@ -33,32 +40,31 @@ describe('streak-freeze', () => {
     expect(isFreezeActiveToday()).toBe(false);
   });
 
-  it('should activate freeze successfully', () => {
-    const result = activateFreeze();
+  it('should activate freeze successfully', async () => {
+    const result = await activateFreeze();
+    expect(mockRpc).toHaveBeenCalledWith('activate_streak_freeze');
     expect(result).toBe(true);
     expect(isFreezeActiveToday()).toBe(true);
     expect(getFreezesRemaining()).toBe(0);
   });
 
-  it('should return true when activating on same day (idempotent)', () => {
-    activateFreeze();
-    const result = activateFreeze();
+  it('should return true when activating on same day (idempotent)', async () => {
+    await activateFreeze();
+    const result = await activateFreeze();
     expect(result).toBe(true);
+    expect(mockRpc).toHaveBeenCalledTimes(1);
   });
 
-  it('should not allow second freeze in same week', () => {
-    activateFreeze();
-    // Simulate a different day by directly manipulating storage
-    const data = JSON.parse(mockStorage['streak-freeze']);
-    data.lastFreezeDate = '2020-01-01'; // different day
-    mockStorage['streak-freeze'] = JSON.stringify(data);
+  it('should not allow a freeze the server refuses', async () => {
+    mockRpc.mockResolvedValue({ data: { success: false, reason: 'no_freeze_left' }, error: null });
 
-    const result = activateFreeze();
+    const result = await activateFreeze();
     expect(result).toBe(false);
+    expect(isFreezeActiveToday()).toBe(false);
   });
 
-  it('should reset counter on new week', () => {
-    activateFreeze();
+  it('should reset counter on new week', async () => {
+    await activateFreeze();
     // Simulate new week by changing weekStart
     const data = JSON.parse(mockStorage['streak-freeze']);
     data.weekStart = '2020-01-06';

@@ -1,9 +1,11 @@
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 import { storage } from '../../../lib/storage/mmkv';
 import { getRandomMessage } from './notification-messages';
 import { getOptimalNotificationHour } from './adaptive-timing';
 import { supabase } from '../../../lib/supabase/client';
 import { lang$ } from '../../../lib/i18n';
+import { onUserDataCleared } from '../../../lib/storage/user-data';
 
 const DAILY_REMINDER_ID = 'daily-reminder';
 const STREAK_RISK_ID = 'streak-risk';
@@ -31,8 +33,9 @@ function isNative(): boolean {
   return Platform.OS !== 'web';
 }
 
-async function getNotifications() {
-  return await import('expo-notifications');
+// Lazily required so web never loads the native module.
+async function getNotifications(): Promise<typeof import('expo-notifications')> {
+  return require('expo-notifications');
 }
 
 export function getNotificationPrefs(): NotificationPrefs {
@@ -256,6 +259,22 @@ export async function cancelHabitReminder(habitId: string): Promise<void> {
   storage.delete(getHabitReminderKey(habitId));
 }
 
+// Per-habit reminders belong to the signed-in user: drop them on sign-out.
+onUserDataCleared(async () => {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+  const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+  await Promise.all(
+    scheduled
+      .map((n: { identifier: string }) => n.identifier)
+      .filter((id: string) => id.startsWith(HABIT_REMINDER_PREFIX))
+      .map(async (id: string) => {
+        await Notifications.cancelScheduledNotificationAsync(id);
+        storage.delete(id);
+      }),
+  );
+});
+
 // ──────────────────────────────────────────────────────────────────────────────
 
 export async function applyNotificationPrefs(prefs?: NotificationPrefs): Promise<void> {
@@ -287,21 +306,24 @@ export async function applyNotificationPrefs(prefs?: NotificationPrefs): Promise
 
 // ── Push token registration ────────────────────────────────────────────────────
 
-export async function registerPushToken(userId: string): Promise<void> {
+export async function registerPushToken(): Promise<void> {
   if (!isNative()) return;
   try {
     const granted = await requestPermissions();
     if (!granted) return;
 
+    // Standalone builds need the EAS project id to get an Expo push token.
+    const projectId =
+      Constants.expoConfig?.extra?.eas?.projectId ?? Constants.easConfig?.projectId;
+    if (!projectId) return;
+
     const Notifications = await getNotifications();
-    const tokenData = await Notifications.getExpoPushTokenAsync();
-    const token = tokenData.data;
+    const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId });
     if (!token) return;
 
-    await supabase
-      .from('profiles')
-      .update({ push_token: token })
-      .eq('id', userId);
+    // Tokens live in a private table; the RPC also detaches the device from
+    // any account previously signed in on it.
+    await supabase.rpc('register_push_token', { p_token: token });
   } catch {
     // Non-critical — don't block app startup
   }

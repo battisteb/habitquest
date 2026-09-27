@@ -91,20 +91,8 @@ export async function refreshSubscriptionStatus(): Promise<void> {
     subscriptionStore$.isPremium.set(isPremium);
     subscriptionStore$.error.set(null);
 
-    // Sync status to Supabase so edge functions can check it server-side
-    const userId = authStore$.user.get()?.id;
-    if (userId) {
-      const expiresAt =
-        customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]?.expirationDate ?? null;
-      await supabase
-        .from('profiles')
-        .update({
-          subscription_status: isPremium ? 'premium' : 'free',
-          subscription_expires_at: expiresAt,
-          revenue_cat_id: customerInfo.originalAppUserId,
-        })
-        .eq('id', userId);
-    }
+    // The server copy of the status comes from the RevenueCat webhook
+    // (supabase/functions/revenuecat-webhook), not from the client.
   } catch {
     // Keep previous state on error
   } finally {
