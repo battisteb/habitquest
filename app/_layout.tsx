@@ -5,7 +5,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth, authStore$ } from '../src/features/auth/stores/auth-store';
-import { hasCompletedOnboarding } from './onboarding';
+import { hasCompletedOnboarding } from '../src/features/onboarding/onboarding-state';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
 import { streakMilestoneStore$, dismissStreakMilestone } from '../src/features/gamification/stores/streak-milestone-store';
 import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';
@@ -24,6 +24,7 @@ import { ThemeProvider, useTheme } from '../src/ui/theme/theme-context';
 import { OfflineBanner } from '../src/ui/components/offline-banner';
 import { initPurchases } from '../src/features/monetization/stores/subscription-store';
 import { preloadInterstitial } from '../src/features/monetization/utils/ad-service';
+import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -79,13 +80,13 @@ function ThemedApp() {
   // Register push token + init RevenueCat once user is authenticated
   useEffect(() => {
     if (authUserId) {
-      registerPushToken(authUserId);
+      registerPushToken();
       initPurchases(authUserId).then(() => preloadInterstitial());
     }
   }, [authUserId]);
 
   return (
-    <>
+    <ResponsiveFrame>
       <StatusBar style={themeKey === 'lifestyle' ? 'dark' : 'light'} />
       <AuthGuard>
         <Stack
@@ -121,7 +122,7 @@ function ThemedApp() {
           }
         />
       )}
-    </>
+    </ResponsiveFrame>
   );
 }
 

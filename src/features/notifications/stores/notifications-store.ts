@@ -4,6 +4,7 @@ import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Json } from '../../../lib/supabase/types';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 export interface InboxNotification {
   id: string;
@@ -21,11 +22,15 @@ interface NotificationsState {
   isLoading: boolean;
 }
 
-export const notificationsStore$ = observable<NotificationsState>({
+const initialState = (): NotificationsState => ({
   items: [],
   unreadCount: 0,
   isLoading: false,
 });
+
+export const notificationsStore$ = observable<NotificationsState>(initialState());
+
+resetOnSignOut(notificationsStore$, initialState);
 
 syncObservable(notificationsStore$, {
   persist: {

@@ -56,3 +56,6 @@ Thumbs.db
 # Supabase local
 supabase/.temp/
 .VSCodeCounter/
+
+# Output of npm run check:bundle
+.bundle-check/

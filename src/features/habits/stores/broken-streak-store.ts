@@ -1,5 +1,6 @@
 import { observable } from '@legendapp/state';
 import { storage } from '../../../lib/storage/mmkv';
+import { onUserDataCleared, resetOnSignOut } from '../../../lib/storage/user-data';
 
 interface BrokenStreak {
   habitId: string;
@@ -11,9 +12,15 @@ interface BrokenStreakState {
   items: BrokenStreak[];
 }
 
-export const brokenStreakStore$ = observable<BrokenStreakState>({ items: [] });
+const initialState = (): BrokenStreakState => ({ items: [] });
+
+export const brokenStreakStore$ = observable<BrokenStreakState>(initialState());
+
+resetOnSignOut(brokenStreakStore$, initialState);
 
 const DISMISSED_KEY = 'broken-streak-dismissed';
+
+onUserDataCleared(() => storage.delete(DISMISSED_KEY));
 
 function getDismissedToday(): Set<string> {
   const today = new Date().toISOString().slice(0, 10);

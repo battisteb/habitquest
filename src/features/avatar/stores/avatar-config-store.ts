@@ -1,8 +1,11 @@
 import { observable } from '@legendapp/state';
 import { storage } from '../../../lib/storage/mmkv';
 import { supabase } from '../../../lib/supabase/client';
+import { onUserDataCleared, resetOnSignOut } from '../../../lib/storage/user-data';
 
 const STORAGE_KEY = 'avatarConfig';
+
+onUserDataCleared(() => storage.delete(STORAGE_KEY));
 
 interface AvatarConfigState {
   skinColor: string;
@@ -16,7 +19,11 @@ const DEFAULT_COLORS: AvatarConfigState = {
   eyeColor: '#1a1a2e',
 };
 
-export const avatarConfigStore$ = observable<AvatarConfigState>({ ...DEFAULT_COLORS });
+const initialState = (): AvatarConfigState => ({ ...DEFAULT_COLORS });
+
+export const avatarConfigStore$ = observable<AvatarConfigState>(initialState());
+
+resetOnSignOut(avatarConfigStore$, initialState);
 
 function loadFromStorage(): AvatarConfigState {
   const raw = storage.getString(STORAGE_KEY);

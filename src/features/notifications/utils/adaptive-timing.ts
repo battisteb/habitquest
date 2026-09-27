@@ -1,6 +1,9 @@
 import { storage } from '../../../lib/storage/mmkv';
+import { onUserDataCleared } from '../../../lib/storage/user-data';
 
 const TIMING_KEY = 'notification-completion-hours';
+
+onUserDataCleared(() => storage.delete(TIMING_KEY));
 
 /**
  * Record the hour at which the user completed habits (call this after completeHabit).

@@ -8,8 +8,11 @@
  * - An expiry date (stored in MMKV)
  */
 import { storage } from '../../../lib/storage/mmkv';
+import { onUserDataCleared } from '../../../lib/storage/user-data';
 
 const MODE_KEY = 'contextual-mode';
+
+onUserDataCleared(() => storage.delete(MODE_KEY));
 
 export type ContextualModeKey = 'exam' | 'competition' | 'vacation' | 'none';
 
