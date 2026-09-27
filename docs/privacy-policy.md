@@ -32,7 +32,7 @@ Free users see ads served by Google AdMob. On iOS, the app asks for permission (
 
 ## 4. Who can see your data
 
-Your friends can see your username, avatar, level and duel results. Your habits and notes are private.
+Other players can find you by username and see your username, avatar, level, XP and best streak (global leaderboard, friend search). Your friends also see your duel and challenge results. Your habits and notes are private.
 
 ## 5. Retention and deletion
 

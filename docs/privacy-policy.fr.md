@@ -32,7 +32,7 @@ Les utilisateurs gratuits voient des publicités fournies par Google AdMob. Sur 
 
 ## 4. Qui voit vos données
 
-Vos amis voient votre pseudo, votre avatar, votre niveau et vos résultats de duel. Vos habitudes et vos notes sont privées.
+Les autres joueurs peuvent vous trouver par votre pseudo et voir votre pseudo, votre avatar, votre niveau, votre XP et votre meilleure série (classement global, recherche d'amis). Vos amis voient aussi vos résultats de duels et de défis. Vos habitudes et vos notes sont privées.
 
 ## 5. Conservation et suppression
 
