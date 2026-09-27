@@ -4,6 +4,7 @@ import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type Achievement = Database['public']['Tables']['achievements']['Row'];
 
@@ -19,11 +20,15 @@ interface AchievementsState {
   newlyUnlocked: AchievementWithStatus[];
 }
 
-export const achievementsStore$ = observable<AchievementsState>({
+const initialState = (): AchievementsState => ({
   achievements: [],
   isLoading: false,
   newlyUnlocked: [],
 });
+
+export const achievementsStore$ = observable<AchievementsState>(initialState());
+
+resetOnSignOut(achievementsStore$, initialState);
 
 syncObservable(achievementsStore$, {
   persist: {
@@ -236,19 +241,7 @@ export async function checkAndUnlockAchievements() {
         achievement_id: a.id,
       });
 
-      // Award XP and gold rewards
-      if (a.xp_reward > 0) {
-        await supabase.rpc('increment_xp', {
-          user_id: userId,
-          xp_amount: a.xp_reward,
-        });
-      }
-      if (a.gold_reward > 0) {
-        await supabase.rpc('add_gold', {
-          p_user_id: userId,
-          p_amount: a.gold_reward,
-        });
-      }
+      // XP and gold rewards are granted by the on_achievement_unlocked_reward trigger.
 
       newlyUnlocked.push({
         ...a,

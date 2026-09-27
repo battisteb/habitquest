@@ -1,5 +1,5 @@
 import { Redirect } from 'expo-router';
-import { hasCompletedOnboarding } from './onboarding';
+import { hasCompletedOnboarding } from '../src/features/onboarding/onboarding-state';
 
 export default function Index() {
   const onboardingDone = hasCompletedOnboarding();

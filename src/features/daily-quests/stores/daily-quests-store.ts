@@ -3,6 +3,7 @@ import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { persistPlugin } from '../../../lib/storage/persist';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 export type QuestType = 'complete_habits' | 'complete_category' | 'earn_xp' | 'maintain_streak';
 export type QuestDifficulty = 'easy' | 'normal' | 'hard';
@@ -41,10 +42,14 @@ interface DailyQuestsState {
   isLoading: boolean;
 }
 
-export const dailyQuestsStore$ = observable<DailyQuestsState>({
+const initialState = (): DailyQuestsState => ({
   quests: [],
   isLoading: false,
 });
+
+export const dailyQuestsStore$ = observable<DailyQuestsState>(initialState());
+
+resetOnSignOut(dailyQuestsStore$, initialState);
 
 syncObservable(dailyQuestsStore$, {
   persist: {
@@ -98,77 +103,6 @@ export async function fetchDailyQuests() {
     dailyQuestsStore$.quests.set(quests);
   } finally {
     dailyQuestsStore$.isLoading.set(false);
-  }
-}
-
-export interface HabitsSnapshot {
-  todayCompletions: Record<string, boolean>;
-  habits: { id: string }[];
-}
-
-export async function updateQuestProgress(
-  questType: QuestType,
-  category?: string,
-  value?: number,
-  habitsSnapshot?: HabitsSnapshot,
-) {
-  const userId = authStore$.user.get()?.id;
-  if (!userId) return;
-
-  const quests = dailyQuestsStore$.quests.get();
-  if (quests.length === 0) return;
-
-  for (const quest of quests) {
-    if (quest.is_completed || quest.is_claimed) continue;
-    if (quest.template.quest_type !== questType) continue;
-
-    // For category quests, check if category matches
-    if (
-      questType === 'complete_category' &&
-      quest.template.target_category &&
-      quest.template.target_category !== category
-    ) {
-      continue;
-    }
-
-    let newProgress: number;
-
-    if (questType === 'earn_xp') {
-      // For XP quests, we accumulate the value
-      newProgress = quest.current_progress + (value ?? 0);
-    } else if (questType === 'maintain_streak') {
-      // For streak quests, check if all habits have been completed today
-      const todayCompletions = habitsSnapshot?.todayCompletions ?? {};
-      const habits = habitsSnapshot?.habits ?? [];
-      const allCompleted = habits.length > 0 && habits.every((h) => todayCompletions[h.id]);
-      newProgress = allCompleted ? 1 : 0;
-    } else {
-      // For completion quests, increment by 1
-      newProgress = quest.current_progress + 1;
-    }
-
-    const isNowCompleted = newProgress >= quest.template.target_value;
-    const now = new Date().toISOString();
-
-    // Update in database
-    await supabase
-      .from('user_daily_quests')
-      .update({
-        current_progress: newProgress,
-        is_completed: isNowCompleted,
-        completed_at: isNowCompleted ? now : null,
-      })
-      .eq('id', quest.id);
-
-    // Optimistic update in store
-    const questIndex = quests.findIndex((q) => q.id === quest.id);
-    if (questIndex !== -1) {
-      dailyQuestsStore$.quests[questIndex].current_progress.set(newProgress);
-      if (isNowCompleted) {
-        dailyQuestsStore$.quests[questIndex].is_completed.set(true);
-        dailyQuestsStore$.quests[questIndex].completed_at.set(now);
-      }
-    }
   }
 }
 

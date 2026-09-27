@@ -5,7 +5,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth, authStore$ } from '../src/features/auth/stores/auth-store';
-import { hasCompletedOnboarding } from './onboarding';
+import { hasCompletedOnboarding } from '../src/features/onboarding/onboarding-state';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
 import { streakMilestoneStore$, dismissStreakMilestone } from '../src/features/gamification/stores/streak-milestone-store';
 import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';
@@ -25,6 +25,8 @@ import { OfflineBanner } from '../src/ui/components/offline-banner';
 import { initPurchases } from '../src/features/monetization/stores/subscription-store';
 import { preloadInterstitial, shouldShowAds } from '../src/features/monetization/utils/ad-service';
 import { requestTrackingConsent } from '../src/features/monetization/utils/tracking-consent';
+import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
+import { syncTimezone } from '../src/features/auth/utils/sync-timezone';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -80,7 +82,8 @@ function ThemedApp() {
   // Register push token + init RevenueCat once user is authenticated
   useEffect(() => {
     if (authUserId) {
-      registerPushToken(authUserId);
+      void syncTimezone();
+      registerPushToken();
       initPurchases(authUserId)
         // Only ask for tracking consent when ads can actually be served
         .then(() => (shouldShowAds() ? requestTrackingConsent() : false))
@@ -89,7 +92,7 @@ function ThemedApp() {
   }, [authUserId]);
 
   return (
-    <>
+    <ResponsiveFrame>
       <StatusBar style={themeKey === 'lifestyle' ? 'dark' : 'light'} />
       <AuthGuard>
         <Stack
@@ -125,7 +128,7 @@ function ThemedApp() {
           }
         />
       )}
-    </>
+    </ResponsiveFrame>
   );
 }
 

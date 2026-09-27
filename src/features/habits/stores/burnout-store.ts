@@ -1,6 +1,7 @@
 import { observable } from '@legendapp/state';
 import { syncObservable } from '@legendapp/state/sync';
 import { persistPlugin } from '../../../lib/storage/persist';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 /** Days the dismissed banner stays hidden before reappearing if signal persists. */
 export const BURNOUT_DISMISS_COOLDOWN_DAYS = 3;
@@ -12,10 +13,14 @@ interface BurnoutState {
   lastBreakTakenAt: string | null;
 }
 
-export const burnoutStore$ = observable<BurnoutState>({
+const initialState = (): BurnoutState => ({
   lastDismissedAt: null,
   lastBreakTakenAt: null,
 });
+
+export const burnoutStore$ = observable<BurnoutState>(initialState());
+
+resetOnSignOut(burnoutStore$, initialState);
 
 syncObservable(burnoutStore$, {
   persist: { name: 'habitquest_burnout', plugin: persistPlugin },
