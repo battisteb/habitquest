@@ -1,6 +1,7 @@
 import { observable } from '@legendapp/state';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../../../lib/supabase/client';
+import { clearUserData } from '../../../lib/storage/user-data';
 
 interface AuthState {
   session: Session | null;
@@ -25,9 +26,13 @@ export async function initAuth() {
   authStore$.user.set(session?.user ?? null);
   authStore$.isInitialized.set(true);
 
-  supabase.auth.onAuthStateChange((_event, session) => {
+  supabase.auth.onAuthStateChange((event, session) => {
     authStore$.session.set(session);
     authStore$.user.set(session?.user ?? null);
+    // Covers manual sign-out, account deletion and expired sessions alike.
+    if (event === 'SIGNED_OUT') {
+      void clearUserData();
+    }
   });
 }
 

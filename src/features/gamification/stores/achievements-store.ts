@@ -4,6 +4,7 @@ import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type Achievement = Database['public']['Tables']['achievements']['Row'];
 
@@ -19,11 +20,15 @@ interface AchievementsState {
   newlyUnlocked: AchievementWithStatus[];
 }
 
-export const achievementsStore$ = observable<AchievementsState>({
+const initialState = (): AchievementsState => ({
   achievements: [],
   isLoading: false,
   newlyUnlocked: [],
 });
+
+export const achievementsStore$ = observable<AchievementsState>(initialState());
+
+resetOnSignOut(achievementsStore$, initialState);
 
 syncObservable(achievementsStore$, {
   persist: {
