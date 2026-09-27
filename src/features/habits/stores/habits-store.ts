@@ -19,6 +19,7 @@ import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { HabitContent } from '../types/habit-content';
 import type { Database, Json } from '../../../lib/supabase/types';
 import { reportBrokenStreaks } from './broken-streak-store';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type Habit = Omit<Database['public']['Tables']['habits']['Row'], 'content'> & { content?: HabitContent | null };
 type Streak = Database['public']['Tables']['streaks']['Row'];
@@ -32,13 +33,17 @@ interface HabitsState {
   isLoading: boolean;
 }
 
-export const habitsStore$ = observable<HabitsState>({
+const initialState = (): HabitsState => ({
   habits: [],
   streaks: {},
   todayCompletions: {},
   weekCompletions: {},
   isLoading: false,
 });
+
+export const habitsStore$ = observable<HabitsState>(initialState());
+
+resetOnSignOut(habitsStore$, initialState);
 
 syncObservable(habitsStore$, {
   persist: {
