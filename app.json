@@ -72,7 +72,8 @@
           "userTrackingUsageDescription": "This identifier will be used to show you personalized ads."
         }
       ],
-      "expo-audio"
+      "expo-audio",
+      "expo-localization"
     ],
     "scheme": "habitquest"
   }

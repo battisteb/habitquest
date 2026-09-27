@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { subscriptionStore$ } from '../stores/subscription-store';
 import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface PremiumGateProps {
   children: React.ReactNode;
@@ -63,6 +64,7 @@ function createStyles() {
 }
 
 export function PremiumGate({ children, lockedLabel, lockedIcon = '👑' }: PremiumGateProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
   const isPremium = use$(subscriptionStore$.isPremium);
@@ -76,7 +78,7 @@ export function PremiumGate({ children, lockedLabel, lockedIcon = '👑' }: Prem
         <Text style={styles.icon}>{lockedIcon}</Text>
         <Text style={styles.label}>{lockedLabel}</Text>
         <Pressable style={styles.cta} onPress={() => router.push('/paywall')}>
-          <Text style={styles.ctaText}>Passer Premium</Text>
+          <Text style={styles.ctaText}>{T.premium_go}</Text>
         </Pressable>
       </View>
     </View>

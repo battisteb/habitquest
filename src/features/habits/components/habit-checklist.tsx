@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import type { ChecklistItem } from '../types/habit-content';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface HabitChecklistProps {
   items: ChecklistItem[];
@@ -10,6 +11,7 @@ interface HabitChecklistProps {
 }
 
 export function HabitChecklist({ items, onComplete }: HabitChecklistProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -151,7 +153,7 @@ export function HabitChecklist({ items, onComplete }: HabitChecklistProps) {
       {/* Complete button */}
       {allDone && (
         <Pressable style={styles.completeButton} onPress={onComplete}>
-          <Text style={styles.completeButtonText}>COMPLETE ✓</Text>
+          <Text style={styles.completeButtonText}>{T.checklist_complete}</Text>
         </Pressable>
       )}
     </View>

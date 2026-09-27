@@ -8,6 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { colors, fontSizes, spacing } from '../theme/tokens';
+import { useT } from '../../lib/i18n';
 
 interface StreakMilestoneProps {
   streak: number;
@@ -15,15 +16,16 @@ interface StreakMilestoneProps {
   onDismiss: () => void;
 }
 
-const MILESTONE_LABELS: Record<number, string> = {
-  7: '🔥 WEEK WARRIOR',
-  14: '⚡ FORTNIGHT FIGHTER',
-  30: '💎 MONTHLY MASTER',
-  60: '🏆 STREAK LEGEND',
-  100: '👑 CENTURY HERO',
-};
+const MILESTONE_LABELS = {
+  7: 'milestone_title_7',
+  14: 'milestone_title_14',
+  30: 'milestone_title_30',
+  60: 'milestone_title_60',
+  100: 'milestone_title_100',
+} as const;
 
 export function StreakMilestone({ streak, visible, onDismiss }: StreakMilestoneProps) {
+  const T = useT();
   const scale = useSharedValue(0);
   const opacity = useSharedValue(0);
 
@@ -42,7 +44,8 @@ export function StreakMilestone({ streak, visible, onDismiss }: StreakMilestoneP
 
   if (!visible) return null;
 
-  const label = MILESTONE_LABELS[streak] ?? `🔥 ${streak}-DAY STREAK!`;
+  const titleKey = MILESTONE_LABELS[streak as keyof typeof MILESTONE_LABELS];
+  const label = titleKey ? T[titleKey] : T.milestone_title_n.replace('{n}', String(streak));
 
   return (
     <Animated.View style={[StyleSheet.absoluteFill, styles.overlay, overlayStyle]}>
@@ -50,10 +53,10 @@ export function StreakMilestone({ streak, visible, onDismiss }: StreakMilestoneP
       <Animated.View style={[styles.card, cardStyle]}>
         <Text style={styles.emoji}>🔥</Text>
         <Text style={styles.label}>{label}</Text>
-        <Text style={styles.streak}>{streak} DAYS</Text>
-        <Text style={styles.sub}>Your streak is legendary. Keep it alive!</Text>
+        <Text style={styles.streak}>{T.milestone_days.replace('{n}', String(streak))}</Text>
+        <Text style={styles.sub}>{T.milestone_sub}</Text>
         <Pressable style={styles.btn} onPress={onDismiss}>
-          <Text style={styles.btnText}>CLAIM GLORY ▶</Text>
+          <Text style={styles.btnText}>{T.milestone_claim}</Text>
         </Pressable>
       </Animated.View>
     </Animated.View>

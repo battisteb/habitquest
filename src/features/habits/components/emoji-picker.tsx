@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 const EMOJI_GROUPS = [
   { label: 'BODY', emojis: ['💪', '🏋️', '🤸', '🧘', '🏃', '🚴', '🤾', '⛹️', '🤼', '🥊'] },
@@ -19,6 +20,7 @@ interface EmojiPickerProps {
 }
 
 export function EmojiPicker({ value, onChange, label }: EmojiPickerProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
     wrapper: { gap: spacing.sm },
@@ -76,7 +78,7 @@ export function EmojiPicker({ value, onChange, label }: EmojiPickerProps) {
         <Text style={styles.label}>{label ?? 'EMOJI'}</Text>
         {value && (
           <Pressable onPress={() => onChange(null)}>
-            <Text style={styles.clearBtn}>CLEAR</Text>
+            <Text style={styles.clearBtn}>{T.emoji_picker_clear}</Text>
           </Pressable>
         )}
       </View>

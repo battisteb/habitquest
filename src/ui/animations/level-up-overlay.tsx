@@ -88,7 +88,7 @@ export function LevelUpOverlay({ visible, newLevel, onComplete }: LevelUpOverlay
           <Text style={styles.star}>★</Text>
           <Text style={styles.star}>★</Text>
         </Animated.View>
-        <Text style={styles.levelUpText}>LEVEL UP!</Text>
+        <Text style={styles.levelUpText}>{T.level_up_title}</Text>
         <View style={styles.levelBadge}>
           <Text style={styles.levelNumber}>{newLevel}</Text>
         </View>

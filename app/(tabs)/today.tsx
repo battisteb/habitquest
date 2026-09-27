@@ -519,7 +519,7 @@ export default function TodayScreen() {
         const { error } = await supabase
           .rpc('add_freeze_token' as never, { p_user_id: userId } as never);
         if (error) {
-          Alert.alert('Error', 'Could not save your freeze token. Please try again.');
+          Alert.alert(T.today_freeze_error_title, T.today_freeze_error_msg);
         } else {
           setFreezesLeft((prev) => prev + 1);
           refreshProfile();
