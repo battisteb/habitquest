@@ -12,6 +12,7 @@ HabitQuest ("the app") is published by **[PUBLISHER NAME]** ("we"). This policy 
 | Username, avatar colors, level, XP, gold, equipped items | Run the game and show your hero to your friends | Supabase |
 | Habits, completions, streaks, optional completion notes | Core habit-tracking features | Supabase, and cached on your device |
 | Friends, duels, challenges, in-app notifications | Social features | Supabase |
+| Time zone (e.g. Europe/Paris) | Count streaks and daily limits on your local day | Supabase |
 | Push notification token | Send reminders and duel invitations | Supabase |
 | Purchase history and subscription status | Unlock Premium | RevenueCat, Apple / Google |
 | Advertising identifier (IDFA / Android advertising ID) — **only if you allow tracking** | Show ads to free users | Google AdMob |

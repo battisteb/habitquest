@@ -12,6 +12,7 @@ HabitQuest (« l'app ») est éditée par **[NOM DE L'ÉDITEUR]** (« nous »). 
 | Pseudo, couleurs de l'avatar, niveau, XP, or, objets équipés | Faire fonctionner le jeu et montrer votre héros à vos amis | Supabase |
 | Habitudes, validations, séries, notes facultatives | Suivi des habitudes | Supabase, et en cache sur votre appareil |
 | Amis, duels, défis, notifications in-app | Fonctions sociales | Supabase |
+| Fuseau horaire (ex. Europe/Paris) | Compter les séries et limites quotidiennes selon votre jour local | Supabase |
 | Jeton de notifications push | Envoyer les rappels et invitations de duel | Supabase |
 | Historique d'achats et statut d'abonnement | Débloquer Premium | RevenueCat, Apple / Google |
 | Identifiant publicitaire (IDFA / identifiant Android) — **uniquement si vous autorisez le suivi** | Afficher des publicités aux utilisateurs gratuits | Google AdMob |
