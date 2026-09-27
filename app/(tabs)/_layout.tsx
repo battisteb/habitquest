@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+import { Text, View } from 'react-native';
 import { Tabs } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
@@ -27,11 +29,33 @@ function useUnreadNotificationCount(): number {
   return use$(notificationsStore$.unreadCount);
 }
 
+/**
+ * Emoji icon and label drawn together: the default label layout squeezed the
+ * label under emoji icons (clipped text), so the navigator label is hidden.
+ */
+function tabIcon(emoji: string, label: string) {
+  function TabIcon({ focused, color }: { focused: boolean; color: string }) {
+    return (
+      <View style={{ alignItems: 'center', minWidth: 72 }}>
+        <Text style={{ fontSize: 18, lineHeight: 22, opacity: focused ? 1 : 0.55 }}>{emoji}</Text>
+        <Text
+          numberOfLines={1}
+          style={{ color, fontSize: 10, lineHeight: 13, fontWeight: 'bold', letterSpacing: 0.5 }}
+        >
+          {label}
+        </Text>
+      </View>
+    );
+  }
+  return TabIcon;
+}
+
 export default function TabsLayout() {
   const pendingHabits = usePendingHabitCount();
   const pendingFriends = usePendingFriendCount();
   const unreadNotifications = useUnreadNotificationCount();
   const T = useT();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     fetchNotifications();
@@ -45,19 +69,20 @@ export default function TabsLayout() {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
           borderTopWidth: 2,
+          // Room for the emoji icon + label, above the home indicator.
+          height: 58 + insets.bottom,
+          paddingTop: 4,
+          paddingBottom: Math.max(insets.bottom, 6),
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
-        tabBarLabelStyle: {
-          fontWeight: 'bold',
-          fontSize: 10,
-          letterSpacing: 0.5,
-        },
+        tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
         name="today"
         options={{
+          tabBarIcon: tabIcon('⚔️', T.tab_quests),
           title: T.tab_quests,
           tabBarLabel: T.tab_quests,
           tabBarBadge: pendingHabits > 0 ? pendingHabits : undefined,
@@ -71,6 +96,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="social"
         options={{
+          tabBarIcon: tabIcon('👥', T.tab_social),
           title: T.tab_social,
           tabBarLabel: T.tab_social,
           tabBarBadge: pendingFriends > 0 ? pendingFriends : undefined,
@@ -84,6 +110,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="shop"
         options={{
+          tabBarIcon: tabIcon('🛒', T.tab_shop),
           title: T.tab_shop,
           tabBarLabel: T.tab_shop,
         }}
@@ -91,6 +118,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          tabBarIcon: tabIcon('🧙', T.tab_me),
           title: T.tab_me,
           tabBarLabel: T.tab_me,
           tabBarBadge: unreadNotifications > 0 ? unreadNotifications : undefined,
