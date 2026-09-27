@@ -2,7 +2,6 @@ import { use$ } from '@legendapp/state/react';
 import {
   dailyQuestsStore$,
   fetchDailyQuests,
-  updateQuestProgress,
   claimQuest,
 } from '../stores/daily-quests-store';
 import type { DailyQuestWithTemplate, QuestType } from '../stores/daily-quests-store';
@@ -15,7 +14,6 @@ export function useDailyQuests() {
     quests,
     isLoading,
     fetchDailyQuests,
-    updateQuestProgress,
     claimQuest,
   };
 }

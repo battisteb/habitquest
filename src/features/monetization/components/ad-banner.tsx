@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { View, StyleSheet, Pressable, Text, Platform } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../stores/subscription-store';
+import { shouldShowAds } from '../utils/ad-service';
+import { canPersonalizeAds } from '../utils/tracking-consent';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../../ui/theme/theme-context';
@@ -60,13 +62,14 @@ export function AdBanner({ position = 'bottom' }: AdBannerProps) {
 
   if (isPremium) return null;
   if (!isNative || !BannerAd) return null; // No ads on web
+  if (!shouldShowAds()) return null; // e.g. iOS ad units not configured yet
 
   return (
     <View style={[styles.container, position === 'bottom' && styles.bottomContainer]}>
       <BannerAd
         unitId={ADMOB_BANNER_ID}
         size={BannerAdSize.BANNER}
-        requestOptions={{ requestNonPersonalizedAdsOnly: false }}
+        requestOptions={{ requestNonPersonalizedAdsOnly: !canPersonalizeAds() }}
         onAdFailedToLoad={() => {/* Silent fail */}}
       />
       <Pressable style={styles.premiumHint} onPress={() => router.push('/paywall')}>

@@ -102,14 +102,17 @@ serve(async (req: Request) => {
     console.log(`weekly-reset: found ${allProfiles.length} profiles`);
 
     // 2. Collect valid Expo push tokens
-    // push_token column may not exist yet — access via type cast
-    const validTokens: string[] = [];
-    for (const profile of allProfiles) {
-      const pushToken = (profile as unknown as Record<string, unknown>).push_token;
-      if (typeof pushToken === 'string' && pushToken.startsWith('ExponentPushToken[')) {
-        validTokens.push(pushToken);
-      }
+    const { data: tokenRows, error: tokensError } = await supabase
+      .from('push_tokens')
+      .select('token');
+
+    if (tokensError) {
+      throw new Error(`Failed to fetch push tokens: ${tokensError.message}`);
     }
+
+    const validTokens: string[] = (tokenRows ?? [])
+      .map((row: { token: string }) => row.token)
+      .filter((token: string) => token.startsWith('ExponentPushToken['));
 
     console.log(`weekly-reset: ${validTokens.length} profiles have valid push tokens`);
 

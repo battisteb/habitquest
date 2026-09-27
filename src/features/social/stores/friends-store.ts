@@ -5,6 +5,7 @@ import { authStore$ } from '../../auth/stores/auth-store';
 import { profileStore$ } from '../../gamification/stores/profile-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
@@ -25,13 +26,17 @@ interface FriendsState {
   isLoading: boolean;
 }
 
-export const friendsStore$ = observable<FriendsState>({
+const initialState = (): FriendsState => ({
   friends: [],
   pendingReceived: [],
   pendingSent: [],
   searchResults: [],
   isLoading: false,
 });
+
+export const friendsStore$ = observable<FriendsState>(initialState());
+
+resetOnSignOut(friendsStore$, initialState);
 
 syncObservable(friendsStore$, {
   persist: {
