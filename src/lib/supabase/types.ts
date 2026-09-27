@@ -67,6 +67,7 @@ export type Database = {
           status: string
           target: number
           type: string
+          wager_settled: boolean
           winner_id: string | null
         }
         Insert: {
@@ -82,6 +83,7 @@ export type Database = {
           status?: string
           target: number
           type: string
+          wager_settled?: boolean
           winner_id?: string | null
         }
         Update: {
@@ -97,6 +99,7 @@ export type Database = {
           status?: string
           target?: number
           type?: string
+          wager_settled?: boolean
           winner_id?: string | null
         }
         Relationships: [
@@ -748,6 +751,10 @@ export type Database = {
       purchase_item: {
         Args: { p_item_id: string; p_user_id: string }
         Returns: Json
+      }
+      settle_challenge_wager: {
+        Args: { p_challenge_id: string }
+        Returns: number
       }
     }
     Enums: {

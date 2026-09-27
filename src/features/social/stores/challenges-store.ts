@@ -114,38 +114,39 @@ export async function updateChallengeProgress(
 
     const updates: Record<string, unknown> = { [progressField]: newProgress };
 
-    if (newProgress >= challenge.target) {
-      const opponentProgress = isCreator ? challenge.opponent_progress : challenge.creator_progress;
-      const opponentAlreadyWon = opponentProgress >= challenge.target;
-      if (!opponentAlreadyWon) {
-        updates.status = 'completed';
-        updates.winner_id = userId;
-        const loserId = isCreator ? challenge.opponent_id : challenge.creator_id;
-        const wager = challenge.gold_wager ?? 0;
-        if (wager > 0) {
-          await supabase.rpc('add_gold', { p_user_id: userId, p_amount: wager });
-          await supabase.rpc('add_gold', { p_user_id: loserId, p_amount: -wager });
-        }
-        // Notify both players
-        const notifType = 'challenge_completed';
-        await supabase.rpc('create_notification', {
-          p_user_id: userId,
-          p_type: notifType,
-          p_title: '🏆 Challenge Won!',
-          p_body: `You won the ${challenge.type === 'xp_race' ? 'XP Race' : 'completion'} challenge and earned ${wager}g!`,
-          p_data: { route: '/(tabs)/social', challengeId: challenge.id },
-        });
-        await supabase.rpc('create_notification', {
-          p_user_id: loserId,
-          p_type: notifType,
-          p_title: '⚔️ Challenge Lost',
-          p_body: `Your opponent won the ${challenge.type === 'xp_race' ? 'XP Race' : 'completion'} challenge.${wager > 0 ? ` You lost ${wager}g.` : ''}`,
-          p_data: { route: '/(tabs)/social', challengeId: challenge.id },
-        });
-      }
+    const opponentProgress = isCreator ? challenge.opponent_progress : challenge.creator_progress;
+    const won = newProgress >= challenge.target && opponentProgress < challenge.target;
+    if (won) {
+      updates.status = 'completed';
+      updates.winner_id = userId;
     }
 
+    // The challenge must be marked completed before the wager can be collected.
     await supabase.from('challenges').update(updates).eq('id', challenge.id);
+    if (!won) continue;
+
+    const loserId = isCreator ? challenge.opponent_id : challenge.creator_id;
+    const { data: collected } = await supabase.rpc('settle_challenge_wager', {
+      p_challenge_id: challenge.id,
+    });
+    const wager = collected ?? 0;
+
+    // Notify both players
+    const notifType = 'challenge_completed';
+    await supabase.rpc('create_notification', {
+      p_user_id: userId,
+      p_type: notifType,
+      p_title: '🏆 Challenge Won!',
+      p_body: `You won the ${challenge.type === 'xp_race' ? 'XP Race' : 'completion'} challenge and earned ${wager}g!`,
+      p_data: { route: '/(tabs)/social', challengeId: challenge.id },
+    });
+    await supabase.rpc('create_notification', {
+      p_user_id: loserId,
+      p_type: notifType,
+      p_title: '⚔️ Challenge Lost',
+      p_body: `Your opponent won the ${challenge.type === 'xp_race' ? 'XP Race' : 'completion'} challenge.${wager > 0 ? ` You lost ${wager}g.` : ''}`,
+      p_data: { route: '/(tabs)/social', challengeId: challenge.id },
+    });
   }
 }
 
