@@ -5,6 +5,7 @@ import { getRandomMessage } from './notification-messages';
 import { getOptimalNotificationHour } from './adaptive-timing';
 import { supabase } from '../../../lib/supabase/client';
 import { lang$ } from '../../../lib/i18n';
+import { onUserDataCleared } from '../../../lib/storage/user-data';
 
 const DAILY_REMINDER_ID = 'daily-reminder';
 const STREAK_RISK_ID = 'streak-risk';
@@ -257,6 +258,22 @@ export async function cancelHabitReminder(habitId: string): Promise<void> {
   await Notifications.cancelScheduledNotificationAsync(getHabitReminderKey(habitId));
   storage.delete(getHabitReminderKey(habitId));
 }
+
+// Per-habit reminders belong to the signed-in user: drop them on sign-out.
+onUserDataCleared(async () => {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+  const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+  await Promise.all(
+    scheduled
+      .map((n: { identifier: string }) => n.identifier)
+      .filter((id: string) => id.startsWith(HABIT_REMINDER_PREFIX))
+      .map(async (id: string) => {
+        await Notifications.cancelScheduledNotificationAsync(id);
+        storage.delete(id);
+      }),
+  );
+});
 
 // ──────────────────────────────────────────────────────────────────────────────
 

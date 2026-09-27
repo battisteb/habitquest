@@ -1,4 +1,9 @@
 import { authStore$ } from '../stores/auth-store';
+import { clearUserData } from '../../../lib/storage/user-data';
+
+jest.mock('../../../lib/storage/user-data', () => ({
+  clearUserData: jest.fn(() => Promise.resolve()),
+}));
 
 // Mock Supabase client
 jest.mock('../../../lib/supabase/client', () => ({
@@ -11,6 +16,9 @@ jest.mock('../../../lib/supabase/client', () => ({
       signOut: jest.fn(),
     },
     rpc: jest.fn(),
+    functions: {
+      invoke: jest.fn(),
+    },
   },
 }));
 
@@ -107,6 +115,51 @@ describe('authStore$', () => {
       const { signOut } = require('../stores/auth-store');
       await expect(signOut()).resolves.toBeUndefined();
       expect(supabase.auth.signOut).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteAccount', () => {
+    it('calls the delete-account function then clears the local session', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.functions.invoke.mockResolvedValue({ data: { deleted: true }, error: null });
+      supabase.auth.signOut.mockResolvedValue({ error: null });
+
+      const { deleteAccount } = require('../stores/auth-store');
+      await deleteAccount();
+
+      expect(supabase.functions.invoke).toHaveBeenCalledWith('delete-account', { method: 'POST' });
+      expect(supabase.auth.signOut).toHaveBeenCalledWith({ scope: 'local' });
+      expect(authStore$.isLoading.get()).toBe(false);
+    });
+
+    it('keeps the session and rethrows when the server fails', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.functions.invoke.mockResolvedValue({ data: null, error: new Error('boom') });
+      supabase.auth.signOut.mockClear();
+
+      const { deleteAccount } = require('../stores/auth-store');
+      await expect(deleteAccount()).rejects.toThrow('boom');
+
+      expect(supabase.auth.signOut).not.toHaveBeenCalled();
+      expect(authStore$.isLoading.get()).toBe(false);
+    });
+  });
+
+  describe('auth state changes', () => {
+    it('clears local user data on SIGNED_OUT only', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      const { initAuth } = require('../stores/auth-store');
+      supabase.auth.onAuthStateChange.mockClear();
+      await initAuth();
+      const listener = supabase.auth.onAuthStateChange.mock.calls[0][0];
+
+      (clearUserData as jest.Mock).mockClear();
+      listener('SIGNED_IN', { user: { id: 'u1' } });
+      expect(clearUserData).not.toHaveBeenCalled();
+
+      listener('SIGNED_OUT', null);
+      expect(clearUserData).toHaveBeenCalledTimes(1);
+      expect(authStore$.user.get()).toBeNull();
     });
   });
 });
