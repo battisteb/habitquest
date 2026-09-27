@@ -27,6 +27,7 @@ import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../sr
 import { brokenStreakStore$, dismissBrokenStreak, clearBrokenStreakForHabit } from '../../src/features/habits/stores/broken-streak-store';
 import { pinnedHabitsStore$, togglePinHabit, isHabitPinned } from '../../src/features/habits/stores/pinned-habits-store';
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
+import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import {
   getFreezesRemaining,
   isFreezeActiveToday,
@@ -778,6 +779,7 @@ export default function TodayScreen() {
         onDismiss={() => setMilestoneSeen(null)}
       />
       <AllDoneCelebration visible={showAllDone} />
+      <TodayTutorial />
 
       {/* Header */}
       <View style={styles.header}>
