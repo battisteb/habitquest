@@ -23,6 +23,10 @@ export const LIMITS = {
   /** Minimum hours between duels for premium users */
   PREMIUM_DUEL_COOLDOWN_HOURS: 24,
 
+  /** Duels a free user can take part in per week (premium: unlimited).
+   *  Mirrored server-side in guard_duel_writes. */
+  FREE_DUELS_PER_WEEK: 3,
+
   /** How many days of stats history free users can see */
   FREE_STATS_DAYS: 30,
   // Premium: no limit (pass Infinity or 0 as "no limit")
