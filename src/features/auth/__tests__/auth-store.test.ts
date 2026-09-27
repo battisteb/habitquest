@@ -10,6 +10,7 @@ jest.mock('../../../lib/supabase/client', () => ({
       signInWithPassword: jest.fn(),
       signOut: jest.fn(),
     },
+    rpc: jest.fn(),
   },
 }));
 
@@ -76,6 +77,36 @@ describe('authStore$', () => {
       email: 'test@test.com',
       password: 'password',
       options: { data: { username: 'hero123' } },
+    });
+  });
+
+  describe('signOut', () => {
+    it('unregisters the push token before ending the session', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      const calls: string[] = [];
+      supabase.rpc.mockImplementation(async (name: string) => {
+        calls.push(name);
+        return { error: null };
+      });
+      supabase.auth.signOut.mockImplementation(async () => {
+        calls.push('signOut');
+        return { error: null };
+      });
+
+      const { signOut } = require('../stores/auth-store');
+      await signOut();
+
+      expect(calls).toEqual(['unregister_push_token', 'signOut']);
+    });
+
+    it('still signs out when the device is offline', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.rpc.mockRejectedValue(new Error('offline'));
+      supabase.auth.signOut.mockResolvedValue({ error: null });
+
+      const { signOut } = require('../stores/auth-store');
+      await expect(signOut()).resolves.toBeUndefined();
+      expect(supabase.auth.signOut).toHaveBeenCalled();
     });
   });
 });

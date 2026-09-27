@@ -58,6 +58,12 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signOut() {
+  // Stop pushes to this device while the session can still authorize the call.
+  try {
+    await supabase.rpc('unregister_push_token');
+  } catch {
+    // Offline: the token is reassigned on the next sign-in on this device.
+  }
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }

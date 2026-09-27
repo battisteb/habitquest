@@ -79,7 +79,7 @@ function ThemedApp() {
   // Register push token + init RevenueCat once user is authenticated
   useEffect(() => {
     if (authUserId) {
-      registerPushToken(authUserId);
+      registerPushToken();
       initPurchases(authUserId).then(() => preloadInterstitial());
     }
   }, [authUserId]);

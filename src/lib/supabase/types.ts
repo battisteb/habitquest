@@ -446,7 +446,6 @@ export type Database = {
           id: string
           last_duel_at: string | null
           level: number
-          push_token: string | null
           rank: string
           revenue_cat_id: string | null
           skin_color: string
@@ -467,7 +466,6 @@ export type Database = {
           id: string
           last_duel_at?: string | null
           level?: number
-          push_token?: string | null
           rank?: string
           revenue_cat_id?: string | null
           skin_color?: string
@@ -488,7 +486,6 @@ export type Database = {
           id?: string
           last_duel_at?: string | null
           level?: number
-          push_token?: string | null
           rank?: string
           revenue_cat_id?: string | null
           skin_color?: string
@@ -498,6 +495,32 @@ export type Database = {
           xp?: number
         }
         Relationships: []
+      }
+      push_tokens: {
+        Row: {
+          token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_tokens_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       purchases: {
         Row: {
@@ -748,6 +771,14 @@ export type Database = {
       purchase_item: {
         Args: { p_item_id: string; p_user_id: string }
         Returns: Json
+      }
+      register_push_token: {
+        Args: { p_token: string }
+        Returns: undefined
+      }
+      unregister_push_token: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {
