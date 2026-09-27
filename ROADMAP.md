@@ -42,7 +42,7 @@
 
 ## 🚧 Phase 6 — Release preparation (in progress)
 - [x] LICENSE
-- [ ] Public README screenshots and demo GIF
+- [x] Public README screenshots (demo GIF still to do)
 - [x] Onboarding and tutorial
 - [ ] iOS TestFlight build
 - [ ] App Store submission (iOS priority)
