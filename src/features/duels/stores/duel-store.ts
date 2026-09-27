@@ -1,6 +1,8 @@
 import { observable } from '@legendapp/state';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import { subscriptionStore$ } from '../../monetization/stores/subscription-store';
+import { LIMITS } from '../../monetization/utils/feature-gates';
 import { simulateDuel, PlayerState } from '../utils/combat-engine';
 
 export interface DuelChallenge {
@@ -102,10 +104,11 @@ export async function getWeeklyDuelsUsed(): Promise<number> {
   return count ?? 0;
 }
 
-/** Returns true when the user can still start a duel this week (limit: 2) */
+/** Returns true when the user can still start a duel this week (free: 3, premium: unlimited) */
 export async function canStartDuel(): Promise<boolean> {
+  if (subscriptionStore$.isPremium.get()) return true;
   const used = await getWeeklyDuelsUsed();
-  return used < 2;
+  return used < LIMITS.FREE_DUELS_PER_WEEK;
 }
 
 /** Load all of the user's duels from Supabase into the store */
@@ -163,7 +166,7 @@ export async function createDuel(opponentId: string, attackId: string): Promise<
 
   const allowed = await canStartDuel();
   if (!allowed) {
-    throw new Error('Weekly duel limit reached — 2 duels per week maximum');
+    throw new Error(`Weekly duel limit reached — ${LIMITS.FREE_DUELS_PER_WEEK} duels per week maximum`);
   }
 
   const { error } = await supabase.from('duels').insert({
