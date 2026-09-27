@@ -8,6 +8,7 @@ import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { duelStore$, fetchUnlockedCategories, fetchDuels, getWeeklyDuelsUsed } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 import { usePremium } from '../../src/features/monetization/hooks/use-premium';
+import { LIMITS } from '../../src/features/monetization/utils/feature-gates';
 import { showInterstitial } from '../../src/features/monetization/utils/ad-service';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { useTheme } from '../../src/ui/theme/theme-context';
@@ -116,13 +117,13 @@ export default function DuelsIndexScreen() {
   const cooldownHours = Math.ceil(cooldownMinutes / 60);
 
   // Legacy weekly limit for free users (3 per week = at most 1 every 2 days + max 3)
-  const weeklyLimitReached = !isPremium && weeklyUsed >= 3;
+  const weeklyLimitReached = !isPremium && weeklyUsed >= LIMITS.FREE_DUELS_PER_WEEK;
   const limitReached = !cooldownOk || weeklyLimitReached;
 
   const badgeColor =
     weeklyUsed === 0
       ? colors.success
-      : weeklyUsed < 3
+      : weeklyUsed < LIMITS.FREE_DUELS_PER_WEEK
       ? colors.warning
       : colors.danger;
 
