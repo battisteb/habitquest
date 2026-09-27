@@ -24,6 +24,7 @@ import { ThemeProvider, useTheme } from '../src/ui/theme/theme-context';
 import { OfflineBanner } from '../src/ui/components/offline-banner';
 import { initPurchases } from '../src/features/monetization/stores/subscription-store';
 import { preloadInterstitial } from '../src/features/monetization/utils/ad-service';
+import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -85,7 +86,7 @@ function ThemedApp() {
   }, [authUserId]);
 
   return (
-    <>
+    <ResponsiveFrame>
       <StatusBar style={themeKey === 'lifestyle' ? 'dark' : 'light'} />
       <AuthGuard>
         <Stack
@@ -121,7 +122,7 @@ function ThemedApp() {
           }
         />
       )}
-    </>
+    </ResponsiveFrame>
   );
 }
 
