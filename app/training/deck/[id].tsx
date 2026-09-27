@@ -244,7 +244,7 @@ export default function DeckReviewScreen() {
           <Text style={styles.upToDateEmoji}>✅</Text>
           <Text style={styles.upToDateTitle}>All caught up!</Text>
           <Text style={styles.upToDateSub}>
-            No cards due today for "{deck.data.title}".
+            No cards due today for “{deck.data.title}”.
           </Text>
           <Text style={styles.upToDateNext}>
             Next review: {deck.srsStates.length > 0
