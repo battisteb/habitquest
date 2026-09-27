@@ -1,14 +1,27 @@
 import { observable } from '@legendapp/state';
 import { use$ } from '@legendapp/state/react';
+import { getLocales } from 'expo-localization';
 import { storage } from '../storage/mmkv';
 
 export type Lang = 'fr' | 'en';
 
 const STORAGE_KEY = 'app_language';
 
-export const lang$ = observable<Lang>(
-  (storage.getString(STORAGE_KEY) as Lang | undefined) ?? 'fr',
-);
+/** French for French-speaking devices, English everywhere else. */
+export function detectDeviceLang(): Lang {
+  try {
+    return getLocales()[0]?.languageCode === 'fr' ? 'fr' : 'en';
+  } catch {
+    return 'en';
+  }
+}
+
+function initialLang(): Lang {
+  const saved = storage.getString(STORAGE_KEY);
+  return saved === 'fr' || saved === 'en' ? saved : detectDeviceLang();
+}
+
+export const lang$ = observable<Lang>(initialLang());
 
 lang$.onChange(({ value }) => storage.set(STORAGE_KEY, value));
 
@@ -52,6 +65,11 @@ const FR = {
   settings_sign_out_confirm_title: 'Déconnexion',
   settings_sign_out_confirm_msg: 'Es-tu sûr de vouloir te déconnecter ?',
   settings_sign_out_cancel: 'Annuler',
+  settings_delete_account: 'Supprimer mon compte',
+  settings_delete_account_title: 'Supprimer ton compte ?',
+  settings_delete_account_msg: "Ton héros, tes habitudes, tes séries, ton or et tes objets seront définitivement effacés. C'est irréversible. Un abonnement actif doit être résilié séparément dans les réglages de l'App Store.",
+  settings_delete_account_confirm: 'Supprimer définitivement',
+  settings_delete_account_error: 'La suppression a échoué. Vérifie ta connexion et réessaie.',
   settings_version: 'HabitQuest v1.0.0',
   settings_tagline: 'Fait avec ⚔️ et pixel art',
   // Language section
@@ -134,6 +152,19 @@ const FR = {
   onb_first_quest: 'PREMIÈRE QUÊTE →',
   onb_skip_intro: 'Passer l\'intro',
   onb_skip: 'Passer',
+  // First-run tutorial (Today screen)
+  tuto_complete_title: 'VALIDE TES QUÊTES',
+  tuto_complete_body: "Touche une habitude pour la valider : tu gagnes de l'XP et de l'or à chaque fois.",
+  tuto_streak_title: 'GARDE TA SÉRIE',
+  tuto_streak_body: 'Chaque jour réussi allonge ta série 🔥. Un imprévu ? Un gel de série par semaine protège ta progression.',
+  tuto_daily_title: 'QUÊTES DU JOUR',
+  tuto_daily_body: "De nouveaux défis t'attendent chaque jour. Termine-les puis réclame ta récompense.",
+  tuto_hero_title: 'FAIS ÉVOLUER TON HÉROS',
+  tuto_hero_body: 'Monte de niveau pour faire évoluer ton avatar, puis dépense ton or à la boutique.',
+  tuto_next: 'Suivant',
+  tuto_done: "C'est parti !",
+  tuto_skip: 'Passer le tutoriel',
+  settings_replay_tutorial: 'Revoir le tutoriel',
   // Onboarding — avatar step
   onb_avatar_title: 'CRÉE TON HÉROS',
   onb_avatar_body: 'Personnalise ton avatar pixel. Tu pourras toujours le modifier plus tard.',
@@ -689,6 +720,72 @@ const FR = {
   note_modal_save: 'Enregistrer',
   // Habit history notes
   habit_history_notes_title: 'JOURNAL',
+  // Hardcoded strings moved to i18n (2026-09)
+  deck_not_found: 'Deck introuvable.',
+  deck_back: '< RETOUR',
+  deck_caught_up: 'Tout est à jour !',
+  deck_no_cards_due: "Aucune carte à réviser aujourd'hui pour « {title} ».",
+  deck_next_review: 'Prochaine révision :',
+  deck_session_done: 'SESSION TERMINÉE !',
+  deck_reviewed_one: '{n} carte révisée',
+  deck_reviewed_many: '{n} cartes révisées',
+  deck_award_xp: "DONNER L'XP À UNE HABITUDE ?",
+  deck_finish_xp: "TERMINER ET GAGNER L'XP",
+  deck_finish: 'TERMINER',
+  deck_quit_title: 'Quitter ?',
+  deck_quit_msg: 'Ta progression sera enregistrée.',
+  deck_cancel: 'Annuler',
+  deck_quit: 'Quitter',
+  deck_question: 'QUESTION',
+  deck_answer: 'RÉPONSE',
+  deck_tap_reveal: 'Touche pour voir la réponse',
+  deck_how_did_it_go: "COMMENT ÇA S'EST PASSÉ ?",
+  deck_q_blackout: 'TROU NOIR',
+  deck_q_blackout_sub: 'Aucune idée',
+  deck_q_hard: 'DIFFICILE',
+  deck_q_hard_sub: 'Laborieux',
+  deck_q_good: 'BIEN',
+  deck_q_good_sub: 'Avec effort',
+  deck_q_easy: 'FACILE',
+  deck_q_easy_sub: 'Instantané',
+  milestone_title_7: '🔥 GUERRIER DE LA SEMAINE',
+  milestone_title_14: '⚡ COMBATTANT DE LA QUINZAINE',
+  milestone_title_30: '💎 MAÎTRE DU MOIS',
+  milestone_title_60: '🏆 LÉGENDE DES SÉRIES',
+  milestone_title_100: '👑 HÉROS CENTENAIRE',
+  milestone_title_n: '🔥 SÉRIE DE {n} JOURS !',
+  milestone_days: '{n} JOURS',
+  milestone_sub: 'Ta série est légendaire. Garde-la en vie !',
+  milestone_claim: 'RÉCLAMER LA GLOIRE ▶',
+  milestone_1w: '1 SEMAINE',
+  milestone_2w: '2 SEMAINES',
+  milestone_1m: '1 MOIS',
+  milestone_2m: '2 MOIS',
+  milestone_100d: '100 JOURS',
+  milestone_1y: '1 AN',
+  milestone_streak: 'SÉRIE DE {label} !',
+  milestone_consistency: 'Une régularité incroyable !',
+  level_up_title: 'NIVEAU SUPÉRIEUR !',
+  habit_list_empty_title: 'Aucune quête pour le moment',
+  habit_list_empty_sub: 'Touche + pour créer ta première habitude',
+  weekly_chart_title: 'CETTE SEMAINE',
+  checklist_complete: 'VALIDER ✓',
+  emoji_picker_clear: 'EFFACER',
+  break_title: '🌙 PRENDRE UNE PAUSE',
+  break_intro: 'Choisis les habitudes à mettre en pause. Tu pourras les reprendre quand tu seras prêt.',
+  break_empty: 'Aucune habitude active à mettre en pause.',
+  break_this_week: 'Cette semaine :',
+  break_cancel: 'Annuler',
+  break_pausing: 'Mise en pause…',
+  break_select_one: 'Sélectionne au moins 1',
+  break_confirm: 'Mettre en pause ({n})',
+  premium_go: 'Passer Premium',
+  ad_remove_ads: '✕ SUPPRIMER LES PUBS',
+  settings_premium_active: '👑 PREMIUM ACTIF',
+  settings_premium_active_sub: 'Toutes les fonctionnalités sont débloquées',
+  settings_go_premium: '👑 Passer Premium — Supprimer les pubs',
+  today_freeze_error_title: 'Erreur',
+  today_freeze_error_msg: "Impossible d'enregistrer ton gel de série. Réessaie.",
 } as const;
 
 const EN = {
@@ -725,6 +822,11 @@ const EN = {
   settings_sign_out_confirm_title: 'Sign out',
   settings_sign_out_confirm_msg: 'Are you sure you want to sign out?',
   settings_sign_out_cancel: 'Cancel',
+  settings_delete_account: 'Delete my account',
+  settings_delete_account_title: 'Delete your account?',
+  settings_delete_account_msg: 'Your hero, habits, streaks, gold and items will be permanently erased. This cannot be undone. An active subscription must be cancelled separately in your App Store settings.',
+  settings_delete_account_confirm: 'Delete permanently',
+  settings_delete_account_error: 'Deletion failed. Check your connection and try again.',
   settings_version: 'HabitQuest v1.0.0',
   settings_tagline: 'Built with ⚔️ and pixel art',
   // Language section
@@ -807,6 +909,19 @@ const EN = {
   onb_first_quest: 'FIRST QUEST →',
   onb_skip_intro: 'Skip intro',
   onb_skip: 'Skip',
+  // First-run tutorial (Today screen)
+  tuto_complete_title: 'COMPLETE YOUR QUESTS',
+  tuto_complete_body: 'Tap a habit to complete it: you earn XP and gold every time.',
+  tuto_streak_title: 'KEEP YOUR STREAK',
+  tuto_streak_body: 'Every successful day grows your streak 🔥. Something came up? One Streak Freeze per week protects your progress.',
+  tuto_daily_title: 'DAILY QUESTS',
+  tuto_daily_body: 'New challenges await every day. Finish them, then claim your reward.',
+  tuto_hero_title: 'EVOLVE YOUR HERO',
+  tuto_hero_body: 'Level up to evolve your avatar, then spend your gold in the shop.',
+  tuto_next: 'Next',
+  tuto_done: "Let's go!",
+  tuto_skip: 'Skip tutorial',
+  settings_replay_tutorial: 'Replay tutorial',
   // Onboarding — avatar step
   onb_avatar_title: 'MEET YOUR HERO',
   onb_avatar_body: 'Customize your pixel avatar. You can always change this later.',
@@ -1362,6 +1477,72 @@ const EN = {
   note_modal_save: 'Save',
   // Habit history notes
   habit_history_notes_title: 'JOURNAL',
+  // Hardcoded strings moved to i18n (2026-09)
+  deck_not_found: 'Deck not found.',
+  deck_back: '< BACK',
+  deck_caught_up: 'All caught up!',
+  deck_no_cards_due: 'No cards due today for “{title}”.',
+  deck_next_review: 'Next review:',
+  deck_session_done: 'SESSION DONE!',
+  deck_reviewed_one: '{n} card reviewed',
+  deck_reviewed_many: '{n} cards reviewed',
+  deck_award_xp: 'AWARD XP TO A HABIT?',
+  deck_finish_xp: 'FINISH & EARN XP',
+  deck_finish: 'FINISH',
+  deck_quit_title: 'Quit?',
+  deck_quit_msg: 'Progress will be saved.',
+  deck_cancel: 'Cancel',
+  deck_quit: 'Quit',
+  deck_question: 'QUESTION',
+  deck_answer: 'ANSWER',
+  deck_tap_reveal: 'Tap to reveal answer',
+  deck_how_did_it_go: 'HOW DID IT GO?',
+  deck_q_blackout: 'BLACKOUT',
+  deck_q_blackout_sub: 'No idea',
+  deck_q_hard: 'HARD',
+  deck_q_hard_sub: 'Struggled',
+  deck_q_good: 'GOOD',
+  deck_q_good_sub: 'With effort',
+  deck_q_easy: 'EASY',
+  deck_q_easy_sub: 'Instant',
+  milestone_title_7: '🔥 WEEK WARRIOR',
+  milestone_title_14: '⚡ FORTNIGHT FIGHTER',
+  milestone_title_30: '💎 MONTHLY MASTER',
+  milestone_title_60: '🏆 STREAK LEGEND',
+  milestone_title_100: '👑 CENTURY HERO',
+  milestone_title_n: '🔥 {n}-DAY STREAK!',
+  milestone_days: '{n} DAYS',
+  milestone_sub: 'Your streak is legendary. Keep it alive!',
+  milestone_claim: 'CLAIM GLORY ▶',
+  milestone_1w: '1 WEEK',
+  milestone_2w: '2 WEEKS',
+  milestone_1m: '1 MONTH',
+  milestone_2m: '2 MONTHS',
+  milestone_100d: '100 DAYS',
+  milestone_1y: '1 YEAR',
+  milestone_streak: '{label} STREAK!',
+  milestone_consistency: 'Incredible consistency!',
+  level_up_title: 'LEVEL UP!',
+  habit_list_empty_title: 'No quests yet',
+  habit_list_empty_sub: 'Tap + to create your first habit',
+  weekly_chart_title: 'THIS WEEK',
+  checklist_complete: 'COMPLETE ✓',
+  emoji_picker_clear: 'CLEAR',
+  break_title: '🌙 TAKE A BREAK',
+  break_intro: "Choose the habits to pause. You can resume them whenever you're ready.",
+  break_empty: 'No active habits to pause.',
+  break_this_week: 'This week:',
+  break_cancel: 'Cancel',
+  break_pausing: 'Pausing…',
+  break_select_one: 'Select at least 1',
+  break_confirm: 'Pause {n}',
+  premium_go: 'Go Premium',
+  ad_remove_ads: '✕ REMOVE ADS',
+  settings_premium_active: '👑 PREMIUM ACTIVE',
+  settings_premium_active_sub: 'All features are unlocked',
+  settings_go_premium: '👑 Go Premium — Remove ads',
+  today_freeze_error_title: 'Error',
+  today_freeze_error_msg: 'Could not save your freeze token. Please try again.',
 } as const;
 
 type Strings = Record<keyof typeof FR, string>;

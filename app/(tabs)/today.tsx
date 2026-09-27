@@ -27,6 +27,7 @@ import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../sr
 import { brokenStreakStore$, dismissBrokenStreak, clearBrokenStreakForHabit } from '../../src/features/habits/stores/broken-streak-store';
 import { pinnedHabitsStore$, togglePinHabit, isHabitPinned } from '../../src/features/habits/stores/pinned-habits-store';
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
+import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import {
   getFreezesRemaining,
   isFreezeActiveToday,
@@ -519,7 +520,7 @@ export default function TodayScreen() {
         const { error } = await supabase
           .rpc('add_freeze_token' as never, { p_user_id: userId } as never);
         if (error) {
-          Alert.alert('Error', 'Could not save your freeze token. Please try again.');
+          Alert.alert(T.today_freeze_error_title, T.today_freeze_error_msg);
         } else {
           setFreezesLeft((prev) => prev + 1);
           refreshProfile();
@@ -604,8 +605,8 @@ export default function TodayScreen() {
         { text: T.today_freeze_alert_cancel, style: 'cancel' },
         {
           text: T.today_freeze_alert_confirm,
-          onPress: () => {
-            const ok = activateFreeze();
+          onPress: async () => {
+            const ok = await activateFreeze();
             if (ok) {
               setFreezeActive(true);
               setFreezesLeft(getFreezesRemaining());
@@ -778,6 +779,7 @@ export default function TodayScreen() {
         onDismiss={() => setMilestoneSeen(null)}
       />
       <AllDoneCelebration visible={showAllDone} />
+      <TodayTutorial />
 
       {/* Header */}
       <View style={styles.header}>

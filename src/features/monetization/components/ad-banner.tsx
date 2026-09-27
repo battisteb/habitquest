@@ -2,9 +2,12 @@ import { useMemo } from 'react';
 import { View, StyleSheet, Pressable, Text, Platform } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../stores/subscription-store';
+import { shouldShowAds } from '../utils/ad-service';
+import { canPersonalizeAds } from '../utils/tracking-consent';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 // AdMob is native-only — dynamic import to avoid web crashes
 const isNative = Platform.OS !== 'web';
@@ -31,6 +34,7 @@ interface AdBannerProps {
  * Includes a subtle "GO PREMIUM" dismiss hint.
  */
 export function AdBanner({ position = 'bottom' }: AdBannerProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -58,17 +62,18 @@ export function AdBanner({ position = 'bottom' }: AdBannerProps) {
 
   if (isPremium) return null;
   if (!isNative || !BannerAd) return null; // No ads on web
+  if (!shouldShowAds()) return null; // e.g. iOS ad units not configured yet
 
   return (
     <View style={[styles.container, position === 'bottom' && styles.bottomContainer]}>
       <BannerAd
         unitId={ADMOB_BANNER_ID}
         size={BannerAdSize.BANNER}
-        requestOptions={{ requestNonPersonalizedAdsOnly: false }}
+        requestOptions={{ requestNonPersonalizedAdsOnly: !canPersonalizeAds() }}
         onAdFailedToLoad={() => {/* Silent fail */}}
       />
       <Pressable style={styles.premiumHint} onPress={() => router.push('/paywall')}>
-        <Text style={styles.premiumHintText}>✕ SUPPRIMER LES PUBS</Text>
+        <Text style={styles.premiumHintText}>{T.ad_remove_ads}</Text>
       </Pressable>
     </View>
   );

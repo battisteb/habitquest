@@ -3,11 +3,9 @@ import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { persistPlugin } from '../../../lib/storage/persist';
 import { authStore$ } from '../../auth/stores/auth-store';
-import { calculateNewStreak } from '../utils/streak-calculator';
-import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
 import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
-import { updateQuestProgress } from '../../daily-quests/stores/daily-quests-store';
-import { updateChallengeProgress } from '../../social/stores/challenges-store';
+import { fetchDailyQuests } from '../../daily-quests/stores/daily-quests-store';
+import { fetchChallenges } from '../../social/stores/challenges-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { triggerStreakMilestone, isMilestone } from '../../gamification/stores/streak-milestone-store';
@@ -15,10 +13,10 @@ import { recordCompletionHour } from '../../notifications/utils/adaptive-timing'
 import { hapticSuccess, hapticHeavy } from '../../../lib/haptics';
 import { playSfx } from '../../../lib/audio/sound-service';
 import { refreshProfile } from '../../gamification/stores/profile-store';
-import { getLevelForXp } from '../../../lib/constants/game-config';
 import type { HabitContent } from '../types/habit-content';
 import type { Database, Json } from '../../../lib/supabase/types';
 import { reportBrokenStreaks } from './broken-streak-store';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type Habit = Omit<Database['public']['Tables']['habits']['Row'], 'content'> & { content?: HabitContent | null };
 type Streak = Database['public']['Tables']['streaks']['Row'];
@@ -32,13 +30,17 @@ interface HabitsState {
   isLoading: boolean;
 }
 
-export const habitsStore$ = observable<HabitsState>({
+const initialState = (): HabitsState => ({
   habits: [],
   streaks: {},
   todayCompletions: {},
   weekCompletions: {},
   isLoading: false,
 });
+
+export const habitsStore$ = observable<HabitsState>(initialState());
+
+resetOnSignOut(habitsStore$, initialState);
 
 syncObservable(habitsStore$, {
   persist: {
@@ -136,8 +138,13 @@ export async function fetchHabits() {
       habitsStore$.weekCompletions.set(weekCompletionMap);
 
       // Check for broken streaks and apply punishment (non-blocking)
-      checkAndApplyPunishments(userId, streakMap).then(({ brokenStreaks }) => {
+      checkAndApplyPunishments().then(({ brokenStreaks }) => {
         if (brokenStreaks.length > 0) {
+          for (const b of brokenStreaks) {
+            if (habitsStore$.streaks[b.habitId].get()) {
+              habitsStore$.streaks[b.habitId].current_count.set(0);
+            }
+          }
           const habitsArr = habitsStore$.habits.get();
           reportBrokenStreaks(
             brokenStreaks.map((b) => ({
@@ -158,16 +165,12 @@ export async function createHabit(name: string, category: string, content?: Habi
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
-  const { data: habit, error } = await supabase
+  // The streak row is created by the on_habit_created_streak trigger.
+  const { error } = await supabase
     .from('habits')
-    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily', emoji: emoji ?? null })
-    .select()
-    .single();
+    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily', emoji: emoji ?? null });
 
   if (error) throw error;
-
-  // Create initial streak record
-  await supabase.from('streaks').insert({ habit_id: habit.id });
 
   await fetchHabits();
 }
@@ -191,8 +194,7 @@ export async function unarchiveHabit(id: string) {
 }
 
 export async function deleteHabitPermanently(id: string) {
-  await supabase.from('completions').delete().eq('habit_id', id);
-  await supabase.from('streaks').delete().eq('habit_id', id);
+  // Completions and streak are removed by ON DELETE CASCADE.
   const { error } = await supabase.from('habits').delete().eq('id', id);
   if (error) throw error;
   await fetchHabits();
@@ -216,6 +218,18 @@ export async function resumeHabit(id: string) {
   await fetchHabits();
 }
 
+interface CompleteHabitResult {
+  success: boolean;
+  reason?: 'already_completed' | 'inactive';
+  xp_earned: number;
+  gold_earned: number;
+  old_level: number;
+  new_level: number;
+  current_streak: number;
+  longest_streak: number;
+  previous_streak: number;
+}
+
 export async function completeHabit(habitId: string, note?: string) {
   const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
   const frequency = habit?.frequency ?? 'daily';
@@ -229,84 +243,27 @@ export async function completeHabit(habitId: string, note?: string) {
     if (weekCount >= getWeeklyTarget(frequency)) return;
   }
 
-  const streak = habitsStore$.streaks.get()[habitId];
-  const currentCount = streak?.current_count ?? 0;
-  const longestCount = streak?.longest_count ?? 0;
-  const lastCompletedAt = streak?.last_completed_at ?? null;
-
-  // Calculate new streak
-  const newStreak = calculateNewStreak(currentCount, longestCount, lastCompletedAt);
-  const xpEarned = calculateXpEarned(newStreak.currentCount);
-  const goldEarned = calculateGoldEarned(xpEarned);
-
-  const now = new Date().toISOString();
-
-  // Insert completion (retry without note if column doesn't exist yet)
-  const baseInsert = { habit_id: habitId, xp_earned: xpEarned };
-  if (note) {
-    const { error: insertErr } = await supabase.from('completions').insert({ ...baseInsert, note });
-    if (insertErr) {
-      await supabase.from('completions').insert(baseInsert);
+  // XP, gold, streak, challenges and daily quests are all computed server-side.
+  const { data, error } = await supabase.rpc('complete_habit', {
+    p_habit_id: habitId,
+    p_note: note ?? undefined,
+  });
+  if (error) throw error;
+  const result = data as unknown as CompleteHabitResult;
+  if (!result.success) {
+    if (result.reason === 'already_completed') {
+      habitsStore$.todayCompletions[habitId].set(true);
     }
-  } else {
-    await supabase.from('completions').insert(baseInsert);
+    return;
   }
 
-  // Update streak
-  await supabase
-    .from('streaks')
-    .update({
-      current_count: newStreak.currentCount,
-      longest_count: newStreak.longestCount,
-      last_completed_at: now,
-    })
-    .eq('habit_id', habitId);
-
-  // Update profile XP and detect level-up
-  const userId = authStore$.user.get()?.id;
-  if (userId) {
-    // Get current XP before increment for level-up detection
-    const { data: profileBefore } = await supabase
-      .from('profiles')
-      .select('xp')
-      .eq('id', userId)
-      .single();
-
-    await supabase.rpc('increment_xp', {
-      user_id: userId,
-      xp_amount: xpEarned,
-    });
-
-    if (goldEarned > 0) {
-      await supabase.rpc('add_gold', {
-        p_user_id: userId,
-        p_amount: goldEarned,
-      });
-    }
-
-    // Check for level-up
-    if (profileBefore) {
-      const oldLevel = getLevelForXp(profileBefore.xp);
-      const newLevel = getLevelForXp(profileBefore.xp + xpEarned);
-      if (newLevel > oldLevel) {
-        triggerLevelUp(newLevel);
-      }
-    }
-
-    // Maintain denormalized best_streak on profile for cross-user leaderboard
-    if (newStreak.longestCount > longestCount) {
-      void supabase
-        .from('profiles')
-        .update({ best_streak: newStreak.longestCount })
-        .eq('id', userId)
-        .lt('best_streak', newStreak.longestCount);
-    }
+  if (result.new_level > result.old_level) {
+    triggerLevelUp(result.new_level);
   }
 
   // Check for streak milestone
-  if (isMilestone(newStreak.currentCount) && newStreak.currentCount > currentCount) {
-    const habitName = habit?.name ?? '';
-    triggerStreakMilestone(newStreak.currentCount, habitName);
+  if (isMilestone(result.current_streak) && result.current_streak > result.previous_streak) {
+    triggerStreakMilestone(result.current_streak, habit?.name ?? '');
     hapticHeavy();
     void playSfx('streak_milestone');
   } else {
@@ -314,42 +271,28 @@ export async function completeHabit(habitId: string, note?: string) {
     void playSfx('complete', 0.6);
   }
 
-  if (goldEarned > 0) {
+  if (result.gold_earned > 0) {
     void playSfx('coin', 0.5);
   }
 
-  // Optimistic update
+  // Mirror the server result locally
   habitsStore$.todayCompletions[habitId].set(true);
   const prevWeekCount = habitsStore$.weekCompletions.get()[habitId] ?? 0;
   habitsStore$.weekCompletions[habitId].set(prevWeekCount + 1);
   recordCompletionHour();
   refreshProfile();
+  const streak = habitsStore$.streaks.get()[habitId];
   if (streak) {
     habitsStore$.streaks[habitId].set({
       ...streak,
-      current_count: newStreak.currentCount,
-      longest_count: newStreak.longestCount,
-      last_completed_at: now,
+      current_count: result.current_streak,
+      longest_count: result.longest_streak,
+      last_completed_at: new Date().toISOString(),
     });
   }
 
-  // Check achievements in background (non-blocking)
+  // Background refreshes (non-blocking)
   checkAndUnlockAchievements().catch(() => {});
-
-  // Update challenge progress (non-blocking)
-  if (userId) {
-    updateChallengeProgress(userId, xpEarned, 1).catch(() => {});
-  }
-
-  // Update daily quest progress (non-blocking)
-  const snapshot = {
-    todayCompletions: habitsStore$.todayCompletions.get(),
-    habits: habitsStore$.habits.get(),
-  };
-  updateQuestProgress('complete_habits', undefined, undefined, snapshot).catch(() => {});
-  if (habit?.category) {
-    updateQuestProgress('complete_category', habit.category, undefined, snapshot).catch(() => {});
-  }
-  updateQuestProgress('earn_xp', undefined, xpEarned, snapshot).catch(() => {});
-  updateQuestProgress('maintain_streak', undefined, undefined, snapshot).catch(() => {});
+  fetchDailyQuests().catch(() => {});
+  fetchChallenges().catch(() => {});
 }

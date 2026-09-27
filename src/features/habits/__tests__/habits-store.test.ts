@@ -84,11 +84,49 @@ describe('habitsStore$', () => {
       },
     });
 
+    const { supabase } = require('../../../lib/supabase/client');
+    supabase.rpc.mockResolvedValueOnce({
+      data: {
+        success: true,
+        xp_earned: 14,
+        gold_earned: 1,
+        old_level: 0,
+        new_level: 0,
+        current_streak: 4,
+        longest_streak: 5,
+        previous_streak: 3,
+      },
+      error: null,
+    });
+
+    const { completeHabit } = require('../stores/habits-store');
+    await completeHabit('h1', 'felt good');
+
+    expect(supabase.rpc).toHaveBeenCalledWith('complete_habit', { p_habit_id: 'h1', p_note: 'felt good' });
+    expect(habitsStore$.todayCompletions.get()['h1']).toBe(true);
+    expect(habitsStore$.streaks.get()['h1'].current_count).toBe(4);
+  });
+
+  it('completeHabit trusts the server when it refuses a duplicate', async () => {
+    habitsStore$.habits.set([
+      {
+        id: 'h1', user_id: 'user-123', name: 'Run', category: 'sport', frequency: 'daily',
+        is_archived: false, is_paused: false, paused_at: null, content: null, emoji: null,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+    habitsStore$.streaks.set({
+      h1: { id: 's1', habit_id: 'h1', current_count: 3, longest_count: 5, last_completed_at: null },
+    });
+
+    const { supabase } = require('../../../lib/supabase/client');
+    supabase.rpc.mockResolvedValueOnce({ data: { success: false, reason: 'already_completed' }, error: null });
+
     const { completeHabit } = require('../stores/habits-store');
     await completeHabit('h1');
 
     expect(habitsStore$.todayCompletions.get()['h1']).toBe(true);
-    expect(habitsStore$.streaks.get()['h1'].current_count).toBe(4);
+    expect(habitsStore$.streaks.get()['h1'].current_count).toBe(3);
   });
 
   it('completeHabit does nothing if already completed today', async () => {
@@ -97,11 +135,13 @@ describe('habitsStore$', () => {
     const { supabase } = require('../../../lib/supabase/client');
     const fromSpy = supabase.from;
     fromSpy.mockClear();
+    supabase.rpc.mockClear();
 
     const { completeHabit } = require('../stores/habits-store');
     await completeHabit('h1');
 
     // Should not have called supabase
     expect(fromSpy).not.toHaveBeenCalled();
+    expect(supabase.rpc).not.toHaveBeenCalledWith('complete_habit', expect.anything());
   });
 });

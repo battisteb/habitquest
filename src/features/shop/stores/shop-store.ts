@@ -5,6 +5,7 @@ import { authStore$ } from '../../auth/stores/auth-store';
 import { refreshProfile } from '../../gamification/stores/profile-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type ShopItem = Database['public']['Tables']['shop_items']['Row'];
 
@@ -16,13 +17,17 @@ interface ShopState {
   activeCategory: string;
 }
 
-export const shopStore$ = observable<ShopState>({
+const initialState = (): ShopState => ({
   items: [],
   ownedItemIds: [] as string[],
   equippedSlots: {},
   isLoading: false,
   activeCategory: 'avatar_hat',
 });
+
+export const shopStore$ = observable<ShopState>(initialState());
+
+resetOnSignOut(shopStore$, initialState);
 
 syncObservable(shopStore$, {
   persist: {

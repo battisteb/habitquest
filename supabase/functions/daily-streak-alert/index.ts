@@ -165,23 +165,23 @@ serve(async (req: Request) => {
       );
     }
 
-    // 5. Fetch profiles for at-risk users to get push tokens
-    console.log('daily-streak-alert: fetching profiles for at-risk users...');
-    const { data: profilesData, error: profilesError } = await supabase
-      .from('profiles')
-      .select('id, push_token')
-      .in('id', Array.from(atRiskUserIds));
+    // 5. Fetch push tokens for at-risk users
+    console.log('daily-streak-alert: fetching push tokens for at-risk users...');
+    const { data: tokensData, error: tokensError } = await supabase
+      .from('push_tokens')
+      .select('user_id, token')
+      .in('user_id', Array.from(atRiskUserIds));
 
-    if (profilesError) {
-      throw new Error(`Failed to fetch profiles: ${profilesError.message}`);
+    if (tokensError) {
+      throw new Error(`Failed to fetch push tokens: ${tokensError.message}`);
     }
 
-    const profiles = profilesData ?? [];
+    const tokenRows = tokensData ?? [];
 
     // 6. Build push messages for users with valid Expo push tokens
     const messages: ExpoPushMessage[] = [];
-    for (const profile of profiles) {
-      const pushToken = (profile as unknown as Record<string, unknown>).push_token;
+    for (const row of tokenRows) {
+      const pushToken = row.token;
       if (typeof pushToken === 'string' && pushToken.startsWith('ExponentPushToken[')) {
         messages.push({
           to: pushToken,

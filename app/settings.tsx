@@ -19,11 +19,12 @@ import {
   applyNotificationPrefs,
   NotificationPrefs,
 } from '../src/features/notifications/utils/notification-service';
-import { signOut } from '../src/features/auth/stores/auth-store';
+import { signOut, deleteAccount } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 import { useT, setLang, lang$ } from '../src/lib/i18n';
+import { resetTutorial } from '../src/features/onboarding/tutorial-state';
 import {
   isSfxEnabled,
   isMusicEnabled,
@@ -64,6 +65,28 @@ export default function SettingsScreen() {
           onPress: async () => {
             await signOut();
             router.replace('/(auth)/sign-in');
+          },
+        },
+      ],
+    );
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      T.settings_delete_account_title,
+      T.settings_delete_account_msg,
+      [
+        { text: T.settings_sign_out_cancel, style: 'cancel' },
+        {
+          text: T.settings_delete_account_confirm,
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteAccount();
+              router.replace('/(auth)/sign-in');
+            } catch {
+              Alert.alert(T.settings_delete_account_error);
+            }
           },
         },
       ],
@@ -226,12 +249,12 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>{T.settings_subscription}</Text>
         {isPremium ? (
           <View style={styles.premiumBadgeRow}>
-            <Text style={styles.premiumActive}>👑 PREMIUM ACTIF</Text>
-            <Text style={styles.premiumSub}>Toutes les fonctionnalités sont débloquées</Text>
+            <Text style={styles.premiumActive}>{T.settings_premium_active}</Text>
+            <Text style={styles.premiumSub}>{T.settings_premium_active_sub}</Text>
           </View>
         ) : (
           <PixelButton
-            title="👑 Passer Premium — Supprimer les pubs"
+            title={T.settings_go_premium}
             onPress={() => router.push('/paywall')}
             variant="secondary"
           />
@@ -257,10 +280,23 @@ export default function SettingsScreen() {
           onPress={() => router.push('/habit/archive')}
           variant="secondary"
         />
+        <PixelButton
+          title={T.settings_replay_tutorial}
+          onPress={() => {
+            resetTutorial();
+            router.replace('/(tabs)/today');
+          }}
+          variant="secondary"
+        />
 
         <PixelButton
           title={T.settings_sign_out}
           onPress={handleSignOut}
+          variant="ghost"
+        />
+        <PixelButton
+          title={T.settings_delete_account}
+          onPress={handleDeleteAccount}
           variant="ghost"
         />
       </View>

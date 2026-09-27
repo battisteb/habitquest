@@ -14,17 +14,21 @@ import { decksStore$, recordReview, getDueCards } from '../../../src/features/tr
 import { completeHabit, habitsStore$ } from '../../../src/features/habits/stores/habits-store';
 import { colors, spacing, fontSizes, borderRadius } from '../../../src/ui/theme/tokens';
 import { useTheme } from '../../../src/ui/theme/theme-context';
+import { useT } from '../../../src/lib/i18n';
 
 type Quality = 0 | 1 | 2 | 3;
 
-const QUALITY_BUTTONS: { label: string; sublabel: string; quality: Quality; color: string }[] = [
-  { label: 'BLACKOUT', sublabel: 'No idea',    quality: 0, color: '#c0392b' },
-  { label: 'HARD',     sublabel: 'Struggled',  quality: 1, color: '#e67e22' },
-  { label: 'GOOD',     sublabel: 'With effort',quality: 2, color: '#27ae60' },
-  { label: 'EASY',     sublabel: 'Instant',    quality: 3, color: '#2980b9' },
+type QualityKey = 'blackout' | 'hard' | 'good' | 'easy';
+
+const QUALITY_BUTTONS: { key: QualityKey; quality: Quality; color: string }[] = [
+  { key: 'blackout', quality: 0, color: '#c0392b' },
+  { key: 'hard',     quality: 1, color: '#e67e22' },
+  { key: 'good',     quality: 2, color: '#27ae60' },
+  { key: 'easy',     quality: 3, color: '#2980b9' },
 ];
 
 export default function DeckReviewScreen() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
@@ -229,7 +233,7 @@ export default function DeckReviewScreen() {
   if (!deck) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Text style={styles.errorText}>Deck not found.</Text>
+        <Text style={styles.errorText}>{T.deck_not_found}</Text>
       </View>
     );
   }
@@ -238,16 +242,16 @@ export default function DeckReviewScreen() {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <Pressable onPress={() => router.back()}>
-          <Text style={styles.backText}>{'< BACK'}</Text>
+          <Text style={styles.backText}>{T.deck_back}</Text>
         </Pressable>
         <View style={styles.upToDate}>
           <Text style={styles.upToDateEmoji}>✅</Text>
-          <Text style={styles.upToDateTitle}>All caught up!</Text>
+          <Text style={styles.upToDateTitle}>{T.deck_caught_up}</Text>
           <Text style={styles.upToDateSub}>
-            No cards due today for "{deck.data.title}".
+            {T.deck_no_cards_due.replace('{title}', deck.data.title)}
           </Text>
           <Text style={styles.upToDateNext}>
-            Next review: {deck.srsStates.length > 0
+            {T.deck_next_review} {deck.srsStates.length > 0
               ? deck.srsStates
                   .map((s) => s.dueDate)
                   .sort()[0]
@@ -266,15 +270,15 @@ export default function DeckReviewScreen() {
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <ScrollView contentContainerStyle={styles.finishContainer}>
           <Text style={styles.finishEmoji}>🎓</Text>
-          <Text style={styles.finishTitle}>SESSION DONE!</Text>
+          <Text style={styles.finishTitle}>{T.deck_session_done}</Text>
           <Text style={styles.finishDeck}>{deck.data.title}</Text>
           <Text style={styles.finishStats}>
-            {reviewed} card{reviewed !== 1 ? 's' : ''} reviewed
+            {(reviewed === 1 ? T.deck_reviewed_one : T.deck_reviewed_many).replace('{n}', String(reviewed))}
           </Text>
 
           {learnHabits.length > 0 && (
             <View style={styles.habitLink}>
-              <Text style={styles.habitLinkLabel}>AWARD XP TO A HABIT?</Text>
+              <Text style={styles.habitLinkLabel}>{T.deck_award_xp}</Text>
               <View style={styles.habitLinkRow}>
                 {learnHabits.slice(0, 3).map((h) => (
                   <Pressable
@@ -294,7 +298,7 @@ export default function DeckReviewScreen() {
 
           <Pressable style={styles.finishButton} onPress={handleFinish}>
             <Text style={styles.finishButtonText}>
-              {linkedHabitId ? 'FINISH & EARN XP' : 'FINISH'}
+              {linkedHabitId ? T.deck_finish_xp : T.deck_finish}
             </Text>
           </Pressable>
         </ScrollView>
@@ -310,9 +314,9 @@ export default function DeckReviewScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Header */}
       <View style={styles.header}>
-        <Pressable onPress={() => Alert.alert('Quit?', 'Progress will be saved.', [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Quit', onPress: () => router.back() },
+        <Pressable onPress={() => Alert.alert(T.deck_quit_title, T.deck_quit_msg, [
+          { text: T.deck_cancel, style: 'cancel' },
+          { text: T.deck_quit, onPress: () => router.back() },
         ])}>
           <Text style={styles.backText}>✕</Text>
         </Pressable>
@@ -336,16 +340,16 @@ export default function DeckReviewScreen() {
         >
           {!flipped ? (
             <View style={styles.cardContent}>
-              <Text style={styles.cardSide}>QUESTION</Text>
+              <Text style={styles.cardSide}>{T.deck_question}</Text>
               <Text style={styles.cardText}>{currentCard.front}</Text>
               {currentCard.hint && (
                 <Text style={styles.cardHint}>💡 {currentCard.hint}</Text>
               )}
-              <Text style={styles.tapHint}>Tap to reveal answer</Text>
+              <Text style={styles.tapHint}>{T.deck_tap_reveal}</Text>
             </View>
           ) : (
             <View style={styles.cardContent}>
-              <Text style={styles.cardSide}>ANSWER</Text>
+              <Text style={styles.cardSide}>{T.deck_answer}</Text>
               <Text style={styles.cardFrontSmall}>{currentCard.front}</Text>
               <Text style={styles.cardAnswer}>{currentCard.back}</Text>
             </View>
@@ -355,7 +359,7 @@ export default function DeckReviewScreen() {
         {/* Rating buttons (only after flip) */}
         {flipped && (
           <View style={styles.ratingSection}>
-            <Text style={styles.ratingLabel}>HOW DID IT GO?</Text>
+            <Text style={styles.ratingLabel}>{T.deck_how_did_it_go}</Text>
             <View style={styles.ratingGrid}>
               {QUALITY_BUTTONS.map((btn) => (
                 <Pressable
@@ -364,9 +368,9 @@ export default function DeckReviewScreen() {
                   onPress={() => handleRate(btn.quality)}
                 >
                   <Text style={[styles.ratingBtnLabel, { color: btn.color }]}>
-                    {btn.label}
+                    {T[`deck_q_${btn.key}`]}
                   </Text>
-                  <Text style={styles.ratingBtnSub}>{btn.sublabel}</Text>
+                  <Text style={styles.ratingBtnSub}>{T[`deck_q_${btn.key}_sub`]}</Text>
                 </Pressable>
               ))}
             </View>
