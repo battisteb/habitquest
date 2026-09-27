@@ -41,7 +41,7 @@
 - Animations (Reanimated 3), pixel art rendering (React Native Skia)
 
 ## 🚧 Phase 6 — Release preparation (in progress)
-- [ ] LICENSE
+- [x] LICENSE
 - [ ] Public README screenshots and demo GIF
 - [ ] Onboarding and tutorial
 - [ ] iOS TestFlight build
