@@ -664,23 +664,43 @@ create trigger guard_challenge_writes
   before insert or update on public.challenges
   for each row execute function public.guard_challenge_writes();
 
--- Duels: at most 2 started per local week, results can only be set once and
--- the winner must be one of the two players.
+-- Duels: same limits as feature-gates.ts (free: 3 per week and 48 h between
+-- duels; premium: 24 h between duels). Results can only be set once and the
+-- winner must be one of the two players.
 create or replace function public.guard_duel_writes()
 returns trigger
 language plpgsql
 set search_path = ''
 as $$
+declare
+  v_premium boolean;
+  v_last timestamptz;
 begin
+  -- Only client writes are limited; server code (definer functions) is trusted.
   if current_user not in ('authenticated', 'anon') then
     return new;
   end if;
 
   if tg_op = 'INSERT' then
-    if (select count(*) from public.duels d
+    select subscription_status = 'premium'
+           and (subscription_expires_at is null or subscription_expires_at > now())
+    into v_premium
+    from public.profiles where id = new.challenger_id;
+
+    select max(d.created_at) into v_last
+    from public.duels d
+    where (d.challenger_id = new.challenger_id or d.opponent_id = new.challenger_id)
+      and d.status <> 'cancelled';
+    if v_last is not null
+       and v_last > now() - (case when v_premium then interval '24 hours' else interval '48 hours' end) then
+      raise exception 'Duel cooldown not over' using errcode = '42501';
+    end if;
+
+    if not coalesce(v_premium, false) and (
+        select count(*) from public.duels d
         where (d.challenger_id = new.challenger_id or d.opponent_id = new.challenger_id)
           and d.status <> 'cancelled'
-          and d.created_at >= date_trunc('week', now())) >= 2 then
+          and d.created_at >= date_trunc('week', now())) >= 3 then
       raise exception 'Weekly duel limit reached' using errcode = '42501';
     end if;
     new.winner_id := null;
