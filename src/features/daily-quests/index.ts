@@ -1,7 +1,6 @@
 export {
   dailyQuestsStore$,
   fetchDailyQuests,
-  updateQuestProgress,
   claimQuest,
 } from './stores/daily-quests-store';
 export { useDailyQuests } from './hooks/use-daily-quests';

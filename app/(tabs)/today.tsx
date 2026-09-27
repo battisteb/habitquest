@@ -604,8 +604,8 @@ export default function TodayScreen() {
         { text: T.today_freeze_alert_cancel, style: 'cancel' },
         {
           text: T.today_freeze_alert_confirm,
-          onPress: () => {
-            const ok = activateFreeze();
+          onPress: async () => {
+            const ok = await activateFreeze();
             if (ok) {
               setFreezeActive(true);
               setFreezesLeft(getFreezesRemaining());

@@ -1,4 +1,5 @@
 import { storage } from '../../../lib/storage/mmkv';
+import { supabase } from '../../../lib/supabase/client';
 
 const FREEZE_KEY = 'streak-freeze';
 
@@ -61,15 +62,19 @@ export function isFreezeActiveToday(): boolean {
   return data.lastFreezeDate === today;
 }
 
-export function activateFreeze(): boolean {
+/**
+ * Freezes today on the server (activate_streak_freeze): the weekly free freeze
+ * first, then a token earned with a rewarded ad. The local copy only drives the UI.
+ */
+export async function activateFreeze(): Promise<boolean> {
   const data = getCurrentData();
   const today = new Date().toISOString().slice(0, 10);
 
   // Already frozen today
   if (data.lastFreezeDate === today) return true;
 
-  // No freezes left this week
-  if (data.freezesUsedThisWeek >= MAX_FREEZES_PER_WEEK) return false;
+  const { data: result, error } = await supabase.rpc('activate_streak_freeze');
+  if (error || !(result as { success?: boolean } | null)?.success) return false;
 
   const updated: FreezeData = {
     lastFreezeDate: today,

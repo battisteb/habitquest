@@ -24,6 +24,7 @@ import { ThemeProvider, useTheme } from '../src/ui/theme/theme-context';
 import { OfflineBanner } from '../src/ui/components/offline-banner';
 import { initPurchases } from '../src/features/monetization/stores/subscription-store';
 import { preloadInterstitial } from '../src/features/monetization/utils/ad-service';
+import { syncTimezone } from '../src/features/auth/utils/sync-timezone';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -79,6 +80,7 @@ function ThemedApp() {
   // Register push token + init RevenueCat once user is authenticated
   useEffect(() => {
     if (authUserId) {
+      void syncTimezone();
       registerPushToken(authUserId);
       initPurchases(authUserId).then(() => preloadInterstitial());
     }
