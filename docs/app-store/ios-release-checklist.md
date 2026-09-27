@@ -18,14 +18,14 @@
 - ⏳ Variables `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` configurées comme variables d'environnement EAS
 
 ## Exigences App Review
-- ❌ Suppression de compte depuis l'app (règle 5.1.1(v)) — obligatoire dès qu'on peut créer un compte
-- ❌ Politique de confidentialité publiée à une URL publique (l'URL de `metadata.md` renvoie une 404)
-- ⏳ Fiche « App Privacy » (données collectées : e-mail, identifiant, données d'usage, identifiant publicitaire)
-- ⏳ Compte de démo pour l'équipe de revue (e-mail + mot de passe dans App Store Connect)
-- ⏳ Classification d'âge : vérifier le questionnaire (fonctions sociales / duels)
+- ✅ Suppression de compte depuis l'app (règle 5.1.1(v)) — PR #4 ; ⏳ déployer la migration et la fonction `delete-account` en prod
+- ⏳ Politique de confidentialité : brouillon EN/FR (PR #5) à compléter puis publier ; mettre l'URL dans `metadata.md` et App Store Connect
+- ⏳ Fiche « App Privacy » : réponses prêtes dans `review-and-privacy.md`
+- ⏳ Compte de démo pour l'équipe de revue ; notes de revue prêtes dans `review-and-privacy.md`
+- ⏳ Classification d'âge : réponses proposées dans `review-and-privacy.md` (9+ attendu, la fiche actuelle indique 4+)
 
 ## Métadonnées (`docs/app-store/metadata.md`)
-- ✅ Nom, sous-titre, description, mots-clés, catégories
+- ✅ Nom, sous-titre, description, mots-clés, catégories — anglais (`metadata.md`) et français (`metadata.fr.md`)
 - ✅ URL de support : `https://github.com/battisteb/habitquest`
 - ⏳ Captures d'écran iPhone 6,9" (1320×2868) — au moins 3
 
