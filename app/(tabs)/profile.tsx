@@ -19,6 +19,7 @@ import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-sto
 import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { titleLabel, stageDescription } from '../../src/lib/i18n/labels';
 
 export default function ProfileScreen() {
   const T = useT();
@@ -235,12 +236,12 @@ export default function ProfileScreen() {
               <AvatarDisplay level={level} size="sm" />
               <View style={styles.stageInfo}>
                 <Text style={[styles.stageTitle, { color: avatarStage.aura }]}>
-                  {avatarStage.title}
+                  {titleLabel(T, avatarStage.title)}
                 </Text>
-                <Text style={styles.stageDescription}>{avatarStage.description}</Text>
+                <Text style={styles.stageDescription}>{stageDescription(T, avatarStage.title, avatarStage.description)}</Text>
                 {nextAvatarStage !== null && (
                   <Text style={styles.stageNext}>
-                    {T.profile_next_stage.replace('{title}', nextAvatarStage.title).replace('{level}', String(nextAvatarStage.minLevel))}
+                    {T.profile_next_stage.replace('{title}', titleLabel(T, nextAvatarStage.title)).replace('{level}', String(nextAvatarStage.minLevel))}
                   </Text>
                 )}
               </View>

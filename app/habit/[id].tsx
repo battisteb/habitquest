@@ -22,6 +22,7 @@ import {
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
+import { categoryLabel } from '../../src/lib/i18n/labels';
 
 export default function HabitDetailScreen() {
   const T = useT();
@@ -371,7 +372,7 @@ export default function HabitDetailScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={[styles.category, { color: categoryColor }]}>
-          {habit.category.toUpperCase()}
+          {categoryLabel(T, habit.category).toUpperCase()}
         </Text>
         <Text style={styles.title}>
           {(habit as any).emoji ? `${(habit as any).emoji} ` : ''}{habit.name}

@@ -12,6 +12,7 @@ import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT, lang$ } from '../../src/lib/i18n';
+import { titleLabel } from '../../src/lib/i18n/labels';
 
 interface PublicProfile {
   id: string;
@@ -201,7 +202,7 @@ export default function PublicProfileScreen() {
         <Text style={styles.username}>{profile.username}</Text>
         <Text style={[styles.rank, { color: rank.color }]}>{rank.name}</Text>
         <Text style={[styles.stage, { color: avatarStage.aura }]}>
-          {avatarStage.title}
+          {titleLabel(T, avatarStage.title)}
         </Text>
         <Text style={styles.memberSince}>{T.profile_pub_member_since.replace('{date}', memberSince)}</Text>
       </View>

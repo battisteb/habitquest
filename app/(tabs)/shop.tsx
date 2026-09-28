@@ -33,13 +33,16 @@ import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { usePremium } from '../../src/features/monetization/hooks/use-premium';
 import { useTheme } from '../../src/ui/theme/theme-context';
+import { rarityLabel } from '../../src/lib/i18n/labels';
 
-const CATEGORIES = [
-  { key: 'avatar_hat', label: 'HATS', icon: '🎩' },
-  { key: 'avatar_outfit', label: 'OUTFITS', icon: '👕' },
-  { key: 'avatar_accessory', label: 'ITEMS', icon: '⚔️' },
-  { key: 'avatar_background', label: 'BG', icon: '🌄' },
-  { key: 'theme', label: 'THEMES', icon: '🎨' },
+type ShopTabKey = 'shop_tab_hats' | 'shop_tab_outfits' | 'shop_tab_items' | 'shop_tab_backgrounds' | 'shop_tab_themes';
+
+const CATEGORIES: { key: string; labelKey: ShopTabKey; icon: string }[] = [
+  { key: 'avatar_hat', labelKey: 'shop_tab_hats', icon: '🎩' },
+  { key: 'avatar_outfit', labelKey: 'shop_tab_outfits', icon: '👕' },
+  { key: 'avatar_accessory', labelKey: 'shop_tab_items', icon: '⚔️' },
+  { key: 'avatar_background', labelKey: 'shop_tab_backgrounds', icon: '🌄' },
+  { key: 'theme', labelKey: 'shop_tab_themes', icon: '🎨' },
 ];
 
 const CATEGORY_TO_SLOT: Record<string, string> = {
@@ -498,7 +501,7 @@ export default function ShopScreen() {
                   activeCategory === cat.key && styles.categoryTextActive,
                 ]}
               >
-                {cat.label}
+                {T[cat.labelKey]}
               </Text>
             </Pressable>
           );
@@ -591,7 +594,7 @@ export default function ShopScreen() {
           <View style={styles.modalBox}>
             <Text style={styles.modalTitle}>{T.shop_confirm_title}</Text>
             <Text style={styles.modalItemName}>{pendingPurchase?.name}</Text>
-            <Text style={styles.modalRarity}>{pendingPurchase?.rarity?.toUpperCase()}</Text>
+            <Text style={styles.modalRarity}>{pendingPurchase?.rarity ? rarityLabel(T, pendingPurchase.rarity).toUpperCase() : ''}</Text>
             <Text style={styles.modalPrice}>
               💰 {pendingPurchase?.price_gold}g
             </Text>

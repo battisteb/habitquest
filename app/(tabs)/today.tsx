@@ -59,6 +59,7 @@ const MONTH_NAMES_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû'
 const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 import { lang$ } from '../../src/lib/i18n';
+import { categoryLabel } from '../../src/lib/i18n/labels';
 
 function todayLabel(): string {
   const d = new Date();
@@ -755,7 +756,7 @@ export default function TodayScreen() {
               <Text
                 style={[styles.filterChipText, activeCategory === cat && styles.filterChipTextActive]}
               >
-                {cat === ALL_KEY ? T.today_filter_all : cat.toUpperCase()}
+                {cat === ALL_KEY ? T.today_filter_all : categoryLabel(T, cat).toUpperCase()}
               </Text>
             </Pressable>
           ))}

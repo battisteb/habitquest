@@ -13,6 +13,7 @@ import type { HabitContent } from '../../../src/features/habits/types/habit-cont
 import { colors, spacing, fontSizes, borderRadius } from '../../../src/ui/theme/tokens';
 import { useTheme } from '../../../src/ui/theme/theme-context';
 import { useT } from '../../../src/lib/i18n';
+import { categoryLabel } from '../../../src/lib/i18n/labels';
 
 export default function EditHabitScreen() {
   const T = useT();
@@ -161,7 +162,7 @@ export default function EditHabitScreen() {
                     { color: category === cat ? config.color : colors.textSecondary },
                   ]}
                 >
-                  {config.icon} {config.label.toUpperCase()}
+                  {config.icon} {categoryLabel(T, cat).toUpperCase()}
                 </Text>
               </Pressable>
             );

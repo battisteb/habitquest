@@ -34,6 +34,7 @@ import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
+import { titleLabel } from '../../src/lib/i18n/labels';
 
 type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
 
@@ -386,7 +387,7 @@ export default function SocialScreen() {
                 <Text style={styles.lbName}>
                   {item.username}{item.isCurrentUser ? ' ★' : ''}
                 </Text>
-                <Text style={styles.lbRank}>{item.rank}</Text>
+                <Text style={styles.lbRank}>{titleLabel(T, item.rank)}</Text>
               </View>
               <View style={styles.lbRight}>
                 <Text style={styles.lbXp}>{item.xp} XP</Text>

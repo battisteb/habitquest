@@ -14,6 +14,7 @@ import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT, lang$ } from '../../src/lib/i18n';
 import { use$ } from '@legendapp/state/react';
 import { HABIT_TEMPLATES } from '../../src/lib/constants/habit-templates';
+import { categoryLabel } from '../../src/lib/i18n/labels';
 
 export default function CreateHabitScreen() {
   const T = useT();
@@ -224,7 +225,7 @@ export default function CreateHabitScreen() {
                     { color: category === cat ? config.color : colors.textSecondary },
                   ]}
                 >
-                  {config.icon} {config.label.toUpperCase()}
+                  {config.icon} {categoryLabel(T, cat).toUpperCase()}
                 </Text>
               </Pressable>
             );
