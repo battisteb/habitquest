@@ -1,0 +1,30 @@
+{
+  "r1-ta-vie-est-un-rpg": {
+    "music": { "file": "assets/sounds/duel-music.m4a", "start": 4 },
+    "segments": [
+      { "type": "card", "dur": 2.4, "icon": true, "title": "Et si ta vie était un <em>RPG</em> ? ⚔️" },
+      { "type": "clip", "dur": 4.2, "src": "today", "start": 0.6, "title": "Chaque habitude<br>= une <em>quête</em>" },
+      { "type": "still", "dur": 3.0, "src": "habit", "title": "Garde ta <em>série</em> 🔥" },
+      { "type": "clip", "dur": 3.2, "src": "profile", "start": 0.3, "title": "Monte de niveau.<br>Deviens une <em>légende</em>." },
+      { "type": "card", "dur": 2.8, "icon": true, "title": "HabitQuest", "subtitle": "Bientôt sur iOS & Android", "cta": "LIEN EN BIO ▲" }
+    ]
+  },
+  "r3-mon-heros-evolue": {
+    "music": { "file": "assets/sounds/duel-music.m4a", "start": 30 },
+    "segments": [
+      { "type": "card", "dur": 2.2, "title": "Mon héros <em>monte de niveau</em>." },
+      { "type": "clip", "dur": 3.6, "src": "profile", "start": 0.2, "title": "Parce que j'ai tenu<br>mes <em>habitudes</em>." },
+      { "type": "still", "dur": 3.2, "src": "journey", "title": "Prochaine étape :<br><em>Chevalier</em> 🛡️" },
+      { "type": "card", "dur": 2.6, "icon": true, "title": "Ton héros t'attend.", "subtitle": "HabitQuest · bientôt dispo", "cta": "LIEN EN BIO ▲" }
+    ]
+  },
+  "r5-defie-tes-potes": {
+    "music": { "file": "assets/sounds/duel-music.m4a", "start": 12 },
+    "segments": [
+      { "type": "card", "dur": 2.0, "title": "Défie tes potes… ⚔️" },
+      { "type": "clip", "dur": 4.2, "src": "battle", "start": 0.6, "speed": 1.3, "title": "…avec tes <em>vraies</em><br>habitudes 💪" },
+      { "type": "still", "dur": 2.6, "src": "duels", "title": "Le plus <em>régulier</em><br>gagne." },
+      { "type": "card", "dur": 2.6, "icon": true, "title": "Tag le pote que tu battrais 👇", "cta": "HABITQUEST" }
+    ]
+  }
+}

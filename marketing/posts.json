@@ -1,0 +1,28 @@
+{
+  "c1-habitquest": [
+    { "emoji": "⚔️", "title": "Tes habitudes deviennent des <em>quêtes</em>.", "body": "Le tracker d'habitudes qui se joue comme un RPG pixel art." },
+    { "image": "today", "title": "1 habitude = 1 quête", "body": "Valide-la chaque jour. <b>+XP, +or</b> à chaque fois." },
+    { "image": "habit", "title": "Garde ta série 🔥", "body": "Un imprévu ? <b>1 gel gratuit</b> par semaine protège ta progression." },
+    { "image": "profile", "title": "Ton héros évolue", "body": "Monte de niveau : Novice, Apprenti, Guerrier… <b>Légende</b>." },
+    { "image": "battle", "title": "Défie tes potes", "body": "Duels et défis entre amis. <b>Le plus régulier gagne.</b>" },
+    { "emoji": "🚀", "title": "Bientôt sur <em>iOS</em> & <em>Android</em>", "body": "Abonne-toi pour ne pas rater la sortie.", "cta": "LIEN EN BIO ▲" }
+  ],
+  "c2-habitudes-niveau-1": [
+    { "emoji": "🎮", "title": "5 habitudes <em>niveau 1</em>", "body": "Pour ne plus abandonner au bout de 3 jours." },
+    { "emoji": "💧", "title": "Un verre d'eau au réveil", "body": "10 secondes. Zéro excuse.", "xp": 20 },
+    { "emoji": "📚", "title": "Lire 1 page", "body": "Une seule. Le reste vient tout seul.", "xp": 40 },
+    { "emoji": "🧘", "title": "Respirer 2 minutes", "body": "Avant d'ouvrir un réseau social.", "xp": 60 },
+    { "emoji": "🏃", "title": "Marcher 10 minutes", "body": "Après le déjeuner.", "xp": 80 },
+    { "emoji": "📵", "title": "Pas de téléphone au lit", "body": "Ton sommeil te dira merci.", "xp": 100 },
+    { "emoji": "⬆️", "title": "Commence petit. <em>Monte de niveau.</em>", "body": "Enregistre ce post pour plus tard 📌", "cta": "LEVEL UP" }
+  ],
+  "c4-rangs": [
+    { "emoji": "🏆", "title": "De <em>Novice</em> à <em>Légende</em>", "body": "Tu serais quel rang aujourd'hui ?" },
+    { "emoji": "🪵", "title": "Novice · niv. 0", "body": "Tout le monde commence ici." },
+    { "emoji": "📜", "title": "Apprenti · niv. 3", "body": "Les premières séries tiennent." },
+    { "emoji": "⚔️", "title": "Guerrier · niv. 5", "body": "Tu as fait tes preuves." },
+    { "emoji": "🛡️", "title": "Chevalier · niv. 7", "body": "La discipline est ton armure." },
+    { "emoji": "👑", "title": "Champion · niv. 9", "body": "Tu inspires les autres." },
+    { "emoji": "🌟", "title": "Légende · niv. 11", "body": "Dis-nous en commentaire ton rang actuel 👇", "cta": "BIENTÔT DISPO" }
+  ]
+}

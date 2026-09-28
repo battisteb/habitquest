@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@500;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0d0f1c; --surface: #1e2448; --primary: #e94560; --accent: #f5c518;
+    --xp: #7b68ee; --text: #f0f0ff; --muted: #9a9cc4;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; background: var(--bg); }
+  body {
+    font-family: 'Inter', sans-serif; color: var(--text);
+    background:
+      radial-gradient(circle at 20% 0%, #2e3870 0%, transparent 55%),
+      radial-gradient(circle at 100% 100%, #3a1e4a 0%, transparent 50%),
+      var(--bg);
+    display: flex; flex-direction: column; padding: 80px 84px 70px; position: relative;
+  }
+  /* pixel grid texture */
+  body::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .06;
+    background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .top { display: flex; align-items: center; gap: 18px; font-family: 'Press Start 2P'; font-size: 22px; color: var(--muted); }
+  .top img { width: 56px; height: 56px; border-radius: 14px; image-rendering: pixelated; }
+  .counter { margin-left: auto; font-size: 18px; }
+  .content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 36px; }
+  .emoji { font-size: 120px; line-height: 1; }
+  h1 { font-family: 'Press Start 2P'; font-size: 58px; line-height: 1.35; letter-spacing: 1px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  p.body { font-size: 40px; line-height: 1.4; color: #c9cbef; font-weight: 500; max-width: 880px; }
+  p.body b { color: var(--text); }
+  .row { display: flex; gap: 48px; align-items: center; }
+  .row .text { flex: 1; display: flex; flex-direction: column; gap: 28px; }
+  .row h1 { font-size: 44px; }
+  .row p.body { font-size: 34px; }
+  .phone {
+    width: 380px; flex: none; border-radius: 48px; padding: 14px; background: #05060d;
+    box-shadow: 0 0 0 4px #2e3870, 0 30px 80px rgba(0,0,0,.6), 0 0 120px rgba(123,104,238,.25);
+  }
+  .phone img { width: 100%; display: block; border-radius: 36px; }
+  .cta {
+    align-self: flex-start; font-family: 'Press Start 2P'; font-size: 26px; padding: 28px 34px;
+    background: var(--primary); border-bottom: 8px solid #a8304a; border-radius: 12px;
+  }
+  .footer { display: flex; justify-content: space-between; align-items: center; font-size: 26px; color: var(--muted); font-weight: 700; }
+  .swipe { font-family: 'Press Start 2P'; font-size: 20px; color: var(--accent); }
+  .xpbar { height: 22px; border-radius: 11px; background: #262d5a; overflow: hidden; max-width: 700px; }
+  .xpbar i { display: block; height: 100%; background: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="top"><img src="../assets/icon.png" alt="" /><span>HABITQUEST</span><span class="counter" id="counter"></span></div>
+  <div class="content" id="content"></div>
+  <div class="footer"><span>@habitquest.app</span><span class="swipe" id="swipe"></span></div>
+<script>
+  // Filled by render-posts.js: window.render({ layout, emoji, title, body, image, cta, index, total, xp })
+  window.render = (s) => {
+    document.getElementById('counter').textContent = s.total > 1 ? `${s.index}/${s.total}` : '';
+    document.getElementById('swipe').textContent = s.index < s.total ? 'SWIPE ▶' : '';
+    const c = document.getElementById('content');
+    const text = `
+      ${s.emoji ? `<div class="emoji">${s.emoji}</div>` : ''}
+      <h1>${s.title}</h1>
+      ${s.body ? `<p class="body">${s.body}</p>` : ''}
+      ${s.xp != null ? `<div class="xpbar"><i style="width:${s.xp}%"></i></div>` : ''}
+      ${s.cta ? `<div class="cta">${s.cta}</div>` : ''}`;
+    c.innerHTML = s.image
+      ? `<div class="row"><div class="text">${text}</div><div class="phone"><img src="../assets/screens/${s.image}.png" /></div></div>`
+      : text;
+  };
+</script>
+</body>
+</html>

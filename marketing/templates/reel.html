@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@600;800&display=swap" rel="stylesheet" />
+<style>
+  /* 1080×1920 reel layers, composited by build-reels.js:
+     'bg' (background) → app recording → 'phone' (transparent, frame + title on top).
+     'card' is a full-screen title card. */
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+  body { font-family: 'Inter', sans-serif; color: #f0f0ff; position: relative; }
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 10%, #2e3870 0%, transparent 55%),
+      radial-gradient(circle at 90% 95%, #4a1e4a 0%, transparent 50%),
+      #0d0f1c;
+  }
+  .bg::after {
+    content: ''; position: absolute; inset: 0; opacity: .06;
+    background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  /* Frame around the app recording; the screen rect (PHONE in build-reels.js) is 546×1182 at (267, 600). */
+  .frame { position: absolute; left: 255px; top: 588px; width: 570px; height: 1206px; border-radius: 56px;
+           border: 12px solid #05060d; box-shadow: 0 0 0 4px #2e3870, 0 0 140px rgba(123,104,238,.35); }
+  .title { position: absolute; left: 80px; right: 80px; top: 230px; height: 330px; display: flex; align-items: center; justify-content: center; text-align: center;
+           font-family: 'Press Start 2P'; font-size: 52px; line-height: 1.45; text-shadow: 0 6px 0 #000; }
+  .title em { font-style: normal; color: #f5c518; }
+  .card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 56px; padding: 0 90px; text-align: center; }
+  .card img { width: 300px; height: 300px; border-radius: 64px; image-rendering: pixelated; box-shadow: 0 0 120px rgba(245,197,24,.25); }
+  .card h1 { font-family: 'Press Start 2P'; font-size: 64px; line-height: 1.45; text-shadow: 0 8px 0 #000; }
+  .card h1 em { font-style: normal; color: #f5c518; }
+  .card p { font-size: 46px; font-weight: 800; color: #c9cbef; }
+  .cta { font-family: 'Press Start 2P'; font-size: 34px; padding: 34px 44px; background: #e94560; border-bottom: 10px solid #a8304a; border-radius: 14px; }
+  .handle { position: absolute; left: 0; right: 0; bottom: 70px; text-align: center; font-size: 34px; font-weight: 800; color: #9a9cc4; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  // window.render({ layout: 'bg' | 'phone' | 'card', title, subtitle, cta, icon })
+  window.render = (s) => {
+    const root = document.getElementById('root');
+    if (s.layout === 'bg') {
+      root.innerHTML = '<div class="bg"></div><div class="handle">@habitquest.app</div>';
+    } else if (s.layout === 'phone') {
+      root.innerHTML = `<div class="frame"></div><div class="title"><div>${s.title}</div></div>`;
+    } else {
+      root.innerHTML = `<div class="bg"></div><div class="card">
+          ${s.icon ? '<img src="../assets/icon.png" />' : ''}
+          <h1>${s.title}</h1>
+          ${s.subtitle ? `<p>${s.subtitle}</p>` : ''}
+          ${s.cta ? `<div class="cta">${s.cta}</div>` : ''}
+        </div><div class="handle">@habitquest.app</div>`;
+    }
+  };
+</script>
+</body>
+</html>
