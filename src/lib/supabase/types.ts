@@ -67,6 +67,7 @@ export type Database = {
           status: string
           target: number
           type: string
+          wager_settled: boolean
           winner_id: string | null
         }
         Insert: {
@@ -82,6 +83,7 @@ export type Database = {
           status?: string
           target: number
           type: string
+          wager_settled?: boolean
           winner_id?: string | null
         }
         Update: {
@@ -97,6 +99,7 @@ export type Database = {
           status?: string
           target?: number
           type?: string
+          wager_settled?: boolean
           winner_id?: string | null
         }
         Relationships: [
@@ -775,6 +778,10 @@ export type Database = {
       register_push_token: {
         Args: { p_token: string }
         Returns: undefined
+      }
+      settle_challenge_wager: {
+        Args: { p_challenge_id: string }
+        Returns: number
       }
       unregister_push_token: {
         Args: Record<PropertyKey, never>
