@@ -110,13 +110,9 @@ async function fetchXpJourneyData(): Promise<Omit<XpJourneyData, 'isLoading'>> {
       completedAt: c.completed_at,
     }));
 
-  // Best streak
-  const bestStreak = Math.max(
-    0,
-    ...(streaksRes.data ?? []).map((s) =>
-      Math.max(s.current_count ?? 0, s.longest_count ?? 0),
-    ),
-  );
+  // Best streak still running: the XP bonus only follows current streaks
+  // (the all-time best made the card promise more XP than completions give).
+  const bestStreak = Math.max(0, ...(streaksRes.data ?? []).map((s) => s.current_count ?? 0));
 
   // Total completions (all time)
   const { count } = await supabase
@@ -411,8 +407,9 @@ export default function XpJourneyScreen() {
   const xpNeeded = xpForNextLevel - currentLevelXp;
 
   // Streak multiplier
+  // Bonus of the next completion of that habit (its streak goes up by one).
   const multiplier = Math.min(
-    1 + data.bestStreak * XP_CONFIG.STREAK_MULTIPLIER_STEP,
+    1 + (data.bestStreak + 1) * XP_CONFIG.STREAK_MULTIPLIER_STEP,
     XP_CONFIG.STREAK_MULTIPLIER_CAP,
   );
   const baseXp = XP_CONFIG.BASE_XP_PER_COMPLETION;
@@ -513,7 +510,7 @@ export default function XpJourneyScreen() {
             <View style={styles.multiplierArrow}><Text style={styles.arrowText}>→</Text></View>
             <View style={styles.multiplierItem}>
               <Text style={[styles.multiplierValue, { color: colors.accent }]}>
-                {calculateXpEarned(data.bestStreak)} XP
+                {calculateXpEarned(data.bestStreak + 1)} XP
               </Text>
               <Text style={styles.multiplierLabel}>{T.xp_per_habit_label}</Text>
             </View>
