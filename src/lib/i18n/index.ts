@@ -173,8 +173,8 @@ const FR = {
   onb_eye_label: 'YEUX',
   // Onboarding — habit step
   onb_habit_title: 'Ta Première Quête',
-  onb_habit_body: 'Crée ta première habitude pour démarrer. Tu pourras en ajouter d\'autres plus tard.',
-  onb_quick_pick: 'CHOIX RAPIDE',
+  onb_habit_body: 'Choisis jusqu\'à 3 habitudes pour démarrer, ou écris la tienne. Tu pourras en ajouter d\'autres plus tard.',
+  onb_quick_pick: 'CHOIX RAPIDE · 3 MAX',
   onb_or_custom: 'OU PERSONNALISÉ',
   onb_habit_placeholder: 'Tape ton habitude…',
   onb_creating: 'Création…',
@@ -995,8 +995,8 @@ const EN = {
   onb_eye_label: 'EYE COLOR',
   // Onboarding — habit step
   onb_habit_title: 'Your First Quest',
-  onb_habit_body: "Let's create your first habit to get started. You can always add more later.",
-  onb_quick_pick: 'QUICK PICK',
+  onb_habit_body: 'Pick up to 3 habits to get started, or write your own. You can always add more later.',
+  onb_quick_pick: 'QUICK PICK · 3 MAX',
   onb_or_custom: 'OR CUSTOM',
   onb_habit_placeholder: 'Type your own habit…',
   onb_creating: 'Creating…',
