@@ -109,7 +109,7 @@
       }
     ]
   },
-  "r7-quetes-du-jour": {
+  "r7-missions-du-jour": {
     "music": {
       "file": "assets/sounds/duel-music.m4a",
       "start": 20
@@ -118,7 +118,7 @@
       {
         "type": "card",
         "dur": 2,
-        "title": "Chaque matin,<br>3 nouvelles <em>quêtes</em> 📜"
+        "title": "Chaque matin,<br>3 nouvelles <em>missions</em> 📜"
       },
       {
         "type": "clip",
