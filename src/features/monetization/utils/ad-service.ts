@@ -1,17 +1,21 @@
 import { Platform } from 'react-native';
 import { subscriptionStore$ } from '../stores/subscription-store';
+import { canPersonalizeAds } from './tracking-consent';
 
 // AdMob is native-only — not available on web
 const isNative = Platform.OS !== 'web';
 
 // ─── Ad Unit IDs ──────────────────────────────────────────────────────────────
-// Ad unit IDs from AdMob console (Android — add iOS units when iOS app is registered in AdMob)
-const PROD_BANNER_IOS = 'ca-app-pub-3756522162472324/4591462256';
+// AdMob app IDs and ad units are per platform. The iOS app is not registered in
+// AdMob yet: leave the iOS IDs empty until it is, so release builds show no ads on
+// iOS rather than requesting Android units.
+const PROD_BANNER_IOS = '';
 const PROD_BANNER_AND = 'ca-app-pub-3756522162472324/4591462256';
-const PROD_INTER_IOS  = 'ca-app-pub-3756522162472324/3414111958';
+const PROD_INTER_IOS  = '';
 const PROD_INTER_AND  = 'ca-app-pub-3756522162472324/3414111958';
 
-const isAdMobConfigured = !PROD_BANNER_IOS.includes('XXXX');
+const isAdMobConfigured =
+  Platform.OS === 'ios' ? PROD_BANNER_IOS !== '' && PROD_INTER_IOS !== '' : true;
 
 // Lazily resolved once at runtime so web never imports the native module
 let _TestIds: Record<string, string> | null = null;
@@ -47,12 +51,11 @@ let _interstitial: any = null;
 let _interstitialLoaded = false;
 
 export function preloadInterstitial(): void {
-  if (!isNative) return;
-  if (subscriptionStore$.isPremium.get()) return;
+  if (!shouldShowAds()) return;
   try {
     const { InterstitialAd, AdEventType } = require('react-native-google-mobile-ads');
     _interstitial = InterstitialAd.createForAdRequest(ADMOB_IDS.interstitial, {
-      requestNonPersonalizedAdsOnly: false,
+      requestNonPersonalizedAdsOnly: !canPersonalizeAds(),
     });
     _interstitial.addAdEventListener(AdEventType.LOADED, () => { _interstitialLoaded = true; });
     _interstitial.addAdEventListener(AdEventType.CLOSED, () => {
@@ -92,12 +95,13 @@ let _rewarded: any = null;
 let _rewardedLoaded = false;
 
 export function preloadRewardedInterstitial(): void {
-  if (!isNative) return;
-  if (subscriptionStore$.isPremium.get()) return;
+  if (!shouldShowAds()) return;
   try {
     const { RewardedInterstitialAd, AdEventType, RewardedAdEventType } =
       require('react-native-google-mobile-ads');
-    _rewarded = RewardedInterstitialAd.createForAdRequest(ADMOB_IDS.interstitial);
+    _rewarded = RewardedInterstitialAd.createForAdRequest(ADMOB_IDS.interstitial, {
+      requestNonPersonalizedAdsOnly: !canPersonalizeAds(),
+    });
     _rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => { _rewardedLoaded = true; });
     _rewarded.addAdEventListener(AdEventType.CLOSED, () => {
       _rewardedLoaded = false;
@@ -129,5 +133,5 @@ export function showRewardedInterstitial(
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 export function shouldShowAds(): boolean {
-  return isNative && !subscriptionStore$.isPremium.get();
+  return isNative && (__DEV__ || isAdMobConfigured) && !subscriptionStore$.isPremium.get();
 }
