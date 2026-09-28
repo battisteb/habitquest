@@ -8,7 +8,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { PixelAvatar, type PixelAvatarProps } from '../renderer/pixel-avatar';
-import { getAvatarStage } from '../utils/avatar-evolution';
+import { getAvatarStage, getAvatarStageIndex } from '../utils/avatar-evolution';
 
 interface EvolvedAvatarProps extends PixelAvatarProps {
   level: number;
@@ -25,13 +25,16 @@ export function EvolvedAvatar({
   ...avatarProps
 }: EvolvedAvatarProps) {
   const stage = getAvatarStage(level);
+  const stageIndex = getAvatarStageIndex(level);
   const auraColor = stage.aura;
 
-  const hasAura = showAura && level >= 5;
-  const hasGlow = showAura && level >= 10;
-  const hasPulse = showAura && level >= 15;
-  const hasParticles = showAura && level >= 20;
-  const isLegend = showAura && level >= 30;
+  // One new effect per rank: Apprentice aura, Warrior glow, Knight pulse,
+  // Champion particles, Legend faster pulse and more particles.
+  const hasAura = showAura && stageIndex >= 1;
+  const hasGlow = showAura && stageIndex >= 2;
+  const hasPulse = showAura && stageIndex >= 3;
+  const hasParticles = showAura && stageIndex >= 4;
+  const isLegend = showAura && stageIndex >= 5;
   const particleCount = isLegend ? PARTICLE_COUNT_LEGEND : PARTICLE_COUNT_CHAMPION;
 
   const padding = hasAura ? 12 : 0;
