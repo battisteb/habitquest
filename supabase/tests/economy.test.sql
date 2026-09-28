@@ -109,7 +109,9 @@ select is((complete_habit('00000000-0000-0000-0000-00000000c001') ->> 'current_s
 reset role;
 delete from streak_freezes;
 insert into streak_freezes (user_id, freeze_date, source)
-values ('00000000-0000-0000-0000-0000000000a1', user_today('00000000-0000-0000-0000-0000000000a1') - 1, 'weekly');
+values ('00000000-0000-0000-0000-0000000000a1', -- Another day of the current week (Sunday, or Monday when today is Sunday).
+        (select case when extract(isodow from d) = 7 then d - 6 else date_trunc('week', d)::date + 6 end
+         from (select user_today('00000000-0000-0000-0000-0000000000a1') as d) t), 'weekly');
 update profiles set freeze_tokens = 0 where id = '00000000-0000-0000-0000-0000000000a1';
 set local role authenticated;
 select is(activate_streak_freeze() ->> 'reason', 'no_freeze_left',
