@@ -9,7 +9,7 @@ export default defineConfig([
     ignores: ['node_modules/', 'dist/', '.expo/', 'coverage/', 'supabase/functions/'],
   },
   {
-    files: ['scripts/**/*.js'],
+    files: ['scripts/**/*.js', 'marketing/**/*.js'],
     languageOptions: { globals: globals.node },
   },
 ]);
