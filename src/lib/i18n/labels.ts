@@ -32,3 +32,10 @@ export function attackName(T: Strings, attack: { id: string; name: string }): st
 export function attackDescription(T: Strings, attack: { id: string; description: string }): string {
   return T[`attack_desc_${attack.id}` as keyof Strings] ?? attack.description;
 }
+
+/** Shop unlock requirement, e.g. "Niveau 5 requis" / "30-day streak". */
+export function unlockLabel(T: Strings, condition: { type: string; value: number | string; label: string }): string {
+  if (condition.type === 'level') return T.shop_unlock_level.replace('{n}', String(condition.value));
+  if (condition.type === 'streak') return T.shop_unlock_streak.replace('{n}', String(condition.value));
+  return condition.label;
+}

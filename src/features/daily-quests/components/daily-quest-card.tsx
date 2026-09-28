@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
 import type { DailyQuestWithTemplate, QuestDifficulty } from '../stores/daily-quests-store';
 import { useTheme } from '../../../ui/theme/theme-context';
-import { useT } from '../../../lib/i18n';
+import { useLang, useT } from '../../../lib/i18n';
+import { questText } from '../../../lib/i18n/content';
 
 interface DailyQuestCardProps {
   quest: DailyQuestWithTemplate;
@@ -19,6 +20,7 @@ const DIFFICULTY_COLORS: Record<QuestDifficulty, string> = {
 
 export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestCardProps) {
   const T = useT();
+  const lang = useLang();
   const { themeKey } = useTheme();
   const DIFFICULTY_LABELS = useMemo<Record<QuestDifficulty, string>>(
     () => ({ easy: T.dq_diff_easy, normal: T.dq_diff_normal, hard: T.dq_diff_hard }),
@@ -177,10 +179,10 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
 
       {/* Title and description */}
       <Text style={[styles.title, isClaimed && styles.textClaimed]}>
-        {isClaimed ? '\u2713 ' : ''}{template.title}
+        {isClaimed ? '\u2713 ' : ''}{questText(lang, template).title}
       </Text>
       <Text style={[styles.description, isClaimed && styles.textClaimed]}>
-        {template.description}
+        {questText(lang, template).description}
       </Text>
 
       {/* Progress bar */}

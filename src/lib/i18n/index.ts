@@ -848,6 +848,8 @@ const FR = {
   duels_log_shield: ' Bouclier activé : le prochain coup est bloqué !',
   duels_log_heal: ' +{n} PV récupérés !',
   duels_log_rally: ' Bonus de ralliement ! +{n} dégâts !',
+  shop_unlock_level: 'Niveau {n} requis',
+  shop_unlock_streak: 'Série de {n} jours requise',
 } as const;
 
 const EN = {
@@ -1667,6 +1669,8 @@ const EN = {
   duels_log_shield: ' Shield activated — next hit blocked!',
   duels_log_heal: ' Recovered {n} HP!',
   duels_log_rally: ' Rally bonus! +{n} extra damage!',
+  shop_unlock_level: 'Reach level {n}',
+  shop_unlock_streak: '{n}-day streak',
 } as const;
 
 export type Strings = Record<keyof typeof FR, string>;
@@ -1677,6 +1681,11 @@ const STRINGS: Record<Lang, Strings> = { fr: FR, en: EN };
 export const STRINGS_FOR_TESTS = STRINGS;
 
 /** Reactive hook — re-renders when language changes */
+/** Current app language (reactive). */
+export function useLang(): Lang {
+  return use$(lang$);
+}
+
 export function useT(): Strings {
   const lang = use$(lang$);
   return STRINGS[lang];
