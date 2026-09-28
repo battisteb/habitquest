@@ -86,11 +86,13 @@ export default function TodayScreen() {
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
+  // The left block shrinks so "AUJOURD'HUI" never pushes the buttons off screen.
+  headerLeft: { flexShrink: 1, marginRight: spacing.sm },
   title: {
-    fontSize: fontSizes.xl,
+    fontSize: fontSizes.lg + 2,
     fontWeight: 'bold',
     color: colors.text,
-    letterSpacing: 2,
+    letterSpacing: 1,
   },
   dateLabel: {
     fontSize: fontSizes.xs,
@@ -99,7 +101,7 @@ export default function TodayScreen() {
     letterSpacing: 1,
     marginTop: 1,
   },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flexShrink: 0 },
   headerStats: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -771,8 +773,10 @@ export default function TodayScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <View>
-          <Text style={styles.title}>{T.today_title}</Text>
+        <View style={styles.headerLeft}>
+          <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit>
+            {T.today_title}
+          </Text>
           <Text style={styles.dateLabel}>{todayLabel()}</Text>
         </View>
         <View style={styles.headerRight}>

@@ -15,6 +15,7 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
+import { categoryLabel } from '../../src/lib/i18n/labels';
 
 export default function ContextualModeScreen() {
   const T = useT();
@@ -284,7 +285,7 @@ export default function ContextualModeScreen() {
                 <View style={styles.chips}>
                   {mode.focusCategories.map((cat) => (
                     <View key={cat} style={styles.chipFocus}>
-                      <Text style={styles.chipFocusText}>{cat}</Text>
+                      <Text style={styles.chipFocusText}>{categoryLabel(T, cat)}</Text>
                     </View>
                   ))}
                 </View>
@@ -294,7 +295,7 @@ export default function ContextualModeScreen() {
                 <View style={styles.chips}>
                   {mode.pauseCategories.map((cat) => (
                     <View key={cat} style={styles.chipPause}>
-                      <Text style={styles.chipPauseText}>{cat}</Text>
+                      <Text style={styles.chipPauseText}>{categoryLabel(T, cat)}</Text>
                     </View>
                   ))}
                 </View>

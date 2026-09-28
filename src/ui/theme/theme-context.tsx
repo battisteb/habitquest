@@ -1,30 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { THEMES, ThemeColors, ThemeKey } from './themes';
 import { storage } from '../../lib/storage/mmkv';
-import { colors } from './tokens';
-
-function applyThemeToColors(key: ThemeKey) {
-  const t = THEMES[key];
-  colors.background = t.background;
-  colors.surface = t.surface;
-  colors.border = t.border;
-  colors.text = t.text;
-  colors.textSecondary = t.textSecondary;
-  colors.textMuted = t.textMuted;
-  colors.primary = t.primary;
-  colors.primaryDark = t.primaryDark;
-  colors.accent = t.accent;
-  colors.success = t.success;
-  colors.streak = t.streak;
-  colors.xp = t.xp;
-  if (t.gold) colors.accent = t.gold;
-  if (t.surfaceLight) colors.surfaceLight = t.surfaceLight;
-  if (t.secondary) colors.secondary = t.secondary;
-  if (t.danger) colors.danger = t.danger;
-  if (t.warning) colors.warning = t.warning;
-}
-
-const THEME_KEY = 'active-theme';
+import { applyThemeToColors, savedThemeKey, THEME_STORAGE_KEY } from './tokens';
 
 interface ThemeContextValue {
   themeKey: ThemeKey;
@@ -39,15 +16,11 @@ const ThemeContext = createContext<ThemeContextValue>({
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeKey, setThemeKey] = useState<ThemeKey>(() => {
-    const saved = storage.getString(THEME_KEY) as ThemeKey | undefined;
-    const key = saved && THEMES[saved] ? saved : 'default';
-    applyThemeToColors(key);
-    return key;
-  });
+  // tokens.ts already applied the saved theme when it was loaded.
+  const [themeKey, setThemeKey] = useState<ThemeKey>(savedThemeKey);
 
   const setTheme = useCallback((key: ThemeKey) => {
-    storage.set(THEME_KEY, key);
+    storage.set(THEME_STORAGE_KEY, key);
     applyThemeToColors(key);
     setThemeKey(key);
   }, []);

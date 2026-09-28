@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import { Pressable, Text, StyleSheet, type ViewStyle } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../theme/tokens';
+import { useTheme } from '../theme/theme-context';
 import { hapticLight } from '../../lib/haptics';
 
 interface PixelButtonProps {
@@ -17,6 +19,8 @@ export function PixelButton({
   disabled = false,
   style,
 }: PixelButtonProps) {
+  const { themeKey } = useTheme();
+  const styles = useMemo(createStyles, [themeKey]);
   const handlePress = () => {
     hapticLight();
     onPress();
@@ -41,7 +45,9 @@ export function PixelButton({
   );
 }
 
-const styles = StyleSheet.create({
+// Rebuilt on theme change: these components are used on every screen.
+function createStyles() {
+  return StyleSheet.create({
   base: {
     paddingVertical: spacing.sm + 2,
     paddingHorizontal: spacing.lg,
@@ -82,3 +88,4 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
 });
+}

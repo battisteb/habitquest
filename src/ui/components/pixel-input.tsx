@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import { TextInput, View, Text, StyleSheet, type TextInputProps } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius } from '../theme/tokens';
+import { useTheme } from '../theme/theme-context';
 
 interface PixelInputProps extends TextInputProps {
   label?: string;
@@ -7,6 +9,8 @@ interface PixelInputProps extends TextInputProps {
 }
 
 export function PixelInput({ label, error, style, ...props }: PixelInputProps) {
+  const { themeKey } = useTheme();
+  const styles = useMemo(createStyles, [themeKey]);
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label.toUpperCase()}</Text>}
@@ -20,7 +24,9 @@ export function PixelInput({ label, error, style, ...props }: PixelInputProps) {
   );
 }
 
-const styles = StyleSheet.create({
+// Rebuilt on theme change: these components are used on every screen.
+function createStyles() {
+  return StyleSheet.create({
   container: {
     width: '100%',
   },
@@ -49,3 +55,4 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
 });
+}
