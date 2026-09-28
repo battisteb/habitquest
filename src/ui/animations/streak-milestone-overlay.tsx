@@ -6,7 +6,6 @@ import Animated, {
   withTiming,
   withSequence,
   withDelay,
-  withSpring,
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
@@ -63,32 +62,38 @@ export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComp
       flameOpacity.value = 0;
       flameY.value = 20;
 
-      overlayOpacity.value = withTiming(1, { duration: 250 });
+      // One sequence: a later assignment would cancel the fade-in.
+      overlayOpacity.value = withSequence(
+        withTiming(1, { duration: 250 }),
+        withDelay(
+          2550,
+          withTiming(0, { duration: 350 }, (finished) => {
+            if (finished && onComplete) runOnJS(onComplete)();
+          }),
+        ),
+      );
 
+      // Timed pop and wobble: the previous under-damped springs overshot to
+      // 2-3x the size, which only showed once the overlay became visible.
       badgeScale.value = withDelay(
         150,
         withSequence(
-          withSpring(1.25, { damping: 6, stiffness: 200 }),
-          withSpring(1, { damping: 10, stiffness: 150 }),
+          withTiming(1.12, { duration: 260, easing: Easing.out(Easing.back(2)) }),
+          withTiming(1, { duration: 160 }),
         ),
       );
       badgeRotate.value = withDelay(
         150,
         withSequence(
-          withSpring(8, { damping: 6 }),
-          withSpring(0, { damping: 8 }),
+          withTiming(5, { duration: 160 }),
+          withTiming(-3, { duration: 160 }),
+          withTiming(0, { duration: 160 }),
         ),
       );
 
       flameOpacity.value = withDelay(400, withTiming(1, { duration: 300 }));
       flameY.value = withDelay(400, withTiming(0, { duration: 300, easing: Easing.out(Easing.cubic) }));
 
-      overlayOpacity.value = withDelay(
-        2800,
-        withTiming(0, { duration: 350 }, (finished) => {
-          if (finished && onComplete) runOnJS(onComplete)();
-        }),
-      );
     }
   }, [visible]);
 
@@ -142,6 +147,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     minWidth: 240,
+    // Long translations ("SÉRIE DE 2 SEMAINES !") wrap instead of leaving the screen.
+    maxWidth: '88%',
     ...Platform.select({
       native: {
         shadowColor: '#000',

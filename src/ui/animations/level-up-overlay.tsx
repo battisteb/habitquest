@@ -32,8 +32,19 @@ export function LevelUpOverlay({ visible, newLevel, onComplete }: LevelUpOverlay
       badgeY.value = 30;
       starOpacity.value = 0;
 
-      // Fade in overlay
-      overlayOpacity.value = withTiming(1, { duration: 200 });
+      // Fade in, hold, then fade out. A second assignment to the same shared
+      // value would replace this animation, so it is one sequence.
+      overlayOpacity.value = withSequence(
+        withTiming(1, { duration: 200 }),
+        withDelay(
+          2000,
+          withTiming(0, { duration: 300 }, (finished) => {
+            if (finished && onComplete) {
+              runOnJS(onComplete)();
+            }
+          }),
+        ),
+      );
 
       // Badge entrance
       badgeScale.value = withDelay(
@@ -51,15 +62,6 @@ export function LevelUpOverlay({ visible, newLevel, onComplete }: LevelUpOverlay
       // Stars appear
       starOpacity.value = withDelay(300, withTiming(1, { duration: 200 }));
 
-      // Auto-dismiss after 2.5s
-      overlayOpacity.value = withDelay(
-        2200,
-        withTiming(0, { duration: 300 }, (finished) => {
-          if (finished && onComplete) {
-            runOnJS(onComplete)();
-          }
-        }),
-      );
     }
   }, [visible]);
 
@@ -110,6 +112,9 @@ const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     gap: spacing.sm,
+    // Keep long translations ("NIVEAU SUPÉRIEUR !") inside the screen.
+    width: '100%',
+    paddingHorizontal: spacing.lg,
   },
   starsRow: {
     flexDirection: 'row',
@@ -120,10 +125,11 @@ const styles = StyleSheet.create({
     color: colors.accent,
   },
   levelUpText: {
-    fontSize: fontSizes.xxl + 4,
+    fontSize: fontSizes.xxl,
     fontWeight: 'bold',
     color: colors.accent,
-    letterSpacing: 4,
+    letterSpacing: 3,
+    textAlign: 'center',
     ...Platform.select({
       native: {
         textShadowColor: 'rgba(218, 165, 32, 0.5)',

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, {
-  useSharedValue, useAnimatedStyle, withTiming, withDelay, withSpring,
+  useSharedValue, useAnimatedStyle, withTiming, withDelay, withSequence, withSpring,
 } from 'react-native-reanimated';
 
 interface Particle {
@@ -27,9 +27,11 @@ function ParticleDot({ angle, color, visible }: Particle & { visible: boolean })
   useEffect(() => {
     if (visible) {
       distance.value = withSpring(60, { damping: 12, stiffness: 200 });
-      opacity.value = withTiming(1, { duration: 100 });
-      // Fade out after burst
-      opacity.value = withDelay(300, withTiming(0, { duration: 300 }));
+      // Flash in, then fade out after the burst (single sequence).
+      opacity.value = withSequence(
+        withTiming(1, { duration: 100 }),
+        withDelay(200, withTiming(0, { duration: 300 })),
+      );
     } else {
       distance.value = 0;
       opacity.value = 0;

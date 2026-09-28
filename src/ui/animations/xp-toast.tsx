@@ -5,6 +5,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withDelay,
+  withSequence,
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
@@ -26,22 +27,22 @@ export function XpToast({ visible, xpAmount, goldAmount = 0, onComplete }: XpToa
       translateY.value = 20;
       opacity.value = 0;
 
-      // Slide up and fade in
-      translateY.value = withTiming(-10, { duration: 400, easing: Easing.out(Easing.cubic) });
-      opacity.value = withTiming(1, { duration: 200 });
-
-      // Fade out after delay
-      opacity.value = withDelay(
-        1000,
-        withTiming(0, { duration: 400 }, (finished) => {
-          if (finished && onComplete) {
-            runOnJS(onComplete)();
-          }
-        }),
+      // Slide up and fade in, hold, then drift up and fade out (one sequence
+      // per shared value: a second assignment would cancel the first).
+      translateY.value = withSequence(
+        withTiming(-10, { duration: 400, easing: Easing.out(Easing.cubic) }),
+        withDelay(600, withTiming(-40, { duration: 400 })),
       );
-      translateY.value = withDelay(
-        1000,
-        withTiming(-40, { duration: 400 }),
+      opacity.value = withSequence(
+        withTiming(1, { duration: 200 }),
+        withDelay(
+          800,
+          withTiming(0, { duration: 400 }, (finished) => {
+            if (finished && onComplete) {
+              runOnJS(onComplete)();
+            }
+          }),
+        ),
       );
     }
   }, [visible]);
