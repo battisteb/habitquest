@@ -5,7 +5,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth, authStore$ } from '../src/features/auth/stores/auth-store';
-import { hasCompletedOnboarding } from './onboarding';
+import { hasCompletedOnboarding } from '../src/features/onboarding/onboarding-state';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
 import { streakMilestoneStore$, dismissStreakMilestone } from '../src/features/gamification/stores/streak-milestone-store';
 import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';

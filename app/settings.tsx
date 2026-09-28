@@ -24,6 +24,7 @@ import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 import { useT, setLang, lang$ } from '../src/lib/i18n';
+import { resetTutorial } from '../src/features/onboarding/tutorial-state';
 import {
   isSfxEnabled,
   isMusicEnabled,
@@ -255,6 +256,14 @@ export default function SettingsScreen() {
         <PixelButton
           title={T.settings_archived}
           onPress={() => router.push('/habit/archive')}
+          variant="secondary"
+        />
+        <PixelButton
+          title={T.settings_replay_tutorial}
+          onPress={() => {
+            resetTutorial();
+            router.replace('/(tabs)/today');
+          }}
           variant="secondary"
         />
 
