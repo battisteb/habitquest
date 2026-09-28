@@ -38,10 +38,10 @@ HabitQuest works for fitness, learning, mindfulness, productivity, creativity â€
 habits,streaks,gamification,RPG,pixel art,productivity,tracker,XP,level up,consistency
 
 ## Support URL
-https://github.com/battisteb/habitquest
+https://battisteb.github.io/habitquest/support
 
 ## Privacy Policy URL
-https://github.com/battiste/habitquest/privacy
+https://battisteb.github.io/habitquest/privacy-policy
 
 ## Age Rating
 4+
