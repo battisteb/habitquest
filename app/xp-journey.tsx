@@ -17,7 +17,7 @@ import { supabase } from '../src/lib/supabase/client';
 import { authStore$ } from '../src/features/auth/stores/auth-store';
 import {
   RANKS,
-  LEVEL_THRESHOLDS,
+  getXpForLevel,
   getRankForLevel,
   getXpForNextLevel,
   calculateXpEarned,
@@ -397,12 +397,12 @@ export default function XpJourneyScreen() {
     fetchXpJourneyData().then((d) => setData({ ...d, isLoading: false }));
   }, []);
 
-  const level = profile?.level ?? 0;
+  const level = profile?.level ?? 1;
   const totalXp = profile?.xp ?? 0;
   const rank = getRankForLevel(level);
 
   // Current level XP bounds
-  const currentLevelXp = level > 0 ? LEVEL_THRESHOLDS[Math.min(level, LEVEL_THRESHOLDS.length - 1)] : 0;
+  const currentLevelXp = getXpForLevel(level);
   const xpInLevel = totalXp - currentLevelXp;
   const xpNeeded = xpForNextLevel - currentLevelXp;
 
@@ -537,7 +537,7 @@ export default function XpJourneyScreen() {
         <View style={styles.roadmapCard}>
           {RANKS.map((r, i) => {
             const nextRank = RANKS[i + 1];
-            const rankLevelXp = LEVEL_THRESHOLDS[Math.min(r.minLevel, LEVEL_THRESHOLDS.length - 1)];
+            const rankLevelXp = getXpForLevel(r.minLevel);
             const isCurrentRank = rank.name === r.name;
             const isPast = level >= r.minLevel;
             const isNext = nextRank ? level < nextRank.minLevel && level >= r.minLevel : false;

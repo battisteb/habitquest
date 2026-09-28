@@ -6,6 +6,8 @@ Parcours testés en conditions réelles (version web, viewport iPhone 390×844, 
 
 Légende : 🔴 bloquant pour la rétention · 🟠 important · 🟡 finition.
 
+> **Mise à jour du 2026-09-28** : tous les points ci-dessous sont corrigés (PR « fix(ux): review fixes », détails et décisions de balance dans `docs/adr/010-ux-review-fixes.md`). Seul reste l'enrichissement de l'onglet Entraînement, masqué pour le lancement.
+
 ## Déjà corrigé
 
 - 🔴 **Les célébrations n'apparaissaient jamais** (montée de niveau, toast « +XP », explosion de validation, palier de série global) : bug d'animation, sur toutes les plateformes. Or c'est le cœur de la boucle de jeu. → PR #27.

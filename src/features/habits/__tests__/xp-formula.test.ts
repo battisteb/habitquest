@@ -1,6 +1,7 @@
 import {
   calculateXpEarned,
   getLevelForXp,
+  getXpForLevel,
   getXpForNextLevel,
   getRankForLevel,
   calculateGoldEarned,
@@ -21,41 +22,49 @@ describe('calculateXpEarned', () => {
 });
 
 describe('getLevelForXp', () => {
-  it('returns 0 for 0 XP', () => {
-    expect(getLevelForXp(0)).toBe(0);
+  it('starts players at level 1', () => {
+    expect(getLevelForXp(0)).toBe(1);
   });
 
-  it('returns 1 at 100 XP', () => {
-    expect(getLevelForXp(100)).toBe(1);
+  it('returns 2 at 100 XP', () => {
+    expect(getLevelForXp(100)).toBe(2);
   });
 
-  it('returns 2 at 250 XP', () => {
-    expect(getLevelForXp(250)).toBe(2);
+  it('returns 3 at 250 XP', () => {
+    expect(getLevelForXp(250)).toBe(3);
   });
 
-  it('returns highest level for large XP', () => {
-    expect(getLevelForXp(99999)).toBe(10);
+  it('reaches level 11 at 6000 XP', () => {
+    expect(getLevelForXp(6000)).toBe(11);
+  });
+
+  it('keeps levelling every 2000 XP past the table', () => {
+    expect(getLevelForXp(7999)).toBe(11);
+    expect(getLevelForXp(8000)).toBe(12);
+    expect(getLevelForXp(14000)).toBe(15);
   });
 });
 
-describe('getXpForNextLevel', () => {
-  it('returns 100 for level 0', () => {
-    expect(getXpForNextLevel(0)).toBe(100);
+describe('getXpForLevel / getXpForNextLevel', () => {
+  it('level 1 needs no XP', () => {
+    expect(getXpForLevel(1)).toBe(0);
   });
 
-  it('returns 250 for level 1', () => {
-    expect(getXpForNextLevel(1)).toBe(250);
+  it('returns 100 to leave level 1', () => {
+    expect(getXpForNextLevel(1)).toBe(100);
   });
 
-  it('scales beyond defined thresholds', () => {
-    const xp = getXpForNextLevel(15);
-    expect(xp).toBeGreaterThan(6000);
+  it('is the inverse of getLevelForXp', () => {
+    for (let level = 1; level <= 20; level++) {
+      expect(getLevelForXp(getXpForLevel(level))).toBe(level);
+      expect(getLevelForXp(getXpForLevel(level) - 1)).toBe(Math.max(1, level - 1));
+    }
   });
 });
 
 describe('getRankForLevel', () => {
-  it('returns Novice for level 0', () => {
-    const rank = getRankForLevel(0);
+  it('returns Novice for level 1', () => {
+    const rank = getRankForLevel(1);
     expect(rank.name).toBe('Novice');
     expect(rank.color).toBe('#aaa');
   });

@@ -88,6 +88,7 @@ const FR = {
   theme_desc_lifestyle: 'Clair, minimal, moderne. Moins donjon, plus quotidien.',
   // Weekly recap
   recap_label: 'CETTE SEMAINE',
+  recap_label_last: 'LA SEMAINE DERNIÈRE',
   recap_title: 'Récap hebdo',
   recap_back: '< Retour',
   recap_stat_done: 'FAIT',
@@ -197,7 +198,7 @@ const FR = {
   onb_quick_no_social: 'Pas de réseaux sociaux le matin',
   // Social screen — title + tabs
   social_title: 'SOCIAL',
-  social_tab_rank: '🏆 CLASS.',
+  social_tab_rank: '🏆 CLASSEMENT',
   social_tab_friends: '👥 AMIS',
   social_tab_duels: '⚔️ DUELS',
   social_tab_streaks: '🔥 SÉRIES',
@@ -933,6 +934,7 @@ const EN = {
   theme_desc_lifestyle: 'Clean, minimal, modern. Less dungeon, more everyday.',
   // Weekly recap
   recap_label: 'THIS WEEK',
+  recap_label_last: 'LAST WEEK',
   recap_title: 'Weekly Recap',
   recap_back: '< Back',
   recap_stat_done: 'DONE',

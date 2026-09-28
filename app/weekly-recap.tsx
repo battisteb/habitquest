@@ -73,6 +73,8 @@ export default function WeeklyRecapScreen() {
   const insets = useSafeAreaInsets();
   const [stats, setStats] = useState<WeekStats | null>(null);
   const [loading, setLoading] = useState(true);
+  // On Monday the current week has barely started: recap the full last week.
+  const weeksBack = new Date().getDay() === 1 ? 1 : 0;
 
   const dayLabels = useMemo(
     () => [T.day_mon, T.day_tue, T.day_wed, T.day_thu, T.day_fri, T.day_sat, T.day_sun],
@@ -90,8 +92,8 @@ export default function WeeklyRecapScreen() {
 
     setLoading(true);
     try {
-      const { start, days } = getWeekDates(0);
-      const { start: prevStart, end: prevEnd } = getWeekDates(1);
+      const { start, days } = getWeekDates(weeksBack);
+      const { start: prevStart, end: prevEnd } = getWeekDates(weeksBack + 1);
 
       const { data: habits } = await supabase
         .from('habits')
@@ -223,7 +225,7 @@ export default function WeeklyRecapScreen() {
       <PixelButton title={T.recap_back} onPress={() => router.back()} variant="ghost" />
 
       <View style={styles.header}>
-        <Text style={styles.screenLabel}>{T.recap_label}</Text>
+        <Text style={styles.screenLabel}>{weeksBack ? T.recap_label_last : T.recap_label}</Text>
         <Text style={styles.title}>{T.recap_title}</Text>
       </View>
 

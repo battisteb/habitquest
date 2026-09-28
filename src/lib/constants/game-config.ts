@@ -4,30 +4,41 @@ export const XP_CONFIG = {
   STREAK_MULTIPLIER_STEP: 0.1,
 } as const;
 
+/**
+ * XP needed for levels 1 to 11 (level 1 = 0 XP). Players start at level 1.
+ * Past the table, one level every LEVEL_XP_BEYOND_TABLE XP.
+ * Mirrored in SQL by public.level_for_xp — change both together (ADR 010).
+ */
 export const LEVEL_THRESHOLDS = [
   0, 100, 250, 500, 850, 1300, 1900, 2600, 3500, 4600, 6000,
 ] as const;
 
+const LEVEL_XP_BEYOND_TABLE = 2000;
+const LAST_TABLE_LEVEL = LEVEL_THRESHOLDS.length; // 11
+
+/** Total XP required to reach `level` (level ≥ 1). */
+export function getXpForLevel(level: number): number {
+  if (level <= 1) return 0;
+  if (level <= LAST_TABLE_LEVEL) return LEVEL_THRESHOLDS[level - 1];
+  return LEVEL_THRESHOLDS[LAST_TABLE_LEVEL - 1] + (level - LAST_TABLE_LEVEL) * LEVEL_XP_BEYOND_TABLE;
+}
+
 export function getLevelForXp(xp: number): number {
-  let level = 0;
+  const lastXp = LEVEL_THRESHOLDS[LAST_TABLE_LEVEL - 1];
+  if (xp >= lastXp) {
+    return LAST_TABLE_LEVEL + Math.floor((xp - lastXp) / LEVEL_XP_BEYOND_TABLE);
+  }
+  let level = 1;
   for (let i = 0; i < LEVEL_THRESHOLDS.length; i++) {
-    if (xp >= LEVEL_THRESHOLDS[i]) {
-      level = i;
-    } else {
-      break;
-    }
+    if (xp >= LEVEL_THRESHOLDS[i]) level = i + 1;
+    else break;
   }
   return level;
 }
 
+/** Total XP required for the level after `currentLevel`. */
 export function getXpForNextLevel(currentLevel: number): number {
-  if (currentLevel + 1 < LEVEL_THRESHOLDS.length) {
-    return LEVEL_THRESHOLDS[currentLevel + 1];
-  }
-  // Beyond defined thresholds: exponential growth
-  const lastThreshold = LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
-  const levelsAbove = currentLevel + 1 - (LEVEL_THRESHOLDS.length - 1);
-  return lastThreshold + levelsAbove * 2000;
+  return getXpForLevel(currentLevel + 1);
 }
 
 export function calculateXpEarned(streakCount: number): number {
@@ -39,7 +50,8 @@ export function calculateXpEarned(streakCount: number): number {
 }
 
 export const RANKS = [
-  { name: 'Novice', minLevel: 0, color: '#aaa' },
+  // Rank XP: 0, 250, 850, 1900, 3500, 6000 (Legend was unreachable before ADR 010).
+  { name: 'Novice', minLevel: 1, color: '#aaa' },
   { name: 'Apprentice', minLevel: 3, color: '#4ecca3' },
   { name: 'Warrior', minLevel: 5, color: '#e94560' },
   { name: 'Knight', minLevel: 7, color: '#f5c518' },

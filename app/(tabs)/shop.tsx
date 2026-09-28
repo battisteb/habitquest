@@ -306,7 +306,7 @@ export default function ShopScreen() {
   const { profile } = useProfileStats();
 
   const userGold = profile?.gold ?? 0;
-  const userLevel = profile?.level ?? 0;
+  const userLevel = profile?.level ?? 1;
   const { canViewShopItem } = usePremium();
 
   // Compute the longest streak across all tracked habits for streak-gated unlocks
