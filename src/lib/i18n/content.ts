@@ -24,6 +24,12 @@ const QUESTS_FR: Record<string, Text> = {
   'Steady Progress': { title: 'Progrès régulier', description: "Valide 2 habitudes aujourd'hui" },
   'Triple Threat': { title: 'Triplé', description: "Valide 3 habitudes aujourd'hui" },
   'XP Hunter': { title: "Chasseur d'XP", description: "Gagne au moins 30 XP aujourd'hui" },
+  'Inner Peace': { title: 'Paix intérieure', description: 'Valide une habitude bien-être' },
+  'Getting Things Done': { title: 'Efficace', description: 'Valide une habitude productivité' },
+  'Eat Well': { title: 'Bien manger', description: 'Valide une habitude nutrition' },
+  'Well Rested': { title: 'Bien reposé', description: 'Valide une habitude sommeil' },
+  'Creative Spark': { title: 'Étincelle créative', description: 'Valide une habitude créativité' },
+  'Good Company': { title: 'Bien entouré', description: 'Valide une habitude sociale' },
 };
 
 const ACHIEVEMENTS_FR: Record<string, Text> = {

@@ -162,7 +162,8 @@ select is((select status || ':' || (winner_id = auth.uid())::text from challenge
 reset role;
 select is((select gold from profiles where id = '00000000-0000-0000-0000-0000000000b2'),
   80, 'the loser pays the wager');
-select is((select count(*)::int from notifications where type = 'challenge_completed'),
+select is((select count(*)::int from notifications where type = 'challenge_completed'
+             and user_id in ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000b2')),
   2, 'both players are notified');
 
 -- ─── Duels ───────────────────────────────────────────────────────────────────
