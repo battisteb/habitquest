@@ -8,7 +8,8 @@
  *   card  — full-screen title card
  *   clip  — app screen recording (REC_DIR/<src>.webm) in a phone frame, title above
  *   still — app screenshot (assets/screens/<src>.png) in the phone frame, slow zoom
- * Output: marketing/exports/reels/<reel>.mp4 (git-ignored).
+ * Output: marketing/exports/reels/<reel>.mp4 and a silent copy in
+ * marketing/exports/reels/sans-musique/ (git-ignored).
  */
 const fs = require('fs');
 const path = require('path');
@@ -99,6 +100,12 @@ async function roundedMask(page, file) {
       '-filter_complex', `[1:a]volume=0.7,afade=in:st=0:d=0.5,afade=out:st=${(total - 1.2).toFixed(2)}:d=1.2[a]`,
       '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-t', String(total), '-movflags', '+faststart', out]);
     console.log(`${name}: ${total.toFixed(1)} s → ${path.relative(repo, out)}`);
+
+    // Silent twin, to add a trending sound in the TikTok/Instagram editor.
+    const silent = path.join(root, 'exports', 'reels', 'sans-musique', `${name}.mp4`);
+    fs.mkdirSync(path.dirname(silent), { recursive: true });
+    run(['-f', 'concat', '-safe', '0', '-i', list, '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo',
+      '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-t', String(total), '-movflags', '+faststart', silent]);
   }
   await browser.close();
 })();

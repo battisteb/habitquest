@@ -1,30 +1,624 @@
 {
   "r1-ta-vie-est-un-rpg": {
-    "music": { "file": "assets/sounds/duel-music.m4a", "start": 4 },
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 4
+    },
     "segments": [
-      { "type": "card", "dur": 2.4, "icon": true, "title": "Et si ta vie était un <em>RPG</em> ? ⚔️" },
-      { "type": "clip", "dur": 4.2, "src": "today", "start": 0.6, "title": "Chaque habitude<br>= une <em>quête</em>" },
-      { "type": "still", "dur": 3.0, "src": "habit", "title": "Garde ta <em>série</em> 🔥" },
-      { "type": "clip", "dur": 3.2, "src": "profile", "start": 0.3, "title": "Monte de niveau.<br>Deviens une <em>légende</em>." },
-      { "type": "card", "dur": 2.8, "icon": true, "title": "HabitQuest", "subtitle": "Bientôt sur iOS & Android", "cta": "LIEN EN BIO ▲" }
+      {
+        "type": "card",
+        "dur": 2.4,
+        "icon": true,
+        "title": "Et si ta vie était un <em>RPG</em> ? ⚔️"
+      },
+      {
+        "type": "clip",
+        "dur": 4.2,
+        "src": "today",
+        "start": 0.6,
+        "title": "Chaque habitude<br>= une <em>quête</em>"
+      },
+      {
+        "type": "still",
+        "dur": 3,
+        "src": "habit",
+        "title": "Garde ta <em>série</em> 🔥"
+      },
+      {
+        "type": "clip",
+        "dur": 3.2,
+        "src": "profile",
+        "start": 0.3,
+        "title": "Monte de niveau.<br>Deviens une <em>légende</em>."
+      },
+      {
+        "type": "card",
+        "dur": 2.8,
+        "icon": true,
+        "title": "HabitQuest",
+        "subtitle": "Bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
     ]
   },
   "r3-mon-heros-evolue": {
-    "music": { "file": "assets/sounds/duel-music.m4a", "start": 30 },
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 30
+    },
     "segments": [
-      { "type": "card", "dur": 2.2, "title": "Mon héros <em>monte de niveau</em>." },
-      { "type": "clip", "dur": 3.6, "src": "profile", "start": 0.2, "title": "Parce que j'ai tenu<br>mes <em>habitudes</em>." },
-      { "type": "still", "dur": 3.2, "src": "journey", "title": "Prochaine étape :<br><em>Chevalier</em> 🛡️" },
-      { "type": "card", "dur": 2.6, "icon": true, "title": "Ton héros t'attend.", "subtitle": "HabitQuest · bientôt dispo", "cta": "LIEN EN BIO ▲" }
+      {
+        "type": "card",
+        "dur": 2.2,
+        "title": "Mon héros <em>monte de niveau</em>."
+      },
+      {
+        "type": "clip",
+        "dur": 3.6,
+        "src": "profile",
+        "start": 0.2,
+        "title": "Parce que j'ai tenu<br>mes <em>habitudes</em>."
+      },
+      {
+        "type": "still",
+        "dur": 3.2,
+        "src": "journey",
+        "title": "Prochaine étape :<br><em>Chevalier</em> 🛡️"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Ton héros t'attend.",
+        "subtitle": "HabitQuest · bientôt dispo",
+        "cta": "LIEN EN BIO ▲"
+      }
     ]
   },
   "r5-defie-tes-potes": {
-    "music": { "file": "assets/sounds/duel-music.m4a", "start": 12 },
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 12
+    },
     "segments": [
-      { "type": "card", "dur": 2.0, "title": "Défie tes potes… ⚔️" },
-      { "type": "clip", "dur": 4.2, "src": "battle", "start": 0.6, "speed": 1.3, "title": "…avec tes <em>vraies</em><br>habitudes 💪" },
-      { "type": "still", "dur": 2.6, "src": "duels", "title": "Le plus <em>régulier</em><br>gagne." },
-      { "type": "card", "dur": 2.6, "icon": true, "title": "Tag le pote que tu battrais 👇", "cta": "HABITQUEST" }
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "Défie tes potes… ⚔️"
+      },
+      {
+        "type": "clip",
+        "dur": 4.2,
+        "src": "battle",
+        "start": 0.6,
+        "speed": 1.3,
+        "title": "…avec tes <em>vraies</em><br>habitudes 💪"
+      },
+      {
+        "type": "still",
+        "dur": 2.6,
+        "src": "duels",
+        "title": "Le plus <em>régulier</em><br>gagne."
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Tag le pote que tu battrais 👇",
+        "cta": "HABITQUEST"
+      }
+    ]
+  },
+  "r7-quetes-du-jour": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 20
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "Chaque matin,<br>3 nouvelles <em>quêtes</em> 📜"
+      },
+      {
+        "type": "clip",
+        "dur": 5,
+        "src": "quests",
+        "start": 0.3,
+        "title": "Tu les remplis<br>en vivant ta <em>journée</em>"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Réclame ton <em>butin</em> 💰",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r9-serie-14-jours": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 44
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "Ce qui arrive quand<br>tu tiens <em>14 jours</em> 🔥"
+      },
+      {
+        "type": "clip",
+        "dur": 5.2,
+        "src": "milestone",
+        "start": 0.4,
+        "title": "Une case cochée…"
+      },
+      {
+        "type": "card",
+        "dur": 2.2,
+        "title": "Et toi, ta plus longue <em>série</em> ?",
+        "subtitle": "Dis-le en commentaire 👇"
+      }
+    ]
+  },
+  "r10-level-up-eau": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 60
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2.2,
+        "title": "POV : tu passes <em>niveau 6</em><br>en buvant de l'eau 💧"
+      },
+      {
+        "type": "clip",
+        "dur": 6.2,
+        "src": "levelup",
+        "start": 0.5,
+        "title": "Boire 2 L d'eau.<br><em>+16 XP.</em>"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Même tes petites habitudes<br>te font <em>monter</em>.",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r11-classement-potes": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 76
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "Mes potes vs moi<br>cette <em>semaine</em> 🏆"
+      },
+      {
+        "type": "clip",
+        "dur": 5,
+        "src": "social",
+        "start": 0.3,
+        "title": "Le plus <em>régulier</em><br>monte sur le podium"
+      },
+      {
+        "type": "card",
+        "dur": 2.4,
+        "title": "Tag celui qui finirait<br><em>dernier</em> 👇",
+        "cta": "HABITQUEST"
+      }
+    ]
+  },
+  "r12-boutique": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 92
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "Ton or sert à quelque chose 💰"
+      },
+      {
+        "type": "clip",
+        "dur": 6.5,
+        "src": "shop",
+        "start": 0.4,
+        "speed": 1.2,
+        "title": "Casques, tenues, décors…<br>habille ton <em>héros</em> 👑"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Chaque habitude<br>= de l'<em>or</em>.",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r13-novice-a-legende": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 108
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "De <em>Novice</em> à <em>Légende</em> :<br>6 rangs ⚔️"
+      },
+      {
+        "type": "clip",
+        "dur": 5,
+        "src": "journey",
+        "start": 0.3,
+        "title": "Ton parcours XP,<br>jour après <em>jour</em>"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Tu es à quel <em>rang</em> ?",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r14-succes": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 124
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "23 <em>succès</em> à débloquer 🏅"
+      },
+      {
+        "type": "clip",
+        "dur": 5,
+        "src": "achievements",
+        "start": 0.3,
+        "speed": 1.2,
+        "title": "Chacun rapporte<br>de l'<em>XP</em> et de l'<em>or</em>"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Combien tu en aurais <em>déjà</em> ?",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r15-stats": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 8
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "Ta discipline,<br>en <em>graphique</em> 📊"
+      },
+      {
+        "type": "clip",
+        "dur": 4.5,
+        "src": "stats",
+        "start": 0.2,
+        "title": "97 % cette semaine.<br>Le calendrier ne <em>ment</em> pas."
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Suis tes <em>progrès</em>.",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r16-cree-ta-quete": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 28
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 1.8,
+        "title": "Crée une quête<br>en <em>10 secondes</em> ⏱️"
+      },
+      {
+        "type": "clip",
+        "dur": 6.5,
+        "src": "create",
+        "start": 0.3,
+        "title": "Nom, catégorie, fréquence,<br><em>emoji</em>. C'est tout."
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Ta première quête,<br>c'est <em>laquelle</em> ?",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r17-modeles": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 52
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "Pas d'idée d'habitude ? 🤔"
+      },
+      {
+        "type": "clip",
+        "dur": 5,
+        "src": "templates",
+        "start": 0.3,
+        "speed": 1.2,
+        "title": "Des dizaines de <em>modèles</em><br>prêts en un tap"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Sommeil, sport, lecture…<br>choisis ta <em>quête</em>.",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r18-defi-1v1": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 68
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "Défie ton pote.<br><em>Mise de l'or.</em> 💰"
+      },
+      {
+        "type": "clip",
+        "dur": 4.8,
+        "src": "challenge",
+        "start": 0.3,
+        "title": "Course à l'XP ou<br>nombre de <em>validations</em>"
+      },
+      {
+        "type": "card",
+        "dur": 2.4,
+        "title": "Le plus régulier<br>rafle la <em>mise</em>.",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r19-mode-examens": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 84
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2.2,
+        "title": "Semaine d'<em>exams</em> ? 📚"
+      },
+      {
+        "type": "clip",
+        "dur": 5,
+        "src": "focus",
+        "start": 0.2,
+        "title": "Mode Examens : tu gardes<br>l'<em>essentiel</em>, le reste attend"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Tes séries sont <em>gelées</em>,<br>pas perdues.",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r20-combat": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 100
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 1.8,
+        "title": "Un combat<br><em>au tour par tour</em> ⚔️"
+      },
+      {
+        "type": "clip",
+        "dur": 7,
+        "src": "battle",
+        "start": 0.5,
+        "speed": 1.6,
+        "title": "Tes attaques viennent<br>de tes <em>habitudes</em>"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Qui tu <em>défies</em> en premier ?",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r21-journee-parfaite": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 116
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2,
+        "title": "La satisfaction d'une<br><em>journée parfaite</em> ✅"
+      },
+      {
+        "type": "clip",
+        "dur": 5.5,
+        "src": "today",
+        "start": 0.5,
+        "speed": 1.3,
+        "title": "5 quêtes sur 5.<br>Série <em>intacte</em>."
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Demain, on <em>recommence</em>.",
+        "subtitle": "HabitQuest · bientôt sur iOS & Android",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r22-j-moins-7": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 132
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2.4,
+        "icon": true,
+        "title": "<em>J-7</em> ⏳",
+        "subtitle": "HabitQuest arrive sur iOS & Android"
+      },
+      {
+        "type": "clip",
+        "dur": 4.2,
+        "src": "today",
+        "start": 0.5,
+        "title": "Tes habitudes vont<br>devenir des <em>quêtes</em>"
+      },
+      {
+        "type": "card",
+        "dur": 2.4,
+        "title": "Abonne-toi pour<br>ne pas <em>rater</em> la sortie",
+        "cta": "SUIVRE ▲"
+      }
+    ]
+  },
+  "r23-j-moins-3": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 12
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2.4,
+        "icon": true,
+        "title": "<em>J-3</em> ⏳",
+        "subtitle": "Prépare ta première quête"
+      },
+      {
+        "type": "clip",
+        "dur": 4.6,
+        "src": "create",
+        "start": 0.3,
+        "title": "Quelle habitude<br>tu vas <em>transformer</em> ?"
+      },
+      {
+        "type": "card",
+        "dur": 2.4,
+        "title": "Dis-la en commentaire 👇",
+        "cta": "LIEN EN BIO ▲"
+      }
+    ]
+  },
+  "r24-j-moins-1": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 36
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2.4,
+        "icon": true,
+        "title": "<em>Demain</em>. ⚔️",
+        "subtitle": "HabitQuest sort sur iOS & Android"
+      },
+      {
+        "type": "clip",
+        "dur": 5,
+        "src": "levelup",
+        "start": 0.5,
+        "title": "Monte de <em>niveau</em><br>pour de vrai"
+      },
+      {
+        "type": "card",
+        "dur": 2.4,
+        "title": "Active la cloche 🔔",
+        "cta": "SUIVRE ▲"
+      }
+    ]
+  },
+  "r25-cest-sorti": {
+    "music": {
+      "file": "assets/sounds/duel-music.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "card",
+        "dur": 2.4,
+        "icon": true,
+        "title": "C'est <em>sorti</em> ! 🎉",
+        "subtitle": "HabitQuest · iOS & Android"
+      },
+      {
+        "type": "clip",
+        "dur": 3.4,
+        "src": "milestone",
+        "start": 0.4,
+        "title": "Tes habitudes =<br>des <em>quêtes</em>"
+      },
+      {
+        "type": "clip",
+        "dur": 3.4,
+        "src": "social",
+        "start": 0.3,
+        "title": "Défie tes <em>potes</em>"
+      },
+      {
+        "type": "card",
+        "dur": 2.6,
+        "icon": true,
+        "title": "Télécharge-le 👇",
+        "subtitle": "Gratuit · lien en bio",
+        "cta": "LIEN EN BIO ▲"
+      }
     ]
   }
 }

@@ -71,3 +71,11 @@ Plan : bouton « Repos », puis série protégée. Textes : « Un imprévu ? »,
 - Filmer l'écran avec l'enregistrement d'écran de l'iPhone (version web installée) ou utiliser les vidéos fournies.
 - Accroche lisible sans le son, texte dans la zone centrale (éviter les 250 px du haut et les 400 px du bas, masqués par l'interface TikTok).
 - Sur TikTok, ajouter un son tendance à faible volume par-dessus.
+
+---
+
+## Reels générés pour le sprint de lancement (R7, R9 → R25)
+
+18 reels supplémentaires, montés depuis de vraies captures de l'app (1080×1920, 9-12 s). Le planning jour par jour, avec légendes et hashtags, est dans [`launch-sprint.md`](launch-sprint.md). Chaque reel existe aussi **sans musique** (`exports/reels/sans-musique/`) pour ajouter un son tendance dans TikTok/Instagram.
+
+Pour les régénérer : enregistrer les écrans (`REC_DIR` = dossier des `.webm`), puis `node marketing/build-reels.js [reel]`.
