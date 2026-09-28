@@ -8,8 +8,10 @@ import { XpToast } from '../../../ui/animations/xp-toast';
 import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 export function HabitList() {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -82,8 +84,8 @@ export function HabitList() {
   if (habits.length === 0) {
     return (
       <View style={styles.empty}>
-        <Text style={styles.emptyTitle}>No quests yet</Text>
-        <Text style={styles.emptySubtitle}>Tap + to create your first habit</Text>
+        <Text style={styles.emptyTitle}>{T.habit_list_empty_title}</Text>
+        <Text style={styles.emptySubtitle}>{T.habit_list_empty_sub}</Text>
       </View>
     );
   }

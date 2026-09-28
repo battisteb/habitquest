@@ -7,6 +7,7 @@ import { canPersonalizeAds } from '../utils/tracking-consent';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 // AdMob is native-only — dynamic import to avoid web crashes
 const isNative = Platform.OS !== 'web';
@@ -33,6 +34,7 @@ interface AdBannerProps {
  * Includes a subtle "GO PREMIUM" dismiss hint.
  */
 export function AdBanner({ position = 'bottom' }: AdBannerProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -71,7 +73,7 @@ export function AdBanner({ position = 'bottom' }: AdBannerProps) {
         onAdFailedToLoad={() => {/* Silent fail */}}
       />
       <Pressable style={styles.premiumHint} onPress={() => router.push('/paywall')}>
-        <Text style={styles.premiumHintText}>✕ SUPPRIMER LES PUBS</Text>
+        <Text style={styles.premiumHintText}>{T.ad_remove_ads}</Text>
       </Pressable>
     </View>
   );

@@ -11,6 +11,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { colors, fontSizes, spacing } from '../theme/tokens';
+import { useT } from '../../lib/i18n';
 
 interface StreakMilestoneOverlayProps {
   visible: boolean;
@@ -19,20 +20,35 @@ interface StreakMilestoneOverlayProps {
   onComplete?: () => void;
 }
 
-const MILESTONE_CONFIGS: Record<number, { emoji: string; label: string; color: string }> = {
-  7:   { emoji: '🔥', label: '1 WEEK',    color: '#f39c12' },
-  14:  { emoji: '⚡', label: '2 WEEKS',   color: '#e67e22' },
-  30:  { emoji: '💎', label: '1 MONTH',   color: '#5b8def' },
-  60:  { emoji: '🏆', label: '2 MONTHS',  color: '#9b59b6' },
-  100: { emoji: '👑', label: '100 DAYS',  color: '#e74c3c' },
-  365: { emoji: '🌟', label: '1 YEAR',    color: '#f1c40f' },
+type MilestoneLabelKey =
+  | 'milestone_1w'
+  | 'milestone_2w'
+  | 'milestone_1m'
+  | 'milestone_2m'
+  | 'milestone_100d'
+  | 'milestone_1y';
+
+interface MilestoneConfig {
+  emoji: string;
+  labelKey: MilestoneLabelKey | null;
+  color: string;
+}
+
+const MILESTONE_CONFIGS: Record<number, MilestoneConfig> = {
+  7:   { emoji: '🔥', labelKey: 'milestone_1w',   color: '#f39c12' },
+  14:  { emoji: '⚡', labelKey: 'milestone_2w',   color: '#e67e22' },
+  30:  { emoji: '💎', labelKey: 'milestone_1m',   color: '#5b8def' },
+  60:  { emoji: '🏆', labelKey: 'milestone_2m',   color: '#9b59b6' },
+  100: { emoji: '👑', labelKey: 'milestone_100d', color: '#e74c3c' },
+  365: { emoji: '🌟', labelKey: 'milestone_1y',   color: '#f1c40f' },
 };
 
-function getMilestoneConfig(count: number) {
-  return MILESTONE_CONFIGS[count] ?? { emoji: '🔥', label: `${count} DAYS`, color: colors.accent };
+function getMilestoneConfig(count: number): MilestoneConfig {
+  return MILESTONE_CONFIGS[count] ?? { emoji: '🔥', labelKey: null, color: colors.accent };
 }
 
 export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComplete }: StreakMilestoneOverlayProps) {
+  const T = useT();
   const overlayOpacity = useSharedValue(0);
   const badgeScale = useSharedValue(0);
   const badgeRotate = useSharedValue(-10);
@@ -96,13 +112,13 @@ export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComp
     <Animated.View style={[styles.overlay, overlayStyle]}>
       <Animated.View style={[styles.card, badgeStyle, { borderColor: config.color }]}>
         <Text style={styles.emoji}>{config.emoji}</Text>
-        <Text style={[styles.milestoneLabel, { color: config.color }]}>{config.label} STREAK!</Text>
+        <Text style={[styles.milestoneLabel, { color: config.color }]}>{T.milestone_streak.replace('{label}', config.labelKey ? T[config.labelKey] : T.milestone_days.replace('{n}', String(streakCount)))}</Text>
         <View style={[styles.countBadge, { backgroundColor: config.color }]}>
           <Text style={styles.countText}>{streakCount}</Text>
         </View>
         <Animated.View style={flameStyle}>
           <Text style={styles.habitName} numberOfLines={1}>{habitName}</Text>
-          <Text style={styles.subtitle}>Incredible consistency!</Text>
+          <Text style={styles.subtitle}>{T.milestone_consistency}</Text>
         </Animated.View>
       </Animated.View>
     </Animated.View>

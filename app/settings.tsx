@@ -249,12 +249,12 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>{T.settings_subscription}</Text>
         {isPremium ? (
           <View style={styles.premiumBadgeRow}>
-            <Text style={styles.premiumActive}>👑 PREMIUM ACTIF</Text>
-            <Text style={styles.premiumSub}>Toutes les fonctionnalités sont débloquées</Text>
+            <Text style={styles.premiumActive}>{T.settings_premium_active}</Text>
+            <Text style={styles.premiumSub}>{T.settings_premium_active_sub}</Text>
           </View>
         ) : (
           <PixelButton
-            title="👑 Passer Premium — Supprimer les pubs"
+            title={T.settings_go_premium}
             onPress={() => router.push('/paywall')}
             variant="secondary"
           />

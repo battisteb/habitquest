@@ -5,6 +5,7 @@ import { habitsStore$, pauseHabit, getWeeklyTarget } from '../stores/habits-stor
 import { recordBreakTaken } from '../stores/burnout-store';
 import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface TakeBreakModalProps {
   visible: boolean;
@@ -23,6 +24,7 @@ interface ScoredHabit {
 }
 
 export function TakeBreakModal({ visible, onClose, onBreakTaken }: TakeBreakModalProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => createStyles(), [themeKey]);
 
@@ -92,13 +94,11 @@ export function TakeBreakModal({ visible, onClose, onBreakTaken }: TakeBreakModa
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.overlay}>
         <View style={styles.box}>
-          <Text style={styles.title}>🌙 PRENDRE UNE PAUSE</Text>
-          <Text style={styles.intro}>
-            Choisis les habitudes à mettre en pause. Tu pourras les reprendre quand tu seras prêt.
-          </Text>
+          <Text style={styles.title}>{T.break_title}</Text>
+          <Text style={styles.intro}>{T.break_intro}</Text>
 
           {scored.length === 0 ? (
-            <Text style={styles.empty}>Aucune habitude active à mettre en pause.</Text>
+            <Text style={styles.empty}>{T.break_empty}</Text>
           ) : (
             <ScrollView style={styles.list} contentContainerStyle={{ gap: spacing.xs }}>
               {scored.map((h) => {
@@ -117,7 +117,7 @@ export function TakeBreakModal({ visible, onClose, onBreakTaken }: TakeBreakModa
                         {h.name}
                       </Text>
                       <Text style={styles.rowStats}>
-                        Cette semaine : {h.weeklyDone}/{h.weeklyTarget}
+                        {T.break_this_week} {h.weeklyDone}/{h.weeklyTarget}
                       </Text>
                     </View>
                   </Pressable>
@@ -128,7 +128,7 @@ export function TakeBreakModal({ visible, onClose, onBreakTaken }: TakeBreakModa
 
           <View style={styles.buttons}>
             <Pressable style={[styles.btn, styles.btnCancel]} onPress={onClose} disabled={pausing}>
-              <Text style={styles.btnText}>Annuler</Text>
+              <Text style={styles.btnText}>{T.break_cancel}</Text>
             </Pressable>
             <Pressable
               style={[styles.btn, styles.btnConfirm, selected.size === 0 && styles.btnDisabled]}
@@ -137,10 +137,10 @@ export function TakeBreakModal({ visible, onClose, onBreakTaken }: TakeBreakModa
             >
               <Text style={styles.btnTextConfirm}>
                 {pausing
-                  ? 'Mise en pause…'
+                  ? T.break_pausing
                   : selected.size === 0
-                  ? 'Sélectionne au moins 1'
-                  : `Pauser ${selected.size}`}
+                  ? T.break_select_one
+                  : T.break_confirm.replace('{n}', String(selected.size))}
               </Text>
             </Pressable>
           </View>

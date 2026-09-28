@@ -113,6 +113,7 @@
           "enableBackgroundPlayback": false
         }
       ],
+      "expo-localization",
       [
         "expo-tracking-transparency",
         {

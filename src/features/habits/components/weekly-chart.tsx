@@ -2,14 +2,16 @@ import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 interface WeeklyChartProps {
   data: { date: string; count: number }[];
 }
 
-const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const DAY_KEYS = ['day_mon', 'day_tue', 'day_wed', 'day_thu', 'day_fri', 'day_sat', 'day_sun'] as const;
 
 export function WeeklyChart({ data }: WeeklyChartProps) {
+  const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: {
@@ -66,13 +68,13 @@ export function WeeklyChart({ data }: WeeklyChartProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>THIS WEEK</Text>
+      <Text style={styles.title}>{T.weekly_chart_title}</Text>
       <View style={styles.chart}>
         {data.map((day, i) => {
           const height = (day.count / maxCount) * 80;
           const dayOfWeek = new Date(day.date + 'T12:00:00').getDay();
           // Convert Sunday=0 to index, Mon=0
-          const label = DAY_LABELS[(dayOfWeek + 6) % 7];
+          const label = T[DAY_KEYS[(dayOfWeek + 6) % 7]];
 
           return (
             <View key={day.date} style={styles.barContainer}>
