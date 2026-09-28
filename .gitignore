@@ -62,3 +62,6 @@ google-service-account.json
 
 # Output of npm run check:bundle
 .bundle-check/
+
+# Generated marketing media (PNG/MP4), rebuilt from marketing/
+marketing/exports/
