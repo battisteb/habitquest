@@ -5,6 +5,7 @@ import { authStore$ } from '../../auth/stores/auth-store';
 import { getLevelForXp } from '../../../lib/constants/game-config';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
+import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
@@ -13,10 +14,14 @@ interface ProfileState {
   isLoading: boolean;
 }
 
-export const profileStore$ = observable<ProfileState>({
+const initialState = (): ProfileState => ({
   profile: null,
   isLoading: false,
 });
+
+export const profileStore$ = observable<ProfileState>(initialState());
+
+resetOnSignOut(profileStore$, initialState);
 
 syncObservable(profileStore$, {
   persist: {

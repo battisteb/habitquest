@@ -2,8 +2,11 @@ import { supabase } from '../../../lib/supabase/client';
 import { storage } from '../../../lib/storage/mmkv';
 import { calculatePunishment } from './punishment';
 import { isFreezeActiveToday } from './streak-freeze';
+import { onUserDataCleared } from '../../../lib/storage/user-data';
 
 const PUNISHED_KEY = 'punished-streaks';
+
+onUserDataCleared(() => storage.delete(PUNISHED_KEY));
 
 function getPunishedSet(): Set<string> {
   const raw = storage.getString(PUNISHED_KEY);

@@ -1,6 +1,9 @@
 import { storage } from '../../../lib/storage/mmkv';
+import { onUserDataCleared } from '../../../lib/storage/user-data';
 
 const FREEZE_KEY = 'streak-freeze';
+
+onUserDataCleared(() => storage.delete(FREEZE_KEY));
 
 interface FreezeData {
   lastFreezeDate: string | null;   // ISO date (YYYY-MM-DD) of last freeze used
