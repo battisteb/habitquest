@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Stack, usePathname, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
@@ -34,17 +34,19 @@ import { lang$ } from '../src/lib/i18n';
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
   const segments = useSegments();
+  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     if (!isInitialized) return;
 
     const inAuthGroup = segments[0] === '(auth)';
-    const inviteCode = segments[0] === 'invite' ? (segments as string[])[1] : undefined;
+    // Segments hold the route pattern ("[code]"): read the real code from the path.
+    const inviteCode = /^\/invite\/([^/?#]+)/.exec(pathname)?.[1];
 
     if (!isAuthenticated && !inAuthGroup) {
       // Keep an invite opened before sign-up; it is accepted after onboarding.
-      if (inviteCode && inviteCode !== '[code]') savePendingInvite(inviteCode);
+      if (inviteCode) savePendingInvite(decodeURIComponent(inviteCode));
       router.replace('/(auth)/sign-in');
     } else if (isAuthenticated && !inAuthGroup && segments[0] !== 'onboarding' && hasCompletedOnboarding()) {
       const pending = takePendingInvite();
@@ -56,7 +58,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
         router.replace('/(tabs)/profile');
       }
     }
-  }, [isAuthenticated, isInitialized, segments]);
+  }, [isAuthenticated, isInitialized, segments, pathname]);
 
   if (!isInitialized) {
     return (
