@@ -12,7 +12,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "check:bundle": "expo export --platform ios --platform android --platform web --output-dir .bundle-check"
+    "check:bundle": "expo export --platform ios --platform android --platform web --output-dir .bundle-check",
+    "export:web": "expo export --platform web --clear",
+    "deploy:web": "npm run export:web && npx eas-cli@latest deploy --prod"
   },
   "dependencies": {
     "@legendapp/state": "3.0.0-beta.46",
