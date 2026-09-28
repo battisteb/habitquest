@@ -15,6 +15,7 @@ import { useT } from '../../src/lib/i18n';
 import { HABIT_TEMPLATES } from '../../src/lib/constants/habit-templates';
 import { CATEGORY_CONFIG } from '../../src/lib/constants/categories';
 import { lang$ } from '../../src/lib/i18n';
+import { categoryLabel } from '../../src/lib/i18n/labels';
 import { use$ } from '@legendapp/state/react';
 
 const CATEGORY_FILTERS = ['all', 'health', 'fitness', 'mindfulness', 'learning', 'productivity', 'nutrition', 'sleep', 'social', 'creativity', 'finance'] as const;
@@ -169,7 +170,7 @@ export default function HabitTemplatesScreen() {
           const cfg = cat !== 'all' ? CATEGORY_CONFIG[cat as keyof typeof CATEGORY_CONFIG] : null;
           const label = cat === 'all'
             ? (lang === 'fr' ? 'TOUS' : 'ALL')
-            : (cfg?.label.toUpperCase() ?? cat.toUpperCase());
+            : categoryLabel(T, cat).toUpperCase();
           return (
             <Pressable
               style={[styles.chip, isActive && styles.chipActive, isActive && cfg ? { borderColor: cfg.color, backgroundColor: cfg.color + '22' } : {}]}
@@ -200,7 +201,7 @@ export default function HabitTemplatesScreen() {
               <View style={styles.itemInfo}>
                 <Text style={styles.itemName}>{name}</Text>
                 <Text style={[styles.itemCategory, { color: catCfg?.color ?? colors.textMuted }]}>
-                  {catCfg?.icon} {catCfg?.label.toUpperCase() ?? item.category}
+                  {catCfg?.icon} {categoryLabel(T, item.category).toUpperCase()}
                 </Text>
                 <Text style={styles.itemFreq}>{freqLabel(item.frequency)}</Text>
               </View>

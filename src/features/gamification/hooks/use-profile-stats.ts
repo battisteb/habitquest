@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { use$ } from '@legendapp/state/react';
 import { profileStore$, fetchProfile } from '../stores/profile-store';
-import { getLevelForXp, getXpForNextLevel } from '../../../lib/constants/game-config';
+import { getLevelForXp, getXpForLevel, getXpForNextLevel } from '../../../lib/constants/game-config';
 
 export function useProfileStats() {
   const profile = use$(profileStore$.profile);
@@ -15,7 +15,7 @@ export function useProfileStats() {
     if (!profile) return { xpForNextLevel: 100, xpProgress: 0 };
     const level = getLevelForXp(profile.xp);
     const nextLevelXp = getXpForNextLevel(level);
-    const currentLevelXp = level > 0 ? getXpForNextLevel(level - 1) : 0;
+    const currentLevelXp = getXpForLevel(level);
     const xpInLevel = profile.xp - currentLevelXp;
     const xpNeeded = nextLevelXp - currentLevelXp;
     const progress = xpNeeded > 0 ? Math.min(xpInLevel / xpNeeded, 1) : 0;

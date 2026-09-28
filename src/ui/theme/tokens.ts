@@ -1,3 +1,6 @@
+import { THEMES, type ThemeKey } from './themes';
+import { storage } from '../../lib/storage/mmkv';
+
 export const colors: {
   background: string;
   surface: string;
@@ -33,6 +36,39 @@ export const colors: {
   xp: '#9b8cf5',
   border: '#3a4080',
 };
+
+export const THEME_STORAGE_KEY = 'active-theme';
+
+/** Copies a theme palette into the shared `colors` object. */
+export function applyThemeToColors(key: ThemeKey): void {
+  const t = THEMES[key];
+  colors.background = t.background;
+  colors.surface = t.surface;
+  colors.border = t.border;
+  colors.text = t.text;
+  colors.textSecondary = t.textSecondary;
+  colors.textMuted = t.textMuted;
+  colors.primary = t.primary;
+  colors.primaryDark = t.primaryDark;
+  colors.accent = t.accent;
+  colors.success = t.success;
+  colors.streak = t.streak;
+  colors.xp = t.xp;
+  if (t.gold) colors.accent = t.gold;
+  if (t.surfaceLight) colors.surfaceLight = t.surfaceLight;
+  if (t.secondary) colors.secondary = t.secondary;
+  if (t.danger) colors.danger = t.danger;
+  if (t.warning) colors.warning = t.warning;
+}
+
+export function savedThemeKey(): ThemeKey {
+  const saved = storage.getString(THEME_STORAGE_KEY) as ThemeKey | undefined;
+  return saved && THEMES[saved] ? saved : 'default';
+}
+
+// Apply the saved theme as soon as the palette is loaded: styles created once
+// at module load (StyleSheet.create at top level) then start from the right theme.
+applyThemeToColors(savedThemeKey());
 
 export const spacing = {
   xs: 4,

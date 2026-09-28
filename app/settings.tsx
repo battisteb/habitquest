@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../src/ui/components/pixel-button';
 import { useTheme } from '../src/ui/theme/theme-context';
-import { THEME_META, ThemeKey } from '../src/ui/theme/themes';
+import { THEME_META, THEMES, ThemeKey } from '../src/ui/theme/themes';
 import {
   getNotificationPrefs,
   saveNotificationPrefs,
@@ -38,6 +38,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { themeKey, setTheme } = useTheme();
+  const styles = useMemo(createStyles, [themeKey]);
   const T = useT();
   const currentLang = use$(lang$);
 
@@ -118,12 +119,20 @@ export default function SettingsScreen() {
                 style={[styles.themeCard, active && styles.themeCardActive]}
                 onPress={() => setTheme(key)}
               >
-                <Text style={styles.themeEmoji}>{meta.emoji}</Text>
+                <View style={styles.themeTop}>
+                  <Text style={styles.themeEmoji}>{meta.emoji}</Text>
+                  {/* Palette preview: background, primary, accent */}
+                  <View style={styles.swatches}>
+                    {[THEMES[key].background, THEMES[key].primary, THEMES[key].accent].map((c) => (
+                      <View key={c} style={[styles.swatch, { backgroundColor: c }]} />
+                    ))}
+                  </View>
+                </View>
                 <Text style={[styles.themeName, active && styles.themeNameActive]} numberOfLines={1}>
-                  {meta.name}
+                  {T[`theme_name_${key}` as keyof typeof T] ?? meta.name}
                 </Text>
                 <Text style={styles.themeDesc} numberOfLines={2}>
-                  {meta.description}
+                  {T[`theme_desc_${key}` as keyof typeof T] ?? meta.description}
                 </Text>
                 {active && <Text style={styles.activeChip}>{T.theme_active}</Text>}
               </Pressable>
@@ -310,7 +319,9 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+// Rebuilt when the theme changes (the screen shows the theme picker).
+function createStyles() {
+  return StyleSheet.create({
   scroll: {
     flex: 1,
     backgroundColor: colors.background,
@@ -367,6 +378,9 @@ const styles = StyleSheet.create({
   themeEmoji: {
     fontSize: 24,
   },
+  themeTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  swatches: { flexDirection: 'row', gap: 3 },
+  swatch: { width: 14, height: 14, borderRadius: 7, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
   themeName: {
     fontSize: fontSizes.sm,
     fontWeight: 'bold',
@@ -506,3 +520,4 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
 });
+}

@@ -118,6 +118,23 @@ describe('OnboardingScreen', () => {
     expect(requestPermissions).toHaveBeenCalled();
   });
 
+  it('creates up to three quick-pick habits', async () => {
+    const utils = render(<OnboardingScreen />);
+    goToHabitStep(utils);
+
+    fireEvent.press(utils.getByText('onb_quick_water'));
+    fireEvent.press(utils.getByText('onb_quick_read'));
+    fireEvent.press(utils.getByText('onb_quick_exercise'));
+    fireEvent.press(utils.getByText('onb_quick_meditate')); // 4th pick is ignored
+    fireEvent.press(utils.getByText('onb_quick_read')); // unselect
+    fireEvent.press(utils.getByText('ONB_START_QUEST'));
+
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/(tabs)/today'));
+    expect(createHabit).toHaveBeenCalledTimes(2);
+    expect(createHabit).toHaveBeenCalledWith('onb_quick_water', 'health');
+    expect(createHabit).toHaveBeenCalledWith('onb_quick_exercise', 'fitness');
+  });
+
   it('creates a custom habit from the text input', async () => {
     const utils = render(<OnboardingScreen />);
     goToHabitStep(utils);

@@ -262,17 +262,6 @@ export default function CreateHabitScreen() {
 
       <ContentPicker value={content} onChange={setContent} />
 
-      {(category === 'fitness' || category === 'learning') && (
-        <Pressable
-          onPress={() => router.push('/(tabs)/training')}
-          style={styles.trainingShortcut}
-        >
-          <Text style={styles.trainingShortcutText}>
-            {category === 'fitness' ? T.habit_create_training_fitness : T.habit_create_training_learning}
-          </Text>
-        </Pressable>
-      )}
-
       <PixelButton
         title={T.habit_create_submit}
         onPress={handleCreate}

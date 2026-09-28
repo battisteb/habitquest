@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Stack, usePathname, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth, authStore$ } from '../src/features/auth/stores/auth-store';
 import { hasCompletedOnboarding } from '../src/features/onboarding/onboarding-state';
+import { savePendingInvite, takePendingInvite } from '../src/features/social/utils/invite';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
 import { streakMilestoneStore$, dismissStreakMilestone } from '../src/features/gamification/stores/streak-milestone-store';
 import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';
@@ -33,15 +34,23 @@ import { lang$ } from '../src/lib/i18n';
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
   const segments = useSegments();
+  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     if (!isInitialized) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    // Segments hold the route pattern ("[code]"): read the real code from the path.
+    const inviteCode = /^\/invite\/([^/?#]+)/.exec(pathname)?.[1];
 
     if (!isAuthenticated && !inAuthGroup) {
+      // Keep an invite opened before sign-up; it is accepted after onboarding.
+      if (inviteCode) savePendingInvite(decodeURIComponent(inviteCode));
       router.replace('/(auth)/sign-in');
+    } else if (isAuthenticated && !inAuthGroup && segments[0] !== 'onboarding' && hasCompletedOnboarding()) {
+      const pending = takePendingInvite();
+      if (pending) router.replace(`/invite/${pending}`);
     } else if (isAuthenticated && inAuthGroup) {
       if (!hasCompletedOnboarding()) {
         router.replace('/onboarding');
@@ -49,7 +58,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
         router.replace('/(tabs)/profile');
       }
     }
-  }, [isAuthenticated, isInitialized, segments]);
+  }, [isAuthenticated, isInitialized, segments, pathname]);
 
   if (!isInitialized) {
     return (

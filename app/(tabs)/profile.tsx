@@ -182,7 +182,7 @@ export default function ProfileScreen() {
     loadAvatarConfig(authStore$.user.get()?.id);
   }, []);
 
-  const level = profile?.level ?? 0;
+  const level = profile?.level ?? 1;
   const rank = getRankForLevel(level);
   const avatarStage = getAvatarStage(level);
   const nextAvatarStage = getNextAvatarStage(level);
@@ -217,7 +217,7 @@ export default function ProfileScreen() {
             {/* Clickable avatar → edit profile */}
             <Pressable style={styles.avatarSection} onPress={() => router.push('/profile/edit')}>
               <EvolvedAvatar
-                level={profile?.level ?? 0}
+                level={profile?.level ?? 1}
                 size={180}
                 hat={equippedHat}
                 outfit={equippedOutfit}

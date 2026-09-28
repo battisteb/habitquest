@@ -16,6 +16,8 @@ import { useT } from '../../../lib/i18n';
 
 const SLIDE_EMOJIS = ['⚔️', '🔥', '🏆'];
 
+const MAX_FIRST_HABITS = 3;
+
 const QUICK_HABIT_CATEGORIES = ['health', 'learning', 'fitness', 'mindfulness', 'productivity'] as const;
 
 // Skin tone swatches
@@ -72,7 +74,8 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const [slideIndex, setSlideIndex] = useState(0);
   const [customHabit, setCustomHabit] = useState('');
-  const [selectedQuick, setSelectedQuick] = useState<number | null>(null);
+  // Up to MAX_FIRST_HABITS quick picks: a fuller first day makes daily quests reachable.
+  const [selectedQuick, setSelectedQuick] = useState<number[]>([]);
   const [isCreating, setIsCreating] = useState(false);
 
   // Avatar colors
@@ -114,10 +117,11 @@ export default function OnboardingScreen() {
       await saveAvatarConfig(skinColor, hairColor, eyeColor, userId);
 
       // Create first habit
-      if (selectedQuick !== null) {
-        const h = quickHabits[selectedQuick];
+      for (const i of selectedQuick) {
+        const h = quickHabits[i];
         await createHabit(h.name, h.category);
-      } else if (customHabit.trim()) {
+      }
+      if (customHabit.trim()) {
         await createHabit(customHabit.trim(), 'general');
       }
       markOnboardingComplete();
@@ -240,16 +244,21 @@ export default function OnboardingScreen() {
           {quickHabits.map((h, i) => (
             <Pressable
               key={i}
-              style={[styles.quickPick, selectedQuick === i && styles.quickPickSelected]}
+              style={[styles.quickPick, selectedQuick.includes(i) && styles.quickPickSelected]}
               onPress={() => {
-                setSelectedQuick(i);
-                setCustomHabit('');
+                setSelectedQuick((prev) =>
+                  prev.includes(i)
+                    ? prev.filter((x) => x !== i)
+                    : prev.length < MAX_FIRST_HABITS
+                      ? [...prev, i]
+                      : prev,
+                );
               }}
             >
               <Text
                 style={[
                   styles.quickPickText,
-                  selectedQuick === i && styles.quickPickTextSelected,
+                  selectedQuick.includes(i) && styles.quickPickTextSelected,
                 ]}
               >
                 {h.name}
@@ -263,7 +272,6 @@ export default function OnboardingScreen() {
             value={customHabit}
             onChangeText={(t) => {
               setCustomHabit(t);
-              setSelectedQuick(null);
             }}
             placeholder={T.onb_habit_placeholder}
           />
@@ -277,7 +285,7 @@ export default function OnboardingScreen() {
             <PixelButton
               title={isCreating ? T.onb_creating : T.onb_start_quest}
               onPress={handleFinish}
-              disabled={isCreating || (selectedQuick === null && !customHabit.trim())}
+              disabled={isCreating || (selectedQuick.length === 0 && !customHabit.trim())}
             />
             <PixelButton title={T.onb_skip} onPress={handleSkip} variant="ghost" />
           </View>

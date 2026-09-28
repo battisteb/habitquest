@@ -17,7 +17,7 @@ import { supabase } from '../src/lib/supabase/client';
 import { authStore$ } from '../src/features/auth/stores/auth-store';
 import {
   RANKS,
-  LEVEL_THRESHOLDS,
+  getXpForLevel,
   getRankForLevel,
   getXpForNextLevel,
   calculateXpEarned,
@@ -110,13 +110,9 @@ async function fetchXpJourneyData(): Promise<Omit<XpJourneyData, 'isLoading'>> {
       completedAt: c.completed_at,
     }));
 
-  // Best streak
-  const bestStreak = Math.max(
-    0,
-    ...(streaksRes.data ?? []).map((s) =>
-      Math.max(s.current_count ?? 0, s.longest_count ?? 0),
-    ),
-  );
+  // Best streak still running: the XP bonus only follows current streaks
+  // (the all-time best made the card promise more XP than completions give).
+  const bestStreak = Math.max(0, ...(streaksRes.data ?? []).map((s) => s.current_count ?? 0));
 
   // Total completions (all time)
   const { count } = await supabase
@@ -401,18 +397,19 @@ export default function XpJourneyScreen() {
     fetchXpJourneyData().then((d) => setData({ ...d, isLoading: false }));
   }, []);
 
-  const level = profile?.level ?? 0;
+  const level = profile?.level ?? 1;
   const totalXp = profile?.xp ?? 0;
   const rank = getRankForLevel(level);
 
   // Current level XP bounds
-  const currentLevelXp = level > 0 ? LEVEL_THRESHOLDS[Math.min(level, LEVEL_THRESHOLDS.length - 1)] : 0;
+  const currentLevelXp = getXpForLevel(level);
   const xpInLevel = totalXp - currentLevelXp;
   const xpNeeded = xpForNextLevel - currentLevelXp;
 
   // Streak multiplier
+  // Bonus of the next completion of that habit (its streak goes up by one).
   const multiplier = Math.min(
-    1 + data.bestStreak * XP_CONFIG.STREAK_MULTIPLIER_STEP,
+    1 + (data.bestStreak + 1) * XP_CONFIG.STREAK_MULTIPLIER_STEP,
     XP_CONFIG.STREAK_MULTIPLIER_CAP,
   );
   const baseXp = XP_CONFIG.BASE_XP_PER_COMPLETION;
@@ -513,7 +510,7 @@ export default function XpJourneyScreen() {
             <View style={styles.multiplierArrow}><Text style={styles.arrowText}>→</Text></View>
             <View style={styles.multiplierItem}>
               <Text style={[styles.multiplierValue, { color: colors.accent }]}>
-                {calculateXpEarned(data.bestStreak)} XP
+                {calculateXpEarned(data.bestStreak + 1)} XP
               </Text>
               <Text style={styles.multiplierLabel}>{T.xp_per_habit_label}</Text>
             </View>
@@ -540,7 +537,7 @@ export default function XpJourneyScreen() {
         <View style={styles.roadmapCard}>
           {RANKS.map((r, i) => {
             const nextRank = RANKS[i + 1];
-            const rankLevelXp = LEVEL_THRESHOLDS[Math.min(r.minLevel, LEVEL_THRESHOLDS.length - 1)];
+            const rankLevelXp = getXpForLevel(r.minLevel);
             const isCurrentRank = rank.name === r.name;
             const isPast = level >= r.minLevel;
             const isNext = nextRank ? level < nextRank.minLevel && level >= r.minLevel : false;

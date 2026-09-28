@@ -35,6 +35,7 @@ import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 import { titleLabel } from '../../src/lib/i18n/labels';
+import { shareInvite } from '../../src/features/social/utils/invite';
 
 type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
 
@@ -101,7 +102,9 @@ export default function SocialScreen() {
     position: 'relative',
   },
   tabActive: { borderBottomWidth: 3, borderBottomColor: colors.primary },
-  tabText: { fontSize: 9, fontWeight: 'bold', color: colors.textMuted, letterSpacing: 0.5 },
+  tabLabel: { alignItems: 'center', gap: 1 },
+  tabIcon: { fontSize: 14, lineHeight: 17 },
+  tabText: { fontSize: 9, fontWeight: 'bold', color: colors.textMuted, letterSpacing: 0.3 },
   tabTextActive: { color: colors.primary },
   tabBadge: {
     backgroundColor: colors.danger,
@@ -118,6 +121,8 @@ export default function SocialScreen() {
   empty: { alignItems: 'center', paddingTop: spacing.xxl, gap: spacing.sm },
   emptyEmoji: { fontSize: 48 },
   emptyText: { color: colors.textMuted, textAlign: 'center', fontSize: fontSizes.md },
+  inviteRow: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs, alignSelf: 'stretch' },
+  inviteFeedback: { color: colors.success, textAlign: 'center', fontSize: fontSizes.sm },
 
   // Leaderboard
   podium: {
@@ -255,6 +260,7 @@ export default function SocialScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('leaderboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [inviteFeedback, setInviteFeedback] = useState<string | null>(null);
 
   const friends = use$(friendsStore$.friends);
   const pendingReceived = use$(friendsStore$.pendingReceived);
@@ -317,10 +323,28 @@ export default function SocialScreen() {
             </Text>
           </Pressable>
         </View>
+        {lbScope === 'friends' && renderInviteButton()}
         {renderLeaderboardList(emptyText)}
       </>
     );
   };
+
+  // ── Invite ──────────────────────────────────────────────────────────────────
+  const handleInvite = async () => {
+    try {
+      const how = await shareInvite(T.invite_share_message);
+      setInviteFeedback(how === 'copied' ? T.invite_copied : null);
+    } catch {
+      // Share sheet dismissed or offline: nothing to report.
+    }
+  };
+
+  const renderInviteButton = () => (
+    <View style={styles.inviteRow}>
+      <PixelButton title={T.invite_button} onPress={handleInvite} variant="secondary" />
+      {inviteFeedback && <Text style={styles.inviteFeedback}>{inviteFeedback}</Text>}
+    </View>
+  );
 
   const renderLeaderboardList = (emptyText: string) => {
     if (lbLoading) return <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />;
@@ -421,11 +445,12 @@ export default function SocialScreen() {
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>👥</Text>
             <Text style={styles.emptyText}>{T.social_friends_empty}</Text>
+            {renderInviteButton()}
           </View>
         }
         renderItem={({ item }) => {
           const profile = item.profile;
-          const rank = profile ? getRankForLevel(profile.level ?? 0) : null;
+          const rank = profile ? getRankForLevel(profile.level ?? 1) : null;
 
           if (item.type === 'pending') {
             return (
@@ -452,7 +477,7 @@ export default function SocialScreen() {
                 <Text style={styles.friendName}>{profile?.username ?? '—'}</Text>
                 <View style={styles.friendMeta}>
                   {rank && <Text style={[styles.friendRank, { color: rank.color }]}>{rank.name}</Text>}
-                  <Text style={styles.friendXp}>{profile?.xp ?? 0} XP · {T.social_lv_prefix}{profile?.level ?? 0}</Text>
+                  <Text style={styles.friendXp}>{profile?.xp ?? 0} XP · {T.social_lv_prefix}{profile?.level ?? 1}</Text>
                 </View>
               </View>
               <View style={styles.friendActions}>
@@ -632,7 +657,7 @@ export default function SocialScreen() {
         renderItem={({ item }) => {
           const alreadyFriend = friends.some((f) => f.profile?.id === item.id);
           const alreadySent = friendsStore$.pendingSent.get().some((f) => f.profile?.id === item.id);
-          const rank = getRankForLevel(item.level ?? 0);
+          const rank = getRankForLevel(item.level ?? 1);
 
           return (
             <View style={styles.friendCard}>
@@ -640,7 +665,7 @@ export default function SocialScreen() {
                 <Text style={styles.friendName}>{item.username}</Text>
                 <View style={styles.friendMeta}>
                   <Text style={[styles.friendRank, { color: rank.color }]}>{rank.name}</Text>
-                  <Text style={styles.friendXp}>{item.xp ?? 0} XP · {T.social_lv_prefix}{item.level ?? 0}</Text>
+                  <Text style={styles.friendXp}>{item.xp ?? 0} XP · {T.social_lv_prefix}{item.level ?? 1}</Text>
                 </View>
               </View>
               {alreadyFriend ? (
@@ -669,9 +694,16 @@ export default function SocialScreen() {
             style={[styles.tab, activeTab === tab.key && styles.tabActive]}
             onPress={() => setActiveTab(tab.key)}
           >
-            <Text style={[styles.tabText, activeTab === tab.key && styles.tabTextActive]}>
-              {tab.label}
-            </Text>
+            {/* Emoji above the word: five tabs must fit a phone width. */}
+            <View style={styles.tabLabel}>
+              <Text style={styles.tabIcon}>{tab.label.split(' ')[0]}</Text>
+              <Text
+                style={[styles.tabText, activeTab === tab.key && styles.tabTextActive]}
+                numberOfLines={1}
+              >
+                {tab.label.split(' ').slice(1).join(' ')}
+              </Text>
+            </View>
             {!!tab.badge && tab.badge > 0 && (
               <View style={styles.tabBadge}>
                 <Text style={styles.tabBadgeText}>{tab.badge}</Text>
