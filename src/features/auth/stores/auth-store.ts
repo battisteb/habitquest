@@ -66,3 +66,19 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }
+
+/**
+ * Permanently deletes the signed-in user's account and all their data
+ * (Edge Function `delete-account`), then clears the local session.
+ */
+export async function deleteAccount() {
+  authStore$.isLoading.set(true);
+  try {
+    const { error } = await supabase.functions.invoke('delete-account', { method: 'POST' });
+    if (error) throw error;
+    // The server-side user is gone; only the local session needs clearing.
+    await supabase.auth.signOut({ scope: 'local' });
+  } finally {
+    authStore$.isLoading.set(false);
+  }
+}
