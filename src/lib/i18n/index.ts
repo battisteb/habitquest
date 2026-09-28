@@ -191,7 +191,7 @@ const FR = {
   onb_creating: 'Création…',
   onb_start_quest: 'Démarrer la quête !',
   // Onboarding — quick habit suggestions
-  onb_quick_water: 'Boire 2L d\'eau',
+  onb_quick_bedtime: 'Au lit avant minuit',
   onb_quick_read: 'Lire 20 minutes',
   onb_quick_exercise: 'Faire 30 min de sport',
   onb_quick_meditate: 'Méditer 10 minutes',
@@ -1037,7 +1037,7 @@ const EN = {
   onb_creating: 'Creating…',
   onb_start_quest: 'Start Your Quest!',
   // Onboarding — quick habit suggestions
-  onb_quick_water: 'Drink 2L of water',
+  onb_quick_bedtime: 'In bed before midnight',
   onb_quick_read: 'Read for 20 minutes',
   onb_quick_exercise: 'Exercise 30 minutes',
   onb_quick_meditate: 'Meditate 10 minutes',

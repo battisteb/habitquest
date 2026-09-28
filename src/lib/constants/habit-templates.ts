@@ -11,7 +11,6 @@ export interface HabitTemplate {
 
 export const HABIT_TEMPLATES: HabitTemplate[] = [
   // Health
-  { id: 'water',        name_fr: 'Boire 2L d\'eau',        name_en: 'Drink 2L of water',      category: 'health',       emoji: '💧', frequency: 'daily' },
   { id: 'sleep',        name_fr: 'Dormir 8h',               name_en: 'Sleep 8 hours',           category: 'sleep',        emoji: '😴', frequency: 'daily' },
   { id: 'vitamins',     name_fr: 'Prendre mes vitamines',   name_en: 'Take vitamins',           category: 'health',       emoji: '💊', frequency: 'daily' },
   { id: 'no_alcohol',   name_fr: 'Pas d\'alcool',           name_en: 'No alcohol',              category: 'health',       emoji: '🚫', frequency: 'daily' },

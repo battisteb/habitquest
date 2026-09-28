@@ -32,9 +32,9 @@ name: Onboarding flow — new user creates first habit
 
 # First habit creation
 - assertVisible: "Your First Quest"
-- tapOn: "Drink 2L of water"
+- tapOn: "In bed before midnight"
 - tapOn: "Start Your Quest!"
 
 # Should land on Today screen
 - assertVisible: "QUESTS"
-- assertVisible: "Drink 2L of water"
+- assertVisible: "In bed before midnight"
