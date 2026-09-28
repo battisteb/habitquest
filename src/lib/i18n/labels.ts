@@ -23,3 +23,12 @@ export function stageDescription(T: Strings, title: string, fallback: string): s
   const key = `stage_desc_${title.toLowerCase()}` as keyof Strings;
   return T[key] ?? fallback;
 }
+
+/** Translated duel attack name / description (attacks are defined in English in attacks.ts). */
+export function attackName(T: Strings, attack: { id: string; name: string }): string {
+  return T[`attack_${attack.id}` as keyof Strings] ?? attack.name;
+}
+
+export function attackDescription(T: Strings, attack: { id: string; description: string }): string {
+  return T[`attack_desc_${attack.id}` as keyof Strings] ?? attack.description;
+}

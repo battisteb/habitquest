@@ -4,7 +4,7 @@ jest.mock('../../storage/mmkv', () => ({
 }));
 
 import { STRINGS_FOR_TESTS } from '..';
-import { categoryLabel, rarityLabel, titleLabel, stageDescription } from '../labels';
+import { attackName, categoryLabel, rarityLabel, titleLabel, stageDescription } from '../labels';
 
 const FR = STRINGS_FOR_TESTS.fr;
 const EN = STRINGS_FOR_TESTS.en;
@@ -16,6 +16,12 @@ describe('game labels', () => {
     expect(titleLabel(FR, 'Warrior')).toBe('Guerrier');
     expect(titleLabel(EN, 'Warrior')).toBe('Warrior');
     expect(stageDescription(FR, 'Knight', 'x')).toBe('La discipline est ton armure.');
+  });
+
+  it('translates duel attacks and keeps unknown ones as defined', () => {
+    expect(attackName(FR, { id: 'balanced_attack', name: 'Balanced Form' })).toBe('Posture équilibrée');
+    expect(attackName(EN, { id: 'balanced_attack', name: 'Balanced Form' })).toBe('Balanced Form');
+    expect(attackName(FR, { id: 'new_move', name: 'New Move' })).toBe('New Move');
   });
 
   it('falls back to the raw value for unknown keys', () => {

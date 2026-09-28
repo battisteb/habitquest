@@ -21,6 +21,7 @@ import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-st
 import { playMusic, stopMusic, playSfx } from '../../src/lib/audio/sound-service';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { useT } from '../../src/lib/i18n';
+import { attackName } from '../../src/lib/i18n/labels';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -177,6 +178,7 @@ const panel_s = StyleSheet.create({
 function AttackBtn({
   attack, selected, onPress, disabled,
 }: { attack: Attack; selected: boolean; onPress: () => void; disabled: boolean }) {
+  const T = useT();
   return (
     <Pressable
       style={[atk_s.btn, selected && atk_s.selected, disabled && atk_s.disabled]}
@@ -185,7 +187,7 @@ function AttackBtn({
     >
       <Text style={atk_s.emoji}>{attack.emoji}</Text>
       <View style={{ flex: 1 }}>
-        <Text style={atk_s.name}>{attack.name}</Text>
+        <Text style={atk_s.name}>{attackName(T, attack)}</Text>
         <Text style={atk_s.stats}>
           💥 {attack.baseDamage} · 🎯 {Math.round(attack.hitChance * 100)}%
           {attack.special ? `  ★ ${attack.special}` : ''}
@@ -318,7 +320,7 @@ export default function BattleScreen() {
       T.duels_battle_opp_chose
         .replace('{name}', oppRef.current.name)
         .replace('{emoji}', oppAtk.emoji)
-        .replace('{attack}', oppAtk.name),
+        .replace('{attack}', attackName(T, oppAtk)),
       'info',
     );
     await delay(500);
@@ -334,6 +336,14 @@ export default function BattleScreen() {
       if (defender.hp <= 0) return;
 
       const result = resolveAttack(atk, attacker.level - defender.level);
+      // The engine's `effect` is English; the log is phrased here from the structured result.
+      const name = attackName(T, atk);
+      let logText = !result.hit
+        ? T.duels_log_miss.replace('{attack}', name)
+        : T.duels_log_hit.replace('{attack}', name).replace('{n}', String(result.damage - (result.bonus ?? 0)))
+          + (result.shieldApplied ? T.duels_log_shield : '')
+          + (result.healAmount ? T.duels_log_heal.replace('{n}', String(result.healAmount)) : '')
+          + (result.bonus ? T.duels_log_rally.replace('{n}', String(result.bonus)) : '');
 
       setAttackingId(attackerId);
       void playSfx('attack', 0.7);
@@ -343,7 +353,7 @@ export default function BattleScreen() {
       if (result.hit) {
         if (defender.shield) {
           result.damage = 0;
-          result.effect += T.duels_battle_blocked;
+          logText += T.duels_battle_blocked;
           if (defenderId === ME_ID) curMe = { ...curMe, shield: false };
           else curOpp = { ...curOpp, shield: false };
         } else {
@@ -353,9 +363,9 @@ export default function BattleScreen() {
         setHitId(defenderId);
         await delay(110);
         setHitId(null);
-        pushLog(result.effect, result.damage === 0 ? 'miss' : result.shieldApplied || result.healAmount ? 'special' : 'hit');
+        pushLog(logText, result.damage === 0 ? 'miss' : result.shieldApplied || result.healAmount ? 'special' : 'hit');
       } else {
-        pushLog(result.effect, 'miss');
+        pushLog(logText, 'miss');
       }
 
       if (result.shieldApplied) {

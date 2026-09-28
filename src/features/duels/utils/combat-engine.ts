@@ -6,6 +6,8 @@ export interface CombatResult {
   effect: string;
   shieldApplied?: boolean;
   healAmount?: number;
+  /** Extra damage from a Rally Cry bonus (already included in `damage`). */
+  bonus?: number;
 }
 
 /**
@@ -39,7 +41,7 @@ export function resolveAttack(attack: Attack, levelAdvantage: number): CombatRes
   } else if (attack.special === 'double' && Math.random() < 0.3) {
     const bonus = Math.round(damage * 0.5);
     effect += ` Rally bonus! +${bonus} extra damage!`;
-    return { hit: true, damage: damage + bonus, effect, shieldApplied, healAmount };
+    return { hit: true, damage: damage + bonus, effect, shieldApplied, healAmount, bonus };
   }
 
   return { hit, damage, effect, shieldApplied, healAmount };

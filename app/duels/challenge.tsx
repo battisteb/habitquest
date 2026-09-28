@@ -10,6 +10,7 @@ import { duelStore$, fetchUnlockedCategories, createDuel } from '../../src/featu
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
+import { attackName, attackDescription } from '../../src/lib/i18n/labels';
 
 export default function ChallengeScreen() {
   const T = useT();
@@ -168,8 +169,8 @@ export default function ChallengeScreen() {
               onPress={() => setSelectedAttackId(a.id)}
             >
               <Text style={styles.atkEmoji}>{a.emoji}</Text>
-              <Text style={styles.atkName}>{a.name}</Text>
-              <Text style={styles.atkDesc}>{a.description}</Text>
+              <Text style={styles.atkName}>{attackName(T, a)}</Text>
+              <Text style={styles.atkDesc}>{attackDescription(T, a)}</Text>
               <View style={styles.atkStats}>
                 <Text style={styles.atkStat}>{T.duels_challenge_dmg.replace('{n}', String(a.baseDamage))}</Text>
                 <Text style={styles.atkStat}>{T.duels_challenge_hit.replace('{n}', String(Math.round(a.hitChance * 100)))}</Text>
