@@ -35,6 +35,7 @@ import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 import { titleLabel } from '../../src/lib/i18n/labels';
+import { shareInvite } from '../../src/features/social/utils/invite';
 
 type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
 
@@ -118,6 +119,8 @@ export default function SocialScreen() {
   empty: { alignItems: 'center', paddingTop: spacing.xxl, gap: spacing.sm },
   emptyEmoji: { fontSize: 48 },
   emptyText: { color: colors.textMuted, textAlign: 'center', fontSize: fontSizes.md },
+  inviteRow: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs, alignSelf: 'stretch' },
+  inviteFeedback: { color: colors.success, textAlign: 'center', fontSize: fontSizes.sm },
 
   // Leaderboard
   podium: {
@@ -255,6 +258,7 @@ export default function SocialScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('leaderboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [inviteFeedback, setInviteFeedback] = useState<string | null>(null);
 
   const friends = use$(friendsStore$.friends);
   const pendingReceived = use$(friendsStore$.pendingReceived);
@@ -317,10 +321,28 @@ export default function SocialScreen() {
             </Text>
           </Pressable>
         </View>
+        {lbScope === 'friends' && renderInviteButton()}
         {renderLeaderboardList(emptyText)}
       </>
     );
   };
+
+  // ── Invite ──────────────────────────────────────────────────────────────────
+  const handleInvite = async () => {
+    try {
+      const how = await shareInvite(T.invite_share_message);
+      setInviteFeedback(how === 'copied' ? T.invite_copied : null);
+    } catch {
+      // Share sheet dismissed or offline: nothing to report.
+    }
+  };
+
+  const renderInviteButton = () => (
+    <View style={styles.inviteRow}>
+      <PixelButton title={T.invite_button} onPress={handleInvite} variant="secondary" />
+      {inviteFeedback && <Text style={styles.inviteFeedback}>{inviteFeedback}</Text>}
+    </View>
+  );
 
   const renderLeaderboardList = (emptyText: string) => {
     if (lbLoading) return <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />;
@@ -421,6 +443,7 @@ export default function SocialScreen() {
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>👥</Text>
             <Text style={styles.emptyText}>{T.social_friends_empty}</Text>
+            {renderInviteButton()}
           </View>
         }
         renderItem={({ item }) => {

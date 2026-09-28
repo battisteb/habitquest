@@ -6,6 +6,7 @@ import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
 import { initAuth, authStore$ } from '../src/features/auth/stores/auth-store';
 import { hasCompletedOnboarding } from '../src/features/onboarding/onboarding-state';
+import { savePendingInvite, takePendingInvite } from '../src/features/social/utils/invite';
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
 import { streakMilestoneStore$, dismissStreakMilestone } from '../src/features/gamification/stores/streak-milestone-store';
 import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';
@@ -39,9 +40,15 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     if (!isInitialized) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    const inviteCode = segments[0] === 'invite' ? (segments as string[])[1] : undefined;
 
     if (!isAuthenticated && !inAuthGroup) {
+      // Keep an invite opened before sign-up; it is accepted after onboarding.
+      if (inviteCode && inviteCode !== '[code]') savePendingInvite(inviteCode);
       router.replace('/(auth)/sign-in');
+    } else if (isAuthenticated && !inAuthGroup && segments[0] !== 'onboarding' && hasCompletedOnboarding()) {
+      const pending = takePendingInvite();
+      if (pending) router.replace(`/invite/${pending}`);
     } else if (isAuthenticated && inAuthGroup) {
       if (!hasCompletedOnboarding()) {
         router.replace('/onboarding');
