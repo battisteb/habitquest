@@ -1,0 +1,11 @@
+# GitHub Pages (Settings → Pages → Deploy from branch: main /docs)
+title: HabitQuest
+description: Level up your habits — a pixel art RPG habit tracker.
+theme: jekyll-theme-minimal
+lang: fr
+# Internal project docs stay in the repo but are not published on the site.
+exclude:
+  - adr/
+  - app-store/
+  - play-store/
+  - game-design/

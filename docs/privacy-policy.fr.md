@@ -1,8 +1,12 @@
+---
+title: Politique de confidentialité — HabitQuest
+---
+
 # HabitQuest — Politique de confidentialité
 
-*Dernière mise à jour : [DATE DE PUBLICATION]*
+*Dernière mise à jour : 28 septembre 2026*
 
-HabitQuest (« l'app ») est éditée par **[NOM DE L'ÉDITEUR]** (« nous »). Cette politique explique quelles données l'app collecte, pourquoi, et quels choix vous avez. Contact : **[E-MAIL DE CONTACT]**.
+HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cette politique explique quelles données l'app collecte, pourquoi, et quels choix vous avez. Contact : **batto060504@gmail.com**.
 
 ## 1. Données collectées
 
@@ -41,7 +45,7 @@ Vos données sont conservées tant que votre compte existe. Vous pouvez supprime
 
 ## 6. Vos droits
 
-Conformément au RGPD, vous pouvez accéder à vos données, les rectifier, les exporter, les supprimer et vous opposer à leur traitement. Écrivez-nous à **[E-MAIL DE CONTACT]**. Vous pouvez aussi saisir la CNIL.
+Conformément au RGPD, vous pouvez accéder à vos données, les rectifier, les exporter, les supprimer et vous opposer à leur traitement. Écrivez-nous à **batto060504@gmail.com**. Vous pouvez aussi saisir la CNIL.
 
 ## 7. Enfants
 

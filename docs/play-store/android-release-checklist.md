@@ -17,8 +17,8 @@
 - ⏳ Variables `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` configurées comme variables d'environnement EAS
 
 ## Exigences Google Play
-- ⏳ Politique de confidentialité publiée (brouillon : `docs/privacy-policy.md`)
-- ✅ Suppression de compte dans l'app ; ⏳ Google exige aussi un **lien web** de demande de suppression (peut pointer vers une section de la politique de confidentialité avec l'e-mail de contact)
+- ⏳ Politique de confidentialité : `https://battisteb.github.io/habitquest/privacy-policy` (après activation de GitHub Pages)
+- ✅ Suppression de compte dans l'app + lien web : `https://battisteb.github.io/habitquest/support` (section « Supprimer mon compte »)
 - ⏳ Formulaire « Sécurité des données » : réponses ci-dessous
 - ⏳ Déclaration « Identifiant publicitaire » : oui, utilisé pour la publicité (AdMob)
 - ⏳ Questionnaire de classification du contenu (IARC) : violence cartoon légère (duels pixel art), pas de chat, pas de jeux d'argent

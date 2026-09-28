@@ -1,8 +1,12 @@
+---
+title: Privacy Policy — HabitQuest
+---
+
 # HabitQuest — Privacy Policy
 
-*Last updated: [DATE OF PUBLICATION]*
+*Last updated: September 28, 2026*
 
-HabitQuest ("the app") is published by **[PUBLISHER NAME]** ("we"). This policy explains what data the app collects, why, and the choices you have. Contact: **[CONTACT EMAIL]**.
+HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy explains what data the app collects, why, and the choices you have. Contact: **batto060504@gmail.com**.
 
 ## 1. Data we collect
 
@@ -41,7 +45,7 @@ We keep your data while your account exists. You can delete your account at any 
 
 ## 6. Your rights
 
-Under the GDPR and similar laws, you can access, correct, export or delete your data, and object to its processing. Contact us at **[CONTACT EMAIL]**. You may also lodge a complaint with your data protection authority (in France: the CNIL).
+Under the GDPR and similar laws, you can access, correct, export or delete your data, and object to its processing. Contact us at **batto060504@gmail.com**. You may also lodge a complaint with your data protection authority (in France: the CNIL).
 
 ## 7. Children
 
