@@ -25,6 +25,7 @@ import {
 } from '../src/lib/constants/game-config';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
+import { titleLabel } from '../src/lib/i18n/labels';
 
 interface DayXp {
   date: string;       // 'YYYY-MM-DD'
@@ -436,7 +437,7 @@ export default function XpJourneyScreen() {
         <View style={styles.heroTop}>
           <View>
             <Text style={styles.heroLevel}>{T.xp_level_prefix} {level}</Text>
-            <Text style={[styles.heroRank, { color: rank.color }]}>{rank.name}</Text>
+            <Text style={[styles.heroRank, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>
           </View>
           <View style={styles.heroXpTotal}>
             <Text style={styles.heroXpValue}>{totalXp.toLocaleString()}</Text>
@@ -549,7 +550,7 @@ export default function XpJourneyScreen() {
                 <View style={[styles.roadmapDot, { backgroundColor: isPast ? r.color : colors.border }]} />
                 <View style={styles.roadmapInfo}>
                   <Text style={[styles.roadmapRank, { color: isPast ? r.color : colors.textMuted }]}>
-                    {r.name} {isCurrentRank ? T.xp_roadmap_you : ''}
+                    {titleLabel(T, r.name)} {isCurrentRank ? T.xp_roadmap_you : ''}
                   </Text>
                   <Text style={styles.roadmapReq}>
                     {T.xp_roadmap_req.replace('{level}', String(r.minLevel)).replace('{xp}', rankLevelXp.toLocaleString())}

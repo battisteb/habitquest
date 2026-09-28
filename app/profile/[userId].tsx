@@ -200,7 +200,7 @@ export default function PublicProfileScreen() {
       <View style={styles.hero}>
         <PixelAvatar size={160} />
         <Text style={styles.username}>{profile.username}</Text>
-        <Text style={[styles.rank, { color: rank.color }]}>{rank.name}</Text>
+        <Text style={[styles.rank, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>
         <Text style={[styles.stage, { color: avatarStage.aura }]}>
           {titleLabel(T, avatarStage.title)}
         </Text>

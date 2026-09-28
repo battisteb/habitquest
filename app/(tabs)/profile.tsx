@@ -227,7 +227,7 @@ export default function ProfileScreen() {
                 eyeColor={eyeColor}
               />
               <Text style={styles.username}>{profile?.username ?? 'Adventurer'}</Text>
-              <Text style={[styles.rankBadge, { color: rank.color }]}>{rank.name}</Text>
+              <Text style={[styles.rankBadge, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>
               <Text style={styles.editHint}>{T.profile_edit_hint}</Text>
             </Pressable>
 
