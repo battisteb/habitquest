@@ -786,6 +786,7 @@ const FR = {
   settings_go_premium: '👑 Passer Premium — Supprimer les pubs',
   today_freeze_error_title: 'Erreur',
   today_freeze_error_msg: "Impossible d'enregistrer ton gel de série. Réessaie.",
+  all_done_celebration: '🏆 TOUTES LES QUÊTES SONT FAITES !',
   // Game labels (categories, rarities, titles, shop tabs)
   cat_health: 'Santé',
   cat_fitness: 'Sport',
@@ -1578,6 +1579,7 @@ const EN = {
   settings_go_premium: '👑 Go Premium — Remove ads',
   today_freeze_error_title: 'Error',
   today_freeze_error_msg: 'Could not save your freeze token. Please try again.',
+  all_done_celebration: '🏆 ALL QUESTS COMPLETE!',
   // Game labels (categories, rarities, titles, shop tabs)
   cat_health: 'Health',
   cat_fitness: 'Fitness',
