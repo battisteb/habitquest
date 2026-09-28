@@ -1,6 +1,8 @@
 import { observable } from '@legendapp/state';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import { subscriptionStore$ } from '../../monetization/stores/subscription-store';
+import { LIMITS } from '../../monetization/utils/feature-gates';
 import { simulateDuel, PlayerState } from '../utils/combat-engine';
 
 export interface DuelChallenge {
@@ -102,10 +104,11 @@ export async function getWeeklyDuelsUsed(): Promise<number> {
   return count ?? 0;
 }
 
-/** Returns true when the user can still start a duel this week (limit: 2) */
+/** Returns true when the user can still start a duel this week (free: 3, premium: unlimited) */
 export async function canStartDuel(): Promise<boolean> {
+  if (subscriptionStore$.isPremium.get()) return true;
   const used = await getWeeklyDuelsUsed();
-  return used < 2;
+  return used < LIMITS.FREE_DUELS_PER_WEEK;
 }
 
 /** Load all of the user's duels from Supabase into the store */
@@ -163,7 +166,7 @@ export async function createDuel(opponentId: string, attackId: string): Promise<
 
   const allowed = await canStartDuel();
   if (!allowed) {
-    throw new Error('Weekly duel limit reached — 2 duels per week maximum');
+    throw new Error(`Weekly duel limit reached — ${LIMITS.FREE_DUELS_PER_WEEK} duels per week maximum`);
   }
 
   const { error } = await supabase.from('duels').insert({
@@ -178,7 +181,10 @@ export async function createDuel(opponentId: string, attackId: string): Promise<
   await fetchDuels();
 }
 
-/** Award gold and XP at end of a duel. Call once the winner is known. */
+/**
+ * Record the duel result, then claim this player's reward on the server
+ * (30 gold for the winner, 25 XP for the loser, once per player).
+ */
 export async function resolveDuel(
   duelId: string | null,
   winnerId: string,
@@ -188,31 +194,15 @@ export async function resolveDuel(
   const LOSER_CATCHUP_XP = 25;
 
   const userId = authStore$.user.get()?.id;
-  if (!userId) return { winnerGold: 0, loserXp: 0 };
+  if (!userId || !duelId) return { winnerGold: 0, loserXp: 0 };
+  if (userId !== winnerId && userId !== loserId) return { winnerGold: 0, loserXp: 0 };
 
-  // Persist duel result to DB if we have a real duelId
-  if (duelId) {
-    await supabase
-      .from('duels')
-      .update({ status: 'resolved', winner_id: winnerId })
-      .eq('id', duelId);
-  }
+  await supabase
+    .from('duels')
+    .update({ status: 'resolved', winner_id: winnerId })
+    .eq('id', duelId);
 
-  // Award gold to winner
-  if (userId === winnerId) {
-    await supabase.rpc('add_gold', {
-      p_user_id: userId,
-      p_amount: WINNER_GOLD,
-    });
-  }
-
-  // Award catch-up XP to loser
-  if (userId === loserId) {
-    await supabase.rpc('increment_xp', {
-      user_id: userId,
-      xp_amount: LOSER_CATCHUP_XP,
-    });
-  }
+  await supabase.rpc('claim_duel_reward', { p_duel_id: duelId });
 
   return { winnerGold: WINNER_GOLD, loserXp: LOSER_CATCHUP_XP };
 }

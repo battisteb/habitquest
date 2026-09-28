@@ -241,19 +241,7 @@ export async function checkAndUnlockAchievements() {
         achievement_id: a.id,
       });
 
-      // Award XP and gold rewards
-      if (a.xp_reward > 0) {
-        await supabase.rpc('increment_xp', {
-          user_id: userId,
-          xp_amount: a.xp_reward,
-        });
-      }
-      if (a.gold_reward > 0) {
-        await supabase.rpc('add_gold', {
-          p_user_id: userId,
-          p_amount: a.gold_reward,
-        });
-      }
+      // XP and gold rewards are granted by the on_achievement_unlocked_reward trigger.
 
       newlyUnlocked.push({
         ...a,
