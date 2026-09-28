@@ -86,7 +86,14 @@
       ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "output": "single",
+      "name": "HabitQuest",
+      "shortName": "HabitQuest",
+      "themeColor": "#1e2448",
+      "backgroundColor": "#1e2448",
+      "lang": "fr",
+      "description": "Level up your habits with pixel art gamification."
     },
     "plugins": [
       "expo-router",
