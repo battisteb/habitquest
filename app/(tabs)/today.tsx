@@ -59,6 +59,7 @@ const MONTH_NAMES_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû'
 const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 import { lang$ } from '../../src/lib/i18n';
+import { categoryLabel } from '../../src/lib/i18n/labels';
 
 function todayLabel(): string {
   const d = new Date();
@@ -577,6 +578,8 @@ export default function TodayScreen() {
     const currentCount = streak?.current_count ?? 0;
     const xp = calculateXpEarned(currentCount + 1);
     const gold = calculateGoldEarned(xp);
+    // Count before completing: completeHabit already marks the habit done in the store.
+    const completedBefore = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
     await completeHabit(habitId);
     clearBrokenStreakForHabit(habitId);
     setXpToast({ visible: true, xp, gold });
@@ -587,9 +590,7 @@ export default function TodayScreen() {
       setMilestoneSeen(newStreak);
     }
 
-    const nowCompletedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
-    const afterCompletionCount = nowCompletedCount + 1;
-    if (afterCompletionCount === totalCount && totalCount > 0) {
+    if (completedBefore + 1 === totalCount && totalCount > 0) {
       if (allDoneTimerRef.current) clearTimeout(allDoneTimerRef.current);
       setShowAllDone(true);
       allDoneTimerRef.current = setTimeout(() => setShowAllDone(false), 3500);
@@ -755,7 +756,7 @@ export default function TodayScreen() {
               <Text
                 style={[styles.filterChipText, activeCategory === cat && styles.filterChipTextActive]}
               >
-                {cat === ALL_KEY ? T.today_filter_all : cat.toUpperCase()}
+                {cat === ALL_KEY ? T.today_filter_all : categoryLabel(T, cat).toUpperCase()}
               </Text>
             </Pressable>
           ))}

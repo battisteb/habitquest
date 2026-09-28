@@ -16,6 +16,8 @@ import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
 import { getWeeklyTarget } from '../stores/habits-store';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
+import { categoryLabel } from '../../../lib/i18n/labels';
 
 interface HabitCardProps {
   name: string;
@@ -90,6 +92,7 @@ export function HabitCard({
   emoji = null,
 }: HabitCardProps) {
   const { themeKey } = useTheme();
+  const T = useT();
   const styles = useMemo(() => StyleSheet.create({
   wrapper: {
     position: 'relative',
@@ -304,7 +307,7 @@ export function HabitCard({
                   </Text>
                   <View style={styles.meta}>
                     <Text style={[styles.category, { color: categoryColor }]}>
-                      {category.toUpperCase()}
+                      {categoryLabel(T, category).toUpperCase()}
                     </Text>
                     {isWeekly ? (
                       <View style={styles.weekBarRow}>

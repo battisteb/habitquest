@@ -13,6 +13,7 @@ import { showInterstitial } from '../../src/features/monetization/utils/ad-servi
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
+import { attackName, attackDescription } from '../../src/lib/i18n/labels';
 
 export default function DuelsIndexScreen() {
   const T = useT();
@@ -166,7 +167,7 @@ export default function DuelsIndexScreen() {
           renderItem={({ item: a }) => (
             <View style={styles.attackChip}>
               <Text style={styles.attackEmoji}>{a.emoji}</Text>
-              <Text style={styles.attackName}>{a.name}</Text>
+              <Text style={styles.attackName}>{attackName(T, a)}</Text>
               <Text style={styles.attackStats}>DMG {a.baseDamage} · {Math.round(a.hitChance * 100)}%</Text>
             </View>
           )}

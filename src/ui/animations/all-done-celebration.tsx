@@ -9,12 +9,14 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 import { colors, fontSizes, spacing } from '../theme/tokens';
+import { useT } from '../../lib/i18n';
 
 interface AllDoneCelebrationProps {
   visible: boolean;
 }
 
 export function AllDoneCelebration({ visible }: AllDoneCelebrationProps) {
+  const T = useT();
   const translateY = useSharedValue(-60);
   const opacity = useSharedValue(0);
 
@@ -40,7 +42,7 @@ export function AllDoneCelebration({ visible }: AllDoneCelebrationProps) {
 
   return (
     <Animated.View style={[styles.banner, style]}>
-      <Text style={styles.text}>🏆 ALL QUESTS COMPLETE!</Text>
+      <Text style={styles.text}>{T.all_done_celebration}</Text>
     </Animated.View>
   );
 }

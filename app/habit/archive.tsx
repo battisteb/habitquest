@@ -18,6 +18,7 @@ import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
 import type { Database } from '../../src/lib/supabase/types';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
+import { categoryLabel } from '../../src/lib/i18n/labels';
 
 type Habit = Database['public']['Tables']['habits']['Row'];
 
@@ -172,7 +173,7 @@ export default function HabitArchiveScreen() {
                   <View style={styles.cardInfo}>
                     <Text style={styles.habitName} numberOfLines={1}>{item.name}</Text>
                     <Text style={[styles.habitCategory, { color }]}>
-                      {item.category.toUpperCase()}
+                      {categoryLabel(T, item.category).toUpperCase()}
                     </Text>
                   </View>
                   <View style={styles.cardActions}>

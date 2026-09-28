@@ -11,7 +11,8 @@ import {
 } from '../src/features/gamification/stores/achievements-store';
 import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
-import { useT } from '../src/lib/i18n';
+import { useLang, useT } from '../src/lib/i18n';
+import { achievementText } from '../src/lib/i18n/content';
 
 const CATEGORY_KEYS = ['all', 'streak', 'completion', 'xp', 'social', 'shop', 'special'] as const;
 type CategoryKey = (typeof CATEGORY_KEYS)[number];
@@ -27,6 +28,7 @@ const CATEGORY_ICONS: Record<CategoryKey, string> = {
 
 export default function AchievementsScreen() {
   const T = useT();
+  const lang = useLang();
   const CATEGORY_LABELS: Record<CategoryKey, string> = {
     all: T.ach_cat_all,
     streak: T.ach_cat_streak,
@@ -272,8 +274,8 @@ export default function AchievementsScreen() {
           contentContainerStyle={styles.list}
           renderItem={({ item }) => (
             <AchievementCard
-              name={item.name}
-              description={item.description}
+              name={achievementText(lang, item).title}
+              description={achievementText(lang, item).description}
               category={item.category}
               isUnlocked={item.isUnlocked}
               xpReward={item.xp_reward}

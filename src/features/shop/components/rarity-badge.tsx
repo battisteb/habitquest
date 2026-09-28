@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { fontSizes, spacing } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
+import { rarityLabel } from '../../../lib/i18n/labels';
 
 const RARITY_COLORS: Record<string, string> = {
   common: '#aaa',
@@ -13,6 +15,7 @@ const RARITY_COLORS: Record<string, string> = {
 
 export function RarityBadge({ rarity }: { rarity: string }) {
   const { themeKey } = useTheme();
+  const T = useT();
   const styles = useMemo(() => StyleSheet.create({
   badge: {
     borderWidth: 1,
@@ -31,7 +34,7 @@ export function RarityBadge({ rarity }: { rarity: string }) {
 
   return (
     <View style={[styles.badge, { borderColor: color }]}>
-      <Text style={[styles.text, { color }]}>{rarity.toUpperCase()}</Text>
+      <Text style={[styles.text, { color }]}>{rarityLabel(T, rarity).toUpperCase()}</Text>
     </View>
   );
 }

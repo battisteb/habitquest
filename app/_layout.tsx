@@ -27,6 +27,8 @@ import { preloadInterstitial, shouldShowAds } from '../src/features/monetization
 import { requestTrackingConsent } from '../src/features/monetization/utils/tracking-consent';
 import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
 import { syncTimezone } from '../src/features/auth/utils/sync-timezone';
+import { achievementText } from '../src/lib/i18n/content';
+import { lang$ } from '../src/lib/i18n';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -70,6 +72,7 @@ function ThemedApp() {
   const newlyUnlocked = use$(achievementsStore$.newlyUnlocked);
   const currentToast = newlyUnlocked[0] ?? null;
   const authUserId = use$(authStore$.user)?.id;
+  const lang = use$(lang$);
 
   useWeeklyRecapScheduler();
   useNotificationObserver();
@@ -118,8 +121,8 @@ function ThemedApp() {
       {currentToast && (
         <AchievementToast
           key={currentToast.id}
-          name={currentToast.name}
-          description={currentToast.description}
+          name={achievementText(lang, currentToast).title}
+          description={achievementText(lang, currentToast).description}
           category={currentToast.category}
           xpReward={currentToast.xp_reward}
           goldReward={currentToast.gold_reward}
