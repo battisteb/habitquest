@@ -230,7 +230,11 @@ interface CompleteHabitResult {
   previous_streak: number;
 }
 
-export async function completeHabit(habitId: string, note?: string) {
+/** Completes a habit on the server; resolves with the rewards actually granted. */
+export async function completeHabit(
+  habitId: string,
+  note?: string,
+): Promise<CompleteHabitResult | undefined> {
   const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
   const frequency = habit?.frequency ?? 'daily';
 
@@ -254,7 +258,7 @@ export async function completeHabit(habitId: string, note?: string) {
     if (result.reason === 'already_completed') {
       habitsStore$.todayCompletions[habitId].set(true);
     }
-    return;
+    return undefined;
   }
 
   if (result.new_level > result.old_level) {
@@ -295,4 +299,6 @@ export async function completeHabit(habitId: string, note?: string) {
   checkAndUnlockAchievements().catch(() => {});
   fetchDailyQuests().catch(() => {});
   fetchChallenges().catch(() => {});
+
+  return result;
 }

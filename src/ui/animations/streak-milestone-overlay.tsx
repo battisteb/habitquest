@@ -6,7 +6,6 @@ import Animated, {
   withTiming,
   withSequence,
   withDelay,
-  withSpring,
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
@@ -74,18 +73,21 @@ export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComp
         ),
       );
 
+      // Timed pop and wobble: the previous under-damped springs overshot to
+      // 2-3x the size, which only showed once the overlay became visible.
       badgeScale.value = withDelay(
         150,
         withSequence(
-          withSpring(1.25, { damping: 6, stiffness: 200 }),
-          withSpring(1, { damping: 10, stiffness: 150 }),
+          withTiming(1.12, { duration: 260, easing: Easing.out(Easing.back(2)) }),
+          withTiming(1, { duration: 160 }),
         ),
       );
       badgeRotate.value = withDelay(
         150,
         withSequence(
-          withSpring(8, { damping: 6 }),
-          withSpring(0, { damping: 8 }),
+          withTiming(5, { duration: 160 }),
+          withTiming(-3, { duration: 160 }),
+          withTiming(0, { duration: 160 }),
         ),
       );
 
@@ -145,6 +147,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     minWidth: 240,
+    // Long translations ("SÉRIE DE 2 SEMAINES !") wrap instead of leaving the screen.
+    maxWidth: '88%',
     ...Platform.select({
       native: {
         shadowColor: '#000',

@@ -17,7 +17,6 @@ import { useT } from '../../src/lib/i18n';
 import { HabitCard } from '../../src/features/habits/components/habit-card';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { XpToast } from '../../src/ui/animations/xp-toast';
-import { StreakMilestone } from '../../src/ui/animations/streak-milestone';
 import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
 import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
 import { habitsStore$, fetchHabits, completeHabit, isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
@@ -40,7 +39,6 @@ import {
   getRemainingDays,
   deactivateMode,
 } from '../../src/features/habits/utils/contextual-mode';
-import { calculateXpEarned, calculateGoldEarned } from '../../src/lib/constants/game-config';
 import { profileStore$, fetchProfile, refreshProfile } from '../../src/features/gamification/stores/profile-store';
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { supabase } from '../../src/lib/supabase/client';
@@ -70,7 +68,6 @@ function todayLabel(): string {
 }
 
 const ALL_KEY = 'all';
-const MILESTONES = [7, 14, 30, 60, 100];
 
 export default function TodayScreen() {
   const T = useT();
@@ -466,7 +463,6 @@ export default function TodayScreen() {
     visible: false, xp: 0, gold: 0,
   });
   const [todayXp, setTodayXp] = useState(0);
-  const [milestoneSeen, setMilestoneSeen] = useState<number | null>(null);
   const [showAllDone, setShowAllDone] = useState(false);
   const allDoneTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -574,21 +570,17 @@ export default function TodayScreen() {
   const allDone = totalCount > 0 && completedCount === totalCount;
 
   const handleComplete = useCallback(async (habitId: string) => {
-    const streak = streaks[habitId];
-    const currentCount = streak?.current_count ?? 0;
-    const xp = calculateXpEarned(currentCount + 1);
-    const gold = calculateGoldEarned(xp);
     // Count before completing: completeHabit already marks the habit done in the store.
     const completedBefore = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
-    await completeHabit(habitId);
+    const result = await completeHabit(habitId);
+    if (!result) return;
     clearBrokenStreakForHabit(habitId);
-    setXpToast({ visible: true, xp, gold });
-    setTodayXp((prev) => prev + xp);
+    // Show what the server actually granted (freezes, bonuses…).
+    setXpToast({ visible: true, xp: result.xp_earned, gold: result.gold_earned });
+    setTodayXp((prev) => prev + result.xp_earned);
 
-    const newStreak = currentCount + 1;
-    if (MILESTONES.includes(newStreak)) {
-      setMilestoneSeen(newStreak);
-    }
+    // Streak milestones are celebrated by the global StreakMilestoneOverlay
+    // (triggered in completeHabit from the server-computed streak).
 
     if (completedBefore + 1 === totalCount && totalCount > 0) {
       if (allDoneTimerRef.current) clearTimeout(allDoneTimerRef.current);
@@ -773,11 +765,6 @@ export default function TodayScreen() {
         xpAmount={xpToast.xp}
         goldAmount={xpToast.gold}
         onComplete={() => setXpToast((p) => ({ ...p, visible: false }))}
-      />
-      <StreakMilestone
-        streak={milestoneSeen ?? 0}
-        visible={milestoneSeen !== null}
-        onDismiss={() => setMilestoneSeen(null)}
       />
       <AllDoneCelebration visible={showAllDone} />
       <TodayTutorial />
