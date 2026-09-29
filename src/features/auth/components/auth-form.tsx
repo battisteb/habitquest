@@ -1,11 +1,14 @@
 import { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { PixelButton } from '../../../ui/components/pixel-button';
 import { PixelInput } from '../../../ui/components/pixel-input';
-import { signIn, signUp } from '../stores/auth-store';
+import { signIn, signUp, requestPasswordReset } from '../stores/auth-store';
+import { authErrorMessage } from '../utils/auth-error';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+
+type Notice = { kind: 'error' | 'info'; text: string } | null;
 
 export function AuthForm() {
   const T = useT();
@@ -38,35 +41,72 @@ export function AuthForm() {
   submitButton: {
     marginTop: spacing.sm,
   },
+  // Shown in the form: native alerts do not exist on the web version.
+  notice: {
+    borderWidth: 2,
+    padding: spacing.sm,
+    fontSize: fontSizes.sm,
+    lineHeight: 18,
+  },
+  noticeError: {
+    borderColor: colors.danger,
+    color: colors.danger,
+    backgroundColor: colors.danger + '18',
+  },
+  noticeInfo: {
+    borderColor: colors.success,
+    color: colors.success,
+    backgroundColor: colors.success + '18',
+  },
 }), [themeKey]);
   const [mode, setMode] = useState<'sign-in' | 'sign-up'>('sign-in');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
+  const [notice, setNotice] = useState<Notice>(null);
 
   const handleSubmit = async () => {
-    if (!email || !password) return;
-    if (mode === 'sign-up' && !username) return;
+    if (!email.trim() || !password || (mode === 'sign-up' && !username.trim())) {
+      setNotice({ kind: 'error', text: T.auth_err_fill_fields });
+      return;
+    }
 
+    setNotice(null);
     setLoading(true);
     try {
       if (mode === 'sign-in') {
-        await signIn(email, password);
+        await signIn(email.trim(), password);
       } else {
-        await signUp(email, password, username);
-        Alert.alert(T.auth_account_created_title, T.auth_account_created_msg);
+        await signUp(email.trim(), password, username.trim());
+        setNotice({ kind: 'info', text: `${T.auth_account_created_title} ${T.auth_account_created_msg}` });
         setMode('sign-in');
       }
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : T.auth_error_default;
-      Alert.alert(T.auth_error_title, message);
+      setNotice({ kind: 'error', text: authErrorMessage(T, error) });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      setNotice({ kind: 'info', text: T.auth_forgot_need_email });
+      return;
+    }
+    setLoading(true);
+    try {
+      await requestPasswordReset(email);
+      setNotice({ kind: 'info', text: T.auth_forgot_sent });
+    } catch (error: unknown) {
+      setNotice({ kind: 'error', text: authErrorMessage(T, error) });
     } finally {
       setLoading(false);
     }
   };
 
   const toggleMode = () => {
+    setNotice(null);
     setMode(mode === 'sign-in' ? 'sign-up' : 'sign-in');
   };
 
@@ -108,12 +148,31 @@ export function AuthForm() {
           secureTextEntry
         />
 
+        {notice && (
+          <Text
+            testID="auth-notice"
+            accessibilityRole="alert"
+            style={[styles.notice, notice.kind === 'error' ? styles.noticeError : styles.noticeInfo]}
+          >
+            {notice.text}
+          </Text>
+        )}
+
         <PixelButton
           title={mode === 'sign-in' ? T.auth_enter_dungeon : T.auth_create_character}
           onPress={handleSubmit}
           disabled={loading}
           style={styles.submitButton}
         />
+
+        {mode === 'sign-in' && (
+          <PixelButton
+            title={T.auth_forgot_password}
+            onPress={handleForgotPassword}
+            disabled={loading}
+            variant="ghost"
+          />
+        )}
 
         <PixelButton
           title={mode === 'sign-in' ? T.auth_new_signup : T.auth_already_signin}
