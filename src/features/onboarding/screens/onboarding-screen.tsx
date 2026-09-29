@@ -18,7 +18,7 @@ const SLIDE_EMOJIS = ['⚔️', '🔥', '🏆'];
 
 const MAX_FIRST_HABITS = 3;
 
-const QUICK_HABIT_CATEGORIES = ['health', 'learning', 'fitness', 'mindfulness', 'productivity'] as const;
+const QUICK_HABIT_CATEGORIES = ['sleep', 'learning', 'fitness', 'mindfulness', 'productivity'] as const;
 
 // Skin tone swatches
 const SKIN_SWATCHES = ['#f4c98a', '#e8a87c', '#d4845a', '#c46c3c', '#a0522d', '#7a3b1e', '#4a2810', '#fce4c8'];
@@ -94,7 +94,7 @@ export default function OnboardingScreen() {
 
   const quickHabits = useMemo(
     () => [
-      { name: T.onb_quick_water, category: QUICK_HABIT_CATEGORIES[0] },
+      { name: T.onb_quick_bedtime, category: QUICK_HABIT_CATEGORIES[0] },
       { name: T.onb_quick_read, category: QUICK_HABIT_CATEGORIES[1] },
       { name: T.onb_quick_exercise, category: QUICK_HABIT_CATEGORIES[2] },
       { name: T.onb_quick_meditate, category: QUICK_HABIT_CATEGORIES[3] },
