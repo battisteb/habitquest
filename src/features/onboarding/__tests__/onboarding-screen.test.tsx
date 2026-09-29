@@ -122,7 +122,7 @@ describe('OnboardingScreen', () => {
     const utils = render(<OnboardingScreen />);
     goToHabitStep(utils);
 
-    fireEvent.press(utils.getByText('onb_quick_water'));
+    fireEvent.press(utils.getByText('onb_quick_bedtime'));
     fireEvent.press(utils.getByText('onb_quick_read'));
     fireEvent.press(utils.getByText('onb_quick_exercise'));
     fireEvent.press(utils.getByText('onb_quick_meditate')); // 4th pick is ignored
@@ -131,7 +131,7 @@ describe('OnboardingScreen', () => {
 
     await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/(tabs)/today'));
     expect(createHabit).toHaveBeenCalledTimes(2);
-    expect(createHabit).toHaveBeenCalledWith('onb_quick_water', 'health');
+    expect(createHabit).toHaveBeenCalledWith('onb_quick_bedtime', 'sleep');
     expect(createHabit).toHaveBeenCalledWith('onb_quick_exercise', 'fitness');
   });
 
@@ -150,7 +150,7 @@ describe('OnboardingScreen', () => {
     const utils = render(<OnboardingScreen />);
     goToHabitStep(utils);
 
-    fireEvent.press(utils.getByText('onb_quick_water'));
+    fireEvent.press(utils.getByText('onb_quick_bedtime'));
     fireEvent.press(utils.getByText('ONB_START_QUEST'));
 
     await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/(tabs)/today'));
