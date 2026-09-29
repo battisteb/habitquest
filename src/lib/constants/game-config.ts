@@ -82,6 +82,59 @@ export function calculateGoldEarned(xpEarned: number): number {
 }
 
 /**
+ * Arenas (ADR 012): 6 leagues, 10-day seasons, groups of 11.
+ * Fights are resolved by the server (public.arena_attack_power / arena_defense_power);
+ * these mirrors only drive the previews on the arena screen — change both together.
+ */
+export const ARENA = {
+  LEAGUES: ['bronze', 'silver', 'gold', 'platinum', 'diamond', 'master'] as const,
+  SEASON_DAYS: 10,
+  GROUP_SIZE: 11,
+  PROMOTED: 3,
+  RELEGATED: 3,
+  BASE_POWER: 100,
+  ATTACK_PER_HABIT: 30,
+  DEFENSE_PER_HABIT: 15,
+  HABIT_CAP: 5,
+  POWER_PER_LEVEL: 2,
+  POWER_PER_STREAK_DAY: 3,
+  STREAK_CAP: 30,
+  LUCK_MIN: 0.85,
+  LUCK_MAX: 1.15,
+  WIN_POINTS: 3,
+  EFFORT_POINTS: 1,
+  WIN_GOLD: 10,
+} as const;
+
+export type ArenaLeague = (typeof ARENA.LEAGUES)[number];
+
+function arenaPower(perHabit: number, habits: number, level: number, streak: number): number {
+  return (
+    ARENA.BASE_POWER +
+    perHabit * Math.min(Math.max(habits, 0), ARENA.HABIT_CAP) +
+    ARENA.POWER_PER_LEVEL * Math.max(level, 0) +
+    ARENA.POWER_PER_STREAK_DAY * Math.min(Math.max(streak, 0), ARENA.STREAK_CAP)
+  );
+}
+
+export function getArenaAttackPower(habits: number, level: number, streak: number): number {
+  return arenaPower(ARENA.ATTACK_PER_HABIT, habits, level, streak);
+}
+
+export function getArenaDefensePower(habits: number, level: number, streak: number): number {
+  return arenaPower(ARENA.DEFENSE_PER_HABIT, habits, level, streak);
+}
+
+/** Win odds of an attack, given the luck factor is uniform over 0.85..1.15 (31 steps). */
+export function getArenaWinChance(attackPower: number, defensePower: number): number {
+  let wins = 0;
+  for (let step = 0; step <= 30; step += 1) {
+    if (Math.round((attackPower * (85 + step)) / 100) > defensePower) wins += 1;
+  }
+  return wins / 31;
+}
+
+/**
  * Co-op challenges (ADR 013). Bounds and reward are enforced by
  * public.create_coop_challenge / coop_on_completion — change both together.
  */
