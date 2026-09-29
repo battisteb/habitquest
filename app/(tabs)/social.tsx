@@ -121,7 +121,7 @@ export default function SocialScreen() {
   empty: { alignItems: 'center', paddingTop: spacing.xxl, gap: spacing.sm },
   emptyEmoji: { fontSize: 48 },
   emptyText: { color: colors.textMuted, textAlign: 'center', fontSize: fontSizes.md },
-  inviteRow: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs, alignSelf: 'stretch' },
+  inviteRow: { paddingHorizontal: spacing.md, paddingTop: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs, alignSelf: 'stretch' },
   inviteFeedback: { color: colors.success, textAlign: 'center', fontSize: fontSizes.sm },
 
   // Leaderboard
@@ -146,7 +146,7 @@ export default function SocialScreen() {
   podiumMedal: { fontSize: 28 },
   podiumName: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 0.5, textAlign: 'center' },
   podiumXp: { fontSize: pixelSize(9), fontFamily: fonts.bold, marginBottom: 4 },
-  podiumBar: { width: '100%', borderTopLeftRadius: 4, borderTopRightRadius: 4 },
+  podiumBar: { width: '100%' },
   restLabel: {
     fontSize: pixelSize(fontSizes.xs),
     fontFamily: fonts.bold,
