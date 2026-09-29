@@ -20,7 +20,7 @@ import {
   NotificationPrefs,
 } from '../src/features/notifications/utils/notification-service';
 import { signOut, deleteAccount } from '../src/features/auth/stores/auth-store';
-import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 import { useT, setLang, lang$ } from '../src/lib/i18n';
@@ -336,22 +336,22 @@ function createStyles() {
     marginBottom: spacing.xs,
   },
   screenLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   section: {
     gap: spacing.sm,
   },
   sectionTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
     marginBottom: 2,
@@ -366,7 +366,7 @@ function createStyles() {
   themeCard: {
     width: '47%',
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.sm,
@@ -380,10 +380,10 @@ function createStyles() {
   },
   themeTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   swatches: { flexDirection: 'row', gap: 3 },
-  swatch: { width: 14, height: 14, borderRadius: 7, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
+  swatch: { width: 14, height: 14, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
   themeName: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   themeNameActive: {
@@ -395,8 +395,8 @@ function createStyles() {
     lineHeight: 14,
   },
   activeChip: {
-    fontSize: 8,
-    fontWeight: 'bold',
+    fontSize: pixelSize(8),
+    fontFamily: fonts.bold,
     color: colors.primary,
     letterSpacing: 1,
     marginTop: 2,
@@ -407,7 +407,7 @@ function createStyles() {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -418,8 +418,8 @@ function createStyles() {
     gap: 2,
   },
   prefLabel: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   prefSub: {
@@ -428,7 +428,7 @@ function createStyles() {
   },
   timeRow: {
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -442,7 +442,7 @@ function createStyles() {
   timeBtn: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: 3,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.background,
@@ -452,8 +452,8 @@ function createStyles() {
     backgroundColor: colors.primary + '33',
   },
   timeBtnText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
   },
   timeBtnTextActive: {
@@ -468,7 +468,7 @@ function createStyles() {
   langBtn: {
     flex: 1,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     paddingVertical: spacing.sm,
@@ -479,8 +479,8 @@ function createStyles() {
     backgroundColor: colors.primary + '22',
   },
   langBtnText: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 0.5,
   },
@@ -493,14 +493,14 @@ function createStyles() {
     backgroundColor: '#FFD700' + '18',
     borderWidth: 2,
     borderColor: '#FFD700' + '66',
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     gap: 4,
     alignItems: 'center',
   },
   premiumActive: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: '#FFD700',
     letterSpacing: 1,
   },

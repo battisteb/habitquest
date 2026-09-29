@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { PixelButton } from '../../../ui/components/pixel-button';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 import { acceptInvite, type InviteResult } from '../utils/invite';
@@ -72,7 +72,7 @@ function createStyles() {
       gap: spacing.md,
     },
     emoji: { fontSize: 64 },
-    title: { fontSize: fontSizes.xl, fontWeight: 'bold', color: colors.text, textAlign: 'center' },
+    title: { fontSize: pixelSize(fontSizes.xl), fontFamily: fonts.bold, color: colors.text, textAlign: 'center' },
     body: { fontSize: fontSizes.md, color: colors.textSecondary, textAlign: 'center', marginBottom: spacing.md },
   });
 }

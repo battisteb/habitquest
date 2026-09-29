@@ -88,6 +88,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 8,
     height: 8,
-    borderRadius: 4,
+    borderRadius: 0,
   },
 });

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { TextInput, View, Text, StyleSheet, type TextInputProps } from 'react-native';
-import { colors, spacing, fontSizes, borderRadius } from '../theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../theme/tokens';
 import { useTheme } from '../theme/theme-context';
 
 interface PixelInputProps extends TextInputProps {
@@ -32,8 +32,8 @@ function createStyles() {
   },
   label: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
     marginBottom: spacing.xs,
   },

@@ -9,7 +9,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
-import { colors, fontSizes, spacing } from '../theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../theme/tokens';
 import { useT } from '../../lib/i18n';
 
 interface StreakMilestoneOverlayProps {
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderWidth: 3,
-    borderRadius: 8,
+    borderRadius: 0,
     padding: spacing.xl,
     alignItems: 'center',
     gap: spacing.sm,
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
     fontSize: 56,
   },
   milestoneLabel: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     letterSpacing: 3,
     textAlign: 'center',
   },
@@ -178,14 +178,14 @@ const styles = StyleSheet.create({
     marginVertical: spacing.xs,
   },
   countText: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: pixelSize(32),
+    fontFamily: fonts.bold,
     color: colors.background,
   },
   habitName: {
-    fontSize: fontSizes.md,
+    fontSize: pixelSize(fontSizes.md),
     color: colors.text,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     textAlign: 'center',
     maxWidth: 200,
   },

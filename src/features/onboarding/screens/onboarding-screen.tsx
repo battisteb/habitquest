@@ -10,7 +10,7 @@ import { saveAvatarConfig } from '../../avatar/stores/avatar-config-store';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { markOnboardingComplete } from '../onboarding-state';
 import { requestPermissions, applyNotificationPrefs } from '../../notifications/utils/notification-service';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 
@@ -54,7 +54,7 @@ function SwatchRow({ label, swatches, selected, onSelect }: SwatchRowProps) {
 
 const swatchStyles = StyleSheet.create({
   section: { gap: 4 },
-  label: { fontSize: 9, fontWeight: 'bold', color: colors.textMuted, letterSpacing: 2 },
+  label: { fontSize: pixelSize(9), fontFamily: fonts.bold, color: colors.textMuted, letterSpacing: 2 },
   row: { flexDirection: 'row', gap: 8, paddingVertical: 4 },
   swatch: { width: 32, height: 32, borderRadius: 16, borderWidth: 2, borderColor: 'transparent' },
   swatchSelected: { borderColor: '#ffffff', borderWidth: 3 },
@@ -311,7 +311,7 @@ function createStyles() {
   dot: {
     width: 10,
     height: 10,
-    borderRadius: 5,
+    borderRadius: 0,
     backgroundColor: colors.border,
   },
   dotActive: {
@@ -333,8 +333,8 @@ function createStyles() {
     textAlign: 'center',
   },
   slideTitle: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xxl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
     textAlign: 'center',
@@ -360,8 +360,8 @@ function createStyles() {
   },
   // Habit step
   title: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xxl),
+    fontFamily: fonts.bold,
     color: colors.text,
     textAlign: 'center',
   },
@@ -376,8 +376,8 @@ function createStyles() {
     paddingBottom: spacing.xxl,
   },
   sectionLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -385,7 +385,7 @@ function createStyles() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.sm,
   },
   quickPickSelected: {
@@ -398,7 +398,7 @@ function createStyles() {
   },
   quickPickTextSelected: {
     color: colors.primary,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
   },
   actions: {
     gap: spacing.sm,

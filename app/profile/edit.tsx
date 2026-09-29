@@ -19,7 +19,7 @@ import { useProfileStats } from '../../src/features/gamification/hooks/use-profi
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { avatarConfigStore$, saveAvatarConfig } from '../../src/features/avatar/stores/avatar-config-store';
 import { supabase } from '../../src/lib/supabase/client';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 
@@ -72,8 +72,8 @@ const swatchStyles = StyleSheet.create({
     gap: spacing.xs,
   },
   label: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
     textTransform: 'uppercase',
@@ -113,22 +113,22 @@ export default function EditProfileScreen() {
     marginBottom: spacing.sm,
   },
   screenLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   field: {
     gap: spacing.xs,
   },
   label: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -136,7 +136,7 @@ export default function EditProfileScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     color: colors.text,
     fontSize: fontSizes.md,
     paddingHorizontal: spacing.md,
@@ -151,13 +151,13 @@ export default function EditProfileScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     gap: spacing.md,
   },
   appearanceTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
     textTransform: 'uppercase',

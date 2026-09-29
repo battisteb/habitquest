@@ -8,7 +8,7 @@ import Animated, {
   withDelay,
   withSequence,
 } from 'react-native-reanimated';
-import { colors, fontSizes, spacing } from '../theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../theme/tokens';
 import { useT } from '../../lib/i18n';
 
 interface AllDoneCelebrationProps {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     left: spacing.lg,
     right: spacing.lg,
     backgroundColor: colors.accent,
-    borderRadius: 6,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.accent + 'aa',
     borderBottomWidth: 4,
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.background,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
 });

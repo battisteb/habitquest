@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { sessionsStore$, markSessionCompleted } from '../../src/features/training/stores/sessions-store';
 import { completeHabit, habitsStore$ } from '../../src/features/habits/stores/habits-store';
-import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import type { Exercise } from '../../src/features/training/types/session';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
@@ -337,7 +337,7 @@ function createStyles() {
   },
   backText: { color: colors.textMuted, fontSize: fontSizes.xl, width: 32, textAlign: 'center' },
   headerCenter: { flex: 1, alignItems: 'center', gap: 2 },
-  sessionTitle: { color: colors.text, fontSize: fontSizes.md, fontWeight: 'bold', letterSpacing: 1 },
+  sessionTitle: { color: colors.text, fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold, letterSpacing: 1 },
   sessionProgress: { color: colors.textMuted, fontSize: fontSizes.xs },
   scroll: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xxl },
   // Step cards (inactive / done)
@@ -360,14 +360,14 @@ function createStyles() {
     borderWidth: 2,
     borderColor: colors.border,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: pixelSize(24),
     color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
   },
   stepIndexDone: { borderColor: colors.success, color: colors.success },
   stepInfo: { flex: 1 },
-  stepName: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold' },
+  stepName: { color: colors.text, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold },
   stepNameDone: { textDecorationLine: 'line-through', color: colors.textMuted },
   stepMeta: { color: colors.textMuted, fontSize: fontSizes.xs, marginTop: 2 },
   // Active step
@@ -382,20 +382,20 @@ function createStyles() {
     alignItems: 'center',
   },
   activeStepProgress: { color: colors.textMuted, fontSize: fontSizes.xs, letterSpacing: 1 },
-  activeStepName: { color: colors.text, fontSize: fontSizes.xl, fontWeight: 'bold', textAlign: 'center' },
+  activeStepName: { color: colors.text, fontSize: pixelSize(fontSizes.xl), fontFamily: fonts.bold, textAlign: 'center' },
   activeStepMeta: { color: colors.textSecondary, fontSize: fontSizes.sm },
   // Timer
   timerBlock: { alignItems: 'center', gap: spacing.sm },
-  bigTime: { fontSize: 52, fontWeight: 'bold', color: colors.text, letterSpacing: 4, fontVariant: ['tabular-nums'] },
+  bigTime: { fontSize: pixelSize(52), fontFamily: fonts.bold, color: colors.text, letterSpacing: 4, fontVariant: ['tabular-nums'] },
   timerLabel: { color: colors.textMuted, fontSize: fontSizes.sm },
   timerButtons: { flexDirection: 'row', gap: spacing.sm },
   // Reps
   repsBlock: { alignItems: 'center', gap: spacing.sm },
-  repsCount: { fontSize: 72, fontWeight: 'bold', color: colors.primary },
-  repsLabel: { color: colors.textSecondary, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 2 },
+  repsCount: { fontSize: pixelSize(72), fontFamily: fonts.bold, color: colors.primary },
+  repsLabel: { color: colors.textSecondary, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 2 },
   // Rest
   restBlock: { alignItems: 'center', gap: spacing.sm },
-  restTitle: { color: colors.accent, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 2 },
+  restTitle: { color: colors.accent, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 2 },
   // Buttons
   actionBtn: {
     backgroundColor: colors.primary,
@@ -406,19 +406,19 @@ function createStyles() {
     borderColor: colors.primaryDark,
     borderBottomWidth: 4,
   },
-  actionBtnText: { color: colors.text, fontWeight: 'bold', fontSize: fontSizes.md, letterSpacing: 2 },
+  actionBtnText: { color: colors.text, fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.md), letterSpacing: 2 },
   skipBtn: { paddingVertical: spacing.xs, paddingHorizontal: spacing.sm },
-  skipBtnText: { color: colors.textMuted, fontSize: fontSizes.sm, fontWeight: 'bold' },
+  skipBtnText: { color: colors.textMuted, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold },
   exerciseDone: { alignItems: 'center' },
-  exerciseDoneText: { color: colors.success, fontSize: fontSizes.md, fontWeight: 'bold' },
+  exerciseDoneText: { color: colors.success, fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold },
   // Finish screen
   finishScreen: { flex: 1, alignItems: 'center', gap: spacing.lg, paddingTop: spacing.xl },
   finishEmoji: { fontSize: 64 },
-  finishTitle: { color: colors.accent, fontSize: fontSizes.xxl, fontWeight: 'bold', letterSpacing: 4 },
-  finishSubtitle: { color: colors.text, fontSize: fontSizes.lg, fontWeight: 'bold' },
+  finishTitle: { color: colors.accent, fontSize: pixelSize(fontSizes.xxl), fontFamily: fonts.bold, letterSpacing: 4 },
+  finishSubtitle: { color: colors.text, fontSize: pixelSize(fontSizes.lg), fontFamily: fonts.bold },
   finishStats: { color: colors.textSecondary, fontSize: fontSizes.sm },
   habitLink: { width: '100%', gap: spacing.sm },
-  habitLinkLabel: { color: colors.textMuted, fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1, textAlign: 'center' },
+  habitLinkLabel: { color: colors.textMuted, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1, textAlign: 'center' },
   habitLinkRow: { flexDirection: 'row', gap: spacing.sm, justifyContent: 'center', flexWrap: 'wrap' },
   habitChip: {
     paddingHorizontal: spacing.sm,
@@ -429,7 +429,7 @@ function createStyles() {
     backgroundColor: colors.surface,
   },
   habitChipSelected: { borderColor: colors.xp, backgroundColor: colors.xp + '22' },
-  habitChipText: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', maxWidth: 100 },
+  habitChipText: { color: colors.text, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, maxWidth: 100 },
   finishButton: {
     backgroundColor: colors.success,
     paddingVertical: spacing.md,
@@ -440,6 +440,6 @@ function createStyles() {
     borderBottomWidth: 4,
     marginTop: spacing.md,
   },
-  finishButtonText: { color: colors.text, fontWeight: 'bold', fontSize: fontSizes.md, letterSpacing: 2 },
+  finishButtonText: { color: colors.text, fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.md), letterSpacing: 2 },
 });
 }

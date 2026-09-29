@@ -9,7 +9,7 @@ import { EmojiPicker } from '../../src/features/habits/components/emoji-picker';
 import { createHabit } from '../../src/features/habits/stores/habits-store';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
-import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT, lang$ } from '../../src/lib/i18n';
 import { use$ } from '@legendapp/state/react';
@@ -43,13 +43,13 @@ export default function CreateHabitScreen() {
   },
   backButton: {
     color: colors.primary,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
@@ -58,8 +58,8 @@ export default function CreateHabitScreen() {
   },
   categoryLabel: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   categoryGrid: {
@@ -74,8 +74,8 @@ export default function CreateHabitScreen() {
     borderWidth: 2,
   },
   categoryChipText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   createButton: {
@@ -85,14 +85,14 @@ export default function CreateHabitScreen() {
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.sm,
     alignItems: 'center',
   },
   trainingShortcutText: {
-    fontSize: fontSizes.sm,
+    fontSize: pixelSize(fontSizes.sm),
     color: colors.textSecondary,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
   frequencySection: {
@@ -100,8 +100,8 @@ export default function CreateHabitScreen() {
   },
   frequencyLabel: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   frequencyRow: {
@@ -122,8 +122,8 @@ export default function CreateHabitScreen() {
     backgroundColor: colors.primary + '22',
   },
   frequencyChipText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
     color: colors.textSecondary,
   },
@@ -134,8 +134,8 @@ export default function CreateHabitScreen() {
     alignSelf: 'flex-end',
   },
   templateLinkText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.primary,
     letterSpacing: 1,
     textDecorationLine: 'underline',

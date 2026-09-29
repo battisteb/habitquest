@@ -9,7 +9,7 @@ import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { sendFriendRequest, friendsStore$ } from '../../src/features/social/stores/friends-store';
 import { use$ } from '@legendapp/state/react';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT, lang$ } from '../../src/lib/i18n';
 import { titleLabel } from '../../src/lib/i18n/labels';
@@ -60,19 +60,19 @@ export default function PublicProfileScreen() {
     paddingVertical: spacing.md,
   },
   username: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xxl),
+    fontFamily: fonts.bold,
     color: colors.text,
     marginTop: spacing.sm,
   },
   rank: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
   stage: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   memberSince: {
@@ -87,7 +87,7 @@ export default function PublicProfileScreen() {
   statCard: {
     flex: 1,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -95,12 +95,12 @@ export default function PublicProfileScreen() {
     gap: 2,
   },
   statValue: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
   },
   statLabel: {
-    fontSize: fontSizes.xs - 1,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs - 1),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -110,16 +110,16 @@ export default function PublicProfileScreen() {
   },
   friendChip: {
     textAlign: 'center',
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.success,
     letterSpacing: 1,
   },
   pendingChip: {
     textAlign: 'center',
-    fontSize: fontSizes.sm,
+    fontSize: pixelSize(fontSizes.sm),
     color: colors.textMuted,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
   },
 }), [themeKey]);
   const { userId } = useLocalSearchParams<{ userId: string }>();

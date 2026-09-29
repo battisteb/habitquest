@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'r
 import { PixelButton } from '../../../ui/components/pixel-button';
 import { PixelInput } from '../../../ui/components/pixel-input';
 import { signIn, signUp } from '../stores/auth-store';
-import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 
@@ -22,8 +22,8 @@ export function AuthForm() {
     marginBottom: spacing.xxl,
   },
   title: {
-    fontSize: fontSizes.title,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.title),
+    fontFamily: fonts.bold,
     color: colors.primary,
     letterSpacing: 2,
   },

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -41,7 +41,7 @@ export function AchievementCard({
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     gap: spacing.md,
   },
@@ -59,8 +59,8 @@ export function AchievementCard({
     gap: 3,
   },
   name: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   lockedText: {
@@ -80,18 +80,18 @@ export function AchievementCard({
     flex: 1,
     height: 4,
     backgroundColor: colors.border,
-    borderRadius: 2,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     backgroundColor: colors.xp,
-    borderRadius: 2,
+    borderRadius: 0,
   },
   progressLabel: {
-    fontSize: 9,
+    fontSize: pixelSize(9),
     color: colors.textMuted,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     minWidth: 40,
     textAlign: 'right',
   },
@@ -101,19 +101,19 @@ export function AchievementCard({
     marginTop: 2,
   },
   xpReward: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.xp,
   },
   goldReward: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.accent,
   },
   checkmark: {
-    fontSize: fontSizes.lg,
+    fontSize: pixelSize(fontSizes.lg),
     color: colors.success,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     marginTop: 2,
   },
 }), [themeKey]);

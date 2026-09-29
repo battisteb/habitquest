@@ -10,7 +10,7 @@ import { EmojiPicker } from '../../../src/features/habits/components/emoji-picke
 import { habitsStore$, updateHabit } from '../../../src/features/habits/stores/habits-store';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../../src/lib/constants/categories';
 import type { HabitContent } from '../../../src/features/habits/types/habit-content';
-import { colors, spacing, fontSizes, borderRadius } from '../../../src/ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../src/ui/theme/tokens';
 import { useTheme } from '../../../src/ui/theme/theme-context';
 import { useT } from '../../../src/lib/i18n';
 import { categoryLabel } from '../../../src/lib/i18n/labels';
@@ -33,21 +33,21 @@ export default function EditHabitScreen() {
   header: { gap: spacing.sm },
   backButton: {
     color: colors.primary,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
   categorySection: { gap: spacing.sm },
   categoryLabel: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
@@ -57,13 +57,13 @@ export default function EditHabitScreen() {
     borderRadius: borderRadius.sm,
     borderWidth: 2,
   },
-  categoryChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
+  categoryChipText: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
   saveButton: { marginTop: spacing.md },
   frequencySection: { gap: spacing.sm },
   frequencyLabel: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   frequencyRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
@@ -79,7 +79,7 @@ export default function EditHabitScreen() {
     borderColor: colors.primary,
     backgroundColor: colors.primary + '22',
   },
-  frequencyChipText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1, color: colors.textSecondary },
+  frequencyChipText: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1, color: colors.textSecondary },
   frequencyChipTextActive: { color: colors.primary },
 }), [themeKey]);
 

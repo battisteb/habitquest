@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { friendsStore$, fetchFriends } from '../../src/features/social/stores/friends-store';
 import { duelStore$, fetchUnlockedCategories, createDuel } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
@@ -18,15 +18,15 @@ export default function ChallengeScreen() {
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
     marginBottom: spacing.md,
   },
   stepLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
     marginBottom: spacing.sm,
@@ -37,7 +37,7 @@ export default function ChallengeScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 6,
+    borderRadius: 0,
     padding: spacing.sm,
     alignItems: 'center',
     minWidth: 80,
@@ -45,7 +45,7 @@ export default function ChallengeScreen() {
   },
   friendChipSelected: { borderColor: colors.primary, backgroundColor: colors.primary + '22' },
   friendEmoji: { fontSize: 28 },
-  friendName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold' },
+  friendName: { color: colors.text, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold },
   friendNameSelected: { color: colors.primary },
   friendLevel: { color: colors.textMuted, fontSize: 9 },
   attackCard: {
@@ -53,7 +53,7 @@ export default function ChallengeScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 6,
+    borderRadius: 0,
     borderBottomWidth: 4,
     padding: spacing.sm,
     alignItems: 'center',
@@ -61,11 +61,11 @@ export default function ChallengeScreen() {
   },
   attackCardSelected: { borderColor: colors.accent, backgroundColor: colors.accent + '18' },
   atkEmoji: { fontSize: 32 },
-  atkName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', textAlign: 'center' },
+  atkName: { color: colors.text, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, textAlign: 'center' },
   atkDesc: { color: colors.textMuted, fontSize: 9, textAlign: 'center', lineHeight: 12 },
   atkStats: { flexDirection: 'row', gap: spacing.sm },
-  atkStat: { color: colors.textSecondary, fontSize: 9, fontWeight: 'bold' },
-  atkSpecial: { color: colors.accent, fontSize: 9, fontWeight: 'bold', letterSpacing: 0.5 },
+  atkStat: { color: colors.textSecondary, fontSize: pixelSize(9), fontFamily: fonts.bold },
+  atkSpecial: { color: colors.accent, fontSize: pixelSize(9), fontFamily: fonts.bold, letterSpacing: 0.5 },
   sendBtn: { marginTop: spacing.md },
 }), [themeKey]);
   const insets = useSafeAreaInsets();

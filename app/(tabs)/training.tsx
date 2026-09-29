@@ -27,7 +27,7 @@ import {
 } from '../../src/features/training/stores/decks-store';
 import { isValidSessionFile } from '../../src/features/training/types/session';
 import { isValidDeckFile } from '../../src/features/training/types/flashcard';
-import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import type { StoredSession } from '../../src/features/training/types/session';
 import type { StoredDeck } from '../../src/features/training/types/flashcard';
 import { useTheme } from '../../src/ui/theme/theme-context';
@@ -326,7 +326,7 @@ function createStyles() {
     borderBottomWidth: 2,
     borderBottomColor: colors.border,
   },
-  title: { fontSize: fontSizes.xl, fontWeight: 'bold', color: colors.text, letterSpacing: 2 },
+  title: { fontSize: pixelSize(fontSizes.xl), fontFamily: fonts.bold, color: colors.text, letterSpacing: 2 },
   subtitle: { fontSize: fontSizes.xs, color: colors.textMuted, marginTop: 2 },
   importButton: {
     paddingHorizontal: spacing.md,
@@ -337,7 +337,7 @@ function createStyles() {
     backgroundColor: colors.primary + '22',
   },
   importButtonDisabled: { opacity: 0.5 },
-  importButtonText: { color: colors.primary, fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
+  importButtonText: { color: colors.primary, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
   tabBar: { flexDirection: 'row', borderBottomWidth: 2, borderBottomColor: colors.border },
   tabItem: {
     flex: 1,
@@ -348,7 +348,7 @@ function createStyles() {
     marginBottom: -2,
   },
   tabItemActive: { borderBottomColor: colors.primary },
-  tabLabel: { color: colors.textMuted, fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
+  tabLabel: { color: colors.textMuted, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
   tabLabelActive: { color: colors.primary },
   list: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xxl },
   // Cards
@@ -364,7 +364,7 @@ function createStyles() {
   cardHeader: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
   cardIcon: { fontSize: 26, lineHeight: 30 },
   cardInfo: { flex: 1, gap: 2 },
-  cardTitle: { color: colors.text, fontSize: fontSizes.md, fontWeight: 'bold' },
+  cardTitle: { color: colors.text, fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold },
   cardMeta: { color: colors.textMuted, fontSize: fontSizes.xs },
   cardLast: { color: colors.textMuted, fontSize: fontSizes.xs, fontStyle: 'italic' },
   cardDesc: { color: colors.textSecondary, fontSize: fontSizes.xs },
@@ -390,7 +390,7 @@ function createStyles() {
     borderColor: colors.xp,
   },
   dueBadgeDone: { backgroundColor: colors.success + '22', borderColor: colors.success },
-  dueBadgeText: { color: colors.xp, fontSize: fontSizes.xs, fontWeight: 'bold' },
+  dueBadgeText: { color: colors.xp, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold },
   dueBadgeTextDone: { color: colors.success },
   startButton: {
     backgroundColor: colors.primary,
@@ -403,11 +403,11 @@ function createStyles() {
   },
   studyButton: { backgroundColor: colors.xp, borderColor: '#5a4ec4' },
   studyButtonDisabled: { backgroundColor: colors.surface, borderColor: colors.border, borderBottomWidth: 2, opacity: 0.5 },
-  startButtonText: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 2 },
+  startButtonText: { color: colors.text, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 2 },
   // Empty
   emptyContainer: { padding: spacing.lg, alignItems: 'center', gap: spacing.md, paddingTop: spacing.xl },
   emptyIcon: { fontSize: 48 },
-  emptyTitle: { color: colors.text, fontSize: fontSizes.lg, fontWeight: 'bold' },
+  emptyTitle: { color: colors.text, fontSize: pixelSize(fontSizes.lg), fontFamily: fonts.bold },
   emptyText: { color: colors.textSecondary, fontSize: fontSizes.sm, textAlign: 'center', lineHeight: 20 },
   exampleBox: {
     width: '100%',
@@ -417,7 +417,7 @@ function createStyles() {
     borderColor: colors.border,
     padding: spacing.md,
   },
-  exampleTitle: { color: colors.textMuted, fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1, marginBottom: spacing.xs },
+  exampleTitle: { color: colors.textMuted, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1, marginBottom: spacing.xs },
   exampleCode: {
     color: colors.textSecondary,
     fontSize: 11,
@@ -433,6 +433,6 @@ function createStyles() {
     borderColor: colors.primaryDark,
     borderBottomWidth: 4,
   },
-  importButtonLargeText: { color: colors.text, fontWeight: 'bold', fontSize: fontSizes.sm, letterSpacing: 1 },
+  importButtonLargeText: { color: colors.text, fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.sm), letterSpacing: 1 },
 });
 }

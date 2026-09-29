@@ -9,7 +9,7 @@ import {
   achievementsStore$,
   fetchAchievements,
 } from '../src/features/gamification/stores/achievements-store';
-import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 import { useLang, useT } from '../src/lib/i18n';
 import { achievementText } from '../src/lib/i18n/content';
@@ -52,14 +52,14 @@ export default function AchievementsScreen() {
     paddingBottom: spacing.sm,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
   counter: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: colors.accent,
     width: 60,
     textAlign: 'right',
@@ -75,18 +75,18 @@ export default function AchievementsScreen() {
     flex: 1,
     height: 6,
     backgroundColor: colors.border,
-    borderRadius: 3,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   summaryFill: {
     height: '100%',
     backgroundColor: colors.accent,
-    borderRadius: 3,
+    borderRadius: 0,
   },
   summaryLabel: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     minWidth: 70,
     textAlign: 'right',
   },
@@ -105,7 +105,7 @@ export default function AchievementsScreen() {
     gap: 4,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     backgroundColor: colors.surface,
@@ -117,19 +117,19 @@ export default function AchievementsScreen() {
   filterIcon: { fontSize: 12 },
   filterLabel: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
   filterLabelActive: { color: colors.accent },
   filterCount: {
     color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     backgroundColor: colors.border,
     paddingHorizontal: 4,
     paddingVertical: 1,
-    borderRadius: 3,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   filterCountActive: {

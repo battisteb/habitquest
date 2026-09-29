@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, spacing, fontSizes, borderRadius } from '../../src/ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 import { HABIT_TEMPLATES } from '../../src/lib/constants/habit-templates';
@@ -43,14 +43,14 @@ export default function HabitTemplatesScreen() {
     },
     backBtn: {
       color: colors.primary,
-      fontSize: fontSizes.sm,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.sm),
+      fontFamily: fonts.bold,
       letterSpacing: 1,
     },
     title: {
       flex: 1,
-      fontSize: fontSizes.xl,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xl),
+      fontFamily: fonts.bold,
       color: colors.text,
       letterSpacing: 2,
     },
@@ -83,8 +83,8 @@ export default function HabitTemplatesScreen() {
       backgroundColor: colors.primary + '22',
     },
     chipText: {
-      fontSize: fontSizes.xs,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
     },
     chipTextActive: { color: colors.primary },
@@ -103,8 +103,8 @@ export default function HabitTemplatesScreen() {
     itemPressed: { opacity: 0.7 },
     itemEmoji: { fontSize: 28 },
     itemInfo: { flex: 1 },
-    itemName: { fontSize: fontSizes.md, fontWeight: 'bold', color: colors.text },
-    itemCategory: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1, marginTop: 2 },
+    itemName: { fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold, color: colors.text },
+    itemCategory: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1, marginTop: 2 },
     itemFreq: { fontSize: fontSizes.xs, color: colors.textMuted, marginTop: 2 },
     addBtn: {
       backgroundColor: colors.primary,
@@ -114,7 +114,7 @@ export default function HabitTemplatesScreen() {
       paddingVertical: spacing.xs,
       paddingHorizontal: spacing.sm,
     },
-    addBtnText: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
+    addBtnText: { color: colors.text, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
   }), [themeKey]);
 
   const filtered = useMemo(() => {

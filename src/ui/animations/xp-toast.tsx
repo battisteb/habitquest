@@ -9,7 +9,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
-import { colors, fontSizes } from '../theme/tokens';
+import { colors, fontSizes, fonts, pixelSize } from '../theme/tokens';
 
 interface XpToastProps {
   visible: boolean;
@@ -73,14 +73,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.xp,
     zIndex: 50,
   },
   text: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
     color: colors.xp,
     letterSpacing: 2,
   },

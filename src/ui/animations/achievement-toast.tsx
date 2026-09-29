@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Platform, View, Text, StyleSheet, Animated, Pressable } from 'react-native';
-import { colors, fontSizes, spacing } from '../theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../theme/tokens';
 import { useT } from '../../lib/i18n';
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.accent,
-    borderRadius: 4,
+    borderRadius: 0,
     borderBottomWidth: 4,
     padding: spacing.sm,
     gap: spacing.sm,
@@ -141,14 +141,14 @@ const styles = StyleSheet.create({
   content: { flex: 1, gap: 1 },
   label: {
     color: colors.accent,
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     letterSpacing: 1.5,
   },
   name: {
     color: colors.text,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
   },
   description: {
     color: colors.textMuted,
@@ -161,13 +161,13 @@ const styles = StyleSheet.create({
   },
   xpReward: {
     color: colors.xp,
-    fontSize: 10,
-    fontWeight: 'bold',
+    fontSize: pixelSize(10),
+    fontFamily: fonts.bold,
   },
   goldReward: {
     color: colors.accent,
-    fontSize: 10,
-    fontWeight: 'bold',
+    fontSize: pixelSize(10),
+    fontFamily: fonts.bold,
   },
   categoryIcon: { fontSize: 24 },
 });

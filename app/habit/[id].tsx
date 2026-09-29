@@ -12,7 +12,7 @@ import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-hea
 import { useDynamicGoal } from '../../src/features/habits/hooks/use-dynamic-goal';
 import { CONTENT_TYPE_CONFIG } from '../../src/features/habits/types/habit-content';
 import { getCategoryColor } from '../../src/lib/constants/categories';
-import { colors, spacing, fontSizes } from '../../src/ui/theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import {
   getHabitReminder,
   scheduleHabitReminder,
@@ -41,13 +41,13 @@ export default function HabitDetailScreen() {
     gap: spacing.xs,
   },
   title: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xxl),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   category: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
   statsGrid: {
@@ -57,7 +57,7 @@ export default function HabitDetailScreen() {
   statCard: {
     flex: 1,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.sm,
@@ -65,18 +65,18 @@ export default function HabitDetailScreen() {
     gap: 2,
   },
   statValue: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
   },
   statLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
   contentSection: {
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     overflow: 'hidden',
@@ -98,8 +98,8 @@ export default function HabitDetailScreen() {
   },
   contentType: {
     color: colors.text,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   contentSubtitle: {
@@ -128,8 +128,8 @@ export default function HabitDetailScreen() {
   },
   alreadyDone: {
     color: colors.success,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     textAlign: 'center',
     letterSpacing: 1,
   },
@@ -137,7 +137,7 @@ export default function HabitDetailScreen() {
     backgroundColor: colors.xp + '18',
     borderWidth: 2,
     borderColor: colors.xp + '66',
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     gap: 4,
   },
@@ -151,8 +151,8 @@ export default function HabitDetailScreen() {
   },
   goalMessage: {
     color: colors.text,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
   },
   goalDetail: {
     color: colors.textSecondary,
@@ -163,14 +163,14 @@ export default function HabitDetailScreen() {
     backgroundColor: '#4FC3F7' + '22',
     borderWidth: 2,
     borderColor: '#4FC3F7',
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.sm,
     alignItems: 'center',
   },
   pausedText: {
     color: '#4FC3F7',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   quickComplete: {
@@ -181,20 +181,20 @@ export default function HabitDetailScreen() {
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm + 2,
   },
   reminderLabel: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   reminderValue: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -213,8 +213,8 @@ export default function HabitDetailScreen() {
     gap: spacing.md,
   },
   modalTitle: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
     textAlign: 'center',
@@ -227,7 +227,7 @@ export default function HabitDetailScreen() {
   hourBtn: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: 3,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.background,
@@ -237,8 +237,8 @@ export default function HabitDetailScreen() {
     backgroundColor: colors.primary + '33',
   },
   hourBtnText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
   },
   hourBtnTextActive: {

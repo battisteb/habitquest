@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 
@@ -16,7 +16,7 @@ export function WeeklyChart({ data }: WeeklyChartProps) {
   const styles = useMemo(() => StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -24,8 +24,8 @@ export function WeeklyChart({ data }: WeeklyChartProps) {
   },
   title: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   chart: {
@@ -43,8 +43,8 @@ export function WeeklyChart({ data }: WeeklyChartProps) {
   },
   barValue: {
     color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
   },
   barTrack: {
     width: '100%',
@@ -54,13 +54,13 @@ export function WeeklyChart({ data }: WeeklyChartProps) {
   },
   barFill: {
     width: '70%',
-    borderRadius: 2,
+    borderRadius: 0,
     minWidth: 8,
   },
   dayLabel: {
     color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
 }), [themeKey]);

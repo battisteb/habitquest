@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../ui/theme/tokens';
 import type { DailyQuestWithTemplate, QuestDifficulty } from '../stores/daily-quests-store';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useLang, useT } from '../../../lib/i18n';
 import { questText } from '../../../lib/i18n/content';
+import { PixelFrame, shade } from '../../../ui/components/pixel-frame';
+import { PixelProgress } from '../../../ui/components/pixel-progress';
 
 interface DailyQuestCardProps {
   quest: DailyQuestWithTemplate;
@@ -27,12 +29,9 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
     [T],
   );
   const styles = useMemo(() => StyleSheet.create({
+  // Flat inside the gold missions frame (DailyQuestsSection).
   card: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderBottomWidth: 4,
-    borderRadius: borderRadius.sm,
+    backgroundColor: colors.background,
     padding: spacing.sm,
     gap: spacing.xs,
   },
@@ -45,15 +44,15 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
   },
   pausedBadge: {
     backgroundColor: '#4FC3F7' + '22',
-    borderRadius: 3,
+    borderRadius: 0,
     paddingHorizontal: spacing.xs,
     paddingVertical: 2,
     alignSelf: 'flex-start',
   },
   pausedBadgeText: {
     color: '#4FC3F7',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
   headerRow: {
@@ -70,8 +69,8 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
   },
   difficultyText: {
     color: colors.text,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   rewards: {
@@ -80,18 +79,18 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
   },
   xpReward: {
     color: colors.xp,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
   },
   goldReward: {
     color: colors.accent,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
   },
   title: {
     color: colors.text,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
   },
   description: {
     color: colors.textSecondary,
@@ -107,40 +106,25 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
   },
   progressBar: {
     flex: 1,
-    height: 6,
-    backgroundColor: colors.border,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: 3,
   },
   progressText: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     minWidth: 32,
     textAlign: 'right',
   },
   claimButton: {
-    backgroundColor: colors.accent,
-    borderWidth: 2,
-    borderColor: '#c9a400',
-    borderBottomWidth: 4,
-    borderRadius: borderRadius.sm,
-    paddingVertical: spacing.xs + 2,
-    alignItems: 'center',
     marginTop: spacing.xs,
   },
-  claimButtonPressed: {
-    borderBottomWidth: 2,
-    marginTop: spacing.xs + 2,
+  claimFace: {
+    paddingVertical: spacing.xs + 2,
+    alignItems: 'center',
   },
   claimButtonText: {
-    color: colors.background,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    color: '#1a1a2e',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
 }), [themeKey]);
@@ -188,18 +172,11 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
       {/* Progress bar */}
       <View style={styles.progressContainer}>
         <View style={styles.progressBar}>
-          <View
-            style={[
-              styles.progressFill,
-              {
-                width: `${progressPercent}%`,
-                backgroundColor: isClaimed
-                  ? colors.textMuted
-                  : isCompleted
-                    ? colors.success
-                    : difficultyColor,
-              },
-            ]}
+          <PixelProgress
+            progress={progressPercent / 100}
+            segments={10}
+            height={6}
+            color={isClaimed ? colors.textMuted : isCompleted ? colors.success : difficultyColor}
           />
         </View>
         <Text style={styles.progressText}>
@@ -211,13 +188,19 @@ export function DailyQuestCard({ quest, onClaim, isPaused = false }: DailyQuestC
       {canClaim && (
         <Pressable
           testID="claim-button"
-          style={({ pressed }) => [
-            styles.claimButton,
-            pressed && styles.claimButtonPressed,
-          ]}
+          style={styles.claimButton}
           onPress={() => onClaim(quest.id)}
         >
-          <Text style={styles.claimButtonText}>{T.dq_claim_btn}</Text>
+          {({ pressed }) => (
+            <PixelFrame
+              pressed={pressed}
+              borderColor={shade(colors.accent, 0.75)}
+              backgroundColor={colors.accent}
+              contentStyle={styles.claimFace}
+            >
+              <Text style={styles.claimButtonText}>{T.dq_claim_btn}</Text>
+            </PixelFrame>
+          )}
         </Pressable>
       )}
     </View>

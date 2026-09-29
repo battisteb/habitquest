@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useT } from '../../../lib/i18n';
 
 interface CompletionNoteModalProps {
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   handle: {
     width: 40,
     height: 4,
-    borderRadius: 2,
+    borderRadius: 0,
     backgroundColor: colors.border,
     alignSelf: 'center',
     marginBottom: spacing.xs,
@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   title: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
     color: colors.text,
     textAlign: 'center',
     letterSpacing: 1,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.sm,
     color: colors.text,
     fontSize: fontSizes.md,
@@ -159,13 +159,13 @@ const styles = StyleSheet.create({
     padding: spacing.sm,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     alignItems: 'center',
   },
   skipText: {
     color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
   },
   saveBtn: {
     flex: 2,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.primaryDark,
     borderBottomWidth: 4,
-    borderRadius: 4,
+    borderRadius: 0,
     alignItems: 'center',
   },
   saveBtnDisabled: {
@@ -182,8 +182,8 @@ const styles = StyleSheet.create({
   },
   saveText: {
     color: colors.text,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
 });

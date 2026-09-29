@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../ui/theme/tokens';
 import type { ChecklistItem } from '../types/habit-content';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -22,20 +22,20 @@ export function HabitChecklist({ items, onComplete }: HabitChecklistProps) {
   },
   progressLabel: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   progressBar: {
     height: 6,
     backgroundColor: colors.border,
-    borderRadius: 3,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     backgroundColor: colors.success,
-    borderRadius: 3,
+    borderRadius: 0,
   },
   list: {
     gap: spacing.xs + 2,
@@ -57,7 +57,7 @@ export function HabitChecklist({ items, onComplete }: HabitChecklistProps) {
   checkbox: {
     width: 28,
     height: 28,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     backgroundColor: colors.surfaceLight,
@@ -70,8 +70,8 @@ export function HabitChecklist({ items, onComplete }: HabitChecklistProps) {
   },
   checkmark: {
     color: colors.text,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
   },
   itemLabel: {
     flex: 1,
@@ -93,8 +93,8 @@ export function HabitChecklist({ items, onComplete }: HabitChecklistProps) {
   },
   completeButtonText: {
     color: colors.text,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
 }), [themeKey]);

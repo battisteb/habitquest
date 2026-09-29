@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Modal, View, Text, StyleSheet, Pressable } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../../ui/components/pixel-button';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 import { tutorialSeen$, markTutorialSeen } from '../tutorial-state';
@@ -79,7 +79,7 @@ function createStyles() {
     },
     counter: { fontSize: fontSizes.xs, color: colors.textMuted, letterSpacing: 2 },
     emoji: { fontSize: 40 },
-    title: { fontSize: fontSizes.lg, fontWeight: 'bold', color: colors.text, textAlign: 'center' },
+    title: { fontSize: pixelSize(fontSizes.lg), fontFamily: fonts.bold, color: colors.text, textAlign: 'center' },
     body: { fontSize: fontSizes.sm, color: colors.textSecondary, textAlign: 'center', lineHeight: 20 },
     skip: { fontSize: fontSizes.xs, color: colors.textMuted, textDecorationLine: 'underline' },
   });

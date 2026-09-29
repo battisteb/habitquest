@@ -12,7 +12,7 @@ import {
   type ContextualModeKey,
 } from '../../src/features/habits/utils/contextual-mode';
 import { PixelButton } from '../../src/ui/components/pixel-button';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 import { categoryLabel } from '../../src/lib/i18n/labels';
@@ -48,8 +48,8 @@ export default function ContextualModeScreen() {
     marginBottom: spacing.sm,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
@@ -62,7 +62,7 @@ export default function ContextualModeScreen() {
     backgroundColor: colors.primary + '18',
     borderWidth: 2,
     borderColor: colors.primary,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     gap: spacing.sm,
   },
@@ -76,8 +76,8 @@ export default function ContextualModeScreen() {
     fontSize: 28,
   },
   activeBannerName: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.primary,
     letterSpacing: 1,
   },
@@ -89,14 +89,14 @@ export default function ContextualModeScreen() {
   deactivateButton: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.danger,
   },
   deactivateButtonText: {
     color: colors.danger,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
 
@@ -110,7 +110,7 @@ export default function ContextualModeScreen() {
   // Mode card
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -132,8 +132,8 @@ export default function ContextualModeScreen() {
     flex: 1,
   },
   cardName: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 1,
   },
@@ -159,8 +159,8 @@ export default function ContextualModeScreen() {
     gap: spacing.xs,
   },
   categoryGroupLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -172,20 +172,20 @@ export default function ContextualModeScreen() {
   chipFocus: {
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
-    borderRadius: 3,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.success,
     backgroundColor: colors.success + '18',
   },
   chipFocusText: {
-    fontSize: fontSizes.xs,
+    fontSize: pixelSize(fontSizes.xs),
     color: colors.success,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
   },
   chipPause: {
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
-    borderRadius: 3,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.textMuted,
     backgroundColor: colors.border,
@@ -200,15 +200,15 @@ export default function ContextualModeScreen() {
     alignSelf: 'flex-start',
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.primary,
     backgroundColor: colors.primary + '22',
   },
   activeTagText: {
     color: colors.primary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
 }), [themeKey]);

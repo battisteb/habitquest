@@ -3,7 +3,7 @@ import { Modal, View, Text, StyleSheet, Pressable, ScrollView } from 'react-nati
 import { use$ } from '@legendapp/state/react';
 import { habitsStore$, pauseHabit, getWeeklyTarget } from '../stores/habits-store';
 import { recordBreakTaken } from '../stores/burnout-store';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 
@@ -164,7 +164,7 @@ function createStyles() {
       borderWidth: 3,
       borderColor: colors.primary,
       borderBottomWidth: 5,
-      borderRadius: 4,
+      borderRadius: 0,
       padding: spacing.lg,
       width: '100%',
       maxWidth: 400,
@@ -172,8 +172,8 @@ function createStyles() {
       gap: spacing.md,
     },
     title: {
-      fontSize: fontSizes.md,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.md),
+      fontFamily: fonts.bold,
       color: colors.primary,
       letterSpacing: 2,
       textAlign: 'center',
@@ -197,7 +197,7 @@ function createStyles() {
       gap: spacing.sm,
       borderWidth: 2,
       borderColor: colors.border,
-      borderRadius: 4,
+      borderRadius: 0,
       paddingHorizontal: spacing.sm,
       paddingVertical: spacing.xs,
       backgroundColor: colors.background,
@@ -211,7 +211,7 @@ function createStyles() {
       height: 18,
       borderWidth: 2,
       borderColor: colors.border,
-      borderRadius: 3,
+      borderRadius: 0,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -221,11 +221,11 @@ function createStyles() {
     },
     checkboxMark: {
       color: colors.background,
-      fontSize: 12,
-      fontWeight: 'bold',
+      fontSize: pixelSize(12),
+      fontFamily: fonts.bold,
     },
     rowText: { flex: 1 },
-    rowName: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.text },
+    rowName: { fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, color: colors.text },
     rowStats: { fontSize: 10, color: colors.textMuted, letterSpacing: 0.5 },
     buttons: {
       flexDirection: 'row',
@@ -235,7 +235,7 @@ function createStyles() {
       flex: 1,
       borderWidth: 2,
       borderBottomWidth: 4,
-      borderRadius: 4,
+      borderRadius: 0,
       paddingVertical: spacing.sm,
       alignItems: 'center',
     },
@@ -251,14 +251,14 @@ function createStyles() {
       opacity: 0.5,
     },
     btnText: {
-      fontSize: fontSizes.sm,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.sm),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
       letterSpacing: 1,
     },
     btnTextConfirm: {
-      fontSize: fontSizes.sm,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.sm),
+      fontFamily: fonts.bold,
       color: colors.primary,
       letterSpacing: 1,
     },
