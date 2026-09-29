@@ -34,6 +34,7 @@ export default function HabitTemplatesScreen() {
     container: { flex: 1, backgroundColor: colors.background },
     header: {
       paddingHorizontal: spacing.md,
+      paddingTop: spacing.md,
       paddingBottom: spacing.sm,
       gap: spacing.sm,
     },

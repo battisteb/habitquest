@@ -91,7 +91,7 @@ export default function TodayScreen() {
   // The left block shrinks so "AUJOURD'HUI" never pushes the buttons off screen.
   headerLeft: { flexShrink: 1, marginRight: spacing.sm },
   title: {
-    fontSize: pixelSize(fontSizes.lg + 2),
+    fontSize: pixelSize(fontSizes.lg),
     fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 0.5,
