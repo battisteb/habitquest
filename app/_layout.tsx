@@ -31,9 +31,10 @@ import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
 import { syncTimezone } from '../src/features/auth/utils/sync-timezone';
 import { achievementText } from '../src/lib/i18n/content';
 import { lang$ } from '../src/lib/i18n';
-import { installWebAlert } from '../src/lib/web-alert';
+import { installAppAlert } from '../src/lib/app-alert';
+import { PixelDialogHost } from '../src/ui/components/pixel-dialog';
 
-installWebAlert();
+installAppAlert();
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -134,6 +135,7 @@ function ThemedApp() {
         onComplete={dismissStreakMilestone}
       />
       <OfflineBanner />
+      <PixelDialogHost />
       {currentToast && (
         <AchievementToast
           key={currentToast.id}

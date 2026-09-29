@@ -1,6 +1,5 @@
 import { authErrorMessage } from '../utils/auth-error';
 import { readRecoveryTokens } from '../utils/recovery-link';
-import { webAlert } from '../../../lib/web-alert';
 import { STRINGS_FOR_TESTS } from '../../../lib/i18n';
 
 const T = STRINGS_FOR_TESTS.fr;
@@ -35,31 +34,5 @@ describe('readRecoveryTokens', () => {
     expect(readRecoveryTokens('#access_token=a&refresh_token=r&type=signup')).toBeNull();
     expect(readRecoveryTokens('#type=recovery&access_token=a')).toBeNull();
     expect(readRecoveryTokens('')).toBeNull();
-  });
-});
-
-describe('webAlert', () => {
-  const g = globalThis as unknown as { window: { alert: jest.Mock; confirm: jest.Mock } };
-  beforeEach(() => {
-    g.window = { alert: jest.fn(), confirm: jest.fn() };
-  });
-
-  it('shows a simple alert and runs its only button', () => {
-    const onPress = jest.fn();
-    webAlert('Erreur', 'Oups', [{ text: 'OK', onPress }]);
-    expect(g.window.alert).toHaveBeenCalledWith('Erreur\n\nOups');
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  it('runs the confirm button when accepted, the cancel one otherwise', () => {
-    const cancel = jest.fn();
-    const confirm = jest.fn();
-    const buttons = [{ text: 'Annuler', style: 'cancel' as const, onPress: cancel }, { text: 'Oui', onPress: confirm }];
-    g.window.confirm.mockReturnValueOnce(true);
-    webAlert('Sûr ?', undefined, buttons);
-    expect(confirm).toHaveBeenCalledTimes(1);
-    g.window.confirm.mockReturnValueOnce(false);
-    webAlert('Sûr ?', undefined, buttons);
-    expect(cancel).toHaveBeenCalledTimes(1);
   });
 });
