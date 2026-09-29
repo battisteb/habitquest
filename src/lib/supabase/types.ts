@@ -782,6 +782,8 @@ export type Database = {
         Args: { p_gold_loss: number; p_user_id: string; p_xp_loss: number };
         Returns: undefined;
       };
+      arena_ack_result: { Args: Record<PropertyKey, never>; Returns: undefined };
+      arena_state: { Args: Record<PropertyKey, never>; Returns: Json };
       assert_caller_is: { Args: { p_user_id: string }; Returns: undefined };
       assign_daily_quests: {
         Args: { p_user_id: string };
