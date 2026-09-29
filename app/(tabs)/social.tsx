@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
+import { PixelFrame } from '../../src/ui/components/pixel-frame';
 import {
   friendsStore$,
   fetchFriends,
@@ -55,6 +56,26 @@ export default function SocialScreen() {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },
+
+  // Arena entry
+  arenaEntry: { marginHorizontal: spacing.md, marginBottom: spacing.sm },
+  arenaEntryContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  arenaEntryIcon: { fontSize: 22 },
+  arenaEntryText: { flex: 1, gap: 2 },
+  arenaEntryTitle: {
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
+    color: colors.accent,
+    letterSpacing: 2,
+  },
+  arenaEntryBody: { fontSize: fontSizes.sm, color: colors.textSecondary },
+  arenaEntryChevron: { fontSize: pixelSize(fontSizes.xl), fontFamily: fonts.bold, color: colors.accent },
 
   // Leaderboard scope toggle
   scopeRow: {
@@ -685,6 +706,30 @@ export default function SocialScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       <Text style={styles.title}>{T.social_title}</Text>
+
+      {/* Arena (ADR 012): open to everyone, even without friends. */}
+      <Pressable
+        onPress={() => router.push('/arena')}
+        accessibilityRole="button"
+        testID="social-arena-entry"
+        style={styles.arenaEntry}
+      >
+        {({ pressed }) => (
+          <PixelFrame
+            pressed={pressed}
+            borderColor={colors.accent}
+            backgroundColor={colors.surface}
+            contentStyle={styles.arenaEntryContent}
+          >
+            <Text style={styles.arenaEntryIcon}>⚔️</Text>
+            <View style={styles.arenaEntryText}>
+              <Text style={styles.arenaEntryTitle}>{T.arena_title}</Text>
+              <Text style={styles.arenaEntryBody}>{T.arena_entry_body}</Text>
+            </View>
+            <Text style={styles.arenaEntryChevron}>›</Text>
+          </PixelFrame>
+        )}
+      </Pressable>
 
       {/* Tab bar */}
       <View style={styles.tabBar}>
