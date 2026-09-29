@@ -705,6 +705,9 @@ const FR = {
   // Daily quests section
   dq_section_title: 'MISSIONS DU JOUR',
   dq_section_reset_hint: 'Se renouvelle chaque jour',
+  dq_to_claim: '{n} À RÉCLAMER !',
+  dq_expand_a11y: 'Afficher les missions du jour',
+  dq_collapse_a11y: 'Masquer les missions du jour',
   dq_diff_easy: 'FACILE',
   dq_diff_normal: 'NORMAL',
   dq_diff_hard: 'DIFFICILE',
@@ -1575,6 +1578,9 @@ const EN = {
   // Daily quests section
   dq_section_title: 'DAILY MISSIONS',
   dq_section_reset_hint: 'Resets daily',
+  dq_to_claim: '{n} TO CLAIM!',
+  dq_expand_a11y: 'Show daily missions',
+  dq_collapse_a11y: 'Hide daily missions',
   dq_diff_easy: 'EASY',
   dq_diff_normal: 'NORMAL',
   dq_diff_hard: 'HARD',

@@ -411,6 +411,8 @@ export default function TodayScreen() {
 
   // Habits list padding
   listPad: { paddingHorizontal: spacing.md },
+  // The list already has a horizontal padding: cancel the section's own.
+  missionsSlot: { marginHorizontal: -spacing.md, marginTop: spacing.sm },
 
   // Empty state
   empty: {
@@ -627,6 +629,12 @@ export default function TodayScreen() {
   const ListHeader = (
     <View>
       {hero}
+      {/* Daily missions: a folded one-line banner above the habits. */}
+      <View style={styles.missionsSlot}>
+        <DailyQuestsSection
+          pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
+        />
+      </View>
       {/* Active mode banner */}
       {activeMode && (() => {
         const def = getModeDefinition(activeMode.key);
@@ -852,11 +860,6 @@ export default function TodayScreen() {
           data={displayedHabits}
           keyExtractor={(item) => item.id}
           ListHeaderComponent={ListHeader}
-          ListFooterComponent={
-            <DailyQuestsSection
-              pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
-            />
-          }
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
           }
