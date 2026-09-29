@@ -7,7 +7,8 @@ import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
 import { friendsStore$ } from '../../src/features/social/stores/friends-store';
 import { notificationsStore$, fetchNotifications } from '../../src/features/notifications/stores/notifications-store';
-import { colors } from '../../src/ui/theme/tokens';
+import { colors, fonts, PIXEL, pixelSize } from '../../src/ui/theme/tokens';
+import { shade } from '../../src/ui/components/pixel-frame';
 import { useT } from '../../src/lib/i18n';
 
 function usePendingHabitCount(): number {
@@ -36,11 +37,20 @@ function useUnreadNotificationCount(): number {
 function tabIcon(emoji: string, label: string) {
   function TabIcon({ focused, color }: { focused: boolean; color: string }) {
     return (
-      <View style={{ alignItems: 'center', minWidth: 72 }}>
+      <View
+        style={{
+          alignItems: 'center',
+          minWidth: 72,
+          paddingHorizontal: 4,
+          paddingBottom: 2,
+          // Active tab: a solid pixel block, like a selected menu entry.
+          backgroundColor: focused ? colors.primary : 'transparent',
+        }}
+      >
         <Text style={{ fontSize: 18, lineHeight: 22, opacity: focused ? 1 : 0.55 }}>{emoji}</Text>
         <Text
           numberOfLines={1}
-          style={{ color, fontSize: 10, lineHeight: 13, fontWeight: 'bold', letterSpacing: 0.5 }}
+          style={{ color: focused ? colors.text : color, fontSize: pixelSize(11), lineHeight: pixelSize(13), fontFamily: fonts.bold, letterSpacing: 0.5 }}
         >
           {label}
         </Text>
@@ -66,9 +76,9 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: colors.surface,
+          backgroundColor: shade(colors.background, 0.7),
           borderTopColor: colors.border,
-          borderTopWidth: 2,
+          borderTopWidth: PIXEL,
           // Room for the emoji icon + label, above the home indicator.
           height: 58 + insets.bottom,
           paddingTop: 4,
@@ -88,8 +98,8 @@ export default function TabsLayout() {
           tabBarBadge: pendingHabits > 0 ? pendingHabits : undefined,
           tabBarBadgeStyle: {
             backgroundColor: colors.streak,
-            fontSize: 9,
-            fontWeight: 'bold',
+            fontSize: pixelSize(9),
+            fontFamily: fonts.bold,
           },
         }}
       />
@@ -102,8 +112,8 @@ export default function TabsLayout() {
           tabBarBadge: pendingFriends > 0 ? pendingFriends : undefined,
           tabBarBadgeStyle: {
             backgroundColor: colors.primary,
-            fontSize: 9,
-            fontWeight: 'bold',
+            fontSize: pixelSize(9),
+            fontFamily: fonts.bold,
           },
         }}
       />
@@ -124,8 +134,8 @@ export default function TabsLayout() {
           tabBarBadge: unreadNotifications > 0 ? unreadNotifications : undefined,
           tabBarBadgeStyle: {
             backgroundColor: colors.primary,
-            fontSize: 9,
-            fontWeight: 'bold',
+            fontSize: pixelSize(9),
+            fontFamily: fonts.bold,
           },
         }}
       />

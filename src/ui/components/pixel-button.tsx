@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { Pressable, Text, StyleSheet, type ViewStyle } from 'react-native';
-import { colors, spacing, fontSizes, borderRadius } from '../theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../theme/tokens';
 import { useTheme } from '../theme/theme-context';
 import { hapticLight } from '../../lib/haptics';
+import { PixelFrame } from './pixel-frame';
 
 interface PixelButtonProps {
   title: string;
@@ -26,21 +27,33 @@ export function PixelButton({
     onPress();
   };
 
+  const label = (
+    <Text style={[styles.text, variant === 'ghost' && styles.ghostText]}>
+      {title.toUpperCase()}
+    </Text>
+  );
+
   return (
     <Pressable
       onPress={handlePress}
       disabled={disabled}
-      style={({ pressed }) => [
-        styles.base,
-        styles[variant],
-        pressed && styles.pressed,
-        disabled && styles.disabled,
-        style,
-      ]}
+      accessibilityRole="button"
+      style={[disabled && styles.disabled, style]}
     >
-      <Text style={[styles.text, variant === 'ghost' && styles.ghostText]}>
-        {title.toUpperCase()}
-      </Text>
+      {({ pressed }) =>
+        variant === 'ghost' ? (
+          <Text style={[styles.ghost, pressed && styles.ghostPressed]}>{label}</Text>
+        ) : (
+          <PixelFrame
+            pressed={pressed}
+            borderColor={variant === 'primary' ? colors.primaryDark : colors.border}
+            backgroundColor={variant === 'primary' ? colors.primary : colors.surface}
+            contentStyle={styles.face}
+          >
+            {label}
+          </PixelFrame>
+        )
+      }
     </Pressable>
   );
 }
@@ -48,40 +61,27 @@ export function PixelButton({
 // Rebuilt on theme change: these components are used on every screen.
 function createStyles() {
   return StyleSheet.create({
-  base: {
+  face: {
     paddingVertical: spacing.sm + 2,
     paddingHorizontal: spacing.lg,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  primary: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primaryDark,
-    borderBottomWidth: 4,
-  },
-  secondary: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderBottomWidth: 4,
-  },
   ghost: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    borderBottomWidth: 2,
+    paddingVertical: spacing.sm + 2,
+    paddingHorizontal: spacing.lg,
+    textAlign: 'center',
   },
-  pressed: {
-    borderBottomWidth: 2,
-    marginTop: 2,
+  ghostPressed: {
+    opacity: 0.6,
   },
   disabled: {
     opacity: 0.5,
   },
   text: {
     color: colors.text,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md + 1),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   ghostText: {

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useRouter } from 'expo-router';
 import { subscriptionStore$ } from '../stores/subscription-store';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 
@@ -19,7 +19,7 @@ function createStyles() {
     container: {
       position: 'relative',
       overflow: 'hidden',
-      borderRadius: 4,
+      borderRadius: 0,
     },
     overlay: {
       position: 'absolute',
@@ -29,14 +29,14 @@ function createStyles() {
       justifyContent: 'center',
       gap: spacing.sm,
       zIndex: 10,
-      borderRadius: 4,
+      borderRadius: 0,
       borderWidth: 2,
       borderColor: gold + '55',
     },
     icon: { fontSize: 32 },
     label: {
-      fontSize: fontSizes.sm,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.sm),
+      fontFamily: fonts.bold,
       color: gold,
       letterSpacing: 1,
       textAlign: 'center',
@@ -44,22 +44,22 @@ function createStyles() {
     },
     cta: {
       backgroundColor: gold,
-      borderRadius: 4,
+      borderRadius: 0,
       borderBottomWidth: 3,
       borderColor: '#B8860B',
       paddingHorizontal: spacing.md,
       paddingVertical: spacing.xs,
     },
-    ctaText: { fontSize: fontSizes.xs, fontWeight: 'bold', color: '#000', letterSpacing: 1 },
+    ctaText: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, color: '#000', letterSpacing: 1 },
     badge: {
       backgroundColor: gold + '22',
       borderWidth: 1,
       borderColor: gold + '88',
-      borderRadius: 3,
+      borderRadius: 0,
       paddingHorizontal: 5,
       paddingVertical: 2,
     },
-    badgeText: { fontSize: 8, fontWeight: 'bold', color: gold, letterSpacing: 0.5 },
+    badgeText: { fontSize: pixelSize(8), fontFamily: fonts.bold, color: gold, letterSpacing: 0.5 },
   });
 }
 

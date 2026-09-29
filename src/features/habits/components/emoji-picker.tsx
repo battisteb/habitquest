@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
-import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 
@@ -31,19 +31,19 @@ export function EmojiPicker({ value, onChange, label }: EmojiPickerProps) {
     },
     label: {
       color: colors.textSecondary,
-      fontSize: fontSizes.xs,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs),
+      fontFamily: fonts.bold,
       letterSpacing: 1,
     },
     clearBtn: {
-      fontSize: fontSizes.xs,
+      fontSize: pixelSize(fontSizes.xs),
       color: colors.textMuted,
-      fontWeight: 'bold',
+      fontFamily: fonts.bold,
       letterSpacing: 1,
     },
     groupLabel: {
-      fontSize: 9,
-      fontWeight: 'bold',
+      fontSize: pixelSize(9),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
       letterSpacing: 1,
       marginTop: spacing.xs,
@@ -56,7 +56,7 @@ export function EmojiPicker({ value, onChange, label }: EmojiPickerProps) {
     emojiBtn: {
       width: 38,
       height: 38,
-      borderRadius: 6,
+      borderRadius: 0,
       borderWidth: 2,
       borderColor: colors.border,
       backgroundColor: colors.surface,

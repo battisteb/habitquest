@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { useT } from '../../src/lib/i18n';
+import { PixelFrame } from '../../src/ui/components/pixel-frame';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
@@ -17,7 +18,7 @@ import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { notificationsStore$ } from '../../src/features/notifications/stores/notifications-store';
 import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
 import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { titleLabel, stageDescription } from '../../src/lib/i18n/labels';
 
@@ -51,7 +52,7 @@ export default function ProfileScreen() {
     top: 0,
     right: 0,
     backgroundColor: colors.primary,
-    borderRadius: 8,
+    borderRadius: 0,
     minWidth: 16,
     height: 16,
     alignItems: 'center',
@@ -59,8 +60,8 @@ export default function ProfileScreen() {
     paddingHorizontal: 3,
   },
   notifBadgeText: {
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     color: '#fff',
   },
   content: {
@@ -74,15 +75,15 @@ export default function ProfileScreen() {
     paddingVertical: spacing.md,
   },
   username: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xxl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 1,
     marginTop: spacing.sm,
   },
   rankBadge: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
   editHint: {
@@ -93,16 +94,13 @@ export default function ProfileScreen() {
   },
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
     padding: spacing.md,
     gap: spacing.xs,
   },
   cardHint: {
     color: colors.xp,
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
     textAlign: 'right',
     marginTop: 2,
@@ -111,24 +109,20 @@ export default function ProfileScreen() {
     flexDirection: 'row',
     gap: spacing.sm,
   },
+  miniStatFrame: { flex: 1 },
   miniStat: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.border,
     padding: spacing.md,
     alignItems: 'center',
     gap: spacing.xs,
   },
   miniStatValue: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.accent,
   },
   miniStatLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -137,7 +131,7 @@ export default function ProfileScreen() {
     alignItems: 'center',
     gap: spacing.sm,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
@@ -147,8 +141,8 @@ export default function ProfileScreen() {
     gap: spacing.xs,
   },
   stageTitle: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   stageDescription: {
@@ -248,7 +242,8 @@ export default function ProfileScreen() {
             </View>
 
             {/* XP Bar */}
-            <Pressable style={styles.card} onPress={() => router.push('/xp-journey')}>
+            <Pressable onPress={() => router.push('/xp-journey')}>
+              <PixelFrame backgroundColor={colors.surface} contentStyle={styles.card}>
               <XpBar
                 level={level}
                 currentXp={profile?.xp ?? 0}
@@ -256,44 +251,45 @@ export default function ProfileScreen() {
                 progress={xpProgress}
               />
               <Text style={styles.cardHint}>{T.profile_xp_journey_hint}</Text>
+              </PixelFrame>
             </Pressable>
 
             {/* Stats row */}
             <View style={styles.statsRow}>
-              <View style={styles.miniStat}>
+              <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
                 <Text style={styles.miniStatValue}>{profile?.xp ?? 0}</Text>
                 <Text style={styles.miniStatLabel}>{T.profile_stat_xp}</Text>
-              </View>
-              <View style={styles.miniStat}>
+              </PixelFrame>
+              <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: colors.xp }]}>{level}</Text>
                 <Text style={styles.miniStatLabel}>{T.profile_stat_level}</Text>
-              </View>
-              <View style={styles.miniStat}>
+              </PixelFrame>
+              <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: colors.accent }]}>
                   {profile?.gold ?? 0}
                 </Text>
                 <Text style={styles.miniStatLabel}>{T.profile_stat_gold}</Text>
-              </View>
+              </PixelFrame>
             </View>
 
             {/* Duel stats */}
             <View style={styles.statsRow}>
-              <View style={styles.miniStat}>
+              <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: '#4CAF50' }]}>{duelsWon}</Text>
                 <Text style={styles.miniStatLabel}>{T.profile_stat_wins}</Text>
-              </View>
-              <View style={styles.miniStat}>
+              </PixelFrame>
+              <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: '#F44336' }]}>{duelsLost}</Text>
                 <Text style={styles.miniStatLabel}>{T.profile_stat_losses}</Text>
-              </View>
-              <View style={styles.miniStat}>
+              </PixelFrame>
+              <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: colors.streak }]}>
                   {duelsWon + duelsLost > 0
                     ? Math.round((duelsWon / (duelsWon + duelsLost)) * 100)
                     : 0}%
                 </Text>
                 <Text style={styles.miniStatLabel}>{T.profile_stat_win_rate}</Text>
-              </View>
+              </PixelFrame>
             </View>
 
             {/* Monthly activity heatmap */}

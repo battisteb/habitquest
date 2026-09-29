@@ -4,7 +4,7 @@ import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../stores/subscription-store';
 import { shouldShowAds } from '../utils/ad-service';
 import { canPersonalizeAds } from '../utils/tracking-consent';
-import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -51,10 +51,10 @@ export function AdBanner({ position = 'bottom' }: AdBannerProps) {
     paddingHorizontal: spacing.sm,
   },
   premiumHintText: {
-    fontSize: 8,
+    fontSize: pixelSize(8),
     color: colors.textMuted,
     letterSpacing: 1,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
   },
 }), [themeKey]);
   const isPremium = use$(subscriptionStore$.isPremium);

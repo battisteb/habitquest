@@ -9,7 +9,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
-import { colors, fontSizes, spacing } from '../theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../theme/tokens';
 import { useT } from '../../lib/i18n';
 
 interface LevelUpOverlayProps {
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
   levelUpText: {
     fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     color: colors.accent,
     letterSpacing: 3,
     textAlign: 'center',
@@ -150,8 +150,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   levelNumber: {
-    fontSize: 36,
-    fontWeight: 'bold',
+    fontSize: pixelSize(36),
+    fontFamily: fonts.bold,
     color: colors.background,
   },
   subtitle: {

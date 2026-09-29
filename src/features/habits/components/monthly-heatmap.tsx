@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { lang$ } from '../../../lib/i18n';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useMonthlyCompletions } from '../hooks/use-monthly-completions';
 
 const MONTH_NAMES_FR = [
@@ -29,15 +29,15 @@ const CELL_SIZE = 34;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
     gap: spacing.sm,
   },
   title: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
   },
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   dayLabel: {
     width: CELL_SIZE,
     textAlign: 'center',
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   cell: {
     width: CELL_SIZE,
     height: CELL_SIZE,
-    borderRadius: 2,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   legendDot: {
     width: 10,
     height: 10,
-    borderRadius: 2,
+    borderRadius: 0,
   },
 });
 

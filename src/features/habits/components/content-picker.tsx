@@ -7,7 +7,7 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../ui/theme/tokens';
 import type { HabitContent, HabitContentType, ChecklistItem } from '../types/habit-content';
 import { CONTENT_TYPE_CONFIG } from '../types/habit-content';
 import { useTheme } from '../../../ui/theme/theme-context';
@@ -49,8 +49,8 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
   },
   sectionLabel: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   typeRow: {
@@ -75,8 +75,8 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
     fontSize: 20,
   },
   typeChipLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -93,8 +93,8 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
   },
   subLabel: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   input: {
@@ -126,16 +126,16 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
   },
   presetChipText: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
   },
   presetChipTextSelected: {
     color: colors.xp,
   },
   durationPreview: {
     color: colors.xp,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     textAlign: 'center',
     letterSpacing: 1,
   },
@@ -164,9 +164,9 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
   },
   removeBtnText: {
     color: colors.danger,
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
-    lineHeight: fontSizes.lg,
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
+    lineHeight: pixelSize(fontSizes.lg),
   },
   addRow: {
     flexDirection: 'row',
@@ -190,8 +190,8 @@ export function ContentPicker({ value, onChange }: ContentPickerProps) {
   },
   addBtnText: {
     color: colors.text,
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     marginTop: -2,
   },
   emptyHint: {

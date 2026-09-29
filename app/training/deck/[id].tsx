@@ -12,7 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { decksStore$, recordReview, getDueCards } from '../../../src/features/training/stores/decks-store';
 import { completeHabit, habitsStore$ } from '../../../src/features/habits/stores/habits-store';
-import { colors, spacing, fontSizes, borderRadius } from '../../../src/ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../src/ui/theme/tokens';
 import { useTheme } from '../../../src/ui/theme/theme-context';
 import { useT } from '../../../src/lib/i18n';
 
@@ -41,20 +41,20 @@ export default function DeckReviewScreen() {
     paddingVertical: spacing.sm,
   },
   headerCenter: { flex: 1, alignItems: 'center', gap: 2 },
-  deckTitle: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 1 },
+  deckTitle: { color: colors.text, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 1 },
   deckProgress: { color: colors.textMuted, fontSize: fontSizes.xs },
   progressBar: {
     height: 4,
     backgroundColor: colors.border,
     marginHorizontal: spacing.md,
-    borderRadius: 2,
+    borderRadius: 0,
     overflow: 'hidden',
     marginBottom: spacing.md,
   },
   progressFill: {
     height: '100%',
     backgroundColor: colors.xp,
-    borderRadius: 2,
+    borderRadius: 0,
   },
   cardContainer: {
     padding: spacing.md,
@@ -78,16 +78,16 @@ export default function DeckReviewScreen() {
   cardContent: { alignItems: 'center', gap: spacing.sm, width: '100%' },
   cardSide: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
   cardText: {
     color: colors.text,
-    fontSize: fontSizes.xl + 4,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl + 4),
+    fontFamily: fonts.bold,
     textAlign: 'center',
-    lineHeight: 36,
+    lineHeight: pixelSize(36),
   },
   cardHint: {
     color: colors.textSecondary,
@@ -108,16 +108,16 @@ export default function DeckReviewScreen() {
   },
   cardAnswer: {
     color: colors.xp,
-    fontSize: fontSizes.xl + 4,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl + 4),
+    fontFamily: fonts.bold,
     textAlign: 'center',
-    lineHeight: 36,
+    lineHeight: pixelSize(36),
   },
   ratingSection: { gap: spacing.sm },
   ratingLabel: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
     textAlign: 'center',
   },
@@ -132,8 +132,8 @@ export default function DeckReviewScreen() {
     gap: 2,
   },
   ratingBtnLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   ratingBtnSub: { color: colors.textMuted, fontSize: 9 },
@@ -145,14 +145,14 @@ export default function DeckReviewScreen() {
     paddingTop: spacing.xl,
   },
   finishEmoji: { fontSize: 64 },
-  finishTitle: { color: colors.xp, fontSize: fontSizes.xxl, fontWeight: 'bold', letterSpacing: 4 },
-  finishDeck: { color: colors.text, fontSize: fontSizes.lg, fontWeight: 'bold' },
+  finishTitle: { color: colors.xp, fontSize: pixelSize(fontSizes.xxl), fontFamily: fonts.bold, letterSpacing: 4 },
+  finishDeck: { color: colors.text, fontSize: pixelSize(fontSizes.lg), fontFamily: fonts.bold },
   finishStats: { color: colors.textSecondary, fontSize: fontSizes.sm },
   habitLink: { width: '100%', gap: spacing.sm },
   habitLinkLabel: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
     textAlign: 'center',
   },
@@ -166,7 +166,7 @@ export default function DeckReviewScreen() {
     backgroundColor: colors.surface,
   },
   habitChipSelected: { borderColor: colors.xp, backgroundColor: colors.xp + '22' },
-  habitChipText: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', maxWidth: 120 },
+  habitChipText: { color: colors.text, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, maxWidth: 120 },
   finishButton: {
     backgroundColor: colors.xp,
     paddingVertical: spacing.md,
@@ -177,11 +177,11 @@ export default function DeckReviewScreen() {
     borderBottomWidth: 4,
     marginTop: spacing.md,
   },
-  finishButtonText: { color: colors.text, fontWeight: 'bold', fontSize: fontSizes.md, letterSpacing: 2 },
+  finishButtonText: { color: colors.text, fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.md), letterSpacing: 2 },
   // Up to date
   upToDate: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.md, padding: spacing.lg },
   upToDateEmoji: { fontSize: 64 },
-  upToDateTitle: { color: colors.success, fontSize: fontSizes.xl, fontWeight: 'bold' },
+  upToDateTitle: { color: colors.success, fontSize: pixelSize(fontSizes.xl), fontFamily: fonts.bold },
   upToDateSub: { color: colors.textSecondary, fontSize: fontSizes.sm, textAlign: 'center' },
   upToDateNext: { color: colors.textMuted, fontSize: fontSizes.xs, fontStyle: 'italic' },
 }), [themeKey]);

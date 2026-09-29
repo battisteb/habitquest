@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useCategoryStats } from '../hooks/use-category-stats';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useT } from '../../../lib/i18n';
 import { useTheme } from '../../../ui/theme/theme-context';
 
@@ -11,15 +11,15 @@ export function CategoryBreakdown() {
   const styles = useMemo(() => StyleSheet.create({
     card: {
       backgroundColor: colors.surface,
-      borderRadius: 4,
+      borderRadius: 0,
       borderWidth: 2,
       borderColor: colors.border,
       padding: spacing.md,
       gap: spacing.sm,
     },
     title: {
-      fontSize: fontSizes.xs,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
       letterSpacing: 2,
       marginBottom: 2,
@@ -42,26 +42,26 @@ export function CategoryBreakdown() {
       fontSize: 14,
     },
     label: {
-      fontSize: fontSizes.xs,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs),
+      fontFamily: fonts.bold,
       color: colors.text,
       letterSpacing: 0.5,
     },
     meta: {
-      fontSize: fontSizes.xs - 1,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs - 1),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
       letterSpacing: 0.5,
     },
     barTrack: {
       height: 6,
       backgroundColor: colors.border,
-      borderRadius: 3,
+      borderRadius: 0,
       overflow: 'hidden',
     },
     barFill: {
       height: '100%',
-      borderRadius: 3,
+      borderRadius: 0,
       minWidth: 4,
     },
   }), [themeKey]);

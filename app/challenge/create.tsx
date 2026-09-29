@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useT } from '../../src/lib/i18n';
 import { createChallenge } from '../../src/features/social/stores/challenges-store';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
 const WAGER_OPTIONS = [5, 10, 25, 50];
@@ -36,22 +36,22 @@ export default function CreateChallengeScreen() {
     padding: spacing.md,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
   opponent: {
-    fontSize: fontSizes.sm,
+    fontSize: pixelSize(fontSizes.sm),
     color: colors.primary,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     marginTop: 2,
   },
   summary: {
     marginHorizontal: spacing.md,
     padding: spacing.md,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     alignItems: 'center',
@@ -62,15 +62,15 @@ export default function CreateChallengeScreen() {
   },
   summaryVal: {
     color: colors.xp,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
   },
   section: {
     padding: spacing.md,
     gap: spacing.sm,
   },
   sectionTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -85,7 +85,7 @@ export default function CreateChallengeScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     gap: spacing.xs,
   },
@@ -93,8 +93,8 @@ export default function CreateChallengeScreen() {
     borderColor: colors.primary,
   },
   optionLabel: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   optionLabelActive: {
@@ -107,7 +107,7 @@ export default function CreateChallengeScreen() {
   chip: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     backgroundColor: colors.surface,
@@ -117,8 +117,8 @@ export default function CreateChallengeScreen() {
     backgroundColor: colors.accent,
   },
   chipText: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.textSecondary,
   },
   chipTextActive: {

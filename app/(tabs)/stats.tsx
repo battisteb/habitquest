@@ -11,7 +11,7 @@ import { CategoryBreakdown } from '../../src/features/habits/components/category
 import { sessionsStore$ } from '../../src/features/training/stores/sessions-store';
 import { decksStore$ } from '../../src/features/training/stores/decks-store';
 import { getDueCards } from '../../src/features/training/types/flashcard';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
@@ -142,8 +142,8 @@ function createStyles() {
     backgroundColor: colors.background,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
@@ -154,7 +154,7 @@ function createStyles() {
   statCard: {
     flex: 1,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -162,12 +162,12 @@ function createStyles() {
     gap: spacing.xs,
   },
   statValue: {
-    fontSize: fontSizes.title,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.title),
+    fontFamily: fonts.bold,
   },
   statLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -176,8 +176,8 @@ function createStyles() {
   },
   sectionTitle: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
 });

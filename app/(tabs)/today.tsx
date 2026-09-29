@@ -27,6 +27,7 @@ import { brokenStreakStore$, dismissBrokenStreak, clearBrokenStreakForHabit } fr
 import { pinnedHabitsStore$, togglePinHabit, isHabitPinned } from '../../src/features/habits/stores/pinned-habits-store';
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
+import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
 import {
   getFreezesRemaining,
   isFreezeActiveToday,
@@ -48,7 +49,7 @@ import {
   shouldShowAds,
 } from '../../src/features/monetization/utils/ad-service';
 import { getMaxFreezeTokens } from '../../src/features/monetization/utils/feature-gates';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
 const DAY_NAMES_FR = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
@@ -89,15 +90,15 @@ export default function TodayScreen() {
   // The left block shrinks so "AUJOURD'HUI" never pushes the buttons off screen.
   headerLeft: { flexShrink: 1, marginRight: spacing.sm },
   title: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg + 2),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 0.5,
   },
   dateLabel: {
-    fontSize: fontSizes.xs,
+    fontSize: pixelSize(fontSizes.xs),
     color: colors.textMuted,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     letterSpacing: 1,
     marginTop: 1,
   },
@@ -107,59 +108,59 @@ export default function TodayScreen() {
     alignItems: 'center',
     gap: spacing.xs,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.border,
     paddingHorizontal: spacing.sm,
     paddingVertical: 3,
   },
   headerStatXp: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.success,
   },
   headerStatGold: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.accent,
   },
   headerStatLevel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.xp,
   },
   freezeButton: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: '#4FC3F7',
   },
   freezeButtonActive: { backgroundColor: '#4FC3F7' },
   freezeText: {
     color: '#4FC3F7',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
   freezeTextActive: { color: colors.background },
   watchAdButton: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.textMuted,
   },
   watchAdText: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
   addButton: {
     width: 36,
     height: 36,
-    borderRadius: 4,
+    borderRadius: 0,
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
@@ -169,8 +170,8 @@ export default function TodayScreen() {
   },
   addButtonText: {
     color: colors.text,
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     marginTop: -2,
   },
 
@@ -186,15 +187,15 @@ export default function TodayScreen() {
     backgroundColor: colors.primary + '18',
     borderWidth: 2,
     borderColor: colors.primary,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.sm,
     margin: spacing.md,
     marginBottom: 0,
   },
   modeBannerText: {
     color: colors.primary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
     flex: 1,
   },
@@ -214,14 +215,14 @@ export default function TodayScreen() {
     backgroundColor: colors.accent + '18',
     borderWidth: 2,
     borderColor: colors.accent,
-    borderRadius: 4,
+    borderRadius: 0,
     borderBottomWidth: 4,
     padding: spacing.md,
   },
   allDoneEmoji: { fontSize: 36 },
   allDoneTitle: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
     color: colors.accent,
     letterSpacing: 2,
   },
@@ -245,28 +246,28 @@ export default function TodayScreen() {
   sortChip: {
     paddingHorizontal: spacing.xs + 2,
     paddingVertical: 2,
-    borderRadius: 3,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
   },
   sortChipActive: { borderColor: colors.primary, backgroundColor: colors.primary + '22' },
-  sortChipText: { fontSize: 9, fontWeight: 'bold', color: colors.textMuted, letterSpacing: 0.5 },
+  sortChipText: { fontSize: pixelSize(9), fontFamily: fonts.bold, color: colors.textMuted, letterSpacing: 0.5 },
   sortChipTextActive: { color: colors.primary },
   habitsTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
   },
   habitsCounter: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textSecondary,
     backgroundColor: colors.surface,
     paddingHorizontal: spacing.xs,
     paddingVertical: 1,
-    borderRadius: 3,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -277,12 +278,12 @@ export default function TodayScreen() {
     backgroundColor: colors.border,
     marginHorizontal: spacing.md,
     marginBottom: spacing.xs,
-    borderRadius: 2,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    borderRadius: 2,
+    borderRadius: 0,
   },
 
   // Category filter
@@ -296,7 +297,7 @@ export default function TodayScreen() {
   filterChip: {
     paddingHorizontal: spacing.sm,
     paddingVertical: 3,
-    borderRadius: 3,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
@@ -306,8 +307,8 @@ export default function TodayScreen() {
     backgroundColor: colors.primary + '22',
   },
   filterChipText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 0.5,
   },
@@ -318,7 +319,7 @@ export default function TodayScreen() {
     backgroundColor: colors.streak + '18',
     borderWidth: 2,
     borderColor: colors.streak,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.sm,
     margin: spacing.md,
     marginBottom: 0,
@@ -329,8 +330,8 @@ export default function TodayScreen() {
   streakRecoveryText: { flex: 1, gap: 2 },
   streakRecoveryTitle: {
     color: colors.streak,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   streakRecoveryMsg: {
@@ -342,20 +343,20 @@ export default function TodayScreen() {
     backgroundColor: colors.streak + '22',
     borderWidth: 1,
     borderColor: colors.streak,
-    borderRadius: 3,
+    borderRadius: 0,
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.sm,
   },
   streakRecoveryBtnText: {
     color: colors.streak,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   streakRecoveryClose: {
     color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     paddingHorizontal: spacing.xs,
   },
 
@@ -364,7 +365,7 @@ export default function TodayScreen() {
     backgroundColor: '#FF6B6B' + '18',
     borderWidth: 2,
     borderColor: '#FF6B6B',
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.sm,
     margin: spacing.md,
     marginBottom: 0,
@@ -378,8 +379,8 @@ export default function TodayScreen() {
   burnoutText: { flex: 1, gap: 2 },
   burnoutMessage: {
     color: '#FF6B6B',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   burnoutSuggestion: {
@@ -389,22 +390,22 @@ export default function TodayScreen() {
   },
   burnoutClose: {
     color: colors.textMuted,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     paddingHorizontal: spacing.xs,
   },
   burnoutAction: {
     marginTop: spacing.xs,
     borderWidth: 1,
     borderColor: '#FF6B6B',
-    borderRadius: 3,
+    borderRadius: 0,
     paddingVertical: spacing.xs,
     alignItems: 'center',
   },
   burnoutActionText: {
     color: '#FF6B6B',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
 
@@ -422,8 +423,8 @@ export default function TodayScreen() {
   emptyEmoji: { fontSize: 48 },
   emptyTitle: {
     color: colors.textSecondary,
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
   },
   emptySubtitle: {
     color: colors.textMuted,
@@ -438,7 +439,7 @@ export default function TodayScreen() {
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 6,
+    borderRadius: 0,
     padding: spacing.md,
   },
   emptyTip: {
@@ -570,6 +571,17 @@ export default function TodayScreen() {
   const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
   const totalCount = activeHabits.length;
   const allDone = totalCount > 0 && completedCount === totalCount;
+  const pendingStreaks = activeHabits
+    .filter((h) => !isHabitCompletedEnough(h.id))
+    .map((h) => streaks[h.id]?.current_count ?? 0);
+  const hero = (
+    <HeroGreeting
+      totalHabits={totalCount}
+      pendingStreaks={pendingStreaks}
+      xp={profile?.xp ?? 0}
+      level={profile?.level ?? 1}
+    />
+  );
 
   const handleComplete = useCallback(async (habitId: string) => {
     // Count before completing: completeHabit already marks the habit done in the store.
@@ -614,6 +626,7 @@ export default function TodayScreen() {
 
   const ListHeader = (
     <View>
+      {hero}
       {/* Active mode banner */}
       {activeMode && (() => {
         const def = getModeDefinition(activeMode.key);
@@ -814,6 +827,7 @@ export default function TodayScreen() {
       {/* Unified list */}
       {habits.length === 0 ? (
         <View>
+          {hero}
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>⚔️</Text>
             <Text style={styles.emptyTitle}>{T.today_empty_title}</Text>

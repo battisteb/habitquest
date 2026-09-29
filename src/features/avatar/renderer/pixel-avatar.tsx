@@ -309,7 +309,7 @@ export function PixelAvatar({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 8,
+    borderRadius: 0,
     overflow: 'hidden',
     borderWidth: 3,
     borderColor: '#2a2a4a',

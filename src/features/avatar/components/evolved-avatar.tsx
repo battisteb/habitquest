@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 4,
     height: 4,
-    borderRadius: 2,
+    borderRadius: 0,
     ...Platform.select({
       native: { shadowOpacity: 0.8, shadowRadius: 4, shadowOffset: { width: 0, height: 0 }, elevation: 4 },
       web: {},

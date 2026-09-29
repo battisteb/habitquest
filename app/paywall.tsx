@@ -20,7 +20,7 @@ import {
   PRODUCT_MONTHLY,
   PRODUCT_ANNUAL,
 } from '../src/features/monetization/stores/subscription-store';
-import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 
 
@@ -56,16 +56,16 @@ export default function PaywallScreen() {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  closeText: { color: colors.textMuted, fontSize: 14, fontWeight: 'bold' },
+  closeText: { color: colors.textMuted, fontSize: pixelSize(14), fontFamily: fonts.bold },
   badge: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: gold,
     letterSpacing: 2,
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: gold + '66',
-    borderRadius: 4,
+    borderRadius: 0,
     paddingHorizontal: spacing.sm,
     paddingVertical: 3,
   },
@@ -75,12 +75,12 @@ export default function PaywallScreen() {
   hero: { alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.md },
   heroEmoji: { fontSize: 56 },
   heroTitle: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     textAlign: 'center',
     letterSpacing: 0.5,
-    lineHeight: 28,
+    lineHeight: pixelSize(28),
   },
   heroSub: {
     fontSize: fontSizes.sm,
@@ -91,7 +91,7 @@ export default function PaywallScreen() {
   // Feature table
   table: {
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     overflow: 'hidden',
@@ -106,8 +106,8 @@ export default function PaywallScreen() {
   },
   tableCol: {
     flex: 1,
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -124,16 +124,16 @@ export default function PaywallScreen() {
   tableCellCenter: { alignItems: 'center' },
   premiumCell: { backgroundColor: gold + '08' },
   featureIcon: { fontSize: 14 },
-  featureLabel: { fontSize: fontSizes.xs, color: colors.text, fontWeight: 'bold', flex: 1 },
+  featureLabel: { fontSize: pixelSize(fontSizes.xs), color: colors.text, fontFamily: fonts.bold, flex: 1 },
   freeText: { fontSize: 9, color: colors.textMuted, textAlign: 'center' },
-  premiumText: { fontSize: 9, color: gold, fontWeight: 'bold', textAlign: 'center' },
+  premiumText: { fontSize: pixelSize(9), color: gold, fontFamily: fonts.bold, textAlign: 'center' },
 
   // Plans
   plans: { flexDirection: 'row', gap: spacing.sm },
   plan: {
     flex: 1,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -144,19 +144,19 @@ export default function PaywallScreen() {
   planBadgeRow: { height: 20, justifyContent: 'center' },
   popularBadge: {
     backgroundColor: gold,
-    borderRadius: 3,
+    borderRadius: 0,
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
-  popularBadgeText: { fontSize: 8, fontWeight: 'bold', color: '#000', letterSpacing: 1 },
-  planPeriod: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.text, letterSpacing: 1 },
-  planPrice: { fontSize: fontSizes.xl, fontWeight: 'bold', color: gold },
+  popularBadgeText: { fontSize: pixelSize(8), fontFamily: fonts.bold, color: '#000', letterSpacing: 1 },
+  planPeriod: { fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, color: colors.text, letterSpacing: 1 },
+  planPrice: { fontSize: pixelSize(fontSizes.xl), fontFamily: fonts.bold, color: gold },
   planSub: { fontSize: 9, color: colors.textMuted, textAlign: 'center' },
 
   // CTA
   cta: {
     backgroundColor: gold,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 3,
     borderColor: '#B8860B',
     borderBottomWidth: 5,
@@ -166,8 +166,8 @@ export default function PaywallScreen() {
   },
   ctaDisabled: { opacity: 0.6 },
   ctaText: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: '#000',
     letterSpacing: 1,
   },

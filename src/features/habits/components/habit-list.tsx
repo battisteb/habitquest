@@ -6,7 +6,7 @@ import { habitsStore$, completeHabit } from '../stores/habits-store';
 import { HabitCard } from './habit-card';
 import { XpToast } from '../../../ui/animations/xp-toast';
 import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
-import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 
@@ -24,20 +24,20 @@ export function HabitList() {
   },
   progressText: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   progressBar: {
     height: 6,
     backgroundColor: colors.border,
-    borderRadius: 3,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     backgroundColor: colors.success,
-    borderRadius: 3,
+    borderRadius: 0,
   },
   list: {
     padding: spacing.md,
@@ -51,8 +51,8 @@ export function HabitList() {
   },
   emptyTitle: {
     color: colors.textSecondary,
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
   },
   emptySubtitle: {
     color: colors.textMuted,

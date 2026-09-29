@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { PixelAvatar } from '../../avatar/renderer/pixel-avatar';
 import { RarityBadge } from './rarity-badge';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { PremiumBadge } from '../../monetization/components/premium-gate';
 import { useTheme } from '../../../ui/theme/theme-context';
 
@@ -63,7 +63,7 @@ export function ShopItemCard({
   card: {
     backgroundColor: colors.surface,
     borderWidth: 2,
-    borderRadius: 4,
+    borderRadius: 0,
     borderBottomWidth: 4,
     padding: spacing.sm,
     gap: spacing.xs,
@@ -80,7 +80,7 @@ export function ShopItemCard({
   previewArea: {
     height: 80,
     backgroundColor: colors.background,
-    borderRadius: 4,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -92,13 +92,13 @@ export function ShopItemCard({
     top: 4,
     right: 4,
     backgroundColor: colors.accent,
-    borderRadius: 2,
+    borderRadius: 0,
     paddingHorizontal: 4,
     paddingVertical: 1,
   },
   equippedBadgeText: {
-    fontSize: 8,
-    fontWeight: 'bold',
+    fontSize: pixelSize(8),
+    fontFamily: fonts.bold,
     color: colors.background,
     letterSpacing: 0.5,
   },
@@ -111,13 +111,13 @@ export function ShopItemCard({
   },
   lockIcon: { fontSize: 22 },
   name: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   status: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 0.5,
   },
@@ -130,8 +130,8 @@ export function ShopItemCard({
     alignItems: 'center',
   },
   price: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.accent,
   },
   priceLocked: {

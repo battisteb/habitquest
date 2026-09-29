@@ -23,7 +23,7 @@ import {
   calculateXpEarned,
   XP_CONFIG,
 } from '../src/lib/constants/game-config';
-import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 import { titleLabel } from '../src/lib/i18n/labels';
 
@@ -152,8 +152,8 @@ export default function XpJourneyScreen() {
     alignItems: 'center',
   },
   title: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
@@ -163,7 +163,7 @@ export default function XpJourneyScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.xp + '88',
-    borderRadius: 4,
+    borderRadius: 0,
     borderBottomWidth: 4,
     padding: spacing.md,
     gap: spacing.sm,
@@ -174,26 +174,26 @@ export default function XpJourneyScreen() {
     alignItems: 'flex-start',
   },
   heroLevel: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.xp,
     letterSpacing: 2,
   },
   heroRank: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
     marginTop: 2,
   },
   heroXpTotal: { alignItems: 'flex-end' },
   heroXpValue: {
-    fontSize: fontSizes.xxl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xxl),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   heroXpLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
@@ -208,8 +208,8 @@ export default function XpJourneyScreen() {
   section: { gap: spacing.xs },
   sectionTitle: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
 
@@ -218,7 +218,7 @@ export default function XpJourneyScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     paddingTop: spacing.sm,
   },
@@ -237,8 +237,8 @@ export default function XpJourneyScreen() {
   },
   chartXp: {
     color: colors.xp,
-    fontSize: 8,
-    fontWeight: 'bold',
+    fontSize: pixelSize(8),
+    fontFamily: fonts.bold,
     height: 12,
     textAlign: 'center',
   },
@@ -249,13 +249,13 @@ export default function XpJourneyScreen() {
   },
   chartBarFill: {
     width: '100%',
-    borderRadius: 2,
+    borderRadius: 0,
     minHeight: 0,
   },
   chartLabel: {
     color: colors.textMuted,
-    fontSize: 8,
-    fontWeight: 'bold',
+    fontSize: pixelSize(8),
+    fontFamily: fonts.bold,
     textAlign: 'center',
   },
   chartLabelToday: { color: colors.accent },
@@ -265,7 +265,7 @@ export default function XpJourneyScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     gap: spacing.sm,
   },
@@ -278,26 +278,26 @@ export default function XpJourneyScreen() {
   multiplierArrow: { paddingHorizontal: 4 },
   arrowText: { color: colors.textMuted, fontSize: fontSizes.lg },
   multiplierValue: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   multiplierLabel: {
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
   multiplierBar: {
     height: 6,
     backgroundColor: colors.border,
-    borderRadius: 3,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   multiplierFill: {
     height: '100%',
     backgroundColor: colors.xp,
-    borderRadius: 3,
+    borderRadius: 0,
   },
   multiplierHint: {
     color: colors.textMuted,
@@ -311,7 +311,7 @@ export default function XpJourneyScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.md,
     gap: spacing.sm,
   },
@@ -323,23 +323,23 @@ export default function XpJourneyScreen() {
   roadmapDot: {
     width: 10,
     height: 10,
-    borderRadius: 5,
+    borderRadius: 0,
   },
   roadmapInfo: { flex: 1 },
   roadmapRank: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
   },
   roadmapReq: {
     fontSize: fontSizes.xs,
     color: colors.textMuted,
     marginTop: 1,
   },
-  roadmapCheck: { fontSize: fontSizes.lg, fontWeight: 'bold' },
+  roadmapCheck: { fontSize: pixelSize(fontSizes.lg), fontFamily: fonts.bold },
   roadmapNext: {
-    fontSize: 9,
+    fontSize: pixelSize(9),
     color: colors.xp,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
 
@@ -348,7 +348,7 @@ export default function XpJourneyScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   gainRow: {
@@ -366,14 +366,14 @@ export default function XpJourneyScreen() {
   gainHabit: {
     flex: 1,
     color: colors.text,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
   },
   gainRight: { alignItems: 'flex-end', gap: 1 },
   gainXp: {
     color: colors.xp,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
   },
   gainDate: {
     color: colors.textMuted,

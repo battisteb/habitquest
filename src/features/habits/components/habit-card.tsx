@@ -11,9 +11,10 @@ import Animated, {
   Extrapolation,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
+import { PixelFrame, shade } from '../../../ui/components/pixel-frame';
 import { getWeeklyTarget } from '../stores/habits-store';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -96,7 +97,6 @@ export function HabitCard({
   const styles = useMemo(() => StyleSheet.create({
   wrapper: {
     position: 'relative',
-    borderRadius: borderRadius.sm,
     overflow: 'hidden',
   },
   reveal: {
@@ -109,23 +109,19 @@ export function HabitCard({
   },
   revealText: {
     color: colors.background,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
   container: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
-    borderRadius: borderRadius.sm,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderBottomWidth: 3,
     overflow: 'visible',
     position: 'relative',
   },
   containerDone: {
-    borderColor: colors.border,
-    opacity: 0.65,
+    // Validated: green frame (see PixelFrame below) on a green-tinted face.
+    backgroundColor: shade(colors.success, 0.3),
   },
   categoryBar: { width: 4 },
   content: {
@@ -139,8 +135,8 @@ export function HabitCard({
   info: { flex: 1, gap: 3 },
   name: {
     color: colors.text,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
   },
   nameCompleted: {
     textDecorationLine: 'line-through',
@@ -153,19 +149,19 @@ export function HabitCard({
     flexWrap: 'wrap',
   },
   category: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   streak: {
-    fontSize: fontSizes.xs,
+    fontSize: pixelSize(fontSizes.xs),
     color: colors.streak,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
   },
   weekProgress: {
-    fontSize: fontSizes.xs,
+    fontSize: pixelSize(fontSizes.xs),
     color: '#ff9500',
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
   },
   weekBarRow: {
     flexDirection: 'row',
@@ -175,13 +171,13 @@ export function HabitCard({
   weekDot: {
     width: 8,
     height: 8,
-    borderRadius: 1,
+    borderRadius: 0,
     borderWidth: 1,
   },
   xpPreview: {
-    fontSize: fontSizes.xs,
+    fontSize: pixelSize(fontSizes.xs),
     color: colors.xp,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     opacity: 0.8,
   },
   checkButton: {
@@ -201,8 +197,8 @@ export function HabitCard({
   },
   checkText: {
     color: colors.text,
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
   },
   checkTextDone: {
     color: colors.background,
@@ -285,6 +281,7 @@ export function HabitCard({
 
   return (
     <RNAnimated.View style={{ transform: [{ translateY: slideY }], opacity: entryOpacity }}>
+      <PixelFrame borderColor={effectiveDone ? colors.success : colors.border}>
       <View style={styles.wrapper}>
         {/* Green reveal layer behind the card */}
         <Animated.View style={[styles.reveal, revealStyle]}>
@@ -357,6 +354,7 @@ export function HabitCard({
           </Animated.View>
         </GestureDetector>
       </View>
+      </PixelFrame>
     </RNAnimated.View>
   );
 }

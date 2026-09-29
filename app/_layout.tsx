@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Stack, usePathname, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useFonts, Jersey10_400Regular } from '@expo-google-fonts/jersey-10';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
@@ -145,6 +146,11 @@ function ThemedApp() {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({ Jersey10_400Regular });
+  // Wait for the pixel font (bundled, so this takes a few ms); on failure the
+  // app still starts with the system font.
+  if (!fontsLoaded && !fontError) return null;
+
   return (
     <ThemeProvider>
       <ThemedApp />

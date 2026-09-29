@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable, Vibration, Platform } from 'react-native';
-import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 
@@ -34,8 +34,8 @@ export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
     paddingVertical: spacing.md,
   },
   label: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.textSecondary,
     letterSpacing: 2,
   },
@@ -71,8 +71,8 @@ export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
     gap: 2,
   },
   timeText: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: pixelSize(32),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
     fontVariant: ['tabular-nums'],
@@ -105,8 +105,8 @@ export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
   },
   mainButtonText: {
     color: colors.text,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
   },
   resetButton: {

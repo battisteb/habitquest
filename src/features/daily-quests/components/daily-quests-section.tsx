@@ -1,11 +1,12 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { colors, spacing, fontSizes, borderRadius } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useDailyQuests } from '../hooks/use-daily-quests';
 import { DailyQuestCard } from './daily-quest-card';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 import { hapticMedium } from '../../../lib/haptics';
+import { PixelFrame } from '../../../ui/components/pixel-frame';
 
 interface DailyQuestsSectionProps {
   pausedCategories?: string[];
@@ -25,37 +26,34 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
     alignItems: 'center',
     marginBottom: spacing.sm,
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
   headerTitle: {
     color: colors.accent,
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     letterSpacing: 2,
-  },
-  counterBadge: {
-    backgroundColor: colors.surfaceLight,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
-    borderRadius: borderRadius.sm,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  counterText: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
   },
   refreshHint: {
     color: colors.textMuted,
     fontSize: fontSizes.xs,
     fontStyle: 'italic',
+    textAlign: 'right',
+  },
+  banner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: colors.accent,
+    paddingHorizontal: spacing.sm + 2,
+    paddingVertical: spacing.xs,
+  },
+  bannerTitle: {
+    color: '#1a1a2e',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
+    letterSpacing: 1,
   },
   questList: {
     gap: spacing.sm,
+    padding: spacing.sm,
   },
 }), [themeKey]);
   const { quests, isLoading, fetchDailyQuests, claimQuest } = useDailyQuests();
@@ -93,16 +91,13 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>{T.dq_section_title}</Text>
-          <View style={styles.counterBadge}>
-            <Text style={styles.counterText}>
-              {completedCount}/{totalCount}
-            </Text>
-          </View>
-        </View>
-        <Text style={styles.refreshHint}>{T.dq_section_reset_hint}</Text>
+      {/* Gold frame: the daily missions are the "treasure" of the day. */}
+      <PixelFrame borderColor={colors.accent} backgroundColor={colors.surface}>
+      <View style={styles.banner}>
+        <Text style={styles.bannerTitle}>{T.dq_section_title}</Text>
+        <Text style={styles.bannerTitle}>
+          {completedCount}/{totalCount}
+        </Text>
       </View>
       <View style={styles.questList}>
         {quests.map((quest) => {
@@ -119,7 +114,9 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
             />
           );
         })}
+        <Text style={styles.refreshHint}>{T.dq_section_reset_hint}</Text>
       </View>
+      </PixelFrame>
     </View>
   );
 }

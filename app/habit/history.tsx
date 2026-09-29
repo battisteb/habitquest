@@ -7,7 +7,7 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { lang$ } from '../../src/lib/i18n';
 import { supabase } from '../../src/lib/supabase/client';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 
@@ -81,14 +81,14 @@ export default function HabitHistoryScreen() {
     marginBottom: spacing.sm,
   },
   screenLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   monthRow: {
@@ -101,9 +101,9 @@ export default function HabitHistoryScreen() {
     alignItems: 'flex-start',
   },
   monthLabel: {
-    fontSize: fontSizes.xs - 1,
+    fontSize: pixelSize(fontSizes.xs - 1),
     color: colors.textMuted,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
   },
   calendarGrid: {
     flexDirection: 'row',
@@ -117,7 +117,7 @@ export default function HabitHistoryScreen() {
   dot: {
     width: DOT_SIZE,
     height: DOT_SIZE,
-    borderRadius: 4,
+    borderRadius: 0,
   },
   legend: {
     flexDirection: 'row',
@@ -133,7 +133,7 @@ export default function HabitHistoryScreen() {
   legendDot: {
     width: 12,
     height: 12,
-    borderRadius: 2,
+    borderRadius: 0,
   },
   legendText: {
     fontSize: fontSizes.xs,
@@ -147,7 +147,7 @@ export default function HabitHistoryScreen() {
   statCard: {
     flex: 1,
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.sm,
@@ -155,18 +155,18 @@ export default function HabitHistoryScreen() {
     gap: 2,
   },
   statValue: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
   },
   statLabel: {
-    fontSize: fontSizes.xs - 1,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs - 1),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
   notesSection: {
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -174,8 +174,8 @@ export default function HabitHistoryScreen() {
     marginTop: spacing.sm,
   },
   notesSectionTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
   },

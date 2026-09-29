@@ -11,7 +11,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
-import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 import { useT } from '../src/lib/i18n';
 import {
@@ -170,15 +170,15 @@ function createStyles() {
     alignItems: 'flex-start',
   },
   backButtonText: {
-    fontSize: fontSizes.sm,
+    fontSize: pixelSize(fontSizes.sm),
     color: colors.textSecondary,
     letterSpacing: 1,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     paddingRight: spacing.sm,
   },
   headerTitle: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
     flex: 1,
@@ -194,11 +194,11 @@ function createStyles() {
     paddingVertical: spacing.xs,
     borderWidth: 1,
     borderColor: colors.primary,
-    borderRadius: 4,
+    borderRadius: 0,
   },
   markAllText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.primary,
     letterSpacing: 1,
   },
@@ -214,7 +214,7 @@ function createStyles() {
     flexDirection: 'row',
     alignItems: 'flex-start',
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     padding: spacing.md,
@@ -230,7 +230,7 @@ function createStyles() {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.background,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -242,8 +242,8 @@ function createStyles() {
     gap: 2,
   },
   itemTitle: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.textSecondary,
     letterSpacing: 0.5,
   },
@@ -264,7 +264,7 @@ function createStyles() {
   unreadDot: {
     width: 8,
     height: 8,
-    borderRadius: 4,
+    borderRadius: 0,
     backgroundColor: colors.primary,
     marginTop: 4,
   },

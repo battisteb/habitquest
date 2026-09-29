@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { observable } from '@legendapp/state';
 import { use$ } from '@legendapp/state/react';
-import { colors, fontSizes, spacing } from '../theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../theme/tokens';
 import { useT } from '../../lib/i18n';
 
 const networkState$ = observable({ isConnected: true, initialized: false });
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
 });

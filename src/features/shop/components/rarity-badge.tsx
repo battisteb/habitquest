@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { fontSizes, spacing } from '../../../ui/theme/tokens';
+import { fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 import { rarityLabel } from '../../../lib/i18n/labels';
@@ -19,14 +19,14 @@ export function RarityBadge({ rarity }: { rarity: string }) {
   const styles = useMemo(() => StyleSheet.create({
   badge: {
     borderWidth: 1,
-    borderRadius: 2,
+    borderRadius: 0,
     paddingHorizontal: spacing.xs,
     paddingVertical: 1,
     alignSelf: 'flex-start',
   },
   text: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 0.5,
   },
 }), [themeKey]);

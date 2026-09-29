@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { duelStore$, fetchUnlockedCategories, fetchDuels, getWeeklyDuelsUsed } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 import { usePremium } from '../../src/features/monetization/hooks/use-premium';
@@ -21,23 +21,23 @@ export default function DuelsIndexScreen() {
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
   backButton: { marginBottom: spacing.sm },
-  backButtonText: { fontSize: fontSizes.sm, fontWeight: 'bold', color: colors.textSecondary, letterSpacing: 1 },
+  backButtonText: { fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, color: colors.textSecondary, letterSpacing: 1 },
   header: { gap: 4, marginBottom: spacing.lg },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  title: { fontSize: fontSizes.xxl, fontWeight: 'bold', color: colors.text, letterSpacing: 2 },
+  title: { fontSize: pixelSize(fontSizes.xxl), fontFamily: fonts.bold, color: colors.text, letterSpacing: 2 },
   weeklyBadge: {
     borderWidth: 2,
-    borderRadius: 4,
+    borderRadius: 0,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
-  weeklyBadgeText: { fontSize: fontSizes.xs, fontWeight: 'bold', letterSpacing: 1 },
+  weeklyBadgeText: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
   sub: { fontSize: fontSizes.sm, color: colors.textMuted },
   resetNote: { fontSize: 10, color: colors.textMuted, fontStyle: 'italic' },
   section: { marginBottom: spacing.lg },
   sectionTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
     marginBottom: spacing.sm,
@@ -46,21 +46,21 @@ export default function DuelsIndexScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 6,
+    borderRadius: 0,
     padding: spacing.sm,
     alignItems: 'center',
     minWidth: 80,
     gap: 2,
   },
   attackEmoji: { fontSize: 24 },
-  attackName: { color: colors.text, fontSize: fontSizes.xs, fontWeight: 'bold', textAlign: 'center' },
+  attackName: { color: colors.text, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, textAlign: 'center' },
   attackStats: { color: colors.textMuted, fontSize: 9, letterSpacing: 0.5 },
   hint: { color: colors.textMuted, fontSize: fontSizes.xs, fontStyle: 'italic', marginTop: spacing.sm },
   lockedContainer: {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.danger,
-    borderRadius: 6,
+    borderRadius: 0,
     padding: spacing.md,
     alignItems: 'center',
     gap: spacing.xs,
@@ -68,8 +68,8 @@ export default function DuelsIndexScreen() {
   },
   lockedIcon: { fontSize: 28 },
   lockedTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.danger,
     letterSpacing: 2,
   },
@@ -85,13 +85,13 @@ export default function DuelsIndexScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 6,
+    borderRadius: 0,
     padding: spacing.md,
     gap: spacing.xs,
   },
   howTitle: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.accent,
     letterSpacing: 2,
     marginBottom: 4,

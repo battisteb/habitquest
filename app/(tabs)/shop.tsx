@@ -29,7 +29,7 @@ import { useProfileStats } from '../../src/features/gamification/hooks/use-profi
 import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { isItemUnlocked } from '../../src/features/shop/utils/unlock-checker';
 import { SHOP_ITEMS } from '../../src/features/shop/types/shop-item';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { usePremium } from '../../src/features/monetization/hooks/use-premium';
 import { useTheme } from '../../src/ui/theme/theme-context';
@@ -76,8 +76,8 @@ export default function ShopScreen() {
     paddingBottom: spacing.xs,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
@@ -93,15 +93,15 @@ export default function ShopScreen() {
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.accent,
-    borderRadius: 4,
+    borderRadius: 0,
     borderBottomWidth: 3,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
   },
   goldIcon: { fontSize: 16 },
   goldText: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: colors.accent,
     letterSpacing: 1,
   },
@@ -121,14 +121,14 @@ export default function ShopScreen() {
   loadoutLeft: {
     borderWidth: 2,
     borderColor: colors.border,
-    borderRadius: 4,
+    borderRadius: 0,
     backgroundColor: colors.background,
     padding: 2,
   },
   loadoutSlots: { flex: 1, gap: 4 },
   loadoutTitle: {
-    fontSize: 9,
-    fontWeight: 'bold',
+    fontSize: pixelSize(9),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 2,
   },
@@ -144,7 +144,7 @@ export default function ShopScreen() {
     backgroundColor: colors.background,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 3,
+    borderRadius: 0,
     paddingHorizontal: 6,
     paddingVertical: 2,
     maxWidth: '48%',
@@ -155,9 +155,9 @@ export default function ShopScreen() {
   },
   slotIcon: { fontSize: 10 },
   slotName: {
-    fontSize: 9,
+    fontSize: pixelSize(9),
     color: colors.textSecondary,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     flex: 1,
   },
   loadoutHint: {
@@ -187,8 +187,8 @@ export default function ShopScreen() {
   },
   categoryIcon: { fontSize: 14 },
   categoryText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 0.5,
   },
@@ -225,7 +225,7 @@ export default function ShopScreen() {
     borderWidth: 3,
     borderColor: colors.accent,
     borderBottomWidth: 5,
-    borderRadius: 4,
+    borderRadius: 0,
     padding: spacing.lg,
     width: '100%',
     maxWidth: 340,
@@ -233,14 +233,14 @@ export default function ShopScreen() {
     gap: spacing.sm,
   },
   modalTitle: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.accent,
     letterSpacing: 2,
   },
   modalItemName: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
     color: colors.text,
     textAlign: 'center',
   },
@@ -250,8 +250,8 @@ export default function ShopScreen() {
     letterSpacing: 1,
   },
   modalPrice: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.accent,
     marginTop: spacing.xs,
   },
@@ -269,7 +269,7 @@ export default function ShopScreen() {
     flex: 1,
     borderWidth: 2,
     borderBottomWidth: 4,
-    borderRadius: 4,
+    borderRadius: 0,
     paddingVertical: spacing.sm,
     alignItems: 'center',
   },
@@ -282,14 +282,14 @@ export default function ShopScreen() {
     backgroundColor: colors.primary + '22',
   },
   modalBtnText: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 1,
   },
   modalBtnTextConfirm: {
-    fontSize: fontSizes.sm,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
     color: colors.primary,
     letterSpacing: 1,
   },

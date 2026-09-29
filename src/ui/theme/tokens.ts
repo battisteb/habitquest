@@ -89,8 +89,32 @@ export const fontSizes = {
   title: 40,
 } as const;
 
+/**
+ * Pixel font (Jersey 10) used for every bold text: titles, labels, numbers,
+ * buttons. Body text stays on the system font for readability. Loaded in
+ * app/_layout.tsx; set `fontFamily` instead of `fontWeight` (Android ignores
+ * weights on custom fonts). Jersey 10 has a single weight.
+ */
+export const fonts = {
+  bold: 'Jersey10_400Regular',
+  semibold: 'Jersey10_400Regular',
+} as const;
+
+/**
+ * Jersey 10 draws smaller than the system font at the same size: pixel-font
+ * texts go through this so they keep the size of the text around them.
+ */
+export function pixelSize(size: number): number {
+  return Math.round(size * 1.3);
+}
+
+/** Size of one "pixel" of the stepped frames (corners, borders, ledge). */
+export const PIXEL = 3;
+
+// Square by design: the pixel direction has no rounded corners. Emphasis
+// comes from PixelFrame (stepped corners + ledge) instead.
 export const borderRadius = {
-  sm: 4,
-  md: 8,
-  lg: 12,
+  sm: 0,
+  md: 0,
+  lg: 0,
 } as const;

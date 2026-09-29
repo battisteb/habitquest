@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+import { PixelProgress } from '../../../ui/components/pixel-progress';
 
 interface XpBarProps {
   level: number;
@@ -24,27 +25,16 @@ export function XpBar({ level, currentXp, nextLevelXp, progress }: XpBarProps) {
     alignItems: 'center',
   },
   level: {
-    fontSize: fontSizes.lg,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
     color: colors.xp,
     letterSpacing: 1,
   },
   xpText: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
     letterSpacing: 0.5,
-  },
-  barTrack: {
-    height: 10,
-    backgroundColor: colors.border,
-    borderRadius: 2,
-    overflow: 'hidden',
-  },
-  barFill: {
-    height: '100%',
-    backgroundColor: colors.xp,
-    borderRadius: 2,
   },
 }), [themeKey]);
   return (
@@ -55,9 +45,7 @@ export function XpBar({ level, currentXp, nextLevelXp, progress }: XpBarProps) {
           {currentXp} / {nextLevelXp} XP
         </Text>
       </View>
-      <View style={styles.barTrack}>
-        <View style={[styles.barFill, { width: `${progress * 100}%` }]} />
-      </View>
+      <PixelProgress progress={progress} color={colors.xp} />
     </View>
   );
 }

@@ -14,7 +14,7 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { getUnlockedAttacks, ATTACKS, Attack } from '../../src/features/duels/utils/attacks';
 import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
 import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-store';
@@ -64,7 +64,7 @@ function HpBar({ hp, maxHp }: { hp: number; maxHp: number }) {
   );
 }
 const hp_s = StyleSheet.create({
-  track: { height: 10, backgroundColor: '#0a0a16', borderRadius: 5, overflow: 'hidden', borderWidth: 1, borderColor: '#2a2a4a', alignSelf: 'stretch' },
+  track: { height: 10, backgroundColor: '#0a0a16', borderRadius: 0, overflow: 'hidden', borderWidth: 1, borderColor: '#2a2a4a', alignSelf: 'stretch' },
   fill: { height: '100%', borderRadius: 5 },
 });
 
@@ -166,9 +166,9 @@ const panel_s = StyleSheet.create({
   wrapRight: { alignItems: 'flex-end' },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   nameRowRight: { flexDirection: 'row-reverse' },
-  name: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold', flexShrink: 1 },
-  badge: { borderWidth: 1, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 1 },
-  badgeText: { fontSize: 9, fontWeight: 'bold' },
+  name: { color: colors.text, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, flexShrink: 1 },
+  badge: { borderWidth: 1, borderRadius: 0, paddingHorizontal: 5, paddingVertical: 1 },
+  badgeText: { fontSize: pixelSize(9), fontFamily: fonts.bold },
   hpNum: { color: colors.textMuted, fontSize: 9 },
   hpNumRight: { textAlign: 'right' },
 });
@@ -201,14 +201,14 @@ const atk_s = StyleSheet.create({
   btn: {
     flexDirection: 'row', alignItems: 'center', gap: spacing.sm,
     backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.border,
-    borderRadius: 6, borderBottomWidth: 4, padding: spacing.sm,
+    borderRadius: 0, borderBottomWidth: 4, padding: spacing.sm,
   },
   selected: { borderColor: colors.accent, backgroundColor: colors.accent + '18', borderBottomColor: '#c9a400' },
   disabled: { opacity: 0.35 },
   emoji: { fontSize: 22 },
-  name: { color: colors.text, fontSize: fontSizes.sm, fontWeight: 'bold' },
+  name: { color: colors.text, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold },
   stats: { color: colors.textMuted, fontSize: 10, marginTop: 2 },
-  check: { color: colors.accent, fontSize: fontSizes.md, fontWeight: 'bold' },
+  check: { color: colors.accent, fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold },
 });
 
 // ─── Log line ─────────────────────────────────────────────────────────────────
@@ -565,7 +565,7 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.md, paddingVertical: 6,
     backgroundColor: '#0f0f22', borderBottomWidth: 1, borderBottomColor: colors.border,
   },
-  roundLabel: { color: colors.accent, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 2 },
+  roundLabel: { color: colors.accent, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 2 },
   roundSub: { color: colors.textMuted, fontSize: fontSizes.xs },
 
   // Arena
@@ -583,7 +583,7 @@ const s = StyleSheet.create({
     backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.border,
     alignItems: 'center', justifyContent: 'center',
   },
-  vsText: { color: colors.textMuted, fontSize: 9, fontWeight: 'bold', letterSpacing: 1 },
+  vsText: { color: colors.textMuted, fontSize: pixelSize(9), fontFamily: fonts.bold, letterSpacing: 1 },
 
   // Log
   logScroll: { flex: 1, backgroundColor: '#09091a' },
@@ -596,17 +596,17 @@ const s = StyleSheet.create({
     padding: spacing.md, gap: spacing.sm,
   },
   panelHeader: {
-    color: colors.textMuted, fontSize: fontSizes.xs,
-    fontWeight: 'bold', letterSpacing: 2,
+    color: colors.textMuted, fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold, letterSpacing: 2,
   },
   attackGrid: { gap: spacing.xs },
   fightBtn: {
     backgroundColor: colors.primary,
-    borderRadius: 6, borderBottomWidth: 4, borderColor: colors.primaryDark,
+    borderRadius: 0, borderBottomWidth: 4, borderColor: colors.primaryDark,
     padding: spacing.md, alignItems: 'center', marginTop: 4,
   },
   fightBtnOff: { opacity: 0.3 },
-  fightBtnText: { color: '#fff', fontSize: fontSizes.md, fontWeight: 'bold', letterSpacing: 2 },
+  fightBtnText: { color: '#fff', fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold, letterSpacing: 2 },
 
   // End panel
   endPanel: {
@@ -615,19 +615,19 @@ const s = StyleSheet.create({
     backgroundColor: '#09091a',
   },
   endTitle: {
-    color: colors.accent, fontSize: fontSizes.xxl,
-    fontWeight: 'bold', letterSpacing: 3,
+    color: colors.accent, fontSize: pixelSize(fontSizes.xxl),
+    fontFamily: fonts.bold, letterSpacing: 3,
   },
   rewardBox: {
     backgroundColor: colors.surface, borderWidth: 2,
-    borderColor: colors.border, borderRadius: 8,
+    borderColor: colors.border, borderRadius: 0,
     padding: spacing.md, gap: spacing.sm, width: '100%', alignItems: 'center',
   },
   rewardLine: { color: colors.text, fontSize: fontSizes.md, textAlign: 'center' },
   exitBtn: {
     backgroundColor: colors.surface, borderWidth: 2,
-    borderColor: colors.primary, borderRadius: 6,
+    borderColor: colors.primary, borderRadius: 0,
     paddingHorizontal: spacing.xl, paddingVertical: spacing.sm,
   },
-  exitBtnText: { color: colors.primary, fontSize: fontSizes.sm, fontWeight: 'bold', letterSpacing: 1 },
+  exitBtnText: { color: colors.primary, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 1 },
 });

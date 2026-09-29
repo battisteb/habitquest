@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../src/ui/components/pixel-button';
 import { supabase } from '../src/lib/supabase/client';
 import { authStore$ } from '../src/features/auth/stores/auth-store';
-import { colors, fontSizes, spacing } from '../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 import { useT } from '../src/lib/i18n';
 
@@ -376,14 +376,14 @@ function createStyles() {
       marginBottom: spacing.xs,
     },
     screenLabel: {
-      fontSize: fontSizes.xs,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
       letterSpacing: 2,
     },
     title: {
-      fontSize: fontSizes.xl,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xl),
+      fontFamily: fonts.bold,
       color: colors.text,
     },
     statsRow: {
@@ -393,7 +393,7 @@ function createStyles() {
     statCard: {
       flex: 1,
       backgroundColor: colors.surface,
-      borderRadius: 4,
+      borderRadius: 0,
       borderWidth: 2,
       borderColor: colors.border,
       padding: spacing.sm,
@@ -401,18 +401,18 @@ function createStyles() {
       gap: 2,
     },
     statValue: {
-      fontSize: fontSizes.lg,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.lg),
+      fontFamily: fonts.bold,
     },
     statLabel: {
-      fontSize: fontSizes.xs - 1,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs - 1),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
       letterSpacing: 1,
     },
     compareCard: {
       backgroundColor: colors.surface,
-      borderRadius: 4,
+      borderRadius: 0,
       borderWidth: 2,
       borderColor: colors.border,
       padding: spacing.md,
@@ -421,26 +421,26 @@ function createStyles() {
       justifyContent: 'space-between',
     },
     compareTitle: {
-      fontSize: fontSizes.xs,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
       letterSpacing: 1.5,
     },
     compareValue: {
-      fontSize: fontSizes.sm,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.sm),
+      fontFamily: fonts.bold,
     },
     chartCard: {
       backgroundColor: colors.surface,
-      borderRadius: 4,
+      borderRadius: 0,
       borderWidth: 2,
       borderColor: colors.border,
       padding: spacing.md,
       gap: spacing.md,
     },
     chartTitle: {
-      fontSize: fontSizes.xs,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
       letterSpacing: 2,
     },
@@ -457,9 +457,9 @@ function createStyles() {
       justifyContent: 'flex-end',
     },
     barXp: {
-      fontSize: 7,
+      fontSize: pixelSize(7),
       color: colors.xp,
-      fontWeight: 'bold',
+      fontFamily: fonts.bold,
     },
     barTrack: {
       width: '100%',
@@ -468,12 +468,12 @@ function createStyles() {
     },
     barFill: {
       width: '100%',
-      borderRadius: 2,
+      borderRadius: 0,
       minHeight: 4,
     },
     barLabel: {
-      fontSize: fontSizes.xs - 1,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs - 1),
+      fontFamily: fonts.bold,
       color: colors.textMuted,
     },
     barCount: {
@@ -482,7 +482,7 @@ function createStyles() {
     },
     highlightCard: {
       backgroundColor: colors.surface,
-      borderRadius: 4,
+      borderRadius: 0,
       borderWidth: 2,
       borderColor: colors.success + '66',
       padding: spacing.md,
@@ -492,14 +492,14 @@ function createStyles() {
       borderColor: colors.warning + '66',
     },
     highlightTitle: {
-      fontSize: fontSizes.xs,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.xs),
+      fontFamily: fonts.bold,
       color: colors.success,
       letterSpacing: 1.5,
     },
     highlightName: {
-      fontSize: fontSizes.md,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.md),
+      fontFamily: fonts.bold,
       color: colors.text,
     },
     highlightSub: {
@@ -510,13 +510,13 @@ function createStyles() {
       backgroundColor: colors.primary + '18',
       borderWidth: 2,
       borderColor: colors.primary + '44',
-      borderRadius: 4,
+      borderRadius: 0,
       padding: spacing.md,
       gap: spacing.xs,
     },
     motivationText: {
-      fontSize: fontSizes.md,
-      fontWeight: 'bold',
+      fontSize: pixelSize(fontSizes.md),
+      fontFamily: fonts.bold,
       color: colors.text,
     },
     motivationSub: {

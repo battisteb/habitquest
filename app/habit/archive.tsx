@@ -14,7 +14,7 @@ import { supabase } from '../../src/lib/supabase/client';
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { unarchiveHabit, deleteHabitPermanently } from '../../src/features/habits/stores/habits-store';
 import { getCategoryColor } from '../../src/lib/constants/categories';
-import { colors, fontSizes, spacing } from '../../src/ui/theme/tokens';
+import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import type { Database } from '../../src/lib/supabase/types';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
@@ -38,8 +38,8 @@ export default function HabitArchiveScreen() {
     paddingVertical: spacing.sm,
   },
   title: {
-    fontSize: fontSizes.xl,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xl),
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 2,
   },
@@ -62,7 +62,7 @@ export default function HabitArchiveScreen() {
   card: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
     overflow: 'hidden',
@@ -80,13 +80,13 @@ export default function HabitArchiveScreen() {
     gap: 2,
   },
   habitName: {
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.md),
+    fontFamily: fonts.bold,
     color: colors.textSecondary,
   },
   habitCategory: {
-    fontSize: fontSizes.xs,
-    fontWeight: 'bold',
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     letterSpacing: 1,
   },
   cardActions: {
