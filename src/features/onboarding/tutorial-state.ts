@@ -1,7 +1,8 @@
 import { observable } from '@legendapp/state';
 import { storage } from '../../lib/storage/mmkv';
 
-const TUTORIAL_KEY = 'today-tutorial-seen';
+// v2: the guided tour replaced the static tips; players who saw the old ones get it once.
+const TUTORIAL_KEY = 'today-tour-v2-seen';
 
 /** Whether the first-run tips on the Today screen have been seen or dismissed. */
 export const tutorialSeen$ = observable<boolean>(storage.getString(TUTORIAL_KEY) === 'true');

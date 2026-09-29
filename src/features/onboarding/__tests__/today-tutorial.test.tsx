@@ -103,7 +103,7 @@ describe('TodayTutorial (guided tour)', () => {
     );
     expect(requestPermissions).toHaveBeenCalled();
     expect(tutorialSeen$.get()).toBe(true);
-    expect(mockStore.get('today-tutorial-seen')).toBe('true');
+    expect(mockStore.get('today-tour-v2-seen')).toBe('true');
     expect(utils.queryByText('tuto_notif_title')).toBeNull();
   });
 
