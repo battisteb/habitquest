@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { PixelProgress } from '../../../ui/components/pixel-progress';
+import { useTourTarget, emitTourEvent } from '../../onboarding/tour/tour-targets';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useDailyQuests } from '../hooks/use-daily-quests';
 import { DailyQuestCard } from './daily-quest-card';
@@ -69,6 +70,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
 }), [themeKey]);
   const { quests, isLoading, fetchDailyQuests, claimQuest } = useDailyQuests();
   const [expanded, setExpanded] = useState(false);
+  const tourTarget = useTourTarget('missions');
 
   useEffect(() => {
     fetchDailyQuests();
@@ -108,9 +110,13 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
       {/* Gold frame: the daily missions are the "treasure" of the day. Folded
           into a one-line banner so they sit above the habits without hiding them. */}
       <PixelFrame borderColor={colors.accent} backgroundColor={colors.surface}>
+      <View {...tourTarget}>
       <Pressable
         testID="missions-banner"
-        onPress={() => setExpanded((e) => !e)}
+        onPress={() => {
+          setExpanded((e) => !e);
+          emitTourEvent('missions_toggled');
+        }}
         accessibilityRole="button"
         accessibilityState={{ expanded }}
         accessibilityLabel={expanded ? T.dq_collapse_a11y : T.dq_expand_a11y}
@@ -126,6 +132,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
           </Text>
         </View>
       </Pressable>
+      </View>
       {!expanded && (
         <View style={styles.collapsedProgress}>
           <PixelProgress progress={totalCount ? completedCount / totalCount : 0} segments={Math.max(totalCount, 1)} height={6} color={colors.accent} />

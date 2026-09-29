@@ -28,6 +28,7 @@ import { pinnedHabitsStore$, togglePinHabit, isHabitPinned } from '../../src/fea
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
+import { useTourTarget } from '../../src/features/onboarding/tour/tour-targets';
 import {
   getFreezesRemaining,
   isFreezeActiveToday,
@@ -573,6 +574,8 @@ export default function TodayScreen() {
   const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
   const totalCount = activeHabits.length;
   const allDone = totalCount > 0 && completedCount === totalCount;
+  const addTarget = useTourTarget('add');
+  const firstPendingId = displayedHabits.find((h) => !isHabitCompletedEnough(h.id))?.id;
   const pendingStreaks = activeHabits
     .filter((h) => !isHabitCompletedEnough(h.id))
     .map((h) => streaks[h.id]?.current_count ?? 0);
@@ -790,7 +793,6 @@ export default function TodayScreen() {
         onComplete={() => setXpToast((p) => ({ ...p, visible: false }))}
       />
       <AllDoneCelebration visible={showAllDone} />
-      <TodayTutorial />
 
       {/* Header */}
       <View style={styles.header}>
@@ -826,9 +828,11 @@ export default function TodayScreen() {
               <Text style={styles.watchAdText}>{T.today_watch_ad}</Text>
             </Pressable>
           )}
-          <Pressable style={styles.addButton} onPress={() => router.push('/habit/create')}>
-            <Text style={styles.addButtonText}>+</Text>
-          </Pressable>
+          <View {...addTarget}>
+            <Pressable style={styles.addButton} onPress={() => router.push('/habit/create')}>
+              <Text style={styles.addButtonText}>+</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
 
@@ -896,12 +900,16 @@ export default function TodayScreen() {
                 contentType={(item.content as { type?: string } | null)?.type as 'timer' | 'checklist' | 'link' | null ?? null}
                 isPinned={pinned}
                 emoji={(item as any).emoji ?? null}
+                tourTarget={item.id === firstPendingId}
               />
             );
           }}
           ItemSeparatorComponent={() => <View style={{ height: spacing.sm }} />}
         />
       )}
+
+      {/* Last child: the guided tour draws over the whole screen. */}
+      <TodayTutorial />
     </View>
   );
 }

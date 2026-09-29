@@ -115,7 +115,8 @@ describe('OnboardingScreen', () => {
     expect(saveAvatarConfig).toHaveBeenCalledWith('#f4c98a', '#4a3728', '#1a1a2e', 'user-1');
     expect(createHabit).toHaveBeenCalledWith('onb_quick_read', 'learning');
     expect(markOnboardingComplete).toHaveBeenCalled();
-    expect(requestPermissions).toHaveBeenCalled();
+    // Notifications are asked later, at the end of the Today tour.
+    expect(requestPermissions).not.toHaveBeenCalled();
   });
 
   it('creates up to three quick-pick habits', async () => {
