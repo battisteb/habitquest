@@ -9,7 +9,6 @@ import { createHabit } from '../../habits/stores/habits-store';
 import { saveAvatarConfig } from '../../avatar/stores/avatar-config-store';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { markOnboardingComplete } from '../onboarding-state';
-import { requestPermissions, applyNotificationPrefs } from '../../notifications/utils/notification-service';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -125,8 +124,7 @@ export default function OnboardingScreen() {
         await createHabit(customHabit.trim(), 'general');
       }
       markOnboardingComplete();
-      // Request notification permissions at the end of onboarding (non-blocking)
-      requestPermissions().then((granted) => { if (granted) applyNotificationPrefs(); }).catch(() => {});
+      // Notifications are asked at the end of the Today tour (with the reminder time).
       router.replace('/(tabs)/today');
     } catch {
       markOnboardingComplete();

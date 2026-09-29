@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   Pressable,
+  ScrollView,
   TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -33,6 +34,7 @@ export default function HabitTemplatesScreen() {
     container: { flex: 1, backgroundColor: colors.background },
     header: {
       paddingHorizontal: spacing.md,
+      paddingTop: spacing.md,
       paddingBottom: spacing.sm,
       gap: spacing.sm,
     },
@@ -64,13 +66,16 @@ export default function HabitTemplatesScreen() {
       color: colors.text,
       fontSize: fontSizes.sm,
     },
+    filterScroll: { flexGrow: 0, flexShrink: 0 },
     filterRow: {
       flexDirection: 'row',
+      alignItems: 'center',
       gap: spacing.xs,
       paddingHorizontal: spacing.md,
       paddingBottom: spacing.sm,
     },
     chip: {
+      alignSelf: 'center',
       paddingHorizontal: spacing.sm,
       paddingVertical: spacing.xs,
       borderRadius: borderRadius.sm,
@@ -158,14 +163,15 @@ export default function HabitTemplatesScreen() {
         />
       </View>
 
-      {/* Category filters */}
-      <FlatList
+      {/* Category filters. A horizontal list must not grow: as a FlatList it took
+          half the screen and blew the chips up. */}
+      <ScrollView
         horizontal
-        data={CATEGORY_FILTERS}
-        keyExtractor={(k) => k}
         showsHorizontalScrollIndicator={false}
+        style={styles.filterScroll}
         contentContainerStyle={styles.filterRow}
-        renderItem={({ item: cat }) => {
+      >
+        {CATEGORY_FILTERS.map((cat) => {
           const isActive = selectedCategory === cat;
           const cfg = cat !== 'all' ? CATEGORY_CONFIG[cat as keyof typeof CATEGORY_CONFIG] : null;
           const label = cat === 'all'
@@ -173,17 +179,19 @@ export default function HabitTemplatesScreen() {
             : categoryLabel(T, cat).toUpperCase();
           return (
             <Pressable
+              key={cat}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
               style={[styles.chip, isActive && styles.chipActive, isActive && cfg ? { borderColor: cfg.color, backgroundColor: cfg.color + '22' } : {}]}
               onPress={() => setSelectedCategory(cat)}
             >
               <Text style={[styles.chipText, isActive && styles.chipTextActive, isActive && cfg ? { color: cfg.color } : {}]}>
-                {cfg ? `${cfg.icon} ` : ''}{label}
+                {label}
               </Text>
             </Pressable>
           );
-        }}
-      />
-
+        })}
+      </ScrollView>
       {/* Template list */}
       <FlatList
         data={filtered}
@@ -201,7 +209,7 @@ export default function HabitTemplatesScreen() {
               <View style={styles.itemInfo}>
                 <Text style={styles.itemName}>{name}</Text>
                 <Text style={[styles.itemCategory, { color: catCfg?.color ?? colors.textMuted }]}>
-                  {catCfg?.icon} {categoryLabel(T, item.category).toUpperCase()}
+                  {categoryLabel(T, item.category).toUpperCase()}
                 </Text>
                 <Text style={styles.itemFreq}>{freqLabel(item.frequency)}</Text>
               </View>

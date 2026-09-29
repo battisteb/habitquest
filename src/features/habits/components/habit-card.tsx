@@ -15,6 +15,7 @@ import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../.
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
 import { PixelFrame, shade } from '../../../ui/components/pixel-frame';
+import { useTourTarget } from '../../onboarding/tour/tour-targets';
 import { getWeeklyTarget } from '../stores/habits-store';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -34,6 +35,8 @@ interface HabitCardProps {
   contentType?: 'timer' | 'checklist' | 'link' | null;
   isPinned?: boolean;
   emoji?: string | null;
+  /** This card's check button is the one the guided tour points at. */
+  tourTarget?: boolean;
 }
 
 const CONTENT_TYPE_ICON: Record<string, string> = {
@@ -91,7 +94,9 @@ export function HabitCard({
   contentType = null,
   isPinned = false,
   emoji = null,
+  tourTarget = false,
 }: HabitCardProps) {
+  const checkTarget = useTourTarget('first-check', tourTarget);
   const { themeKey } = useTheme();
   const T = useT();
   const styles = useMemo(() => StyleSheet.create({
@@ -337,7 +342,7 @@ export function HabitCard({
                     )}
                   </View>
                 </View>
-                <Animated.View style={checkPopStyle}>
+                <Animated.View style={checkPopStyle} {...checkTarget}>
                 <Pressable
                   onPress={handleComplete}
                   style={[styles.checkButton, effectiveDone && styles.checkButtonDone]}

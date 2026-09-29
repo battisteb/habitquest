@@ -1,5 +1,7 @@
-import { useEffect, useCallback, useMemo } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { useEffect, useCallback, useMemo, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
+import { PixelProgress } from '../../../ui/components/pixel-progress';
+import { useTourTarget, emitTourEvent } from '../../onboarding/tour/tour-targets';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useDailyQuests } from '../hooks/use-daily-quests';
 import { DailyQuestCard } from './daily-quest-card';
@@ -51,12 +53,24 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
     fontFamily: fonts.bold,
     letterSpacing: 1,
   },
+  bannerRight: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  claimBadge: {
+    color: colors.text,
+    backgroundColor: colors.success,
+    paddingHorizontal: spacing.xs + 2,
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
+    letterSpacing: 0.5,
+  },
+  collapsedProgress: { padding: spacing.xs + 2 },
   questList: {
     gap: spacing.sm,
     padding: spacing.sm,
   },
 }), [themeKey]);
   const { quests, isLoading, fetchDailyQuests, claimQuest } = useDailyQuests();
+  const [expanded, setExpanded] = useState(false);
+  const tourTarget = useTourTarget('missions');
 
   useEffect(() => {
     fetchDailyQuests();
@@ -89,16 +103,42 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
     return null;
   }
 
+  const claimable = quests.filter((q) => q.is_completed && !q.is_claimed).length;
+
   return (
     <View style={styles.container}>
-      {/* Gold frame: the daily missions are the "treasure" of the day. */}
+      {/* Gold frame: the daily missions are the "treasure" of the day. Folded
+          into a one-line banner so they sit above the habits without hiding them. */}
       <PixelFrame borderColor={colors.accent} backgroundColor={colors.surface}>
-      <View style={styles.banner}>
+      <View {...tourTarget}>
+      <Pressable
+        testID="missions-banner"
+        onPress={() => {
+          setExpanded((e) => !e);
+          emitTourEvent('missions_toggled');
+        }}
+        accessibilityRole="button"
+        accessibilityState={{ expanded }}
+        accessibilityLabel={expanded ? T.dq_collapse_a11y : T.dq_expand_a11y}
+        style={styles.banner}
+      >
         <Text style={styles.bannerTitle}>{T.dq_section_title}</Text>
-        <Text style={styles.bannerTitle}>
-          {completedCount}/{totalCount}
-        </Text>
+        <View style={styles.bannerRight}>
+          {claimable > 0 && !expanded && (
+            <Text style={styles.claimBadge}>{T.dq_to_claim.replace('{n}', String(claimable))}</Text>
+          )}
+          <Text style={styles.bannerTitle}>
+            {completedCount}/{totalCount} {expanded ? '▲' : '▼'}
+          </Text>
+        </View>
+      </Pressable>
       </View>
+      {!expanded && (
+        <View style={styles.collapsedProgress}>
+          <PixelProgress progress={totalCount ? completedCount / totalCount : 0} segments={Math.max(totalCount, 1)} height={6} color={colors.accent} />
+        </View>
+      )}
+      {expanded && (
       <View style={styles.questList}>
         {quests.map((quest) => {
           const isPaused =
@@ -116,6 +156,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
         })}
         <Text style={styles.refreshHint}>{T.dq_section_reset_hint}</Text>
       </View>
+      )}
       </PixelFrame>
     </View>
   );

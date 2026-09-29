@@ -31,6 +31,10 @@ import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
 import { syncTimezone } from '../src/features/auth/utils/sync-timezone';
 import { achievementText } from '../src/lib/i18n/content';
 import { lang$ } from '../src/lib/i18n';
+import { installAppAlert } from '../src/lib/app-alert';
+import { PixelDialogHost } from '../src/ui/components/pixel-dialog';
+
+installAppAlert();
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isInitialized } = useAuth();
@@ -42,6 +46,9 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     if (!isInitialized) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    // The reset page opens a session from the email link, then asks for the
+    // new password: it must not be redirected in between.
+    if ((segments as string[])[1] === 'reset-password') return;
     // Segments hold the route pattern ("[code]"): read the real code from the path.
     const inviteCode = /^\/invite\/([^/?#]+)/.exec(pathname)?.[1];
 
@@ -128,6 +135,7 @@ function ThemedApp() {
         onComplete={dismissStreakMilestone}
       />
       <OfflineBanner />
+      <PixelDialogHost />
       {currentToast && (
         <AchievementToast
           key={currentToast.id}

@@ -8,6 +8,7 @@ import { shopStore$ } from '../../shop/stores/shop-store';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { heroLine, heroText } from '../utils/hero-line';
 import { PixelFrame } from '../../../ui/components/pixel-frame';
+import { useTourTarget } from '../../onboarding/tour/tour-targets';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -29,6 +30,7 @@ export function HeroGreeting({ totalHabits, pendingStreaks, xp, level }: HeroGre
   const hairColor = use$(avatarConfigStore$.hairColor);
   const eyeColor = use$(avatarConfigStore$.eyeColor);
   const equippedSlots = use$(shopStore$.equippedSlots);
+  const tourTarget = useTourTarget('hero');
 
   useEffect(() => {
     loadAvatarConfig(authStore$.user.get()?.id);
@@ -37,7 +39,7 @@ export function HeroGreeting({ totalHabits, pendingStreaks, xp, level }: HeroGre
   const text = heroText(T, heroLine({ totalHabits, pendingStreaks, xp, level }));
 
   return (
-    <View style={styles.row}>
+    <View style={styles.row} {...tourTarget}>
       <Pressable
         onPress={() => router.push('/(tabs)/profile')}
         accessibilityRole="button"

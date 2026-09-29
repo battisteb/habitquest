@@ -28,6 +28,7 @@ import { pinnedHabitsStore$, togglePinHabit, isHabitPinned } from '../../src/fea
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
+import { useTourTarget } from '../../src/features/onboarding/tour/tour-targets';
 import {
   getFreezesRemaining,
   isFreezeActiveToday,
@@ -90,7 +91,7 @@ export default function TodayScreen() {
   // The left block shrinks so "AUJOURD'HUI" never pushes the buttons off screen.
   headerLeft: { flexShrink: 1, marginRight: spacing.sm },
   title: {
-    fontSize: pixelSize(fontSizes.lg + 2),
+    fontSize: pixelSize(fontSizes.lg),
     fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: 0.5,
@@ -411,6 +412,8 @@ export default function TodayScreen() {
 
   // Habits list padding
   listPad: { paddingHorizontal: spacing.md },
+  // The list already has a horizontal padding: cancel the section's own.
+  missionsSlot: { marginHorizontal: -spacing.md, marginTop: spacing.sm },
 
   // Empty state
   empty: {
@@ -571,6 +574,8 @@ export default function TodayScreen() {
   const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
   const totalCount = activeHabits.length;
   const allDone = totalCount > 0 && completedCount === totalCount;
+  const addTarget = useTourTarget('add');
+  const firstPendingId = displayedHabits.find((h) => !isHabitCompletedEnough(h.id))?.id;
   const pendingStreaks = activeHabits
     .filter((h) => !isHabitCompletedEnough(h.id))
     .map((h) => streaks[h.id]?.current_count ?? 0);
@@ -627,6 +632,12 @@ export default function TodayScreen() {
   const ListHeader = (
     <View>
       {hero}
+      {/* Daily missions: a folded one-line banner above the habits. */}
+      <View style={styles.missionsSlot}>
+        <DailyQuestsSection
+          pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
+        />
+      </View>
       {/* Active mode banner */}
       {activeMode && (() => {
         const def = getModeDefinition(activeMode.key);
@@ -782,7 +793,6 @@ export default function TodayScreen() {
         onComplete={() => setXpToast((p) => ({ ...p, visible: false }))}
       />
       <AllDoneCelebration visible={showAllDone} />
-      <TodayTutorial />
 
       {/* Header */}
       <View style={styles.header}>
@@ -818,9 +828,11 @@ export default function TodayScreen() {
               <Text style={styles.watchAdText}>{T.today_watch_ad}</Text>
             </Pressable>
           )}
-          <Pressable style={styles.addButton} onPress={() => router.push('/habit/create')}>
-            <Text style={styles.addButtonText}>+</Text>
-          </Pressable>
+          <View {...addTarget}>
+            <Pressable style={styles.addButton} onPress={() => router.push('/habit/create')}>
+              <Text style={styles.addButtonText}>+</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
 
@@ -852,11 +864,6 @@ export default function TodayScreen() {
           data={displayedHabits}
           keyExtractor={(item) => item.id}
           ListHeaderComponent={ListHeader}
-          ListFooterComponent={
-            <DailyQuestsSection
-              pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
-            />
-          }
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
           }
@@ -893,12 +900,16 @@ export default function TodayScreen() {
                 contentType={(item.content as { type?: string } | null)?.type as 'timer' | 'checklist' | 'link' | null ?? null}
                 isPinned={pinned}
                 emoji={(item as any).emoji ?? null}
+                tourTarget={item.id === firstPendingId}
               />
             );
           }}
           ItemSeparatorComponent={() => <View style={{ height: spacing.sm }} />}
         />
       )}
+
+      {/* Last child: the guided tour draws over the whole screen. */}
+      <TodayTutorial />
     </View>
   );
 }
