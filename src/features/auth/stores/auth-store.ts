@@ -1,4 +1,5 @@
 import { observable } from '@legendapp/state';
+import { Platform } from 'react-native';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../../../lib/supabase/client';
 import { clearUserData } from '../../../lib/storage/user-data';
@@ -60,6 +61,29 @@ export async function signIn(email: string, password: string) {
   } finally {
     authStore$.isLoading.set(false);
   }
+}
+
+/** Public page that receives the reset link (web, also used from the mobile app). */
+export const RESET_PASSWORD_URL = 'https://habitquest.expo.app/reset-password';
+
+/** On the web, stay on the current site (preview deployments included). */
+function resetPasswordUrl(): string {
+  if (Platform.OS === 'web' && typeof window !== 'undefined') {
+    return `${window.location.origin}/reset-password`;
+  }
+  return RESET_PASSWORD_URL;
+}
+
+export async function requestPasswordReset(email: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    redirectTo: resetPasswordUrl(),
+  });
+  if (error) throw error;
+}
+
+export async function updatePassword(password: string) {
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) throw error;
 }
 
 export async function signOut() {
