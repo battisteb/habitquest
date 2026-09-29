@@ -80,3 +80,31 @@ export const GOLD_CONFIG = {
 export function calculateGoldEarned(xpEarned: number): number {
   return Math.floor(xpEarned * GOLD_CONFIG.GOLD_PER_XP_RATIO);
 }
+
+/**
+ * Co-op challenges (ADR 013). Bounds and reward are enforced by
+ * public.create_coop_challenge / coop_on_completion — change both together.
+ */
+export const COOP = {
+  MIN_FRIENDS: 1,
+  MAX_FRIENDS: 3,
+  DURATIONS: [3, 7, 14] as const,
+  REWARD_RATIO: 0.5,
+  TARGET_BOUNDS: {
+    validations: { min: 3, max: 200 },
+    xp: { min: 30, max: 5000 },
+  },
+} as const;
+
+export type CoopGoal = keyof typeof COOP.TARGET_BOUNDS;
+
+export function clampCoopTarget(goal: CoopGoal, target: number): number {
+  const { min, max } = COOP.TARGET_BOUNDS[goal];
+  return Math.min(Math.max(Math.round(target), min), max);
+}
+
+/** A fair default: about one validation per player per day (10 XP each for an XP goal). */
+export function suggestCoopTarget(goal: CoopGoal, players: number, days: number): number {
+  const validations = players * days;
+  return clampCoopTarget(goal, goal === 'xp' ? validations * XP_CONFIG.BASE_XP_PER_COMPLETION : validations);
+}
