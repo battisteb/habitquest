@@ -52,7 +52,7 @@
 - [ ] Multi-language support (start with English + French)
 - [ ] Push notifications (habit reminders, duel invites)
 - [ ] Web companion (shared `src/` logic)
-- [ ] Additional PvP modes (co-op challenges, guilds)
+- [x] Additional PvP modes: arenas (6 leagues, 10-day seasons, daily fights, ADR 012) and co-op challenges (ADR 013). Guilds dropped
 
 ---
 
