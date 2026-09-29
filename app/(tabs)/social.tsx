@@ -544,6 +544,12 @@ export default function SocialScreen() {
         onPress={() => router.push('/duels')}
         style={styles.duelArenaBtn}
       />
+      <PixelButton
+        title={T.social_coop_btn}
+        onPress={() => router.push('/coop')}
+        variant="secondary"
+        style={styles.duelArenaBtn}
+      />
       <FlatList
         data={allChallenges}
         keyExtractor={(item) => item.id}

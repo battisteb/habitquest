@@ -27,6 +27,10 @@ export const LIMITS = {
    *  Mirrored server-side in guard_duel_writes. */
   FREE_DUELS_PER_WEEK: 3,
 
+  /** Co-op challenges a player can take part in at once. Mirrored in public.coop_slots_left. */
+  FREE_COOP_ACTIVE: 1,
+  PREMIUM_COOP_ACTIVE: 2,
+
   /** How many days of stats history free users can see */
   FREE_STATS_DAYS: 30,
   // Premium: no limit (pass Infinity or 0 as "no limit")

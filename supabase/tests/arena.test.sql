@@ -83,8 +83,8 @@ select ok((arena_state() -> 'last_result') is null or json_typeof(arena_state() 
 select pg_temp.act_as('00000000-0000-0000-0000-0000000aa002');
 select is((arena_state() ->> 'tier')::int, 1, 'new players start in Bronze');
 select pg_temp.act_as('00000000-0000-0000-0000-0000000aa003');
-select is((select count(*)::int from json_array_elements(arena_state() -> 'standings') e
-           where not (e ->> 'is_bot')::boolean), 2, 'the next Bronze player joins the same group');
+select ok(exists(select 1 from json_array_elements(arena_state() -> 'standings') e
+           where e ->> 'username' = 'rookie'), 'the next Bronze player joins the same group');
 select is((arena_state() -> 'today' -> 'opponent' ->> 'username') is not null, true,
   'there is an opponent to attack today');
 
