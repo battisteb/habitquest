@@ -42,3 +42,21 @@ Une slide par rang : Novice (niv. 1), Apprenti (3), Guerrier (5), Chevalier (7),
 3. Pas de revente de données.
 4. Suppression du compte en 1 clic, depuis l'app.
 5. Politique complète : lien en bio.
+
+---
+
+# English versions (international audience)
+
+Rendered with `LANG=en node marketing/render-posts.js` → `marketing/exports/posts-en/`. Screenshots: `assets/screens-en/` (English app, 32×32 hero).
+
+## C1 — "Your habits become quests"
+**Caption**: We turned habit tracking into a video game. 🎮 Swipe to see how it works 👉 Which habit would you start with?
+`#habittracker #gamification #pixelart #selfimprovement #productivity #levelup`
+
+## C2 — "5 level 1 habits"
+**Caption**: The secret isn't motivation, it's the size of the quest. Start ridiculously small. 📌 Save this for later.
+`#habits #selfimprovement #studygram #discipline #morningroutine #smallsteps`
+
+## C4 — "From Novice to Legend"
+**Caption**: From Novice to Legend ⚔️ Which rank would you be today? Tell us below 👇
+`#levelup #rpg #gamification #habittracker #motivation #pixelart`
