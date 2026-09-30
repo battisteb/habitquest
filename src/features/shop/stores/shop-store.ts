@@ -127,6 +127,22 @@ export async function unequipSlot(slot: string) {
   await fetchShop();
 }
 
+/** Sprite keys a player wears, by slot (equipment is publicly readable, for friend profiles). */
+export type Equipment = Partial<Record<'hat' | 'outfit' | 'accessory' | 'background', string>>;
+
+export async function fetchEquipmentOf(userId: string): Promise<Equipment> {
+  const { data } = await supabase
+    .from('equipped_items')
+    .select('slot, item:shop_items(sprite_key)')
+    .eq('user_id', userId);
+
+  const gear: Equipment = {};
+  (data ?? []).forEach((e: any) => {
+    if (e.item?.sprite_key) gear[e.slot as keyof Equipment] = e.item.sprite_key;
+  });
+  return gear;
+}
+
 export async function setActiveTheme(themeKey: string) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;

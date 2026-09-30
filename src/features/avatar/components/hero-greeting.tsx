@@ -52,6 +52,7 @@ export function HeroGreeting({ totalHabits, pendingStreaks, xp, level }: HeroGre
             showAura={false}
             hat={equippedSlots?.hat?.item?.sprite_key}
             outfit={equippedSlots?.outfit?.item?.sprite_key}
+            accessory={equippedSlots?.accessory?.item?.sprite_key}
             skinColor={skinColor}
             hairColor={hairColor}
             eyeColor={eyeColor}
