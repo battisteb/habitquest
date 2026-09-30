@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-nat
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PixelButton } from '../../src/ui/components/pixel-button';
-import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
+import { EvolvedAvatar } from '../../src/features/avatar/components/evolved-avatar';
+import { fetchEquipmentOf, type Equipment } from '../../src/features/shop/stores/shop-store';
 import { supabase } from '../../src/lib/supabase/client';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
-import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
-import { sendFriendRequest, friendsStore$ } from '../../src/features/social/stores/friends-store';
+import { sendFriendRequest, fetchFriends, friendsStore$ } from '../../src/features/social/stores/friends-store';
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
@@ -21,10 +21,12 @@ interface PublicProfile {
   level: number;
   gold: number;
   created_at: string;
+  skin_color: string;
+  hair_color: string;
+  eye_color: string;
 }
 
 interface ProfileStats {
-  totalCompletions: number;
   bestStreak: number;
   duelsWon: number;
   duelsTotal: number;
@@ -69,11 +71,6 @@ export default function PublicProfileScreen() {
     fontSize: pixelSize(fontSizes.md),
     fontFamily: fonts.bold,
     letterSpacing: 2,
-  },
-  stage: {
-    fontSize: pixelSize(fontSizes.sm),
-    fontFamily: fonts.bold,
-    letterSpacing: 1,
   },
   memberSince: {
     fontSize: fontSizes.xs,
@@ -128,6 +125,7 @@ export default function PublicProfileScreen() {
 
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
+  const [gear, setGear] = useState<Equipment>({});
   const [loading, setLoading] = useState(true);
 
   const friends = use$(friendsStore$.friends);
@@ -139,6 +137,8 @@ export default function PublicProfileScreen() {
   useEffect(() => {
     if (!userId) return;
     loadProfile();
+    // Opened from a link or a notification: know whether we are already friends.
+    void fetchFriends();
   }, [userId]);
 
   async function loadProfile() {
@@ -146,16 +146,17 @@ export default function PublicProfileScreen() {
     try {
       const { data: p } = await supabase
         .from('profiles')
-        .select('id, username, xp, level, gold, best_streak, created_at')
+        .select('id, username, xp, level, gold, best_streak, created_at, skin_color, hair_color, eye_color')
         .eq('id', userId)
         .single();
 
       if (!p) return;
       setProfile(p as PublicProfile);
+      // Their hero as they dressed it (hat, outfit, accessory, background).
+      setGear(await fetchEquipmentOf(userId));
 
       // Use denormalized best_streak from profiles (no RLS bypass needed)
       setStats({
-        totalCompletions: 0,
         bestStreak: (p as any).best_streak ?? 0,
         duelsWon: 0,
         duelsTotal: 0,
@@ -183,7 +184,6 @@ export default function PublicProfileScreen() {
   }
 
   const rank = getRankForLevel(profile.level);
-  const avatarStage = getAvatarStage(profile.level);
   const memberSince = new Date(profile.created_at).toLocaleDateString(
     lang$.get() === 'fr' ? 'fr-FR' : 'en-US',
     { month: 'long', year: 'numeric' },
@@ -198,12 +198,19 @@ export default function PublicProfileScreen() {
 
       {/* Hero */}
       <View style={styles.hero}>
-        <PixelAvatar size={160} />
+        <EvolvedAvatar
+          level={profile.level}
+          size={160}
+          skinColor={profile.skin_color}
+          hairColor={profile.hair_color}
+          eyeColor={profile.eye_color}
+          hat={gear.hat}
+          outfit={gear.outfit}
+          accessory={gear.accessory}
+          background={gear.background}
+        />
         <Text style={styles.username}>{profile.username}</Text>
         <Text style={[styles.rank, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>
-        <Text style={[styles.stage, { color: avatarStage.aura }]}>
-          {titleLabel(T, avatarStage.title)}
-        </Text>
         <Text style={styles.memberSince}>{T.profile_pub_member_since.replace('{date}', memberSince)}</Text>
       </View>
 
@@ -225,12 +232,6 @@ export default function PublicProfileScreen() {
 
       {stats && (
         <View style={styles.statsRow}>
-          <View style={styles.statCard}>
-            <Text style={[styles.statValue, { color: colors.success }]}>
-              {stats.totalCompletions}
-            </Text>
-            <Text style={styles.statLabel}>{T.profile_pub_stat_completions}</Text>
-          </View>
           <View style={styles.statCard}>
             <Text style={[styles.statValue, { color: colors.streak }]}>
               {stats.bestStreak}🔥

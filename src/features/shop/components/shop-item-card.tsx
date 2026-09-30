@@ -5,6 +5,7 @@ import { RarityBadge } from './rarity-badge';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { PremiumBadge } from '../../monetization/components/premium-gate';
 import { useTheme } from '../../../ui/theme/theme-context';
+import { useT } from '../../../lib/i18n';
 
 const RARITY_BORDER: Record<string, string> = {
   common: colors.border,
@@ -59,6 +60,7 @@ export function ShopItemCard({
   onPress,
 }: ShopItemCardProps) {
   const { themeKey } = useTheme();
+  const T = useT();
   const styles = useMemo(() => StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
@@ -189,7 +191,7 @@ export function ShopItemCard({
         />
         {isEquipped && (
           <View style={styles.equippedBadge}>
-            <Text style={styles.equippedBadgeText}>ON</Text>
+            <Text style={styles.equippedBadgeText}>{T.shop_card_on}</Text>
           </View>
         )}
         {!canUnlock && !isOwned && (
@@ -213,7 +215,7 @@ export function ShopItemCard({
 
       {isOwned ? (
         <Text style={[styles.status, isEquipped && styles.statusEquipped]}>
-          {isEquipped ? '● EQUIPPED' : '○ OWNED'}
+          {isEquipped ? `● ${T.shop_equipped_label}` : `○ ${T.shop_card_owned}`}
         </Text>
       ) : (
         <View style={styles.priceRow}>

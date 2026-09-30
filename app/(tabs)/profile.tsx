@@ -182,6 +182,7 @@ export default function ProfileScreen() {
   const nextAvatarStage = getNextAvatarStage(level);
   const equippedHat = equippedSlots?.hat?.item?.sprite_key;
   const equippedOutfit = equippedSlots?.outfit?.item?.sprite_key;
+  const equippedAccessory = equippedSlots?.accessory?.item?.sprite_key;
   const equippedBg = equippedSlots?.background?.item?.sprite_key;
 
   return (
@@ -215,6 +216,7 @@ export default function ProfileScreen() {
                 size={180}
                 hat={equippedHat}
                 outfit={equippedOutfit}
+                accessory={equippedAccessory}
                 background={equippedBg}
                 skinColor={skinColor}
                 hairColor={hairColor}

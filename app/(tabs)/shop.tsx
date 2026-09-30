@@ -350,16 +350,16 @@ export default function ShopScreen() {
       if (isOwned) {
         if (item.category === 'theme') {
           await setActiveTheme(item.sprite_key);
-          Alert.alert(T.shop_theme_applied_title, T.shop_theme_applied_msg.replace('{name}', item.name));
+          Alert.alert(T.shop_theme_applied_title, T.shop_theme_applied_msg.replace('{name}', shopItemText(lang, item).title));
           return;
         }
         const equipped = equippedSlots[slot];
         if (equipped?.itemId === item.id) {
           await unequipSlot(slot);
-          Alert.alert(T.shop_unequipped_title, T.shop_unequipped_msg.replace('{name}', item.name));
+          Alert.alert(T.shop_unequipped_title, T.shop_unequipped_msg.replace('{name}', shopItemText(lang, item).title));
         } else {
           await equipItem(item.id, slot);
-          Alert.alert(T.shop_equipped_title, T.shop_equipped_msg.replace('{name}', item.name));
+          Alert.alert(T.shop_equipped_title, T.shop_equipped_msg.replace('{name}', shopItemText(lang, item).title));
         }
         return;
       }
@@ -458,7 +458,7 @@ export default function ShopScreen() {
           <View style={styles.slotsGrid}>
             {Object.entries(SLOT_LABELS).map(([slot, icon]) => {
               const eq = equippedSlots[slot];
-              const itemName = eq?.item?.name;
+              const itemName = eq?.item ? shopItemText(lang, eq.item).title : undefined;
               return (
                 <Pressable
                   key={slot}
