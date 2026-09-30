@@ -463,6 +463,7 @@ export type Database = {
           best_streak: number;
           created_at: string;
           eye_color: string;
+          language: string;
           freeze_tokens: number;
           gold: number;
           hair_color: string;
@@ -483,6 +484,7 @@ export type Database = {
           best_streak?: number;
           created_at?: string;
           eye_color?: string;
+          language?: string;
           freeze_tokens?: number;
           gold?: number;
           hair_color?: string;
@@ -503,6 +505,7 @@ export type Database = {
           best_streak?: number;
           created_at?: string;
           eye_color?: string;
+          language?: string;
           freeze_tokens?: number;
           gold?: number;
           hair_color?: string;
