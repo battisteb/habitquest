@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -25,6 +25,8 @@ import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 import { useT, setLang, lang$ } from '../src/lib/i18n';
 import { resetTutorial } from '../src/features/onboarding/tutorial-state';
+import { useOwnedThemes } from '../src/features/shop/hooks/use-owned-themes';
+import { fetchShop, setActiveTheme } from '../src/features/shop/stores/shop-store';
 import {
   isSfxEnabled,
   isMusicEnabled,
@@ -38,6 +40,21 @@ export default function SettingsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { themeKey, setTheme } = useTheme();
+  const ownedThemes = useOwnedThemes();
+  useEffect(() => {
+    void fetchShop();
+  }, []);
+  const pickTheme = (key: ThemeKey) => {
+    if (ownedThemes.has(key)) {
+      setTheme(key);
+      void setActiveTheme(key).catch(() => {});
+      return;
+    }
+    Alert.alert(T.settings_theme_locked_title, T.settings_theme_locked_msg, [
+      { text: T.settings_sign_out_cancel, style: 'cancel' },
+      { text: T.settings_theme_locked_cta, onPress: () => router.push('/shop') },
+    ]);
+  };
   const styles = useMemo(createStyles, [themeKey]);
   const T = useT();
   const currentLang = use$(lang$);
@@ -117,7 +134,7 @@ export default function SettingsScreen() {
               <Pressable
                 key={key}
                 style={[styles.themeCard, active && styles.themeCardActive]}
-                onPress={() => setTheme(key)}
+                onPress={() => pickTheme(key)}
               >
                 <View style={styles.themeTop}>
                   <Text style={styles.themeEmoji}>{meta.emoji}</Text>
@@ -135,6 +152,7 @@ export default function SettingsScreen() {
                   {T[`theme_desc_${key}` as keyof typeof T] ?? meta.description}
                 </Text>
                 {active && <Text style={styles.activeChip}>{T.theme_active}</Text>}
+                {!ownedThemes.has(key) && <Text style={styles.lockedChip}>🔒 {T.settings_theme_locked_chip}</Text>}
               </Pressable>
             );
           })}
@@ -398,6 +416,13 @@ function createStyles() {
     fontSize: pixelSize(8),
     fontFamily: fonts.bold,
     color: colors.primary,
+    letterSpacing: 1,
+    marginTop: 2,
+  },
+  lockedChip: {
+    fontSize: pixelSize(8),
+    fontFamily: fonts.bold,
+    color: colors.textMuted,
     letterSpacing: 1,
     marginTop: 2,
   },

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, StyleSheet, type LayoutChangeEvent } from 'react-native';
 import { PixelFrame } from '../../../ui/components/pixel-frame';
 import { useTheme } from '../../../ui/theme/theme-context';
+import type { ThemeKey } from '../../../ui/theme/themes';
 import { PixelAvatar, BG_COLORS, type PixelAvatarProps } from '../renderer/pixel-avatar';
 import { getAvatarStage } from '../utils/avatar-evolution';
 import { heroScene, SCENE_ROWS } from '../utils/hero-scene';
@@ -10,6 +11,8 @@ interface HeroStageProps extends Omit<PixelAvatarProps, 'bare'> {
   level: number;
   /** Height of the hero; the stage is as tall, and as wide as its parent. */
   size?: number;
+  /** Scene of this theme instead of the current one (shop previews). */
+  theme?: ThemeKey;
 }
 
 /**
@@ -17,8 +20,9 @@ interface HeroStageProps extends Omit<PixelAvatarProps, 'bare'> {
  * the theme (or the background bought in the shop), the frame takes the
  * rank color.
  */
-export function HeroStage({ level, size = 180, background, ...avatarProps }: HeroStageProps) {
-  const { themeKey } = useTheme();
+export function HeroStage({ level, size = 180, background, theme, ...avatarProps }: HeroStageProps) {
+  const current = useTheme().themeKey;
+  const themeKey = theme ?? current;
   const [width, setWidth] = useState(0);
   const height = size + 24;
   const cell = height / SCENE_ROWS;

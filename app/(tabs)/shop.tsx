@@ -35,6 +35,7 @@ import { usePremium } from '../../src/features/monetization/hooks/use-premium';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { rarityLabel, unlockLabel as formatUnlock } from '../../src/lib/i18n/labels';
 import { shopItemText } from '../../src/lib/i18n/content';
+import { themeKeyOfItem } from '../../src/features/shop/utils/owned-themes';
 
 type ShopTabKey = 'shop_tab_hats' | 'shop_tab_outfits' | 'shop_tab_items' | 'shop_tab_backgrounds' | 'shop_tab_themes';
 
@@ -63,7 +64,7 @@ const SLOT_LABELS: Record<string, string> = {
 export default function ShopScreen() {
   const T = useT();
   const lang = useLang();
-  const { themeKey } = useTheme();
+  const { themeKey, setTheme } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
 
@@ -349,7 +350,10 @@ export default function ShopScreen() {
       // Already owned → equip/unequip
       if (isOwned) {
         if (item.category === 'theme') {
-          await setActiveTheme(item.sprite_key);
+          const key = themeKeyOfItem(item.sprite_key);
+          if (!key) return;
+          setTheme(key);
+          await setActiveTheme(key);
           Alert.alert(T.shop_theme_applied_title, T.shop_theme_applied_msg.replace('{name}', shopItemText(lang, item).title));
           return;
         }
@@ -418,6 +422,12 @@ export default function ShopScreen() {
     try {
       await purchaseItem(item.id);
       if (slot) await equipItem(item.id, slot);
+      // A bought theme is applied at once, like equipment.
+      const bought = item.category === 'theme' ? themeKeyOfItem(item.sprite_key) : null;
+      if (bought) {
+        setTheme(bought);
+        await setActiveTheme(bought);
+      }
     } catch (e: any) {
       Alert.alert(T.shop_error_title, e.message ?? T.shop_error_purchase);
     } finally {
