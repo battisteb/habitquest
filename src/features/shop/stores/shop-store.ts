@@ -3,6 +3,7 @@ import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { refreshProfile } from '../../gamification/stores/profile-store';
+import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
 import { resetOnSignOut } from '../../../lib/storage/user-data';
@@ -95,6 +96,7 @@ export async function purchaseItem(itemId: string) {
   // Refresh shop and profile data
   await fetchShop();
   refreshProfile();
+  checkAndUnlockAchievements().catch(() => {});
 }
 
 export async function equipItem(itemId: string, slot: string) {
@@ -111,6 +113,8 @@ export async function equipItem(itemId: string, slot: string) {
 
   if (error) throw error;
   await fetchShop();
+  // Fully Equipped (4 slots).
+  checkAndUnlockAchievements().catch(() => {});
 }
 
 export async function unequipSlot(slot: string) {

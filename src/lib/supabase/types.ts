@@ -776,6 +776,7 @@ export type Database = {
     Functions: {
       accept_invite: { Args: { p_code: string }; Returns: Json };
       cancel_coop_challenge: { Args: { p_id: string }; Returns: undefined };
+      check_achievements: { Args: Record<PropertyKey, never>; Returns: Json };
       create_coop_challenge: {
         Args: { p_days: number; p_friend_ids: string[]; p_goal: string; p_target: number };
         Returns: string;
