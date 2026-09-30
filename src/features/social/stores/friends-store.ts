@@ -6,6 +6,7 @@ import { profileStore$ } from '../../gamification/stores/profile-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
 import { resetOnSignOut } from '../../../lib/storage/user-data';
+import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
@@ -166,6 +167,8 @@ export async function respondToRequest(friendshipId: string, accept: boolean) {
       p_body: `${responderName} accepted your friend request!`,
       p_data: { route: '/(tabs)/social' },
     });
+    // Friend achievements (Social Butterfly, Party Leader) show up right away.
+    checkAndUnlockAchievements().catch(() => {});
   }
 
   await fetchFriends();

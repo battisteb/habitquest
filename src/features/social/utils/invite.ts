@@ -1,5 +1,6 @@
 import { Platform, Share } from 'react-native';
 import { supabase } from '../../../lib/supabase/client';
+import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 import { storage } from '../../../lib/storage/mmkv';
 
 /** Public web app: the link opens in any browser, with or without the app. */
@@ -46,6 +47,7 @@ export type InviteResult =
 export async function acceptInvite(code: string): Promise<InviteResult> {
   const { data, error } = await supabase.rpc('accept_invite', { p_code: code });
   if (error) throw error;
+  checkAndUnlockAchievements().catch(() => {});
   return data as unknown as InviteResult;
 }
 

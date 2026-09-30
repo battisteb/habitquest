@@ -215,9 +215,10 @@ reset role;
 insert into achievements (id, key, name, description, category, threshold, xp_reward, gold_reward)
 values ('00000000-0000-0000-0000-00000000f001', 'test_ach', 'Test', 'Test', 'special', 1, 50, 7);
 update profiles set xp = 0, gold = 0 where id = '00000000-0000-0000-0000-0000000000a1';
-set local role authenticated;
+-- Unlocks are written by check_achievements() (security definer), not by players.
 insert into user_achievements (user_id, achievement_id)
-values (auth.uid(), '00000000-0000-0000-0000-00000000f001');
+values ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-00000000f001');
+set local role authenticated;
 select is((select xp || '/' || gold from profiles where id = auth.uid()), '50/7',
   'unlocking an achievement grants its catalogue reward');
 

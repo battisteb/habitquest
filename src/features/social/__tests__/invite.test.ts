@@ -1,6 +1,9 @@
 const mockRpc = jest.fn();
 const mockShare = jest.fn();
 
+jest.mock('../../gamification/stores/achievements-store', () => ({
+  checkAndUnlockAchievements: jest.fn(() => Promise.resolve()),
+}));
 jest.mock('react-native', () => ({
   Platform: { OS: 'ios' },
   Share: { share: (...args: unknown[]) => mockShare(...args) },
