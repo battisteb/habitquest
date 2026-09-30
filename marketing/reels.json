@@ -347,7 +347,7 @@
         "dur": 6.5,
         "src": "create",
         "start": 0.3,
-        "title": "Nom, catégorie, fréquence,<br><em>emoji</em>. C'est tout."
+        "title": "Un nom, une catégorie,<br>une fréquence. <em>C'est tout.</em>"
       },
       {
         "type": "card",
