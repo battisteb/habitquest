@@ -29,6 +29,7 @@ import { preloadInterstitial, shouldShowAds } from '../src/features/monetization
 import { requestTrackingConsent } from '../src/features/monetization/utils/tracking-consent';
 import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
 import { syncTimezone } from '../src/features/auth/utils/sync-timezone';
+import { syncLanguage } from '../src/features/auth/utils/sync-language';
 import { achievementText } from '../src/lib/i18n/content';
 import { lang$ } from '../src/lib/i18n';
 import { installAppAlert } from '../src/lib/app-alert';
@@ -90,6 +91,10 @@ function ThemedApp() {
   const currentToast = newlyUnlocked[0] ?? null;
   const authUserId = use$(authStore$.user)?.id;
   const lang = use$(lang$);
+  // Server notifications are written in the player's language.
+  useEffect(() => {
+    if (authUserId) void syncLanguage(authUserId, lang);
+  }, [authUserId, lang]);
 
   useWeeklyRecapScheduler();
   useNotificationObserver();
