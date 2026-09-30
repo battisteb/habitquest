@@ -1,10 +1,18 @@
-import { useEffect, useState } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
-
-// Pixel scale: each "pixel" is SCALE x SCALE real pixels
-const SCALE = 4;
-const GRID = 16; // 16x16 pixel grid
-const SIZE = GRID * SCALE;
+import { useEffect, useMemo, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import {
+  GRID,
+  BODY,
+  HAIR,
+  TUNIC,
+  HAT_SPRITES,
+  HATS_OVER_HAIR,
+  OUTFIT_SPRITES,
+  ACCESSORY_SPRITES,
+  HAT_COLORS,
+  OUTFIT_COLORS,
+  ACCESSORY_COLORS,
+} from './sprites';
 
 export interface PixelAvatarProps {
   size?: number;
@@ -23,177 +31,8 @@ export interface PixelAvatarProps {
   bare?: boolean;
 }
 
-// Format: [x, y, color_key]
-type PixelData = [number, number, string][];
-
 // ──────────────────────────────────────────
-// Base body (16x16 grid)
-// ──────────────────────────────────────────
-const BODY_PIXELS: PixelData = [
-  // Head (rows 2-7)
-  [6, 2, 'skin'], [7, 2, 'skin'], [8, 2, 'skin'], [9, 2, 'skin'],
-  [5, 3, 'skin'], [6, 3, 'skin'], [7, 3, 'skin'], [8, 3, 'skin'], [9, 3, 'skin'], [10, 3, 'skin'],
-  [5, 4, 'skin'], [6, 4, 'eye'], [7, 4, 'skin'], [8, 4, 'skin'], [9, 4, 'eye'], [10, 4, 'skin'],
-  [5, 5, 'skin'], [6, 5, 'skin'], [7, 5, 'skin'], [8, 5, 'skin'], [9, 5, 'skin'], [10, 5, 'skin'],
-  [6, 6, 'skin'], [7, 6, 'mouth'], [8, 6, 'mouth'], [9, 6, 'skin'],
-  [7, 7, 'skin'], [8, 7, 'skin'],
-  // Body (rows 8-11)
-  [6, 8, 'outfit'], [7, 8, 'outfit'], [8, 8, 'outfit'], [9, 8, 'outfit'],
-  [5, 9, 'outfit'], [6, 9, 'outfit'], [7, 9, 'outfit'], [8, 9, 'outfit'], [9, 9, 'outfit'], [10, 9, 'outfit'],
-  [5, 10, 'outfit'], [6, 10, 'outfit'], [7, 10, 'outfit'], [8, 10, 'outfit'], [9, 10, 'outfit'], [10, 10, 'outfit'],
-  [5, 11, 'skin'], [6, 11, 'outfit'], [7, 11, 'outfit'], [8, 11, 'outfit'], [9, 11, 'outfit'], [10, 11, 'skin'],
-  // Legs (rows 12-14)
-  [6, 12, 'pants'], [7, 12, 'pants'], [8, 12, 'pants'], [9, 12, 'pants'],
-  [6, 13, 'pants'], [7, 13, 'pants'], [8, 13, 'pants'], [9, 13, 'pants'],
-  [5, 14, 'shoes'], [6, 14, 'shoes'], [9, 14, 'shoes'], [10, 14, 'shoes'],
-];
-
-// ──────────────────────────────────────────
-// Hair (shown when no hat equipped)
-// ──────────────────────────────────────────
-const HAIR_PIXELS: Record<string, PixelData> = {
-  default: [
-    [6, 1, 'hair'], [7, 1, 'hair'], [8, 1, 'hair'], [9, 1, 'hair'],
-    [5, 2, 'hair'], [10, 2, 'hair'],
-    [4, 3, 'hair'], [4, 4, 'hair'],
-  ],
-};
-
-// ──────────────────────────────────────────
-// Hats
-// ──────────────────────────────────────────
-const HAT_SPRITES: Record<string, PixelData> = {
-  hat_adventurer: [
-    [5, 0, 'hat'], [6, 0, 'hat'], [7, 0, 'hat'], [8, 0, 'hat'], [9, 0, 'hat'], [10, 0, 'hat'],
-    [6, 1, 'hat'], [7, 1, 'hat'], [8, 1, 'hat'], [9, 1, 'hat'],
-  ],
-  hat_knight: [
-    [4, -1, 'hat'], [5, -1, 'hat'], [6, -1, 'hat'], [7, -1, 'hat'], [8, -1, 'hat'], [9, -1, 'hat'], [10, -1, 'hat'], [11, -1, 'hat'],
-    [5, 0, 'hat'], [6, 0, 'hat_accent'], [7, 0, 'hat_accent'], [8, 0, 'hat_accent'], [9, 0, 'hat_accent'], [10, 0, 'hat'],
-    [6, 1, 'hat'], [7, 1, 'hat'], [8, 1, 'hat'], [9, 1, 'hat'],
-  ],
-  hat_wizard: [
-    [7, -3, 'hat_accent'], [8, -3, 'hat_accent'],
-    [6, -2, 'hat'], [7, -2, 'hat'], [8, -2, 'hat'], [9, -2, 'hat'],
-    [5, -1, 'hat'], [6, -1, 'hat'], [7, -1, 'hat'], [8, -1, 'hat'], [9, -1, 'hat'], [10, -1, 'hat'],
-    [5, 0, 'hat'], [6, 0, 'hat'], [7, 0, 'hat'], [8, 0, 'hat'], [9, 0, 'hat'], [10, 0, 'hat'],
-    [4, 1, 'hat'], [5, 1, 'hat'], [6, 1, 'hat'], [7, 1, 'hat'], [8, 1, 'hat'], [9, 1, 'hat'], [10, 1, 'hat'], [11, 1, 'hat'],
-  ],
-  hat_crown: [
-    [5, -1, 'hat_accent'], [7, -1, 'hat_accent'], [9, -1, 'hat_accent'],
-    [5, 0, 'hat'], [6, 0, 'hat'], [7, 0, 'hat'], [8, 0, 'hat'], [9, 0, 'hat'], [10, 0, 'hat'],
-    [6, 1, 'hat'], [7, 1, 'hat'], [8, 1, 'hat'], [9, 1, 'hat'],
-  ],
-  hat_dragon: [
-    [3, -1, 'hat_accent'], [4, 0, 'hat_accent'], [11, 0, 'hat_accent'], [12, -1, 'hat_accent'],
-    [5, 0, 'hat'], [6, 0, 'hat'], [7, 0, 'hat'], [8, 0, 'hat'], [9, 0, 'hat'], [10, 0, 'hat'],
-    [6, 1, 'hat'], [7, 1, 'hat'], [8, 1, 'hat'], [9, 1, 'hat'],
-  ],
-  hat_pirate: [
-    [5, -1, 'hat'], [6, -1, 'hat'], [7, -1, 'hat'], [8, -1, 'hat'], [9, -1, 'hat'], [10, -1, 'hat'],
-    [4, 0, 'hat'], [5, 0, 'hat'], [6, 0, 'hat'], [7, 0, 'hat'], [8, 0, 'hat'], [9, 0, 'hat'], [10, 0, 'hat'], [11, 0, 'hat'],
-    [6, 1, 'hat'], [7, 1, 'hat_accent'], [8, 1, 'hat_accent'], [9, 1, 'hat'],
-  ],
-  hat_samurai: [
-    [4, -2, 'hat_accent'], [11, -2, 'hat_accent'],
-    [4, -1, 'hat'], [5, -1, 'hat'], [6, -1, 'hat'], [7, -1, 'hat'], [8, -1, 'hat'], [9, -1, 'hat'], [10, -1, 'hat'], [11, -1, 'hat'],
-    [5, 0, 'hat'], [6, 0, 'hat_accent'], [7, 0, 'hat'], [8, 0, 'hat'], [9, 0, 'hat_accent'], [10, 0, 'hat'],
-    [6, 1, 'hat'], [7, 1, 'hat'], [8, 1, 'hat'], [9, 1, 'hat'],
-  ],
-  hat_halo: [
-    [5, -2, 'hat_accent'], [6, -2, 'hat_accent'], [7, -2, 'hat_accent'], [8, -2, 'hat_accent'], [9, -2, 'hat_accent'], [10, -2, 'hat_accent'],
-    [4, -1, 'hat_accent'], [11, -1, 'hat_accent'],
-    [5, -1, 'hat'], [10, -1, 'hat'],
-  ],
-  hat_viking: [
-    [3, -1, 'hat_accent'], [12, -1, 'hat_accent'],
-    [3, 0, 'hat_accent'], [12, 0, 'hat_accent'],
-    [4, 0, 'hat'], [5, 0, 'hat'], [6, 0, 'hat'], [7, 0, 'hat'], [8, 0, 'hat'], [9, 0, 'hat'], [10, 0, 'hat'], [11, 0, 'hat'],
-    [5, 1, 'hat'], [6, 1, 'hat'], [7, 1, 'hat'], [8, 1, 'hat'], [9, 1, 'hat'], [10, 1, 'hat'],
-  ],
-};
-
-// Data-driven hat colors (replaces chained ternaries)
-const HAT_COLORS: Record<string, { hat: string; hat_accent: string }> = {
-  hat_adventurer: { hat: '#8B7355', hat_accent: '#A08B6B' },
-  hat_knight:     { hat: '#708090', hat_accent: '#C0C0C0' },
-  hat_wizard:     { hat: '#4B0082', hat_accent: '#E040FB' },
-  hat_crown:      { hat: '#DAA520', hat_accent: '#FFD700' },
-  hat_dragon:     { hat: '#8B0000', hat_accent: '#FF4500' },
-  hat_pirate:     { hat: '#1a1a1a', hat_accent: '#F0E68C' },
-  hat_samurai:    { hat: '#8B0000', hat_accent: '#C0C0C0' },
-  hat_halo:       { hat: '#FFFACD', hat_accent: '#FFD700' },
-  hat_viking:     { hat: '#8B7355', hat_accent: '#E0E0E0' },
-};
-
-// ──────────────────────────────────────────
-// Accessories (rendered on top of body)
-// ──────────────────────────────────────────
-const ACCESSORY_SPRITES: Record<string, PixelData> = {
-  acc_shield: [
-    [2, 9, 'acc'], [2, 10, 'acc'], [2, 11, 'acc'],
-    [3, 8, 'acc'], [3, 9, 'acc_accent'], [3, 10, 'acc_accent'], [3, 11, 'acc'], [3, 12, 'acc'],
-    [4, 9, 'acc'], [4, 10, 'acc'], [4, 11, 'acc'],
-  ],
-  acc_sword: [
-    [12, 6, 'acc_accent'], [12, 7, 'acc'],
-    [11, 8, 'acc'], [12, 8, 'acc'],
-    [11, 9, 'acc'], [11, 10, 'acc'], [11, 11, 'acc'],
-    [11, 12, 'acc_accent'], [11, 13, 'acc_accent'],
-  ],
-  acc_cape: [
-    [4, 8, 'acc'], [11, 8, 'acc'],
-    [3, 9, 'acc'], [4, 9, 'acc'], [11, 9, 'acc'], [12, 9, 'acc'],
-    [3, 10, 'acc'], [4, 10, 'acc_accent'], [11, 10, 'acc_accent'], [12, 10, 'acc'],
-    [3, 11, 'acc'], [4, 11, 'acc'], [11, 11, 'acc'], [12, 11, 'acc'],
-    [4, 12, 'acc'], [11, 12, 'acc'],
-  ],
-  acc_wings: [
-    [2, 8, 'acc_accent'], [13, 8, 'acc_accent'],
-    [1, 9, 'acc'], [2, 9, 'acc'], [3, 9, 'acc'], [12, 9, 'acc'], [13, 9, 'acc'], [14, 9, 'acc'],
-    [1, 10, 'acc_accent'], [2, 10, 'acc'], [13, 10, 'acc'], [14, 10, 'acc_accent'],
-    [2, 11, 'acc'], [13, 11, 'acc'],
-  ],
-  acc_scarf: [
-    [5, 7, 'acc'], [6, 7, 'acc'], [7, 7, 'acc'], [8, 7, 'acc'], [9, 7, 'acc'], [10, 7, 'acc'],
-    [10, 8, 'acc'], [11, 8, 'acc'],
-    [11, 9, 'acc_accent'],
-  ],
-  acc_aura: [
-    [4, 2, 'acc_accent'], [11, 2, 'acc_accent'],
-    [3, 5, 'acc_accent'], [12, 5, 'acc_accent'],
-    [3, 8, 'acc_accent'], [12, 8, 'acc_accent'],
-    [4, 11, 'acc_accent'], [11, 11, 'acc_accent'],
-    [5, 13, 'acc_accent'], [10, 13, 'acc_accent'],
-  ],
-};
-
-const ACCESSORY_COLORS: Record<string, { acc: string; acc_accent: string }> = {
-  acc_shield:  { acc: '#708090', acc_accent: '#B22222' },
-  acc_sword:   { acc: '#C0C0C0', acc_accent: '#8B7355' },
-  acc_cape:    { acc: '#8B0000', acc_accent: '#DAA520' },
-  acc_wings:   { acc: '#E8E8E8', acc_accent: '#FFD700' },
-  acc_scarf:   { acc: '#e94560', acc_accent: '#c73e54' },
-  acc_aura:    { acc: '#7B68EE', acc_accent: '#E040FB55' },
-};
-
-// ──────────────────────────────────────────
-// Outfits (color overrides for body)
-// ──────────────────────────────────────────
-const OUTFIT_COLORS: Record<string, { primary: string; secondary: string }> = {
-  outfit_peasant:  { primary: '#8B7355', secondary: '#6B5B45' },
-  outfit_leather:  { primary: '#8B4513', secondary: '#654321' },
-  outfit_mage:     { primary: '#4B0082', secondary: '#6A0DAD' },
-  outfit_golden:   { primary: '#DAA520', secondary: '#B8860B' },
-  outfit_shadow:   { primary: '#1a1a2e', secondary: '#2d2d4e' },
-  outfit_forest:   { primary: '#2d5a1e', secondary: '#1a3a10' },
-  outfit_ice:      { primary: '#4FC3F7', secondary: '#0288D1' },
-  outfit_crimson:  { primary: '#B71C1C', secondary: '#880E0E' },
-  outfit_royal:    { primary: '#4A148C', secondary: '#7B1FA2' },
-};
-
-// ──────────────────────────────────────────
-// Backgrounds
+// Backgrounds (shop "décors")
 // ──────────────────────────────────────────
 export const BG_COLORS: Record<string, string[]> = {
   bg_forest:    ['#2d5a1e', '#1a3a10'],
@@ -207,28 +46,116 @@ export const BG_COLORS: Record<string, string[]> = {
   default:      ['#1a1a2e', '#16213e'],
 };
 
-// ──────────────────────────────────────────
-// Default colors
-// ──────────────────────────────────────────
-const DEFAULT_COLORS = {
+const DEFAULTS = {
   skin: '#f4c98a',
   hair: '#4a3728',
   eye: '#1a1a2e',
-  mouth: '#c47a5a',
-  outfit: '#e94560',
+  outfit: ['#e94560', '#b8354b', '#f0c43c'] as [string, string, string],
   pants: '#2a4a6a',
   shoes: '#3a2a1a',
-  hat: '#aaa',
-  hat_accent: '#ddd',
-  acc: '#888',
-  acc_accent: '#bbb',
 };
+
+/** Darkens (factor < 1) or lightens (factor > 1) a #rrggbb color. */
+export function tint(hex: string, factor: number): string {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return hex;
+  const n = parseInt(m[1], 16);
+  const channel = (shift: number) => {
+    const c = (n >> shift) & 0xff;
+    return factor < 1 ? Math.round(c * factor) : Math.min(255, Math.round(c + (255 - c) * (factor - 1)));
+  };
+  return `#${[16, 8, 0].map((s) => channel(s).toString(16).padStart(2, '0')).join('')}`;
+}
+
+type Palette = Record<string, string>;
+
+const OUTLINE = '#1b1428';
+
+function basePalette(skin: string, hair: string, eye: string): Palette {
+  return {
+    o: OUTLINE, s: skin, S: tint(skin, 0.82), c: '#eaa79a', w: '#f4f1ea', e: eye, m: '#a8584a',
+    h: hair, H: tint(hair, 0.7), L: tint(hair, 1.35),
+    n: DEFAULTS.pants, N: tint(DEFAULTS.pants, 0.72), f: DEFAULTS.shoes, F: tint(DEFAULTS.shoes, 0.7),
+    b: '#5a3a1a', B: '#e0b04a',
+  };
+}
+
+function outfitPalette([p, q, x]: [string, string, string]): Palette {
+  return {
+    o: OUTLINE, w: '#f4f1ea', b: '#5a3a1a', B: '#e0b04a',
+    p, P: tint(p, 0.72), l: tint(p, 1.3), q, Q: tint(q, 0.72), x, X: tint(x, 0.72), y: tint(x, 1.35),
+  };
+}
+
+function itemPalette([a, x]: [string, string]): Palette {
+  return { o: OUTLINE, a, A: tint(a, 0.7), g: tint(a, 1.4), x, X: tint(x, 0.72), y: tint(x, 1.35) };
+}
+
+export interface HeroLook {
+  skin: string;
+  hair: string;
+  eye: string;
+  hat?: string;
+  outfit?: string;
+  accessory?: string;
+}
+
+/**
+ * Stacks the hero's layers into a GRID×GRID color map (null = transparent):
+ * back accessory, body, outfit, hair or hat, front accessory.
+ */
+export function composeHero(look: HeroLook): (string | null)[][] {
+  const grid: (string | null)[][] = Array.from({ length: GRID }, () => Array(GRID).fill(null));
+  const paint = (rows: string[] | undefined, palette: Palette, fallback?: Palette) => {
+    rows?.forEach((row, y) => {
+      for (let x = 0; x < GRID; x++) {
+        const ch = row[x];
+        if (!ch || ch === '.') continue;
+        grid[y][x] = palette[ch] ?? fallback?.[ch] ?? '#ff00ff';
+      }
+    });
+  };
+
+  const base = basePalette(look.skin, look.hair, look.eye);
+  const acc = look.accessory ? ACCESSORY_SPRITES[look.accessory] : undefined;
+  const accPalette = look.accessory ? itemPalette(ACCESSORY_COLORS[look.accessory] ?? ['#888888', '#bbbbbb']) : base;
+  const hatRows = look.hat ? HAT_SPRITES[look.hat] : undefined;
+
+  if (acc?.layer === 'back') paint(acc.rows, accPalette, base);
+  paint(BODY, base);
+  const outfitRows = (look.outfit && OUTFIT_SPRITES[look.outfit]) || TUNIC;
+  paint(outfitRows, outfitPalette((look.outfit && OUTFIT_COLORS[look.outfit]) || DEFAULTS.outfit), base);
+  if (!hatRows || HATS_OVER_HAIR.has(look.hat!)) paint(HAIR, base);
+  if (hatRows) paint(hatRows, itemPalette(HAT_COLORS[look.hat!] ?? ['#aaaaaa', '#dddddd']), base);
+  if (acc?.layer === 'front') paint(acc.rows, accPalette, base);
+  return grid;
+}
+
+/** Merges same-colored neighbors of a row into one strip: far fewer views than one per pixel. */
+export function toStrips(grid: (string | null)[][]): [number, number, number, string][] {
+  const strips: [number, number, number, string][] = [];
+  grid.forEach((row, y) => {
+    let x = 0;
+    while (x < row.length) {
+      const color = row[x];
+      if (!color) {
+        x++;
+        continue;
+      }
+      let end = x + 1;
+      while (end < row.length && row[end] === color) end++;
+      strips.push([x, y, end - x, color]);
+      x = end;
+    }
+  });
+  return strips;
+}
 
 export function PixelAvatar({
   size = 200,
-  skinColor = DEFAULT_COLORS.skin,
-  hairColor = DEFAULT_COLORS.hair,
-  eyeColor = DEFAULT_COLORS.eye,
+  skinColor = DEFAULTS.skin,
+  hairColor = DEFAULTS.hair,
+  eyeColor = DEFAULTS.eye,
   hat,
   outfit,
   accessory,
@@ -246,70 +173,38 @@ export function PixelAvatar({
   }, [idleFrame, idleIntervalMs]);
   const frame = idleFrame ?? autoFrame;
 
-  const scale = size / SIZE;
-  const pixelSize = SCALE * scale;
+  const strips = useMemo(
+    () => toStrips(composeHero({ skin: skinColor, hair: hairColor, eye: eyeColor, hat, outfit, accessory })),
+    [skinColor, hairColor, eyeColor, hat, outfit, accessory],
+  );
 
-  const hatColors = hat && HAT_COLORS[hat] ? HAT_COLORS[hat] : { hat: DEFAULT_COLORS.hat, hat_accent: DEFAULT_COLORS.hat_accent };
-  const accColors = accessory && ACCESSORY_COLORS[accessory] ? ACCESSORY_COLORS[accessory] : { acc: DEFAULT_COLORS.acc, acc_accent: DEFAULT_COLORS.acc_accent };
-
-  const colorMap: Record<string, string> = {
-    skin: skinColor,
-    hair: hairColor,
-    eye: eyeColor,
-    mouth: DEFAULT_COLORS.mouth,
-    outfit: outfit && OUTFIT_COLORS[outfit] ? OUTFIT_COLORS[outfit].primary : DEFAULT_COLORS.outfit,
-    pants: DEFAULT_COLORS.pants,
-    shoes: DEFAULT_COLORS.shoes,
-    hat: hatColors.hat,
-    hat_accent: hatColors.hat_accent,
-    acc: accColors.acc,
-    acc_accent: accColors.acc_accent,
-  };
-
+  const cell = size / GRID;
+  // Idle bounce: the hero rises by one grid pixel every other frame.
+  const bounceY = frame % 2 === 0 ? 0 : -cell;
   const bgColors = background && BG_COLORS[background] ? BG_COLORS[background] : BG_COLORS.default;
-
-  // Idle bounce offset (in px)
-  const bounceY = frame % 2 === 0 ? 0 : -1 * scale;
-  // Vertical offset to push body group down (equivalent to translateY: 2 * pixelSize)
-  const groupOffsetY = 2 * pixelSize;
-
-  function renderPixels(pixels: PixelData) {
-    return pixels.map(([x, y, colorKey], i) => (
-      <View
-        key={i}
-        style={{
-          position: 'absolute',
-          left: x * pixelSize,
-          top: y * pixelSize + bounceY + groupOffsetY,
-          width: pixelSize,
-          height: pixelSize,
-          backgroundColor: colorMap[colorKey] ?? colorKey,
-        }}
-      />
-    ));
-  }
 
   return (
     <View style={[styles.container, bare && styles.bare, { width: size, height: size }]}>
-      {/* Background */}
       {!bare && (
         <>
           <View style={{ position: 'absolute', top: 0, left: 0, width: size, height: size, backgroundColor: bgColors[0] }} />
           <View style={{ position: 'absolute', top: size * 0.6, left: 0, width: size, height: size * 0.4, backgroundColor: bgColors[1] }} />
         </>
       )}
-
-      {/* Accessory behind body (cape, wings, aura) */}
-      {accessory && ACCESSORY_SPRITES[accessory] && renderPixels(ACCESSORY_SPRITES[accessory])}
-
-      {/* Hair (behind head, hidden if hat) */}
-      {!hat && renderPixels(HAIR_PIXELS.default)}
-
-      {/* Body */}
-      {renderPixels(BODY_PIXELS)}
-
-      {/* Hat (on top of head) */}
-      {hat && HAT_SPRITES[hat] && renderPixels(HAT_SPRITES[hat])}
+      {strips.map(([x, y, w, color], i) => (
+        <View
+          key={i}
+          style={{
+            position: 'absolute',
+            left: x * cell,
+            top: y * cell + bounceY,
+            // +0.5 hides hairline gaps between strips at fractional sizes.
+            width: w * cell + 0.5,
+            height: cell + 0.5,
+            backgroundColor: color,
+          }}
+        />
+      ))}
     </View>
   );
 }
