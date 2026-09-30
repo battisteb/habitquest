@@ -7,6 +7,7 @@ import {
   Pressable,
   ActivityIndicator,
   Alert,
+  Platform,
 } from 'react-native';
 import { useT } from '../src/lib/i18n';
 import { useRouter } from 'expo-router';
@@ -172,6 +173,18 @@ export default function PaywallScreen() {
     letterSpacing: 1,
   },
 
+  webNotice: {
+    borderWidth: 2,
+    borderColor: colors.accent,
+    padding: spacing.md,
+    marginTop: spacing.md,
+  },
+  webNoticeText: {
+    color: colors.text,
+    fontSize: fontSizes.md,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
   legal: {
     fontSize: 9,
     color: colors.textMuted,
@@ -213,12 +226,18 @@ export default function PaywallScreen() {
   const monthlyPrice = monthlyPkg?.product.priceString ?? '4,99 €';
   const annualPrice = annualPkg?.product.priceString ?? '34,99 €';
   const annualMonthly = annualPkg
-    ? `${(annualPkg.product.price / 12).toFixed(2)} €/mois`
-    : '2,92 €/mois';
+    ? T.paywall_per_month.replace('{price}', `${(annualPkg.product.price / 12).toFixed(2)} €`)
+    : T.paywall_per_month.replace('{price}', '2,92 €');
 
   async function handlePurchase() {
     const productId = selected === 'monthly' ? PRODUCT_MONTHLY : PRODUCT_ANNUAL;
     const success = await purchaseSubscription(productId);
+    const error = subscriptionStore$.error.get();
+    if (!success && error) {
+      // Cancelling is silent; any other failure is explained.
+      Alert.alert(T.paywall_error_title, T.paywall_error_msg);
+      return;
+    }
     if (success) {
       Alert.alert(
         T.paywall_welcome_title,
@@ -308,7 +327,12 @@ export default function PaywallScreen() {
           </Pressable>
         </View>
 
-        {/* CTA */}
+        {/* CTA: subscriptions are sold through the App Store / Play Store only. */}
+        {Platform.OS === 'web' ? (
+          <View style={styles.webNotice}>
+            <Text style={styles.webNoticeText}>{T.paywall_web_only}</Text>
+          </View>
+        ) : (
         <Pressable
           style={[styles.cta, isLoading && styles.ctaDisabled]}
           onPress={handlePurchase}
@@ -322,12 +346,15 @@ export default function PaywallScreen() {
             </Text>
           )}
         </Pressable>
+        )}
 
         <Text style={styles.legal}>{T.paywall_legal}</Text>
 
-        <Pressable onPress={handleRestore} style={styles.restoreBtn}>
-          <Text style={styles.restoreText}>{T.paywall_restore}</Text>
-        </Pressable>
+        {Platform.OS !== 'web' && (
+          <Pressable onPress={handleRestore} style={styles.restoreBtn}>
+            <Text style={styles.restoreText}>{T.paywall_restore}</Text>
+          </Pressable>
+        )}
       </ScrollView>
     </View>
   );
