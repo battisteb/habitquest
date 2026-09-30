@@ -50,7 +50,7 @@ export default function PaywallScreen() {
   closeBtn: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 0,
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,

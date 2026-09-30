@@ -20,6 +20,11 @@ import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
 import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-store';
 import { playMusic, stopMusic, playSfx } from '../../src/lib/audio/sound-service';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
+import { PixelAvatar, type PixelAvatarProps } from '../../src/features/avatar/renderer/pixel-avatar';
+import { PixelFrame } from '../../src/ui/components/pixel-frame';
+import { avatarConfigStore$ } from '../../src/features/avatar/stores/avatar-config-store';
+import { shopStore$, fetchEquipmentOf } from '../../src/features/shop/stores/shop-store';
+import { supabase } from '../../src/lib/supabase/client';
 import { useT } from '../../src/lib/i18n';
 import { attackName } from '../../src/lib/i18n/labels';
 
@@ -65,15 +70,23 @@ function HpBar({ hp, maxHp }: { hp: number; maxHp: number }) {
 }
 const hp_s = StyleSheet.create({
   track: { height: 10, backgroundColor: '#0a0a16', borderRadius: 0, overflow: 'hidden', borderWidth: 1, borderColor: '#2a2a4a', alignSelf: 'stretch' },
-  fill: { height: '100%', borderRadius: 5 },
+  fill: { height: '100%', borderRadius: 0 },
 });
 
 // ─── Character sprite ─────────────────────────────────────────────────────────
 
+type Look = Omit<PixelAvatarProps, 'size' | 'bare' | 'background'>;
+
+/** A sparring partner when the opponent is not a known player (practice fight). */
+const TRAINER_LOOK: Look = {
+  skinColor: '#e0ac69', hairColor: '#2b2b2b', eyeColor: '#3b2a1a',
+  hat: 'hat_knight', outfit: 'outfit_crimson', accessory: 'acc_sword',
+};
+
 function Character({
-  player, flip, isAttacking, isHit,
+  player, look, flip, isAttacking, isHit,
 }: {
-  player: LivePlayer; flip: boolean; isAttacking: boolean; isHit: boolean;
+  player: LivePlayer; look: Look; flip: boolean; isAttacking: boolean; isHit: boolean;
 }) {
   const stage = getAvatarStage(player.level);
   const shakeX = useRef(new Animated.Value(0)).current;
@@ -112,15 +125,17 @@ function Character({
   return (
     <View style={[char_s.wrap, flip && char_s.flip]}>
       <Animated.View style={[char_s.sprite, { transform: [{ translateX: shakeX }, { translateX: slideX }], opacity }]}>
-        <View style={[
-          char_s.aura,
-          {
-            borderColor: isDead ? '#333' : stage.aura,
-            backgroundColor: isDead ? '#111' : stage.aura + '25',
-          },
-        ]}>
-          <Text style={[char_s.emoji, isDead && char_s.dead]}>{isDead ? '💀' : stage.emoji}</Text>
-        </View>
+        {/* The heroes themselves, in a pixel frame of their rank color. */}
+        <PixelFrame
+          borderColor={isDead ? '#333333' : stage.aura}
+          backgroundColor="#0a0a16"
+          contentStyle={char_s.portrait}
+        >
+          <View style={isDead && char_s.dead}>
+            <PixelAvatar size={76} bare {...look} />
+          </View>
+          {isDead && <Text style={char_s.skull}>💀</Text>}
+        </PixelFrame>
         {player.shield && !isDead && (
           <Text style={char_s.shieldIcon}>🛡️</Text>
         )}
@@ -132,12 +147,9 @@ const char_s = StyleSheet.create({
   wrap: { alignItems: 'center' },
   flip: { transform: [{ scaleX: -1 }] },
   sprite: { alignItems: 'center', justifyContent: 'center' },
-  aura: {
-    width: 80, height: 80, borderRadius: 40,
-    borderWidth: 3, alignItems: 'center', justifyContent: 'center',
-  },
-  emoji: { fontSize: 42 },
-  dead: { opacity: 0.4 },
+  portrait: { width: 80, height: 80, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  dead: { opacity: 0.35 },
+  skull: { position: 'absolute', fontSize: 28 },
   shieldIcon: { position: 'absolute', bottom: -4, right: -4, fontSize: 18 },
 });
 
@@ -256,6 +268,32 @@ export default function BattleScreen() {
     myName?: string; myLevel?: string; openingAttackId?: string;
     duelId?: string; opponentId?: string;
   }>();
+  // My hero as I dressed it; a friend's hero from the server, or a sparring partner.
+  const myColors = use$(avatarConfigStore$);
+  const myGear = use$(shopStore$.equippedSlots);
+  const myLook: Look = {
+    skinColor: myColors.skinColor, hairColor: myColors.hairColor, eyeColor: myColors.eyeColor,
+    hat: myGear.hat?.item?.sprite_key, outfit: myGear.outfit?.item?.sprite_key,
+    accessory: myGear.accessory?.item?.sprite_key,
+  };
+  const [oppLook, setOppLook] = useState<Look>(TRAINER_LOOK);
+  useEffect(() => {
+    const id = params.opponentId;
+    if (!id) return;
+    (async () => {
+      const [{ data: p }, gear] = await Promise.all([
+        supabase.from('profiles').select('skin_color, hair_color, eye_color').eq('id', id).single(),
+        fetchEquipmentOf(id),
+      ]);
+      setOppLook({
+        skinColor: p?.skin_color, hairColor: p?.hair_color, eyeColor: p?.eye_color,
+        hat: gear.hat, outfit: gear.outfit, accessory: gear.accessory,
+      });
+    })().catch(() => {
+      // Offline: keep the sparring partner's look.
+    });
+  }, [params.opponentId]);
+
   const formatHp = (hp: number, max: number) =>
     T.duels_battle_hp.replace('{hp}', String(hp)).replace('{max}', String(max));
 
@@ -460,6 +498,7 @@ export default function BattleScreen() {
           <PlayerPanel player={opp} align="left" hpLabel={formatHp(opp.hp, opp.maxHp)} />
           <Character
             player={opp}
+            look={oppLook}
             flip={false}
             isAttacking={attackingId === OPP_ID}
             isHit={hitId === OPP_ID}
@@ -474,6 +513,7 @@ export default function BattleScreen() {
         <View style={[s.arenaSlot, s.arenaSlotRight]}>
           <Character
             player={me}
+            look={myLook}
             flip={true}
             isAttacking={attackingId === ME_ID}
             isHit={hitId === ME_ID}
@@ -579,7 +619,7 @@ const s = StyleSheet.create({
   arenaSlot: { flex: 1, gap: spacing.sm },
   arenaSlotRight: { alignItems: 'flex-end' },
   vsDivider: {
-    width: 32, height: 32, borderRadius: 16,
+    width: 32, height: 32, borderRadius: 0,
     backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.border,
     alignItems: 'center', justifyContent: 'center',
   },

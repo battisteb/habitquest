@@ -86,7 +86,7 @@ const swatchStyles = StyleSheet.create({
   swatch: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 0,
     borderWidth: 3,
     borderColor: 'transparent',
   },
