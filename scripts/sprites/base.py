@@ -23,19 +23,19 @@ BODY = mirror([
 "................",
 "................",
 "................",  # 5
-"..........oooooo",  # 6 head top (flat)
-"........oossssss",
-"........osssssss",
-"........osssssss",
-"........osssssss",  # 10
-"........ossewsss",  # eyes
-"........osseesss",
-"........occsssss",  # cheeks
-"........oSssssss",
-"........oSsssssm",  # 15 mouth
-"........oSSsssss",  # square jaw
-".........oSSSSSS",
-"..........oooooo",  # 18 chin on the shoulders
+"...........ooooo",  # 6 head top (flat)
+".........oosssss",
+".........ossssss",
+".........ossssss",
+".........ossssss",  # 10
+".........osewsss",  # eyes
+".........oseesss",
+".........occssss",  # cheeks
+".........oSsssss",
+".........oSssssm",  # 15 mouth
+".........oSSssss",  # square jaw
+"..........oSSSSS",
+"...........ooooo",  # 18 chin on the shoulders
 "..........oooSss",
 ".........osssssS",  # 20 shoulders / torso
 "........ossossss",
@@ -58,13 +58,13 @@ HAIR = mirror([
 "................",
 "................",
 "................",
-"..........oooooo",  # 5
-".........ohhhhhh",
-"........ohhhLLhh",
-".......ohhhLhhhh",
-".......ohhHhhhHh",
-".......ohoHho.oH",  # 10 bangs
-".......oo.......",
+"...........ooooo",  # 5
+"..........ohhhhh",
+".........ohhhLLh",
+"........ohhhLhhh",
+"........ohhHhhhH",
+"........ohhHhhHh",  # 10 bangs
+"........oo......",
 ])
 
 # Default tunic.
