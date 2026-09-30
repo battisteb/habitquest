@@ -34,7 +34,7 @@ Les visuels C1 et C2 sont générés automatiquement (`marketing/templates/`). D
 6. HabitQuest : séries, gels, XP. Bientôt dispo.
 
 ## C4 — « De Novice à Légende » — 🖼️ visuels fournis
-Une slide par rang : Novice (niv. 0), Apprenti (3), Guerrier (5), Chevalier (7), Champion (9), Légende (11). « Tu serais quel rang aujourd'hui ? »
+Une slide par rang : Novice (niv. 1), Apprenti (3), Guerrier (5), Chevalier (7), Champion (9), Légende (11). « Tu serais quel rang aujourd'hui ? »
 
 ## C5 — « Ta vie privée »
 1. Tes habitudes t'appartiennent.
