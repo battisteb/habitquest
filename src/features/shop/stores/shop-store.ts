@@ -147,6 +147,7 @@ export async function fetchEquipmentOf(userId: string): Promise<Equipment> {
   return gear;
 }
 
+/** Saves the app theme on the profile (the server checks it is owned). */
 export async function setActiveTheme(themeKey: string) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;

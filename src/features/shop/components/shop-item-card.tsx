@@ -6,6 +6,8 @@ import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/
 import { PremiumBadge } from '../../monetization/components/premium-gate';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+import { HeroStage } from '../../avatar/components/hero-stage';
+import { themeKeyOfItem } from '../utils/owned-themes';
 
 const RARITY_BORDER: Record<string, string> = {
   common: colors.border,
@@ -181,6 +183,17 @@ export function ShopItemCard({
     >
       {/* Avatar preview — pointer-events:none so pixel Views don't absorb touches */}
       <View style={[styles.previewArea, { pointerEvents: 'none' } as any]}>
+        {category === 'theme' && themeKeyOfItem(spriteKey) ? (
+          <HeroStage
+            level={1}
+            size={56}
+            theme={themeKeyOfItem(spriteKey)!}
+            hat={currentHat}
+            outfit={currentOutfit}
+            accessory={currentAccessory}
+            idleFrame={0}
+          />
+        ) : (
         <PixelAvatar
           size={72}
           hat={previewHat}
@@ -189,6 +202,7 @@ export function ShopItemCard({
           background={previewBg}
           idleFrame={0}
         />
+        )}
         {isEquipped && (
           <View style={styles.equippedBadge}>
             <Text style={styles.equippedBadgeText}>{T.shop_card_on}</Text>

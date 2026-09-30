@@ -10,6 +10,10 @@ import { notificationsStore$, fetchNotifications } from '../../src/features/noti
 import { colors, fonts, PIXEL, pixelSize } from '../../src/ui/theme/tokens';
 import { shade } from '../../src/ui/components/pixel-frame';
 import { useT } from '../../src/lib/i18n';
+import { useTheme } from '../../src/ui/theme/theme-context';
+import { useOwnedThemes } from '../../src/features/shop/hooks/use-owned-themes';
+import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
+import { FREE_THEME } from '../../src/features/shop/utils/owned-themes';
 
 function usePendingHabitCount(): number {
   const habits = use$(habitsStore$.habits);
@@ -65,6 +69,16 @@ export default function TabsLayout() {
   const pendingFriends = usePendingFriendCount();
   const unreadNotifications = useUnreadNotificationCount();
   const T = useT();
+  // Themes are sold in the shop (Q15): a theme that is not owned falls back to the free one.
+  const { themeKey, setTheme } = useTheme();
+  const ownedThemes = useOwnedThemes();
+  const shopLoaded = use$(shopStore$.items).length > 0;
+  useEffect(() => {
+    void fetchShop();
+  }, []);
+  useEffect(() => {
+    if (shopLoaded && !ownedThemes.has(themeKey)) setTheme(FREE_THEME);
+  }, [shopLoaded, ownedThemes, themeKey, setTheme]);
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
