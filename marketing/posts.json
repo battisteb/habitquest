@@ -9,7 +9,7 @@
   ],
   "c2-habitudes-niveau-1": [
     { "emoji": "🎮", "title": "5 habitudes <em>niveau 1</em>", "body": "Pour ne plus abandonner au bout de 3 jours." },
-    { "emoji": "💧", "title": "Un verre d'eau au réveil", "body": "10 secondes. Zéro excuse.", "xp": 20 },
+    { "emoji": "🛏️", "title": "Faire ton lit", "body": "1 minute. Première quête du jour validée.", "xp": 20 },
     { "emoji": "📚", "title": "Lire 1 page", "body": "Une seule. Le reste vient tout seul.", "xp": 40 },
     { "emoji": "🧘", "title": "Respirer 2 minutes", "body": "Avant d'ouvrir un réseau social.", "xp": 60 },
     { "emoji": "🏃", "title": "Marcher 10 minutes", "body": "Après le déjeuner.", "xp": 80 },
