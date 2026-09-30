@@ -6,7 +6,7 @@ Revue complète avant la sortie sur les stores, demandée par Battiste. Pour cha
 
 - **`scripts/smoke-web.js`** : se connecte puis ouvre les 38 écrans en français et en anglais. Il signale les erreurs JS, les clés de traduction affichées brutes, les débordements à 390 px, les mots coupés sur deux lignes et les écrans bloqués en chargement. Il a été lancé avant chaque déploiement et après chaque mise en prod ; résultat final : 0 problème.
 - **`scripts/demo/reset-local-demo.sql`** : remet le compte démo local dans un état récent, avec des séries à jour.
-- **Tests** : 311 tests Jest (contre 256 au début) et 202 assertions pgTAP réparties en 14 fichiers (contre 101 au début).
+- **Tests** : 311 tests Jest (contre 256 au début) et 189 assertions pgTAP réparties en 13 fichiers (contre 101 au début).
 
 ## Constats
 
