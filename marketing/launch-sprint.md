@@ -11,8 +11,8 @@ Objectif : publier **chaque jour** le même reel sur TikTok et Instagram (Reels)
 |---|---|---|---|
 | J-20 | `r1-ta-vie-est-un-rpg` | Tes habitudes méritent mieux qu'une checklist ⚔️ Chaque jour tu valides tes quêtes, tu gagnes de l'XP et ton héros évolue. Tu le jouerais ? 👇 | #habitquest #habittracker #gamification #pixelart #routine |
 | J-19 | `r21-journee-parfaite` | 5 sur 5. Le petit bruit de la série qui continue 🔥 | #habitquest #discipline #productivité #routine #selfimprovement |
-| J-18 | `r10-level-up-eau` | Niveau 6 grâce à… de l'eau 💧 Même les petites habitudes comptent. | #habitquest #hydratation #habitudes #gamification #pov |
-| J-17 | `r7-quetes-du-jour` | 3 nouvelles quêtes chaque matin. Tu les remplis juste en vivant ta journée 📜 | #habitquest #quetesdujour #rpg #routine #motivation |
+| J-18 | `r10-level-up-minuit` | Niveau 6 grâce à… une nuit de sommeil 🌙 Même les petites habitudes comptent. | #habitquest #sommeil #habitudes #gamification #pov |
+| J-17 | `r7-missions-du-jour` | 3 nouvelles missions chaque matin. Tu les remplis juste en vivant ta journée 📜 | #habitquest #missionsdujour #rpg #routine #motivation |
 | J-16 | `r9-serie-14-jours` | 14 jours d'affilée = un palier 🔥 C'est quoi ta plus longue série ? 👇 | #habitquest #serie #discipline #habittracker #challenge |
 | J-15 | `r3-mon-heros-evolue` | Mon héros monte de niveau parce que moi aussi. | #habitquest #pixelart #levelup #gamer #selfimprovement |
 | J-14 | `r16-cree-ta-quete` | Une quête en 10 secondes. C'est laquelle, ta première ? 👇 | #habitquest #nouvelleshabitudes #routine #productivité #tips |

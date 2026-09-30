@@ -109,7 +109,7 @@
       }
     ]
   },
-  "r7-quetes-du-jour": {
+  "r7-missions-du-jour": {
     "music": {
       "file": "assets/sounds/duel-music.m4a",
       "start": 20
@@ -118,7 +118,7 @@
       {
         "type": "card",
         "dur": 2,
-        "title": "Chaque matin,<br>3 nouvelles <em>quêtes</em> 📜"
+        "title": "Chaque matin,<br>3 nouvelles <em>missions</em> 📜"
       },
       {
         "type": "clip",
@@ -163,7 +163,7 @@
       }
     ]
   },
-  "r10-level-up-eau": {
+  "r10-level-up-minuit": {
     "music": {
       "file": "assets/sounds/duel-music.m4a",
       "start": 60
@@ -172,14 +172,14 @@
       {
         "type": "card",
         "dur": 2.2,
-        "title": "POV : tu passes <em>niveau 6</em><br>en buvant de l'eau 💧"
+        "title": "POV : tu passes <em>niveau 6</em><br>en allant te coucher 🌙"
       },
       {
         "type": "clip",
         "dur": 6.2,
         "src": "levelup",
         "start": 0.5,
-        "title": "Boire 2 L d'eau.<br><em>+16 XP.</em>"
+        "title": "Au lit avant minuit.<br><em>+16 XP.</em>"
       },
       {
         "type": "card",
@@ -347,7 +347,7 @@
         "dur": 6.5,
         "src": "create",
         "start": 0.3,
-        "title": "Nom, catégorie, fréquence,<br><em>emoji</em>. C'est tout."
+        "title": "Un nom, une catégorie,<br>une fréquence. <em>C'est tout.</em>"
       },
       {
         "type": "card",
