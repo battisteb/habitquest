@@ -219,7 +219,8 @@ export function HabitCard({
   const isWeekly = frequency !== 'daily';
   const weeklyTarget = isWeekly ? getWeeklyTarget(frequency) : 1;
   const isWeeklyDone = isWeekly && weekCompletionCount >= weeklyTarget;
-  const effectiveDone = isWeekly ? isWeeklyDone : isCompletedToday;
+  // A weekly quest is validated at most once a day (server rule), like a daily one.
+  const effectiveDone = isWeekly ? isWeeklyDone || isCompletedToday : isCompletedToday;
 
   // Entry animation (RN Animated — staggered slide-up + fade)
   const slideY = useRef(new RNAnimated.Value(18)).current;

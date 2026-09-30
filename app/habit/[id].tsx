@@ -248,11 +248,14 @@ export default function HabitDetailScreen() {
     flexDirection: 'row',
     gap: spacing.sm,
   },
+  bottomActions: {
+    gap: spacing.xs,
+    marginTop: 'auto',
+    marginBottom: spacing.lg,
+  },
   bottomRow: {
     flexDirection: 'row',
     gap: spacing.sm,
-    marginTop: 'auto',
-    marginBottom: spacing.lg,
   },
 }), [themeKey]);
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -506,25 +509,27 @@ export default function HabitDetailScreen() {
         </View>
       )}
 
-      <View style={styles.bottomRow}>
-        <PixelButton
-          title={T.habit_detail_btn_edit}
-          onPress={() => router.push(`/habit/edit/${habit.id}`)}
-          variant="ghost"
-          style={{ flex: 1 }}
-        />
+      {/* Three buttons in one row left ~60 px per label: "MODIFIE/R" wrapped mid-word. */}
+      <View style={styles.bottomActions}>
         <PixelButton
           title={isPaused ? T.habit_detail_btn_resume : T.habit_detail_btn_pause}
           onPress={handlePauseResume}
           variant="secondary"
-          style={{ flex: 1 }}
         />
-        <PixelButton
-          title={T.habit_detail_btn_archive}
-          onPress={handleArchive}
-          variant="ghost"
-          style={{ flex: 1 }}
-        />
+        <View style={styles.bottomRow}>
+          <PixelButton
+            title={T.habit_detail_btn_edit}
+            onPress={() => router.push(`/habit/edit/${habit.id}`)}
+            variant="ghost"
+            style={{ flex: 1 }}
+          />
+          <PixelButton
+            title={T.habit_detail_btn_archive}
+            onPress={handleArchive}
+            variant="ghost"
+            style={{ flex: 1 }}
+          />
+        </View>
       </View>
       {/* Reminder */}
       <Pressable

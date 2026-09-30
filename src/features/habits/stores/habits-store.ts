@@ -77,6 +77,8 @@ export function isHabitCompletedEnough(habitId: string): boolean {
   if (frequency === 'daily') {
     return !!habitsStore$.todayCompletions.get()[habitId];
   }
+  // "N times a week" = N different days: done for today once validated today.
+  if (habitsStore$.todayCompletions.get()[habitId]) return true;
   const count = habitsStore$.weekCompletions.get()[habitId] ?? 0;
   return count >= getWeeklyTarget(frequency);
 }
@@ -242,7 +244,8 @@ export async function completeHabit(
     // Already completed today?
     if (habitsStore$.todayCompletions.get()[habitId]) return;
   } else {
-    // Already hit weekly target?
+    // Already validated today, or weekly target already hit?
+    if (habitsStore$.todayCompletions.get()[habitId]) return;
     const weekCount = habitsStore$.weekCompletions.get()[habitId] ?? 0;
     if (weekCount >= getWeeklyTarget(frequency)) return;
   }
