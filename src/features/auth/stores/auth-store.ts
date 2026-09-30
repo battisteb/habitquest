@@ -37,14 +37,35 @@ export async function initAuth() {
   });
 }
 
+/** Hero names: 3 to 20 letters, digits or _, unique. Same rules at sign-up and in profile edit. */
+export const USERNAME_MIN = 3;
+export const USERNAME_MAX = 20;
+
+export function usernameProblem(name: string): 'length' | 'chars' | null {
+  if (name.length < USERNAME_MIN || name.length > USERNAME_MAX) return 'length';
+  if (!/^[a-zA-Z0-9_]+$/.test(name)) return 'chars';
+  return null;
+}
+
 export async function signUp(email: string, password: string, username: string) {
   authStore$.isLoading.set(true);
   try {
+    const name = username.trim();
+    const problem = usernameProblem(name);
+    if (problem) {
+      throw Object.assign(new Error('Invalid hero name'), {
+        code: problem === 'chars' ? 'username_chars' : 'username_invalid',
+      });
+    }
+    const { data: available } = await supabase.rpc('username_available', { p_username: name });
+    if (available === false) {
+      throw Object.assign(new Error('Hero name taken'), { code: 'username_taken' });
+    }
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { username },
+        data: { username: name },
       },
     });
     if (error) throw error;

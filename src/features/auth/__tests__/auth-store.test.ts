@@ -77,6 +77,7 @@ describe('authStore$', () => {
   it('signUp passes username in metadata', async () => {
     const { supabase } = require('../../../lib/supabase/client');
     supabase.auth.signUp.mockResolvedValue({ error: null });
+    supabase.rpc.mockResolvedValue({ data: true, error: null });
 
     const { signUp } = require('../stores/auth-store');
     await signUp('test@test.com', 'password', 'hero123');
@@ -85,6 +86,25 @@ describe('authStore$', () => {
       email: 'test@test.com',
       password: 'password',
       options: { data: { username: 'hero123' } },
+    });
+  });
+
+  describe('hero name at sign-up', () => {
+    it('refuses a name that is already taken, before creating the account', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.auth.signUp.mockClear();
+      supabase.rpc.mockResolvedValue({ data: false, error: null });
+      const { signUp } = require('../stores/auth-store');
+      await expect(signUp('a@b.co', 'password', 'Zelda')).rejects.toMatchObject({ code: 'username_taken' });
+      expect(supabase.rpc).toHaveBeenCalledWith('username_available', { p_username: 'Zelda' });
+      expect(supabase.auth.signUp).not.toHaveBeenCalled();
+    });
+
+    it('refuses names shorter than 3 or longer than 20 characters', async () => {
+      const { signUp } = require('../stores/auth-store');
+      await expect(signUp('a@b.co', 'password', 'ab')).rejects.toMatchObject({ code: 'username_invalid' });
+      await expect(signUp('a@b.co', 'password', 'x'.repeat(21))).rejects.toMatchObject({ code: 'username_invalid' });
+      await expect(signUp('a@b.co', 'password', 'Sir Zelda!')).rejects.toMatchObject({ code: 'username_chars' });
     });
   });
 

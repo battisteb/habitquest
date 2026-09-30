@@ -16,7 +16,7 @@ import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
-import { authStore$ } from '../../src/features/auth/stores/auth-store';
+import { authStore$, usernameProblem } from '../../src/features/auth/stores/auth-store';
 import { avatarConfigStore$, saveAvatarConfig } from '../../src/features/avatar/stores/avatar-config-store';
 import { supabase } from '../../src/lib/supabase/client';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
@@ -198,11 +198,12 @@ export default function EditProfileScreen() {
       Alert.alert(T.profile_edit_invalid_title, T.profile_edit_invalid_empty);
       return;
     }
-    if (trimmed.length < 3) {
-      Alert.alert(T.profile_edit_invalid_title, T.profile_edit_invalid_short);
+    const problem = usernameProblem(trimmed);
+    if (problem === 'length') {
+      Alert.alert(T.profile_edit_invalid_title, T.auth_err_username_invalid);
       return;
     }
-    if (!/^[a-zA-Z0-9_]+$/.test(trimmed)) {
+    if (problem === 'chars') {
       Alert.alert(T.profile_edit_invalid_title, T.profile_edit_invalid_chars);
       return;
     }
