@@ -77,6 +77,16 @@ serve(async (req: Request) => {
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
+  // Scheduled job, server-to-server only: it pushes to every player, so
+  // anyone holding the public anon key could otherwise spam the whole base.
+  // The app already schedules these reminders locally (notification-service).
+  if (!serviceRoleKey || req.headers.get('Authorization') !== `Bearer ${serviceRoleKey}`) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
   if (!supabaseUrl || !serviceRoleKey) {
     console.error('weekly-reset: missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
     return new Response(
