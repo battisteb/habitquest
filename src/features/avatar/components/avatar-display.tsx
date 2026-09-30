@@ -1,11 +1,6 @@
-import React from 'react';
-import { Platform, View, Text, StyleSheet } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-} from 'react-native-reanimated';
+import { Text, StyleSheet } from 'react-native';
+import { PixelFrame, shade } from '../../../ui/components/pixel-frame';
+import { colors } from '../../../ui/theme/tokens';
 import { getAvatarStage } from '../utils/avatar-evolution';
 
 interface AvatarDisplayProps {
@@ -16,56 +11,23 @@ interface AvatarDisplayProps {
 const SIZES = { sm: 48, md: 80, lg: 120 } as const;
 const FONT_SIZES = { sm: 24, md: 40, lg: 64 } as const;
 
+/** Rank emblem in a stepped pixel frame of the rank color (no round aura: pixel direction). */
 export function AvatarDisplay({ level, size = 'md' }: AvatarDisplayProps) {
   const stage = getAvatarStage(level);
   const dim = SIZES[size];
-  const fontSize = FONT_SIZES[size];
-  const pulse = useSharedValue(1);
-
-  React.useEffect(() => {
-    pulse.value = withRepeat(withTiming(1.06, { duration: 1800 }), -1, true);
-  }, [pulse]);
-
-  const auraStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
-  }));
-
-  const auraShadow = Platform.select({
-    native: { shadowColor: stage.aura, shadowOpacity: 0.8, shadowRadius: 12, elevation: 8 },
-    web: { boxShadow: `0 0 12px ${stage.aura}` },
-  });
-
   return (
-    <View style={[styles.container, { width: dim, height: dim }]}>
-      <Animated.View
-        style={[
-          styles.auraRing,
-          {
-            width: dim,
-            height: dim,
-            borderRadius: dim / 2,
-            borderColor: stage.aura,
-            backgroundColor: stage.aura + '22',
-          },
-          auraStyle,
-          auraShadow,
-        ]}
-      />
-      <Text style={[styles.emoji, { fontSize }]}>{stage.emoji}</Text>
-    </View>
+    <PixelFrame
+      borderColor={stage.aura}
+      backgroundColor={shade(colors.background, 0.8)}
+      contentStyle={[styles.face, { width: dim, height: dim }]}
+      testID="rank-emblem"
+    >
+      <Text style={[styles.emoji, { fontSize: FONT_SIZES[size] }]}>{stage.emoji}</Text>
+    </PixelFrame>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  auraRing: {
-    position: 'absolute',
-    borderWidth: 3,
-  },
-  emoji: {
-    textAlign: 'center',
-  },
+  face: { alignItems: 'center', justifyContent: 'center' },
+  emoji: { textAlign: 'center' },
 });
