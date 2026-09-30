@@ -6,6 +6,8 @@ const T = STRINGS_FOR_TESTS.fr;
 
 describe('authErrorMessage', () => {
   it.each([
+    [{ code: 'username_taken', message: 'Hero name taken' }, T.auth_err_username_taken],
+    [{ code: 'username_invalid', message: 'Invalid hero name' }, T.auth_err_username_invalid],
     [{ code: 'invalid_credentials', message: 'Invalid login credentials' }, T.auth_err_invalid_credentials],
     [{ message: 'Invalid login credentials' }, T.auth_err_invalid_credentials],
     [{ code: 'user_already_exists', message: 'User already registered' }, T.auth_err_already_exists],

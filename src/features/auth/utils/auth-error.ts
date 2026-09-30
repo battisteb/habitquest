@@ -9,6 +9,9 @@ export function authErrorMessage(T: Strings, error: unknown): string {
   const code = e?.code ?? '';
   const message = (e?.message ?? '').toLowerCase();
 
+  if (code === 'username_taken') return T.auth_err_username_taken;
+  if (code === 'username_invalid') return T.auth_err_username_invalid;
+  if (code === 'username_chars') return T.profile_edit_invalid_chars;
   if (code === 'invalid_credentials' || message.includes('invalid login credentials')) {
     return T.auth_err_invalid_credentials;
   }
