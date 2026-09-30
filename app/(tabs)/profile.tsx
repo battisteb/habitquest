@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { useT } from '../../src/lib/i18n';
 import { PixelFrame } from '../../src/ui/components/pixel-frame';
+import { PixelProgress } from '../../src/ui/components/pixel-progress';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
@@ -127,32 +128,33 @@ export default function ProfileScreen() {
     letterSpacing: 1,
   },
   stageCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: spacing.sm,
-    backgroundColor: colors.surface,
-    borderRadius: 0,
-    borderWidth: 2,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+  },
+  stageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
   },
   stageInfo: {
     flex: 1,
     gap: spacing.xs,
   },
   stageTitle: {
-    fontSize: pixelSize(fontSizes.sm),
+    fontSize: pixelSize(fontSizes.lg),
     fontFamily: fonts.bold,
-    letterSpacing: 1,
+    letterSpacing: 2,
   },
   stageDescription: {
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.sm,
     color: colors.textSecondary,
   },
   stageNext: {
-    fontSize: fontSizes.xs,
+    fontSize: pixelSize(fontSizes.xs),
+    fontFamily: fonts.bold,
     color: colors.textMuted,
-    letterSpacing: 0.5,
+    letterSpacing: 1,
   },
 }), [themeKey]);
   const { profile, xpForNextLevel, xpProgress, isLoading } = useProfileStats();
@@ -228,20 +230,30 @@ export default function ProfileScreen() {
             </Pressable>
 
             {/* Avatar evolution stage */}
-            <View style={[styles.stageCard, { borderColor: avatarStage.aura }]}>
-              <AvatarDisplay level={level} size="sm" />
-              <View style={styles.stageInfo}>
-                <Text style={[styles.stageTitle, { color: avatarStage.aura }]}>
-                  {titleLabel(T, avatarStage.title)}
-                </Text>
-                <Text style={styles.stageDescription}>{stageDescription(T, avatarStage.title, avatarStage.description)}</Text>
-                {nextAvatarStage !== null && (
+            <PixelFrame borderColor={avatarStage.aura} backgroundColor={colors.surface} contentStyle={styles.stageCard}>
+              <View style={styles.stageRow}>
+                <AvatarDisplay level={level} size="sm" />
+                <View style={styles.stageInfo}>
+                  <Text style={[styles.stageTitle, { color: avatarStage.aura }]}>
+                    {titleLabel(T, avatarStage.title).toUpperCase()}
+                  </Text>
+                  <Text style={styles.stageDescription}>{stageDescription(T, avatarStage.title, avatarStage.description)}</Text>
+                </View>
+              </View>
+              {nextAvatarStage !== null && (
+                <>
+                  <PixelProgress
+                    progress={(level - avatarStage.minLevel) / Math.max(nextAvatarStage.minLevel - avatarStage.minLevel, 1)}
+                    color={nextAvatarStage.aura}
+                    segments={10}
+                    height={6}
+                  />
                   <Text style={styles.stageNext}>
                     {T.profile_next_stage.replace('{title}', titleLabel(T, nextAvatarStage.title)).replace('{level}', String(nextAvatarStage.minLevel))}
                   </Text>
-                )}
-              </View>
-            </View>
+                </>
+              )}
+            </PixelFrame>
 
             {/* XP Bar */}
             <Pressable onPress={() => router.push('/xp-journey')}>
