@@ -35,6 +35,7 @@ import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
+import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { titleLabel } from '../../src/lib/i18n/labels';
 import { shareInvite } from '../../src/features/social/utils/invite';
 
@@ -278,6 +279,7 @@ export default function SocialScreen() {
 }), [themeKey]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const myId = use$(authStore$.user)?.id;
   const [activeTab, setActiveTab] = useState<Tab>('leaderboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -312,7 +314,8 @@ export default function SocialScreen() {
   const TABS: { key: Tab; label: string; badge?: number }[] = [
     { key: 'leaderboard', label: T.social_tab_rank },
     { key: 'friends', label: T.social_tab_friends, badge: pendingReceived.length },
-    { key: 'challenges', label: T.social_tab_duels, badge: pendingChallenges.length },
+    // Only challenges waiting for my answer, not the ones I sent.
+    { key: 'challenges', label: T.social_tab_duels, badge: pendingChallenges.filter((c) => c.opponent_id === myId).length },
     { key: 'streaks', label: T.social_tab_streaks },
     { key: 'search', label: T.social_tab_search },
   ];
@@ -562,12 +565,11 @@ export default function SocialScreen() {
           </View>
         }
         renderItem={({ item }) => {
-          const userId = friendsStore$.friends.get()[0]; // just for type safety
-          const isCreator = (item as any).section !== undefined;
           const opponent = (item as any).opponent_profile;
           const creator = (item as any).creator_profile;
           const section = (item as any).section as string;
           const challenge = item as any;
+          const iAmOpponent = challenge.opponent_id === myId;
 
           const sectionColor = section === 'pending' ? colors.accent
             : section === 'active' ? colors.success
@@ -577,9 +579,13 @@ export default function SocialScreen() {
             <View style={[styles.challengeCard, { borderColor: sectionColor + '88' }]}>
               <View style={styles.challengeHeader}>
                 <Text style={[styles.challengeStatus, { color: sectionColor }]}>
-                  {section.toUpperCase()}
+                  {section === 'pending' ? T.social_challenge_pending
+                    : section === 'active' ? T.social_challenge_active
+                    : T.social_challenge_completed}
                 </Text>
-                <Text style={styles.challengeType}>{challenge.type?.toUpperCase()}</Text>
+                <Text style={styles.challengeType}>
+                  {(challenge.type === 'xp_race' ? T.challenge_type_xp_label : T.challenge_type_completion_label).toUpperCase()}
+                </Text>
               </View>
               <View style={styles.challengeVs}>
                 <Text style={styles.vsName}>{creator?.username ?? '—'}</Text>
@@ -596,10 +602,17 @@ export default function SocialScreen() {
                 </View>
                 <Text style={styles.progressVal}>{challenge.opponent_progress}/{challenge.target}</Text>
               </View>
-              {section === 'pending' && (
+              {/* Only the challenged friend can accept; the sender can call it off until then. */}
+              {section === 'pending' && iAmOpponent && (
                 <View style={styles.challengeActions}>
                   <PixelButton title={T.social_duel_accept} onPress={() => respondToChallenge(challenge.id, true)} style={{ flex: 1 }} />
                   <PixelButton title={T.social_duel_decline} onPress={() => respondToChallenge(challenge.id, false)} variant="ghost" style={{ flex: 1 }} />
+                </View>
+              )}
+              {section === 'pending' && !iAmOpponent && (
+                <View style={styles.challengeActions}>
+                  <Text style={[styles.wager, { flex: 1 }]}>{T.social_challenge_waiting}</Text>
+                  <PixelButton title={T.social_challenge_cancel} onPress={() => respondToChallenge(challenge.id, false)} variant="ghost" />
                 </View>
               )}
               {challenge.gold_wager > 0 && (

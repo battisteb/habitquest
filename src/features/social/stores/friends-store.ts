@@ -120,6 +120,10 @@ export async function sendFriendRequest(addresseeId: string) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
+  // They already asked us: answer their request instead (the server would too).
+  const incoming = friendsStore$.pendingReceived.get().find((f) => f.requester_id === addresseeId);
+  if (incoming) return respondToRequest(incoming.id, true);
+
   const { error } = await supabase.from('friendships').insert({
     requester_id: userId,
     addressee_id: addresseeId,

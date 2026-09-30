@@ -243,6 +243,11 @@ const FR = {
   social_duel_vs: 'VS',
   social_duel_accept: 'Accepter',
   social_duel_decline: 'Refuser',
+  social_challenge_pending: 'EN ATTENTE',
+  social_challenge_active: 'EN COURS',
+  social_challenge_completed: 'TERMINÉ',
+  social_challenge_waiting: 'En attente de sa réponse…',
+  social_challenge_cancel: 'Annuler',
   // Social — streaks
   social_streaks_empty: 'Ajoute des amis pour comparer vos séries !',
   // Social — search
@@ -1216,6 +1221,11 @@ const EN = {
   social_duel_vs: 'VS',
   social_duel_accept: 'Accept',
   social_duel_decline: 'Decline',
+  social_challenge_pending: 'PENDING',
+  social_challenge_active: 'ACTIVE',
+  social_challenge_completed: 'FINISHED',
+  social_challenge_waiting: 'Waiting for their answer…',
+  social_challenge_cancel: 'Cancel',
   // Social — streaks
   social_streaks_empty: 'Add friends to compare streaks!',
   // Social — search

@@ -783,6 +783,7 @@ export type Database = {
       };
       get_coop_challenges: { Args: Record<PropertyKey, never>; Returns: Json };
       respond_coop_challenge: { Args: { p_accept: boolean; p_id: string }; Returns: undefined };
+      settle_expired_challenges: { Args: Record<PropertyKey, never>; Returns: number };
       activate_streak_freeze: { Args: Record<PropertyKey, never>; Returns: Json };
       add_freeze_token: { Args: { p_user_id: string }; Returns: undefined };
       add_gold: { Args: { p_amount: number; p_user_id: string }; Returns: undefined };
