@@ -214,7 +214,11 @@ export default function HabitHistoryScreen() {
   const streak = habitId ? streaks[habitId] : undefined;
 
   useEffect(() => {
-    if (!habitId) return;
+    // Opened without a quest (e.g. a bare web link): show the empty history.
+    if (!habitId) {
+      setLoading(false);
+      return;
+    }
 
     const ninetyDaysAgo = dates[0];
 
