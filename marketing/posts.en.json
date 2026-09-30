@@ -1,0 +1,116 @@
+{
+  "c1-habitquest": [
+    {
+      "emoji": "⚔️",
+      "title": "Your habits become <em>quests</em>.",
+      "body": "The habit tracker that plays like a pixel-art RPG."
+    },
+    {
+      "image": "today",
+      "title": "1 habit = 1 quest",
+      "body": "Complete it every day. <b>+XP, +gold</b> every time."
+    },
+    {
+      "image": "stats",
+      "title": "Keep your streak 🔥",
+      "body": "Busy day? <b>1 free freeze</b> a week protects your progress."
+    },
+    {
+      "image": "profile",
+      "title": "Your hero levels up",
+      "body": "Rank up: Novice, Apprentice, Warrior… <b>Legend</b>."
+    },
+    {
+      "image": "arena",
+      "title": "Fight every day ⚔️",
+      "body": "A daily arena, duels and co-op with friends. <b>Your habits power your attacks.</b>"
+    },
+    {
+      "emoji": "🚀",
+      "title": "Coming soon to <em>iOS</em> & <em>Android</em>",
+      "body": "Follow so you don't miss the launch.",
+      "cta": "LINK IN BIO ▲"
+    }
+  ],
+  "c2-level-1-habits": [
+    {
+      "emoji": "🎮",
+      "title": "5 <em>level 1</em> habits",
+      "body": "So you stop quitting after 3 days."
+    },
+    {
+      "emoji": "🛏️",
+      "title": "Make your bed",
+      "body": "1 minute. First quest of the day: done.",
+      "xp": 20
+    },
+    {
+      "emoji": "📚",
+      "title": "Read 1 page",
+      "body": "Just one. The rest follows.",
+      "xp": 40
+    },
+    {
+      "emoji": "🧘",
+      "title": "Breathe for 2 minutes",
+      "body": "Before opening social media.",
+      "xp": 60
+    },
+    {
+      "emoji": "🏃",
+      "title": "Walk for 10 minutes",
+      "body": "After lunch.",
+      "xp": 80
+    },
+    {
+      "emoji": "📵",
+      "title": "No phone in bed",
+      "body": "Your sleep will thank you.",
+      "xp": 100
+    },
+    {
+      "emoji": "⬆️",
+      "title": "Start small. <em>Level up.</em>",
+      "body": "Save this post for later 📌",
+      "cta": "LEVEL UP"
+    }
+  ],
+  "c4-ranks": [
+    {
+      "emoji": "🏆",
+      "title": "From <em>Novice</em> to <em>Legend</em>",
+      "body": "Which rank would you be today?"
+    },
+    {
+      "emoji": "🪵",
+      "title": "Novice · lvl 1",
+      "body": "Everyone starts here."
+    },
+    {
+      "emoji": "📜",
+      "title": "Apprentice · lvl 3",
+      "body": "Your first streaks hold."
+    },
+    {
+      "emoji": "⚔️",
+      "title": "Warrior · lvl 5",
+      "body": "You've proven yourself."
+    },
+    {
+      "emoji": "🛡️",
+      "title": "Knight · lvl 7",
+      "body": "Discipline is your armor."
+    },
+    {
+      "emoji": "👑",
+      "title": "Champion · lvl 9",
+      "body": "You inspire others."
+    },
+    {
+      "emoji": "🌟",
+      "title": "Legend · lvl 11",
+      "body": "Drop your current rank in the comments 👇",
+      "cta": "COMING SOON"
+    }
+  ]
+}

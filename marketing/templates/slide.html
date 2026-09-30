@@ -69,7 +69,7 @@
       ${s.xp != null ? `<div class="xpbar"><i style="width:${s.xp}%"></i></div>` : ''}
       ${s.cta ? `<div class="cta">${s.cta}</div>` : ''}`;
     c.innerHTML = s.image
-      ? `<div class="row"><div class="text">${text}</div><div class="phone"><img src="../assets/screens/${s.image}.png" /></div></div>`
+      ? `<div class="row"><div class="text">${text}</div><div class="phone"><img src="../assets/${s.screens || 'screens'}/${s.image}.png" /></div></div>`
       : text;
   };
 </script>

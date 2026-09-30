@@ -5,6 +5,9 @@
  *   CHROME="C:/Program Files/Google/Chrome/Application/chrome.exe" node marketing/render-posts.js
  *
  * Output: marketing/exports/posts/<carousel>/<n>.png (git-ignored).
+ *
+ * English version: LANG=en node marketing/render-posts.js
+ * → posts.en.json, screenshots from assets/screens-en, output exports/posts-en.
  */
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +15,10 @@ const { pathToFileURL } = require('url');
 const puppeteer = require('puppeteer-core');
 
 const root = __dirname;
-const posts = JSON.parse(fs.readFileSync(path.join(root, 'posts.json'), 'utf8'));
+const lang = process.env.LANG === 'en' ? 'en' : 'fr';
+const posts = JSON.parse(fs.readFileSync(path.join(root, lang === 'en' ? 'posts.en.json' : 'posts.json'), 'utf8'));
+const screens = lang === 'en' ? 'screens-en' : 'screens';
+const exportsDir = lang === 'en' ? 'posts-en' : 'posts';
 const template = pathToFileURL(path.join(root, 'templates', 'slide.html')).href;
 const only = process.argv[2];
 
@@ -27,11 +33,11 @@ const only = process.argv[2];
 
   for (const [name, slides] of Object.entries(posts)) {
     if (only && name !== only) continue;
-    const outDir = path.join(root, 'exports', 'posts', name);
+    const outDir = path.join(root, 'exports', exportsDir, name);
     fs.mkdirSync(outDir, { recursive: true });
     for (let i = 0; i < slides.length; i++) {
       await page.goto(template, { waitUntil: 'networkidle0' });
-      await page.evaluate((s) => window.render(s), { ...slides[i], index: i + 1, total: slides.length });
+      await page.evaluate((s) => window.render(s), { ...slides[i], screens, index: i + 1, total: slides.length });
       await page.evaluate(() => document.fonts.ready);
       await page.evaluate(() => Promise.all([...document.images].map((img) => img.decode().catch(() => {}))));
       await page.screenshot({ path: path.join(outDir, `${i + 1}.png`) });
