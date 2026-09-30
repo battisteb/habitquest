@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Pressable,
   TextInput,
-  ScrollView,
 } from 'react-native';
 import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../ui/theme/tokens';
 import type { HabitContent, HabitContentType, ChecklistItem } from '../types/habit-content';

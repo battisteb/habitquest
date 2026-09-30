@@ -2,7 +2,6 @@ import { observable } from '@legendapp/state';
 import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
-import { getLevelForXp } from '../../../lib/constants/game-config';
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
 import { resetOnSignOut } from '../../../lib/storage/user-data';

@@ -14,7 +14,6 @@ import { useLang, useT } from '../../src/lib/i18n';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { use$ } from '@legendapp/state/react';
-import { PixelAvatar } from '../../src/features/avatar/renderer/pixel-avatar';
 import { EvolvedAvatar } from '../../src/features/avatar/components/evolved-avatar';
 import { ShopItemCard } from '../../src/features/shop/components/shop-item-card';
 import {

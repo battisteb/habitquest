@@ -1,4 +1,4 @@
-import { observable, when } from '@legendapp/state';
+import { observable } from '@legendapp/state';
 import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
 import { persistPlugin } from '../../../lib/storage/persist';
@@ -20,7 +20,6 @@ import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type Habit = Omit<Database['public']['Tables']['habits']['Row'], 'content'> & { content?: HabitContent | null };
 type Streak = Database['public']['Tables']['streaks']['Row'];
-type Completion = Database['public']['Tables']['completions']['Row'];
 
 interface HabitsState {
   habits: Habit[];

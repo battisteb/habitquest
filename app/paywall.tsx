@@ -361,6 +361,5 @@ export default function PaywallScreen() {
 }
 
 const gold = '#FFD700';
-const premiumPurple = '#9B59B6';
 
 

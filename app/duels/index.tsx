@@ -13,7 +13,7 @@ import { showInterstitial } from '../../src/features/monetization/utils/ad-servi
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
-import { attackName, attackDescription } from '../../src/lib/i18n/labels';
+import { attackName } from '../../src/lib/i18n/labels';
 
 export default function DuelsIndexScreen() {
   const T = useT();

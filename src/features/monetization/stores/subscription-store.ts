@@ -1,7 +1,5 @@
 import { observable } from '@legendapp/state';
 import { Platform } from 'react-native';
-import { supabase } from '../../../lib/supabase/client';
-import { authStore$ } from '../../auth/stores/auth-store';
 
 // react-native-purchases is native-only — lazy require to avoid web crashes
 const isNative = Platform.OS !== 'web';
@@ -72,7 +70,7 @@ export async function initPurchases(userId: string): Promise<void> {
     _initialized = true;
 
     await refreshSubscriptionStatus();
-  } catch (e) {
+  } catch {
     // Non-critical — app works without subscription
   }
 }

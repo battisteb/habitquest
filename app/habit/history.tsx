@@ -5,11 +5,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
-import { lang$ } from '../../src/lib/i18n';
 import { supabase } from '../../src/lib/supabase/client';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
-import { useT } from '../../src/lib/i18n';
+import { useT, lang$ } from '../../src/lib/i18n';
 
 const DOT_SIZE = 28;
 const DOT_GAP = 3;
