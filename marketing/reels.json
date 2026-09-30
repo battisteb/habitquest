@@ -163,7 +163,7 @@
       }
     ]
   },
-  "r10-level-up-eau": {
+  "r10-level-up-minuit": {
     "music": {
       "file": "assets/sounds/duel-music.m4a",
       "start": 60
@@ -172,14 +172,14 @@
       {
         "type": "card",
         "dur": 2.2,
-        "title": "POV : tu passes <em>niveau 6</em><br>en buvant de l'eau 💧"
+        "title": "POV : tu passes <em>niveau 6</em><br>en allant te coucher 🌙"
       },
       {
         "type": "clip",
         "dur": 6.2,
         "src": "levelup",
         "start": 0.5,
-        "title": "Boire 2 L d'eau.<br><em>+16 XP.</em>"
+        "title": "Au lit avant minuit.<br><em>+16 XP.</em>"
       },
       {
         "type": "card",
