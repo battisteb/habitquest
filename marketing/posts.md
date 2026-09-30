@@ -15,7 +15,7 @@ Les visuels C1 et C2 sont générés automatiquement (`marketing/templates/`). D
 
 ## C2 — « 5 habitudes niveau 1 pour commencer » — 🖼️ visuels fournis
 1. **5 habitudes niveau 1** (pour ne plus abandonner au bout de 3 jours)
-2. 💧 **Boire un verre d'eau au réveil** — 10 secondes, zéro excuse.
+2. 🛏️ **Faire ton lit** — 1 minute, première quête du jour validée.
 3. 📚 **Lire 1 page** — une seule. Le reste vient tout seul.
 4. 🧘 **Respirer 2 minutes** — avant d'ouvrir un réseau social.
 5. 🏃 **Marcher 10 minutes** — après le déjeuner.
