@@ -12,10 +12,9 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
-import { useT } from '../../src/lib/i18n';
+import { useT, lang$ } from '../../src/lib/i18n';
 import { HABIT_TEMPLATES } from '../../src/lib/constants/habit-templates';
 import { CATEGORY_CONFIG } from '../../src/lib/constants/categories';
-import { lang$ } from '../../src/lib/i18n';
 import { categoryLabel } from '../../src/lib/i18n/labels';
 import { use$ } from '@legendapp/state/react';
 

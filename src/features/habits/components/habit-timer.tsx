@@ -136,7 +136,6 @@ export function HabitTimer({ duration, label, onComplete }: HabitTimerProps) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const progress = 1 - remaining / duration;
-  const circumference = 2 * Math.PI * 54; // radius 54
 
   const stop = useCallback(() => {
     if (intervalRef.current) {

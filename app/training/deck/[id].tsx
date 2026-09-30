@@ -192,7 +192,6 @@ export default function DeckReviewScreen() {
   const habits = use$(habitsStore$.habits);
 
   const deck = decks.find((d) => d.id === id);
-  const dueIndices = deck ? getDueCards(deck) : [];
 
   const [queue, ] = useState<number[]>(() => {
     if (!deck) return [];

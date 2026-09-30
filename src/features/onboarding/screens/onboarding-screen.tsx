@@ -34,7 +34,6 @@ interface SwatchRowProps {
 }
 
 function SwatchRow({ label, swatches, selected, onSelect }: SwatchRowProps) {
-  const styles = createStyles();
   return (
     <View style={swatchStyles.section}>
       <Text style={swatchStyles.label}>{label}</Text>

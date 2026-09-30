@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { storage } from '../../src/lib/storage/mmkv';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
-import { useT } from '../../src/lib/i18n';
+import { useT, lang$ } from '../../src/lib/i18n';
 import { HabitCard } from '../../src/features/habits/components/habit-card';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { XpToast } from '../../src/ui/animations/xp-toast';
@@ -24,7 +24,7 @@ import { useStreakRiskNotification } from '../../src/features/notifications/hook
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../src/features/habits/stores/burnout-store';
 import { brokenStreakStore$, dismissBrokenStreak, clearBrokenStreakForHabit } from '../../src/features/habits/stores/broken-streak-store';
-import { pinnedHabitsStore$, togglePinHabit, isHabitPinned } from '../../src/features/habits/stores/pinned-habits-store';
+import { pinnedHabitsStore$, togglePinHabit } from '../../src/features/habits/stores/pinned-habits-store';
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
@@ -58,7 +58,6 @@ const DAY_NAMES_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'F
 const MONTH_NAMES_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
 const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-import { lang$ } from '../../src/lib/i18n';
 import { categoryLabel } from '../../src/lib/i18n/labels';
 
 function todayLabel(): string {

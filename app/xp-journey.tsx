@@ -19,7 +19,6 @@ import {
   RANKS,
   getXpForLevel,
   getRankForLevel,
-  getXpForNextLevel,
   calculateXpEarned,
   XP_CONFIG,
 } from '../src/lib/constants/game-config';
@@ -412,7 +411,6 @@ export default function XpJourneyScreen() {
     1 + (data.bestStreak + 1) * XP_CONFIG.STREAK_MULTIPLIER_STEP,
     XP_CONFIG.STREAK_MULTIPLIER_CAP,
   );
-  const baseXp = XP_CONFIG.BASE_XP_PER_COMPLETION;
 
   // Chart max
   const chartMax = Math.max(...data.dailyXp.map((d) => d.xp), 1);
@@ -540,7 +538,6 @@ export default function XpJourneyScreen() {
             const rankLevelXp = getXpForLevel(r.minLevel);
             const isCurrentRank = rank.name === r.name;
             const isPast = level >= r.minLevel;
-            const isNext = nextRank ? level < nextRank.minLevel && level >= r.minLevel : false;
 
             return (
               <View key={r.name} style={styles.roadmapRow}>

@@ -4,7 +4,7 @@ import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../stores/subscription-store';
 import { shouldShowAds } from '../utils/ad-service';
 import { canPersonalizeAds } from '../utils/tracking-consent';
-import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
+import { colors, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';

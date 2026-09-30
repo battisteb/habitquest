@@ -308,8 +308,6 @@ export default function SocialScreen() {
     setRefreshing(false);
   };
 
-  const pendingCount = pendingReceived.length + pendingChallenges.length;
-  const challengeCount = activeChallenges.length + pendingChallenges.length;
 
   const TABS: { key: Tab; label: string; badge?: number }[] = [
     { key: 'leaderboard', label: T.social_tab_rank },
