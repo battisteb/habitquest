@@ -40,6 +40,8 @@ export async function fetchChallenges() {
 
   challengesStore$.isLoading.set(true);
   try {
+    // Challenges whose time is up are settled first (winner = the one ahead).
+    await supabase.rpc('settle_expired_challenges');
     const { data } = await supabase
       .from('challenges')
       .select(
