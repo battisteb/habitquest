@@ -49,7 +49,6 @@ export function HeroGreeting({ totalHabits, pendingStreaks, xp, level }: HeroGre
           <EvolvedAvatar
             level={level}
             size={52}
-            showAura={false}
             hat={equippedSlots?.hat?.item?.sprite_key}
             outfit={equippedSlots?.outfit?.item?.sprite_key}
             accessory={equippedSlots?.accessory?.item?.sprite_key}

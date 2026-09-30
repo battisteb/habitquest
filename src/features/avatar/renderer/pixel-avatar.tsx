@@ -19,6 +19,8 @@ export interface PixelAvatarProps {
   idleFrame?: number;
   /** Auto-bounce period in ms (default 700). Ignored when `idleFrame` is set. */
   idleIntervalMs?: number;
+  /** Hero only, without its square and background: for scenes such as HeroStage. */
+  bare?: boolean;
 }
 
 // Format: [x, y, color_key]
@@ -193,7 +195,7 @@ const OUTFIT_COLORS: Record<string, { primary: string; secondary: string }> = {
 // ──────────────────────────────────────────
 // Backgrounds
 // ──────────────────────────────────────────
-const BG_COLORS: Record<string, string[]> = {
+export const BG_COLORS: Record<string, string[]> = {
   bg_forest:    ['#2d5a1e', '#1a3a10'],
   bg_castle:    ['#4a4a5a', '#3a3a4a'],
   bg_volcano:   ['#5a1a0a', '#3a0a00'],
@@ -233,6 +235,7 @@ export function PixelAvatar({
   background,
   idleFrame,
   idleIntervalMs = 700,
+  bare = false,
 }: PixelAvatarProps) {
   // Auto-animate when caller doesn't pin the frame. Static frame for previews.
   const [autoFrame, setAutoFrame] = useState(0);
@@ -287,10 +290,14 @@ export function PixelAvatar({
   }
 
   return (
-    <View style={[styles.container, { width: size, height: size }]}>
+    <View style={[styles.container, bare && styles.bare, { width: size, height: size }]}>
       {/* Background */}
-      <View style={{ position: 'absolute', top: 0, left: 0, width: size, height: size, backgroundColor: bgColors[0] }} />
-      <View style={{ position: 'absolute', top: size * 0.6, left: 0, width: size, height: size * 0.4, backgroundColor: bgColors[1] }} />
+      {!bare && (
+        <>
+          <View style={{ position: 'absolute', top: 0, left: 0, width: size, height: size, backgroundColor: bgColors[0] }} />
+          <View style={{ position: 'absolute', top: size * 0.6, left: 0, width: size, height: size * 0.4, backgroundColor: bgColors[1] }} />
+        </>
+      )}
 
       {/* Accessory behind body (cape, wings, aura) */}
       {accessory && ACCESSORY_SPRITES[accessory] && renderPixels(ACCESSORY_SPRITES[accessory])}
@@ -313,5 +320,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 3,
     borderColor: '#2a2a4a',
+  },
+  bare: {
+    borderWidth: 0,
+    overflow: 'visible',
   },
 });
