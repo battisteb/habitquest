@@ -1,7 +1,8 @@
 /**
  * Smoke test of the web build: signs in with a test account, opens every
  * screen of app/ in French and English, and reports JS errors, i18n keys shown
- * as raw text and content overflowing a 390 px phone screen.
+ * as raw text, content overflowing a 390 px phone screen, words broken across
+ * lines and screens still loading.
  *
  *   npm i --no-save puppeteer-core
  *   SMOKE_EMAIL=… SMOKE_PASSWORD=… node scripts/smoke-web.js [baseUrl]
@@ -83,6 +84,17 @@ async function inspect(page) {
       overflow,
       pageScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       empty: texts.length === 0,
+      // A single word laid out on several lines, like "MODIFIE/R" in a narrow button.
+      brokenWords: texts
+        .filter((e) => /^[^\s]{4,}$/.test((e.textContent || '').trim()) && e.firstChild?.nodeType === 3)
+        .filter((e) => {
+          const range = document.createRange();
+          range.selectNodeContents(e.firstChild);
+          const lines = new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top)));
+          return lines.size > 1;
+        })
+        .map((e) => e.textContent.trim())
+        .slice(0, 5),
       // RN Web renders ActivityIndicator as role=progressbar.
       loading: [...document.querySelectorAll('[role="progressbar"]')].some((e) => e.getBoundingClientRect().width > 0),
     };
@@ -137,8 +149,8 @@ async function inspect(page) {
       await page.screenshot({ path: path.join(OUT, file) });
       const errs = errors.filter((e) => !ignored(e));
       results.push({ lang, route: label, url: page.url().replace(BASE, ''), errors: errs, ...found, screenshot: file });
-      const bad = errs.length || found.rawKeys.length || found.overflow.length || found.pageScroll || found.loading;
-      console.log(`${bad ? '✗' : '✓'} [${lang}] ${label}${bad ? ` — ${[...errs, ...found.rawKeys.map((k) => `key:${k}`), ...found.overflow.map((o) => `overflow:${o}`), found.pageScroll ? 'page scrolls sideways' : '', found.loading ? 'still loading' : ''].filter(Boolean).join(' | ')}` : ''}`);
+      const bad = errs.length || found.rawKeys.length || found.overflow.length || found.pageScroll || found.loading || found.brokenWords.length;
+      console.log(`${bad ? '✗' : '✓'} [${lang}] ${label}${bad ? ` — ${[...errs, ...found.rawKeys.map((k) => `key:${k}`), ...found.overflow.map((o) => `overflow:${o}`), found.pageScroll ? 'page scrolls sideways' : '', found.loading ? 'still loading' : '', ...found.brokenWords.map((w) => `broken word:${w}`)].filter(Boolean).join(' | ')}` : ''}`);
     };
 
     for (const route of PUBLIC_ROUTES) await visit(route, route);
@@ -178,7 +190,7 @@ async function inspect(page) {
   }
   await browser.close();
 
-  const bad = results.filter((r) => !r.skipped && (r.errors.length || r.rawKeys.length || r.overflow.length || r.pageScroll || r.loading));
+  const bad = results.filter((r) => !r.skipped && (r.errors.length || r.rawKeys.length || r.overflow.length || r.pageScroll || r.loading || r.brokenWords.length));
   const md = [
     `# Smoke test — ${BASE}`,
     '',
@@ -188,7 +200,7 @@ async function inspect(page) {
     '|---|---|---|---|',
     ...results.map((r) => r.skipped
       ? `| ${r.lang} | \`${r.route}\` | skipped: ${r.skipped} | |`
-      : `| ${r.lang} | \`${r.route}\` | ${[...r.errors, ...r.rawKeys.map((k) => `untranslated \`${k}\``), ...r.overflow.map((o) => `overflow « ${o} »`), r.pageScroll ? 'page scrolls sideways' : '', r.loading ? 'still loading' : ''].filter(Boolean).join('<br>') || '✓'} | ${r.screenshot} |`),
+      : `| ${r.lang} | \`${r.route}\` | ${[...r.errors, ...r.rawKeys.map((k) => `untranslated \`${k}\``), ...r.overflow.map((o) => `overflow « ${o} »`), r.pageScroll ? 'page scrolls sideways' : '', r.loading ? 'still loading' : '', ...r.brokenWords.map((w) => `word broken across lines « ${w} »`)].filter(Boolean).join('<br>') || '✓'} | ${r.screenshot} |`),
   ].join('\n');
   fs.writeFileSync(path.join(OUT, 'report.md'), md);
   fs.writeFileSync(path.join(OUT, 'report.json'), JSON.stringify(results, null, 2));

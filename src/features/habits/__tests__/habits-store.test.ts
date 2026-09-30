@@ -144,4 +144,35 @@ describe('habitsStore$', () => {
     expect(fromSpy).not.toHaveBeenCalled();
     expect(supabase.rpc).not.toHaveBeenCalledWith('complete_habit', expect.anything());
   });
+
+  describe('3 times a week', () => {
+    const weekly = {
+      id: 'w1', user_id: 'user-123', name: 'Gym', category: 'fitness', frequency: '3x_week',
+      is_archived: false, is_paused: false, paused_at: null, content: null, emoji: null,
+      created_at: new Date().toISOString(),
+    };
+
+    beforeEach(() => {
+      habitsStore$.habits.set([weekly]);
+      habitsStore$.weekCompletions.set({});
+    });
+
+    it('counts as done for today once validated today, even below the weekly target', () => {
+      const { isHabitCompletedEnough } = require('../stores/habits-store');
+      habitsStore$.weekCompletions.set({ w1: 1 });
+      expect(isHabitCompletedEnough('w1')).toBe(false);
+      habitsStore$.todayCompletions.set({ w1: true });
+      expect(isHabitCompletedEnough('w1')).toBe(true);
+    });
+
+    it('is not sent to the server a second time the same day', async () => {
+      habitsStore$.todayCompletions.set({ w1: true });
+      habitsStore$.weekCompletions.set({ w1: 1 });
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.rpc.mockClear();
+      const { completeHabit } = require('../stores/habits-store');
+      await completeHabit('w1');
+      expect(supabase.rpc).not.toHaveBeenCalled();
+    });
+  });
 });
