@@ -8,7 +8,7 @@ import { PixelFrame } from '../../src/ui/components/pixel-frame';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
-import { EvolvedAvatar } from '../../src/features/avatar/components/evolved-avatar';
+import { HeroStage } from '../../src/features/avatar/components/hero-stage';
 import { AvatarDisplay } from '../../src/features/avatar/components/avatar-display';
 import { getAvatarStage, getNextAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
@@ -211,7 +211,7 @@ export default function ProfileScreen() {
           <>
             {/* Clickable avatar → edit profile */}
             <Pressable style={styles.avatarSection} onPress={() => router.push('/profile/edit')}>
-              <EvolvedAvatar
+              <HeroStage
                 level={profile?.level ?? 1}
                 size={180}
                 hat={equippedHat}
