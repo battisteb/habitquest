@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   levelBadge: {
     width: 80,
     height: 80,
-    borderRadius: 40,
+    borderRadius: 0,
     backgroundColor: colors.accent,
     borderWidth: 4,
     borderColor: '#FFD700',

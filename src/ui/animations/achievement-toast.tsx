@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   badge: {
     width: 44,
     height: 44,
-    borderRadius: 22,
+    borderRadius: 0,
     backgroundColor: colors.accent + '22',
     borderWidth: 2,
     borderColor: colors.accent,

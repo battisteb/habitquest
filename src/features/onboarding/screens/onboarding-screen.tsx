@@ -55,7 +55,7 @@ const swatchStyles = StyleSheet.create({
   section: { gap: 4 },
   label: { fontSize: pixelSize(9), fontFamily: fonts.bold, color: colors.textMuted, letterSpacing: 2 },
   row: { flexDirection: 'row', gap: 8, paddingVertical: 4 },
-  swatch: { width: 32, height: 32, borderRadius: 16, borderWidth: 2, borderColor: 'transparent' },
+  swatch: { width: 32, height: 32, borderRadius: 0, borderWidth: 2, borderColor: 'transparent' },
   swatchSelected: { borderColor: '#ffffff', borderWidth: 3 },
 });
 
