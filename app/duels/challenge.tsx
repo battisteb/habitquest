@@ -7,6 +7,8 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { friendsStore$, fetchFriends } from '../../src/features/social/stores/friends-store';
 import { duelStore$, fetchUnlockedCategories, createDuel } from '../../src/features/duels/stores/duel-store';
+import { profileStore$ } from '../../src/features/gamification/stores/profile-store';
+import { LIMITS } from '../../src/features/monetization/utils/feature-gates';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
@@ -40,6 +42,7 @@ export default function ChallengeScreen() {
     borderRadius: 0,
     padding: spacing.sm,
     alignItems: 'center',
+    alignSelf: 'flex-start',
     minWidth: 80,
     gap: 2,
   },
@@ -75,6 +78,7 @@ export default function ChallengeScreen() {
   const [selectedFriendId, setSelectedFriendId] = useState<string | null>(null);
   const [selectedAttackId, setSelectedAttackId] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const profile = use$(profileStore$.profile);
 
   const attacks = getUnlockedAttacks(unlockedCategories);
 
@@ -89,35 +93,42 @@ export default function ChallengeScreen() {
       return;
     }
 
-    const friend = (friends as any[]).find(
-      (f: any) => (f.id ?? f.friend_id) === selectedFriendId,
-    );
-    const friendName = friend?.username ?? friend?.friend_profile?.username ?? T.duels_battle_default_rival;
-    const friendLevel = friend?.level ?? friend?.friend_profile?.level ?? 5;
+    const friend = friends.find((f) => (f.profile?.id ?? f.id) === selectedFriendId)?.profile;
+    const friendName = friend?.username ?? T.duels_battle_default_rival;
+    const friendLevel = friend?.level ?? 1;
 
-    // Navigate to battle screen immediately with the selected attack pre-loaded
-    router.push({
-      pathname: '/duels/battle',
-      params: {
-        opponentName: friendName,
-        opponentLevel: String(friendLevel),
-        openingAttackId: selectedAttackId,
-      },
-    });
-
-    // Also persist the challenge to Supabase in background
+    // The duel is recorded first: the server enforces the weekly limit and
+    // the cooldown, and the battle screen needs its id to save the result.
     setIsSending(true);
+    let duelId: string;
     try {
-      await createDuel(selectedFriendId, selectedAttackId);
+      duelId = await createDuel(selectedFriendId, selectedAttackId);
     } catch (err) {
-      const message = err instanceof Error ? err.message : '';
-      if (message.toLowerCase().includes('limit')) {
-        Alert.alert(T.duels_challenge_limit_title, T.duels_challenge_limit_msg);
+      const message = err instanceof Error ? err.message.toLowerCase() : '';
+      if (message.includes('limit')) {
+        Alert.alert(T.duels_challenge_limit_title, T.duels_challenge_limit_msg.replace('{n}', String(LIMITS.FREE_DUELS_PER_WEEK)));
+      } else if (message.includes('cooldown')) {
+        Alert.alert(T.duels_challenge_cooldown_title, T.duels_challenge_cooldown_msg);
+      } else {
+        Alert.alert(T.duels_challenge_error_title, T.duels_challenge_error_msg);
       }
-      // other errors silently ignored — battle is local demo
+      return;
     } finally {
       setIsSending(false);
     }
+
+    router.push({
+      pathname: '/duels/battle',
+      params: {
+        duelId,
+        opponentId: selectedFriendId,
+        opponentName: friendName,
+        opponentLevel: String(friendLevel),
+        myName: profile?.username ?? '',
+        myLevel: String(profile?.level ?? 1),
+        openingAttackId: selectedAttackId,
+      },
+    });
   };
 
   return (

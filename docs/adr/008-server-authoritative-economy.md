@@ -34,6 +34,7 @@ Les formules (`level_for_xp`, `rank_for_level`, XP par validation, pénalités) 
 
 - Le déblocage d'un succès n'est pas revérifié par le serveur. Le gain reste borné : chaque succès ne rapporte qu'une fois, et le catalogue est fini.
 - Le combat d'un duel est simulé sur le téléphone, donc le vainqueur déclaré n'est pas vérifié. C'est borné par les limites de duels et par une récompense unique ; le combat de démo ne rapporte plus rien.
+  - *Mise à jour du 2026-10-01* : les duels entre amis sont asynchrones. Le duel est enregistré avant le combat (limites vérifiées par le serveur), le challenger affronte le héros de son ami tout de suite, puis lui seul enregistre le résultat, une seule fois (`guard_duel_writes`). Une égalité clôt le duel sans vainqueur ni récompense. L'ami n'a rien à accepter : il reçoit le résultat (`notify_duel_result`) au lieu d'une invitation. Migration `20261001200000_friend_duel_results.sql`, tests `supabase/tests/duels.test.sql`.
 - Changer le fuseau horaire décale le « jour » d'au plus 24 h.
 
 ## Tests

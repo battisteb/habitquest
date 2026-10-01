@@ -159,8 +159,8 @@ export async function fetchDuels(): Promise<void> {
   duelStore$.resolvedDuels.set(resolved);
 }
 
-/** Create a new duel challenge, enforcing the 2-per-week limit */
-export async function createDuel(opponentId: string, attackId: string): Promise<void> {
+/** Records a duel against a friend (server limits apply) and returns its id. */
+export async function createDuel(opponentId: string, attackId: string): Promise<string> {
   const userId = authStore$.user.get()?.id;
   if (!userId) throw new Error('Not authenticated');
 
@@ -169,42 +169,44 @@ export async function createDuel(opponentId: string, attackId: string): Promise<
     throw new Error(`Weekly duel limit reached — ${LIMITS.FREE_DUELS_PER_WEEK} duels per week maximum`);
   }
 
-  const { error } = await supabase.from('duels').insert({
-    challenger_id: userId,
-    opponent_id: opponentId,
-    challenger_attack_id: attackId,
-    status: 'pending',
-  });
+  const { data, error } = await supabase
+    .from('duels')
+    .insert({
+      challenger_id: userId,
+      opponent_id: opponentId,
+      challenger_attack_id: attackId,
+      status: 'pending',
+    })
+    .select('id')
+    .single();
 
-  if (error) throw new Error(error.message);
+  if (error || !data) throw new Error(error?.message ?? 'Duel not created');
 
   await fetchDuels();
+  return data.id as string;
 }
 
 /**
- * Record the duel result, then claim this player's reward on the server
- * (30 gold for the winner, 25 XP for the loser, once per player).
+ * Records the result of a friend duel (winnerId null for a draw), then
+ * claims this player's reward on the server: 30 gold for a win, 25 XP for
+ * a loss, nothing for a draw. Returns what the server actually paid.
  */
 export async function resolveDuel(
-  duelId: string | null,
-  winnerId: string,
-  loserId: string,
-): Promise<{ winnerGold: number; loserXp: number }> {
-  const WINNER_GOLD = 30;
-  const LOSER_CATCHUP_XP = 25;
-
-  const userId = authStore$.user.get()?.id;
-  if (!userId || !duelId) return { winnerGold: 0, loserXp: 0 };
-  if (userId !== winnerId && userId !== loserId) return { winnerGold: 0, loserXp: 0 };
-
-  await supabase
+  duelId: string,
+  winnerId: string | null,
+): Promise<{ gold: number; xp: number }> {
+  const none = { gold: 0, xp: 0 };
+  const { error } = await supabase
     .from('duels')
     .update({ status: 'resolved', winner_id: winnerId })
     .eq('id', duelId);
+  if (error) throw new Error(error.message);
 
-  await supabase.rpc('claim_duel_reward', { p_duel_id: duelId });
-
-  return { winnerGold: WINNER_GOLD, loserXp: LOSER_CATCHUP_XP };
+  void fetchDuels();
+  if (!winnerId) return none;
+  const { data } = await supabase.rpc('claim_duel_reward', { p_duel_id: duelId });
+  const reward = data as { success?: boolean; gold?: number; xp?: number } | null;
+  return reward?.success ? { gold: reward.gold ?? 0, xp: reward.xp ?? 0 } : none;
 }
 
 // Re-export simulateDuel so screens can import from a single location if desired
