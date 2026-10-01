@@ -65,3 +65,6 @@ google-service-account.json
 
 # Generated marketing media (PNG/MP4), rebuilt from marketing/
 marketing/exports/
+
+# Generated audio previews (marketing/audio/chiptune.py)
+marketing/audio/out/
