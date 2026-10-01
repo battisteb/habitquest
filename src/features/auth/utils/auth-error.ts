@@ -5,7 +5,7 @@ import type { Strings } from '../../../lib/i18n';
  * Supabase errors carry a stable `code` (and English messages we never show as is).
  */
 export function authErrorMessage(T: Strings, error: unknown): string {
-  const e = error as { code?: string; message?: string; status?: number } | null;
+  const e = error as { code?: string; message?: string; status?: number; reasons?: string[] } | null;
   const code = e?.code ?? '';
   const message = (e?.message ?? '').toLowerCase();
 
@@ -19,7 +19,8 @@ export function authErrorMessage(T: Strings, error: unknown): string {
     return T.auth_err_already_exists;
   }
   if (code === 'weak_password' || message.includes('password should be')) {
-    return T.auth_err_weak_password;
+    // Supabase lists why: 'length', 'characters' or 'pwned' (seen in a data leak).
+    return e?.reasons?.includes('pwned') ? T.auth_err_pwned_password : T.auth_err_weak_password;
   }
   if (code === 'email_not_confirmed') return T.auth_err_email_not_confirmed;
   if (code === 'validation_failed' || code === 'email_address_invalid' || message.includes('invalid format')) {
