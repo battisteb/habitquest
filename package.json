@@ -14,7 +14,9 @@
     "typecheck": "tsc --noEmit",
     "check:bundle": "expo export --platform ios --platform android --platform web --output-dir .bundle-check",
     "export:web": "expo export --platform web --clear",
-    "deploy:web": "npm run export:web && npx eas-cli@latest deploy --prod"
+    "deploy:web": "npm run export:web && npx eas-cli@latest deploy --prod",
+    "update:preview": "npx eas-cli@latest update --channel preview --platform all --non-interactive",
+    "update:production": "npx eas-cli@latest update --channel production --platform all --non-interactive"
   },
   "dependencies": {
     "@expo-google-fonts/jersey-10": "^0.4.1",
@@ -38,6 +40,7 @@
     "expo-splash-screen": "~55.0.25",
     "expo-status-bar": "~55.0.6",
     "expo-tracking-transparency": "~55.0.18",
+    "expo-updates": "~55.0.33",
     "html2canvas": "^1.4.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
