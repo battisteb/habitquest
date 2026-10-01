@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { View, StyleSheet, Pressable, Text, Platform } from 'react-native';
 import { use$ } from '@legendapp/state/react';
-import { subscriptionStore$ } from '../stores/subscription-store';
 import { shouldShowAds } from '../utils/ad-service';
 import { canPersonalizeAds } from '../utils/tracking-consent';
 import { colors, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+import { premium$ } from '../stores/premium';
 
 // AdMob is native-only — dynamic import to avoid web crashes
 const isNative = Platform.OS !== 'web';
@@ -57,7 +57,7 @@ export function AdBanner({ position = 'bottom' }: AdBannerProps) {
     fontFamily: fonts.bold,
   },
 }), [themeKey]);
-  const isPremium = use$(subscriptionStore$.isPremium);
+  const isPremium = use$(premium$);
   const router = useRouter();
 
   if (isPremium) return null;

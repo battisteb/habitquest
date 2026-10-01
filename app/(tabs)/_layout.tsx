@@ -163,14 +163,6 @@ export default function TabsLayout() {
           },
         }}
       />
-      <Tabs.Screen
-        name="training"
-        options={{
-          href: null,
-          title: 'TRAIN',
-          tabBarLabel: 'TRAIN',
-        }}
-      />
     </Tabs>
   );
 }

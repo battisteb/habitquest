@@ -255,14 +255,6 @@ export default function PublicProfileScreen() {
               }
               variant="secondary"
             />
-            <PixelButton
-              title={T.profile_pub_quick_duel}
-              onPress={() =>
-                router.push(
-                  `/duels/battle?opponentId=${profile.id}&opponentName=${profile.username}&opponentLevel=${profile.level}`,
-                )
-              }
-            />
           </>
         ) : alreadySent ? (
           <Text style={styles.pendingChip}>{T.profile_pub_request_sent}</Text>

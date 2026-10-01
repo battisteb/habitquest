@@ -24,6 +24,7 @@ import {
 } from '../src/features/monetization/stores/subscription-store';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
+import { premium$ } from '../src/features/monetization/stores/premium';
 
 
 export default function PaywallScreen() {
@@ -33,7 +34,6 @@ export default function PaywallScreen() {
 
   const FEATURES = [
     { icon: '❄️', label: T.paywall_feat_freezes_label, free: T.paywall_feat_freezes_free, premium: T.paywall_feat_freezes_premium },
-    { icon: '⚔️', label: T.paywall_feat_duels_label, free: T.paywall_feat_duels_free, premium: T.paywall_feat_duels_premium },
     { icon: '📊', label: T.paywall_feat_stats_label, free: T.paywall_feat_stats_free, premium: T.paywall_feat_stats_premium },
     { icon: '🛍️', label: T.paywall_feat_shop_label, free: T.paywall_feat_shop_free, premium: T.paywall_feat_shop_premium },
     { icon: '🚫', label: T.paywall_feat_ads_label, free: T.paywall_feat_ads_free, premium: T.paywall_feat_ads_premium },
@@ -206,18 +206,13 @@ export default function PaywallScreen() {
   const insets = useSafeAreaInsets();
   const isLoading = use$(subscriptionStore$.isLoading);
   const offering = use$(subscriptionStore$.offering);
-  const isPremium = use$(subscriptionStore$.isPremium);
+  const isPremium = use$(premium$);
   const [selected, setSelected] = useState<'monthly' | 'annual'>('annual');
 
   useEffect(() => {
     loadOfferings();
   }, []);
 
-  useEffect(() => {
-    if (isPremium) {
-      router.back();
-    }
-  }, [isPremium]);
 
   const monthlyPkg = offering?.availablePackages.find(
     (p: any) => p.product.identifier === PRODUCT_MONTHLY,
@@ -270,6 +265,30 @@ export default function PaywallScreen() {
         <Text style={styles.badge}>{T.paywall_badge}</Text>
       </View>
 
+      {isPremium ? (
+        // Already subscribed (or just bought): what Premium gives, and where to manage it.
+        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false} testID="paywall-active">
+          <View style={styles.hero}>
+            <Text style={styles.heroEmoji}>👑</Text>
+            <Text style={styles.heroTitle}>{T.paywall_active_title}</Text>
+            <Text style={styles.heroSub}>{T.paywall_active_sub}</Text>
+          </View>
+          <View style={styles.table}>
+            {FEATURES.map((f) => (
+              <View key={f.label} style={styles.tableRow}>
+                <View style={[styles.tableCell, { flex: 2, flexDirection: 'row', gap: 6 }]}>
+                  <Text style={styles.featureIcon}>{f.icon}</Text>
+                  <Text style={styles.featureLabel}>{f.label}</Text>
+                </View>
+                <View style={[styles.tableCell, styles.tableCellCenter, styles.premiumCell]}>
+                  <Text style={styles.premiumText}>{f.premium}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+          <Text style={styles.legal}>{Platform.OS === 'web' ? T.paywall_active_manage_web : T.paywall_active_manage}</Text>
+        </ScrollView>
+      ) : (
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Hero */}
         <View style={styles.hero}>
@@ -369,6 +388,7 @@ export default function PaywallScreen() {
           </Pressable>
         )}
       </ScrollView>
+      )}
     </View>
   );
 }

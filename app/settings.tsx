@@ -22,7 +22,6 @@ import {
 import { signOut, deleteAccount } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { use$ } from '@legendapp/state/react';
-import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 import { useT, setLang, lang$ } from '../src/lib/i18n';
 import { openLegalPage } from '../src/lib/legal-links';
 import Constants from 'expo-constants';
@@ -36,6 +35,7 @@ import {
   playSfx,
   setMusicEnabled,
 } from '../src/lib/audio/sound-service';
+import { premium$ } from '../src/features/monetization/stores/premium';
 
 const THEME_KEYS: ThemeKey[] = ['default', 'medieval', 'cyberpunk', 'nature', 'lifestyle'];
 
@@ -65,7 +65,7 @@ export default function SettingsScreen() {
   const [prefs, setPrefs] = useState<NotificationPrefs>(() => getNotificationPrefs());
   const [sfxOn, setSfxOn] = useState<boolean>(() => isSfxEnabled());
   const [musicOn, setMusicOn] = useState<boolean>(() => isMusicEnabled());
-  const isPremium = use$(subscriptionStore$.isPremium);
+  const isPremium = use$(premium$);
 
   function updatePref<K extends keyof NotificationPrefs>(key: K, value: NotificationPrefs[K]) {
     const next = { ...prefs, [key]: value };
