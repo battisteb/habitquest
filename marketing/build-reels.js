@@ -133,15 +133,15 @@ async function roundedMask(page, file) {
         const overlay = path.join(work, `${name}-${i}-full.png`);
         await renderLayer(page, { layout: 'full', ...seg }, overlay);
         const z = seg.zoom;
-        // Punch zoom: reaches `to` in 0.2 s from `at`, centered on (x, y).
+        // Zoom: reaches `to` in 0.5 s from `at`, centered on (x, y).
         const a = z ? Math.round(z.at * FPS) : 0;
         const zoom = z
-          ? `,zoompan=z='if(lt(on,${a}),1,min(1+(on-${a})*${((z.to - 1) / 6).toFixed(4)},${z.to}))'` +
+          ? `,zoompan=z='if(lt(on,${a}),1,min(1+(on-${a})*${((z.to - 1) / 15).toFixed(4)},${z.to}))'` +
             `:x='(iw-iw/zoom)*${z.x}':y='(ih-ih/zoom)*${z.y}':d=1:s=1080x1920:fps=${FPS}`
           : '';
         run(['-ss', String(seg.start || 0), '-i', path.join(recDir, `${seg.src}.webm`), '-loop', '1', '-i', overlay, '-t', String(seg.dur),
           '-filter_complex',
-          `[0:v]setpts=PTS/${seg.speed || 1},fps=${FPS},scale=1080:-2,crop=1080:1920:0:(ih-1920)*${seg.y || 0}${zoom},format=rgba[s];` +
+          `[0:v]setpts=PTS/${seg.speed || 1},fps=${FPS},tpad=stop_mode=clone:stop_duration=3,scale=1080:-2,crop=1080:1920:0:(ih-1920)*${seg.y || 0}${zoom},format=rgba[s];` +
           `[s][1:v]overlay=0:0,format=yuv420p`,
           ...enc]);
       } else if (seg.type === 'card') {
@@ -158,7 +158,7 @@ async function roundedMask(page, file) {
           ? ['-ss', String(seg.start || 0), '-i', path.join(recDir, `${seg.src}.webm`)]
           : ['-loop', '1', '-i', path.join(root, 'assets', screens, `${seg.src}.png`)];
         const screen = seg.type === 'clip'
-          ? `[1:v]setpts=PTS/${seg.speed || 1},fps=${FPS},scale=${PHONE.w}:${PHONE.h}`
+          ? `[1:v]setpts=PTS/${seg.speed || 1},fps=${FPS},tpad=stop_mode=clone:stop_duration=3,scale=${PHONE.w}:${PHONE.h}`
           : `[1:v]scale=${PHONE.w * 2}:-1,zoompan=z='min(1+0.0008*on,1.08)':d=1:x='iw/2-(iw/zoom/2)':y=0:s=${PHONE.w}x${PHONE.h}:fps=${FPS}`;
         run(['-loop', '1', '-i', bg, ...screenInput, '-loop', '1', '-i', mask, '-loop', '1', '-i', overlay, '-t', String(seg.dur),
           '-filter_complex',
@@ -180,7 +180,7 @@ async function roundedMask(page, file) {
     const out = path.join(outDir, `${name}.mp4`);
     // Music, plus the sound effects of the segments on top.
     const sfxIn = sfx.flatMap((x) => ['-i', x.file]);
-    const sfxMix = sfx.map((x, k) => `[${k + 2}:a]adelay=${Math.round(x.at * 1000)}|${Math.round(x.at * 1000)},volume=1.6[s${k}];`).join('');
+    const sfxMix = sfx.map((x, k) => `[${k + 2}:a]adelay=${Math.round(x.at * 1000)}|${Math.round(x.at * 1000)},volume=1.2[s${k}];`).join('');
     const mix = sfx.length
       ? `${sfxMix}[m]${sfx.map((_, k) => `[s${k}]`).join('')}amix=inputs=${sfx.length + 1}:duration=first:normalize=0[a]`
       : '[m]anull[a]';
