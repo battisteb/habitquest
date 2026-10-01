@@ -33,6 +33,7 @@ import {
   isSfxEnabled,
   isMusicEnabled,
   setSfxEnabled,
+  playSfx,
   setMusicEnabled,
 } from '../src/lib/audio/sound-service';
 
@@ -113,22 +114,23 @@ export default function SettingsScreen() {
     );
   };
 
+  // One row of a grouped card: label, optional subtitle, control on the right.
+  const groupRow = (first: boolean) => [styles.groupRow, !first && styles.groupRowDivider];
+
   return (
     <ScrollView
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title={T.settings_back} onPress={() => router.back()} variant="ghost" />
-
       <View style={styles.header}>
-        <Text style={styles.screenLabel}>{T.settings_screen_label}</Text>
+        <PixelButton title={T.settings_back} onPress={() => router.back()} variant="ghost" />
         <Text style={styles.title}>{T.settings_title}</Text>
       </View>
 
-      {/* Theme section */}
+      {/* Theme section: one row of compact tiles */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{T.settings_theme}</Text>
-        <View style={styles.themeGrid}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.themeRow}>
           {THEME_KEYS.map((key) => {
             const meta = THEME_META[key];
             const active = themeKey === key;
@@ -137,6 +139,8 @@ export default function SettingsScreen() {
                 key={key}
                 style={[styles.themeCard, active && styles.themeCardActive]}
                 onPress={() => pickTheme(key)}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
               >
                 <View style={styles.themeTop}>
                   <Text style={styles.themeEmoji}>{meta.emoji}</Text>
@@ -147,18 +151,18 @@ export default function SettingsScreen() {
                     ))}
                   </View>
                 </View>
-                <Text style={[styles.themeName, active && styles.themeNameActive]} numberOfLines={1}>
+                <Text style={[styles.themeName, active && styles.themeNameActive]} numberOfLines={2}>
                   {T[`theme_name_${key}` as keyof typeof T] ?? meta.name}
                 </Text>
-                <Text style={styles.themeDesc} numberOfLines={2}>
-                  {T[`theme_desc_${key}` as keyof typeof T] ?? meta.description}
-                </Text>
-                {active && <Text style={styles.activeChip}>{T.theme_active}</Text>}
-                {!ownedThemes.has(key) && <Text style={styles.lockedChip}>🔒 {T.settings_theme_locked_chip}</Text>}
+                {active ? (
+                  <Text style={styles.activeChip}>{T.theme_active}</Text>
+                ) : !ownedThemes.has(key) ? (
+                  <Text style={styles.lockedChip}>🔒 {T.settings_theme_locked_chip}</Text>
+                ) : null}
               </Pressable>
             );
           })}
-        </View>
+        </ScrollView>
       </View>
 
       {/* Language section */}
@@ -182,94 +186,93 @@ export default function SettingsScreen() {
       {/* Notifications section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{T.settings_notifications}</Text>
-
-        <View style={styles.prefRow}>
-          <View style={styles.prefInfo}>
-            <Text style={styles.prefLabel}>{T.settings_daily_reminder}</Text>
-            <Text style={styles.prefSub}>{T.settings_daily_reminder_sub}</Text>
+        <View style={styles.group}>
+          <View style={groupRow(true)}>
+            <View style={styles.prefInfo}>
+              <Text style={styles.prefLabel}>{T.settings_daily_reminder}</Text>
+              <Text style={styles.prefSub} numberOfLines={1}>{T.settings_daily_reminder_sub}</Text>
+            </View>
+            <Switch
+              value={prefs.dailyReminderEnabled}
+              onValueChange={(v) => updatePref('dailyReminderEnabled', v)}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={colors.text}
+            />
           </View>
-          <Switch
-            value={prefs.dailyReminderEnabled}
-            onValueChange={(v) => updatePref('dailyReminderEnabled', v)}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={colors.text}
-          />
-        </View>
 
-        {prefs.dailyReminderEnabled && (
-          <View style={styles.timeRow}>
-            <Text style={styles.prefSub}>{T.settings_reminder_time}</Text>
-            <View style={styles.timeButtons}>
+          {prefs.dailyReminderEnabled && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.timeButtons}>
               {[7, 8, 9, 10, 12, 18, 20, 21].map((h) => (
                 <Pressable
                   key={h}
                   style={[styles.timeBtn, prefs.dailyReminderHour === h && styles.timeBtnActive]}
                   onPress={() => updatePref('dailyReminderHour', h)}
+                  accessibilityLabel={`${T.settings_reminder_time} ${h}:00`}
                 >
                   <Text style={[styles.timeBtnText, prefs.dailyReminderHour === h && styles.timeBtnTextActive]}>
                     {h}:00
                   </Text>
                 </Pressable>
               ))}
+            </ScrollView>
+          )}
+
+          <View style={groupRow(false)}>
+            <View style={styles.prefInfo}>
+              <Text style={styles.prefLabel}>{T.settings_streak_risk}</Text>
+              <Text style={styles.prefSub} numberOfLines={1}>{T.settings_streak_risk_sub}</Text>
             </View>
+            <Switch
+              value={prefs.streakRiskEnabled}
+              onValueChange={(v) => updatePref('streakRiskEnabled', v)}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={colors.text}
+            />
           </View>
-        )}
 
-        <View style={styles.prefRow}>
-          <View style={styles.prefInfo}>
-            <Text style={styles.prefLabel}>{T.settings_streak_risk}</Text>
-            <Text style={styles.prefSub}>{T.settings_streak_risk_sub}</Text>
+          <View style={groupRow(false)}>
+            <View style={styles.prefInfo}>
+              <Text style={styles.prefLabel}>{T.settings_weekly_recap}</Text>
+              <Text style={styles.prefSub} numberOfLines={1}>{T.settings_weekly_recap_sub}</Text>
+            </View>
+            <Switch
+              value={prefs.weeklyRecapEnabled}
+              onValueChange={(v) => updatePref('weeklyRecapEnabled', v)}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={colors.text}
+            />
           </View>
-          <Switch
-            value={prefs.streakRiskEnabled}
-            onValueChange={(v) => updatePref('streakRiskEnabled', v)}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={colors.text}
-          />
-        </View>
-
-        <View style={styles.prefRow}>
-          <View style={styles.prefInfo}>
-            <Text style={styles.prefLabel}>{T.settings_weekly_recap}</Text>
-            <Text style={styles.prefSub}>{T.settings_weekly_recap_sub}</Text>
-          </View>
-          <Switch
-            value={prefs.weeklyRecapEnabled}
-            onValueChange={(v) => updatePref('weeklyRecapEnabled', v)}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={colors.text}
-          />
         </View>
       </View>
 
       {/* Audio section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{T.settings_audio}</Text>
-
-        <View style={styles.prefRow}>
-          <View style={styles.prefInfo}>
-            <Text style={styles.prefLabel}>{T.settings_sfx}</Text>
-            <Text style={styles.prefSub}>{T.settings_sfx_sub}</Text>
+        <View style={styles.group}>
+          <View style={groupRow(true)}>
+            <View style={styles.prefInfo}>
+              <Text style={styles.prefLabel}>{T.settings_sfx}</Text>
+              <Text style={styles.prefSub} numberOfLines={1}>{T.settings_sfx_sub}</Text>
+            </View>
+            <Switch
+              value={sfxOn}
+              onValueChange={(v) => { setSfxOn(v); setSfxEnabled(v); }}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={colors.text}
+            />
           </View>
-          <Switch
-            value={sfxOn}
-            onValueChange={(v) => { setSfxOn(v); setSfxEnabled(v); }}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={colors.text}
-          />
-        </View>
-
-        <View style={styles.prefRow}>
-          <View style={styles.prefInfo}>
-            <Text style={styles.prefLabel}>{T.settings_music}</Text>
-            <Text style={styles.prefSub}>{T.settings_music_sub}</Text>
+          <View style={groupRow(false)}>
+            <View style={styles.prefInfo}>
+              <Text style={styles.prefLabel}>{T.settings_music}</Text>
+              <Text style={styles.prefSub} numberOfLines={1}>{T.settings_music_sub}</Text>
+            </View>
+            <Switch
+              value={musicOn}
+              onValueChange={(v) => { setMusicOn(v); setMusicEnabled(v); }}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={colors.text}
+            />
           </View>
-          <Switch
-            value={musicOn}
-            onValueChange={(v) => { setMusicOn(v); setMusicEnabled(v); }}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={colors.text}
-          />
         </View>
       </View>
 
@@ -290,49 +293,42 @@ export default function SettingsScreen() {
         )}
       </View>
 
-      {/* Account section */}
+      {/* Account section: a compact menu */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{T.settings_account}</Text>
+        <View style={styles.group}>
+          {[
+            { label: T.settings_edit_profile, onPress: () => router.push('/profile/edit') },
+            { label: T.settings_focus_mode, onPress: () => router.push('/settings/contextual-mode') },
+            { label: T.settings_support, onPress: () => router.push('/settings/support') },
+            { label: T.settings_archived, onPress: () => router.push('/habit/archive') },
+            {
+              label: T.settings_replay_tutorial,
+              onPress: () => {
+                resetTutorial();
+                router.replace('/(tabs)/today');
+              },
+            },
+          ].map((item, i) => (
+            <Pressable
+              key={item.label}
+              style={({ pressed }) => [...groupRow(i === 0), pressed && styles.menuPressed]}
+              onPress={() => {
+                void playSfx('tap', 0.3);
+                item.onPress();
+              }}
+              accessibilityRole="button"
+            >
+              <Text style={styles.menuLabel}>{item.label}</Text>
+              <Text style={styles.menuChevron}>›</Text>
+            </Pressable>
+          ))}
+        </View>
 
-        <PixelButton
-          title={T.settings_edit_profile}
-          onPress={() => router.push('/profile/edit')}
-          variant="secondary"
-        />
-        <PixelButton
-          title={T.settings_focus_mode}
-          onPress={() => router.push('/settings/contextual-mode')}
-          variant="secondary"
-        />
-        <PixelButton
-          title={T.settings_support}
-          onPress={() => router.push('/settings/support')}
-          variant="secondary"
-        />
-        <PixelButton
-          title={T.settings_archived}
-          onPress={() => router.push('/habit/archive')}
-          variant="secondary"
-        />
-        <PixelButton
-          title={T.settings_replay_tutorial}
-          onPress={() => {
-            resetTutorial();
-            router.replace('/(tabs)/today');
-          }}
-          variant="secondary"
-        />
-
-        <PixelButton
-          title={T.settings_sign_out}
-          onPress={handleSignOut}
-          variant="ghost"
-        />
-        <PixelButton
-          title={T.settings_delete_account}
-          onPress={handleDeleteAccount}
-          variant="ghost"
-        />
+        <View style={styles.dangerRow}>
+          <PixelButton title={T.settings_sign_out} onPress={handleSignOut} variant="ghost" />
+          <PixelButton title={T.settings_delete_account} onPress={handleDeleteAccount} variant="ghost" />
+        </View>
       </View>
 
       {/* App info */}
@@ -367,19 +363,14 @@ function createStyles() {
     backgroundColor: colors.background,
   },
   container: {
-    padding: spacing.lg,
-    gap: spacing.lg,
-    paddingBottom: spacing.xxl,
+    padding: spacing.md,
+    gap: spacing.md,
+    paddingBottom: spacing.xl,
   },
   header: {
-    gap: spacing.xs,
-    marginBottom: spacing.xs,
-  },
-  screenLabel: {
-    fontSize: pixelSize(fontSizes.xs),
-    fontFamily: fonts.bold,
-    color: colors.textMuted,
-    letterSpacing: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
   title: {
     fontSize: pixelSize(fontSizes.xl),
@@ -387,7 +378,7 @@ function createStyles() {
     color: colors.text,
   },
   section: {
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
   sectionTitle: {
     fontSize: pixelSize(fontSizes.xs),
@@ -397,14 +388,12 @@ function createStyles() {
     marginBottom: 2,
   },
 
-  // Theme grid
-  themeGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  // Theme row
+  themeRow: {
     gap: spacing.sm,
   },
   themeCard: {
-    width: '47%',
+    width: 128,
     backgroundColor: colors.surface,
     borderRadius: 0,
     borderWidth: 2,
@@ -416,7 +405,7 @@ function createStyles() {
     borderColor: colors.primary,
   },
   themeEmoji: {
-    fontSize: 24,
+    fontSize: 20,
   },
   themeTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   swatches: { flexDirection: 'row', gap: 3 },
@@ -428,11 +417,6 @@ function createStyles() {
   },
   themeNameActive: {
     color: colors.primary,
-  },
-  themeDesc: {
-    fontSize: fontSizes.xs - 1,
-    color: colors.textMuted,
-    lineHeight: 14,
   },
   activeChip: {
     fontSize: pixelSize(8),
@@ -449,16 +433,42 @@ function createStyles() {
     marginTop: 2,
   },
 
-  // Notification prefs
-  prefRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  // Grouped cards (notifications, audio, account menu)
+  group: {
     backgroundColor: colors.surface,
-    borderRadius: 0,
     borderWidth: 2,
     borderColor: colors.border,
-    padding: spacing.md,
+  },
+  groupRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
     gap: spacing.sm,
+    minHeight: 48,
+  },
+  groupRowDivider: {
+    borderTopWidth: 2,
+    borderTopColor: colors.border,
+  },
+  menuPressed: {
+    backgroundColor: colors.primary + '1A',
+  },
+  menuLabel: {
+    flex: 1,
+    fontSize: pixelSize(fontSizes.sm),
+    fontFamily: fonts.bold,
+    color: colors.text,
+  },
+  menuChevron: {
+    fontSize: pixelSize(fontSizes.lg),
+    fontFamily: fonts.bold,
+    color: colors.textMuted,
+  },
+  dangerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    flexWrap: 'wrap',
   },
   prefInfo: {
     flex: 1,
@@ -473,18 +483,11 @@ function createStyles() {
     fontSize: fontSizes.xs,
     color: colors.textMuted,
   },
-  timeRow: {
-    backgroundColor: colors.surface,
-    borderRadius: 0,
-    borderWidth: 2,
-    borderColor: colors.border,
-    padding: spacing.md,
-    gap: spacing.sm,
-  },
   timeButtons: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
   },
   timeBtn: {
     paddingHorizontal: spacing.sm,

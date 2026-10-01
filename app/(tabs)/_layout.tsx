@@ -13,6 +13,7 @@ import { useTheme } from '../../src/ui/theme/theme-context';
 import { useOwnedThemes } from '../../src/features/shop/hooks/use-owned-themes';
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
 import { FREE_THEME } from '../../src/features/shop/utils/owned-themes';
+import { playSfx } from '../../src/lib/audio/sound-service';
 
 function usePendingHabitCount(): number {
   const habits = use$(habitsStore$.habits);
@@ -87,6 +88,7 @@ export default function TabsLayout() {
 
   return (
     <Tabs
+      screenListeners={{ tabPress: () => void playSfx('tap', 0.3) }}
       screenOptions={{
         headerShown: false,
         tabBarStyle: {

@@ -82,6 +82,14 @@ export function isHabitCompletedEnough(habitId: string): boolean {
   return count >= getWeeklyTarget(frequency);
 }
 
+/** Active habits still to do today (same rule as the Quests tab badge). */
+export function pendingHabitCount(): number {
+  return habitsStore$.habits
+    .get()
+    .filter((h) => !(h as { is_paused?: boolean }).is_paused && !h.is_archived)
+    .filter((h) => !isHabitCompletedEnough(h.id)).length;
+}
+
 export async function fetchHabits() {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
@@ -263,12 +271,15 @@ export async function completeHabit(
     return undefined;
   }
 
-  if (result.new_level > result.old_level) {
+  const pendingBefore = pendingHabitCount();
+  const levelUp = result.new_level > result.old_level;
+  if (levelUp) {
     triggerLevelUp(result.new_level);
   }
 
   // Check for streak milestone
-  if (isMilestone(result.current_streak) && result.current_streak > result.previous_streak) {
+  const milestone = isMilestone(result.current_streak) && result.current_streak > result.previous_streak;
+  if (milestone) {
     triggerStreakMilestone(result.current_streak, habit?.name ?? '');
     hapticHeavy();
     void playSfx('streak_milestone');
@@ -285,6 +296,12 @@ export async function completeHabit(
   habitsStore$.todayCompletions[habitId].set(true);
   const prevWeekCount = habitsStore$.weekCompletions.get()[habitId] ?? 0;
   habitsStore$.weekCompletions[habitId].set(prevWeekCount + 1);
+
+  // Last quest of the day: a short fanfare after the completion sound,
+  // unless a level-up or streak milestone already celebrates.
+  if (pendingBefore > 0 && pendingHabitCount() === 0 && !levelUp && !milestone) {
+    setTimeout(() => void playSfx('all_done', 0.8), 450);
+  }
   recordCompletionHour();
   refreshProfile();
   const streak = habitsStore$.streaks.get()[habitId];
