@@ -1,5 +1,7 @@
 ---
 title: Privacy Policy — HabitQuest
+lang: en
+alt: /privacy-policy.fr
 ---
 
 # HabitQuest — Privacy Policy

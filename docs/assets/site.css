@@ -48,8 +48,8 @@ img { max-width: 100%; display: block; image-rendering: auto; }
 
 /* Phones */
 .phone { background: var(--surface); border: var(--px) solid var(--border); box-shadow: 0 0 0 var(--px) #000, 10px 10px 0 4px var(--primary-dark); overflow: hidden; }
-.phone img { width: 100%; }
-.hero .phone { max-width: 340px; justify-self: center; }
+.phone img { width: 100%; height: auto; }
+.hero .phone { max-width: 300px; width: 100%; justify-self: center; }
 
 /* Sections */
 section { padding: 64px 0; }
@@ -60,7 +60,7 @@ h2 { font-size: clamp(40px, 5vw, 60px); line-height: 1; margin-bottom: 14px; }
 .card .icon { font-size: 34px; line-height: 1; }
 .card h3 { font-family: 'Jersey 10', monospace; font-weight: 400; font-size: 30px; line-height: 1; margin: 12px 0 8px; }
 .card p { color: var(--text-2); font-size: 15.5px; }
-.shots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.shots { display: grid; grid-template-columns: repeat(4, minmax(0, 210px)); justify-content: center; gap: 40px 56px; }
 .shots figure { margin: 0; }
 .shots figcaption { margin-top: 14px; text-align: center; font-family: 'Jersey 10', monospace; font-size: 24px; color: var(--text-2); }
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step; }
@@ -98,8 +98,8 @@ footer a:hover { color: var(--text); }
 
 @media (max-width: 880px) {
   .hero .wrap { grid-template-columns: 1fr; }
-  .hero .phone { max-width: 280px; }
+  .hero .phone { max-width: 250px; }
   .grid, .steps, .premium { grid-template-columns: 1fr; }
-  .shots { grid-template-columns: repeat(2, 1fr); }
+  .shots { grid-template-columns: repeat(2, minmax(0, 160px)); gap: 32px 36px; }
   .nav a:not(.lang) { display: none; }
 }
