@@ -9,7 +9,8 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { useT } from '../src/lib/i18n';
+import { useT, lang$ } from '../src/lib/i18n';
+import { openLegalPage } from '../src/lib/legal-links';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
@@ -27,6 +28,7 @@ import { useTheme } from '../src/ui/theme/theme-context';
 
 export default function PaywallScreen() {
   const T = useT();
+  const lang = use$(lang$);
   const { themeKey } = useTheme();
 
   const FEATURES = [
@@ -191,6 +193,8 @@ export default function PaywallScreen() {
     textAlign: 'center',
     lineHeight: 14,
   },
+  legalLinks: { flexDirection: 'row', justifyContent: 'center', gap: spacing.sm, marginTop: spacing.xs },
+  legalLink: { fontSize: fontSizes.xs, color: colors.textSecondary, textDecorationLine: 'underline' },
   restoreBtn: { alignItems: 'center', paddingVertical: spacing.sm },
   restoreText: {
     fontSize: fontSizes.xs,
@@ -349,6 +353,15 @@ export default function PaywallScreen() {
         )}
 
         <Text style={styles.legal}>{T.paywall_legal}</Text>
+        <View style={styles.legalLinks}>
+          <Pressable onPress={() => openLegalPage('terms', lang)} accessibilityRole="link">
+            <Text style={styles.legalLink}>{T.legal_terms}</Text>
+          </Pressable>
+          <Text style={styles.legal}>·</Text>
+          <Pressable onPress={() => openLegalPage('privacy', lang)} accessibilityRole="link">
+            <Text style={styles.legalLink}>{T.legal_privacy}</Text>
+          </Pressable>
+        </View>
 
         {Platform.OS !== 'web' && (
           <Pressable onPress={handleRestore} style={styles.restoreBtn}>

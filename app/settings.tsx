@@ -24,6 +24,8 @@ import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/to
 import { use$ } from '@legendapp/state/react';
 import { subscriptionStore$ } from '../src/features/monetization/stores/subscription-store';
 import { useT, setLang, lang$ } from '../src/lib/i18n';
+import { openLegalPage } from '../src/lib/legal-links';
+import Constants from 'expo-constants';
 import { resetTutorial } from '../src/features/onboarding/tutorial-state';
 import { useOwnedThemes } from '../src/features/shop/hooks/use-owned-themes';
 import { fetchShop, setActiveTheme } from '../src/features/shop/stores/shop-store';
@@ -335,7 +337,22 @@ export default function SettingsScreen() {
 
       {/* App info */}
       <View style={styles.appInfo}>
-        <Text style={styles.appInfoText}>{T.settings_version}</Text>
+        <View style={styles.legalRow}>
+          <Pressable onPress={() => openLegalPage('privacy', currentLang)} accessibilityRole="link">
+            <Text style={styles.legalLink}>{T.legal_privacy}</Text>
+          </Pressable>
+          <Text style={styles.appInfoText}>·</Text>
+          <Pressable onPress={() => openLegalPage('terms', currentLang)} accessibilityRole="link">
+            <Text style={styles.legalLink}>{T.legal_terms}</Text>
+          </Pressable>
+          <Text style={styles.appInfoText}>·</Text>
+          <Pressable onPress={() => openLegalPage('support', currentLang)} accessibilityRole="link">
+            <Text style={styles.legalLink}>{T.legal_help}</Text>
+          </Pressable>
+        </View>
+        <Text style={styles.appInfoText}>
+          {T.settings_version.replace('{version}', Constants.expoConfig?.version ?? '1.0.0')}
+        </Text>
         <Text style={styles.appInfoText}>{T.settings_tagline}</Text>
       </View>
     </ScrollView>
@@ -549,5 +566,7 @@ function createStyles() {
     fontSize: fontSizes.xs,
     color: colors.textMuted,
   },
+  legalRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: spacing.sm },
+  legalLink: { fontSize: fontSizes.xs, color: colors.textSecondary, textDecorationLine: 'underline' },
 });
 }
