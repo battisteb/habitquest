@@ -1,8 +1,8 @@
 {
   "r1-ta-vie-est-un-rpg": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 4
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -119,8 +119,8 @@
   },
   "r3-mon-heros-evolue": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 30
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -221,8 +221,8 @@
   },
   "r5-defie-tes-potes": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 12
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -259,8 +259,8 @@
   },
   "r7-missions-du-jour": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 20
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -319,8 +319,8 @@
   },
   "r9-serie-14-jours": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 44
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -395,8 +395,8 @@
   },
   "r10-level-up-minuit": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 60
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -471,8 +471,8 @@
   },
   "r11-classement-potes": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 76
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -502,8 +502,8 @@
   },
   "r12-boutique": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 92
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -572,8 +572,8 @@
   },
   "r13-novice-a-legende": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 108
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -644,8 +644,8 @@
   },
   "r14-succes": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 124
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -676,8 +676,8 @@
   },
   "r15-stats": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 8
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -706,8 +706,8 @@
   },
   "r16-cree-ta-quete": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 28
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -738,8 +738,8 @@
   },
   "r17-modeles": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 52
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -769,8 +769,8 @@
   },
   "r18-defi-1v1": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 68
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -801,8 +801,8 @@
   },
   "r19-mode-examens": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 84
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -831,8 +831,8 @@
   },
   "r20-combat": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 100
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -894,8 +894,8 @@
   },
   "r21-journee-parfaite": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 116
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -969,8 +969,8 @@
   },
   "r22-j-moins-7": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 132
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -1023,8 +1023,8 @@
   },
   "r23-j-moins-3": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 12
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -1053,8 +1053,8 @@
   },
   "r24-j-moins-1": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
-      "start": 36
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0
     },
     "segments": [
       {
@@ -1100,7 +1100,7 @@
   },
   "r25-cest-sorti": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
+      "file": "marketing/audio/theme-quest.m4a",
       "start": 0
     },
     "segments": [
@@ -1171,7 +1171,7 @@
   },
   "tour-habitquest": {
     "music": {
-      "file": "assets/sounds/duel-music.m4a",
+      "file": "marketing/audio/theme-quest.m4a",
       "start": 0
     },
     "segments": [
