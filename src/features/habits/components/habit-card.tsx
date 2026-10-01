@@ -291,7 +291,7 @@ export function HabitCard({
       <View style={styles.wrapper}>
         {/* Green reveal layer behind the card */}
         <Animated.View style={[styles.reveal, revealStyle]}>
-          <Text style={styles.revealText}>✓ DONE</Text>
+          <Text style={styles.revealText}>{T.habit_swipe_done}</Text>
         </Animated.View>
 
         <GestureDetector gesture={panGesture}>
