@@ -118,6 +118,14 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="stats"
+        options={{
+          tabBarIcon: tabIcon('📊', T.tab_stats),
+          title: T.tab_stats,
+          tabBarLabel: T.tab_stats,
+        }}
+      />
+      <Tabs.Screen
         name="social"
         options={{
           tabBarIcon: tabIcon('👥', T.tab_social),
@@ -151,14 +159,6 @@ export default function TabsLayout() {
             fontSize: pixelSize(9),
             fontFamily: fonts.bold,
           },
-        }}
-      />
-      <Tabs.Screen
-        name="stats"
-        options={{
-          href: null,
-          title: 'STATS',
-          tabBarLabel: 'STATS',
         }}
       />
       <Tabs.Screen

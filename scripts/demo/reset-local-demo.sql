@@ -34,9 +34,11 @@ begin
       insert into public.completions (habit_id, completed_at, xp_earned)
       values (v_habit.id, ((v_today - k) + time '18:00') at time zone 'Europe/Paris', 10);
     end loop;
-    -- Older history with gaps, so the calendar looks lived-in.
-    for k in (v_habit.streak + 2)..30 loop
-      if k % 3 <> 0 then
+    -- A year of older history with gaps, getting more regular over time,
+    -- so the stats (year in pixels, 12-week trend) look lived-in.
+    update public.habits set created_at = now() - interval '370 days' where id = v_habit.id;
+    for k in (v_habit.streak + 2)..365 loop
+      if (k * 37 + v_habit.streak * 11) % 10 < (case when k > 240 then 5 when k > 120 then 7 else 8 end) then
         insert into public.completions (habit_id, completed_at, xp_earned)
         values (v_habit.id, ((v_today - k) + time '18:00') at time zone 'Europe/Paris', 10);
       end if;
