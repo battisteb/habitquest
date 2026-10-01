@@ -13,7 +13,8 @@
  *   kinetic — title whose words slam in one by one (hook); optional subtitle, icon, cta
  *   hero    — the hero drawn big in its scene, outfits swapping every `every` s
  *             (looks: [{ hat, outfit, accessory, label }])
- * Any segment: `flash` (cut from white), `speed` (clips), `sfx` (sound from assets/sounds at `sfxAt` s).
+ * Any segment: `flash` (cut from white), `speed` (clips), `sfx` (sound at `sfxAt` s, from marketing/audio/sfx
+ * if it exists there, else from the app's assets/sounds). Music: marketing/audio (chiptune.py).
  * clip/still: `zoom: [{ t, z, x, y }]` zooms the whole phone (title stays fixed): keyframes at t s,
  *   zoom z, centered on (x, y) of the app screen (0-1), eased in between.
  * Output: marketing/exports/reels/<reel>.mp4 and a copy without the music (game sounds only) in
@@ -138,7 +139,12 @@ async function roundedMask(page, file) {
     for (const [i, seg] of reel.segments.entries()) {
       const out = path.join(work, `${name}-${i}.mp4`);
       const enc = ['-r', String(FPS), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', out];
-      if (seg.sfx) sfx.push({ file: path.join(repo, 'assets', 'sounds', `${seg.sfx}.m4a`), at: clock + (seg.sfxAt || 0) });
+      if (seg.sfx) {
+        // Video-only sounds (marketing/audio/sfx) take precedence over the app's.
+        const own = path.join(root, 'audio', 'sfx', `${seg.sfx}.m4a`);
+        const file = fs.existsSync(own) ? own : path.join(repo, 'assets', 'sounds', `${seg.sfx}.m4a`);
+        sfx.push({ file, at: clock + (seg.sfxAt || 0) });
+      }
       clock += seg.dur;
       if (seg.type === 'kinetic') {
         await renderAnimated(page, { layout: 'kinetic', ...seg }, seg.dur, out, enc);
