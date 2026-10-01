@@ -1262,11 +1262,19 @@
         "sfx": "streak-milestone"
       },
       {
+        "type": "full",
+        "dur": 3.8,
+        "src": "stats",
+        "start": 0.3,
+        "title": "<em>3.</em> See your<br><em>progress</em> 📊",
+        "flash": true
+      },
+      {
         "type": "clip",
         "dur": 1.05,
         "src": "levelup",
         "start": 0.5,
-        "title": "<em>3.</em> Every quest<br>gives <em>XP</em>",
+        "title": "<em>4.</em> Every quest<br>gives <em>XP</em>",
         "zoom": [
           {
             "t": 0,
@@ -1362,7 +1370,7 @@
         "dur": 2.3,
         "src": "quests",
         "start": 2.3,
-        "title": "<em>4.</em> Daily missions:<br>bonus <em>loot</em> 💰",
+        "title": "<em>5.</em> Daily missions:<br>bonus <em>loot</em> 💰",
         "zoom": [
           {
             "t": 0,
@@ -1391,7 +1399,7 @@
       {
         "type": "hero",
         "dur": 4.4,
-        "title": "<em>5.</em> Spend your gold<br>on your <em>hero</em>",
+        "title": "<em>6.</em> Spend your gold<br>on your <em>hero</em>",
         "every": 0.8,
         "flash": true,
         "sfx": "coin",
@@ -1441,7 +1449,7 @@
         "dur": 3.8,
         "src": "social",
         "start": 0.8,
-        "title": "<em>6.</em> Climb the<br><em>leaderboard</em> 🏆",
+        "title": "<em>7.</em> Climb the<br><em>leaderboard</em> 🏆",
         "flash": true
       },
       {
@@ -1467,22 +1475,15 @@
         "src": "achievements",
         "start": 0.4,
         "speed": 1.2,
-        "title": "<em>7.</em> Unlock<br>23 <em>achievements</em> 🏅",
+        "title": "<em>8.</em> Unlock<br>23 <em>achievements</em> 🏅",
         "flash": true
-      },
-      {
-        "type": "clip",
-        "dur": 3.4,
-        "src": "stats",
-        "start": 0.6,
-        "title": "Track your <em>progress</em> 📊"
       },
       {
         "type": "full",
         "dur": 3.6,
         "src": "focus",
         "start": 0.6,
-        "title": "<em>8.</em> Exams? Holidays?<br>Streaks <em>frozen</em>, not lost",
+        "title": "<em>9.</em> Exams? Holidays?<br>Streaks <em>frozen</em>, not lost",
         "flash": true
       },
       {
