@@ -9,7 +9,9 @@ export type SfxKey =
   | 'coin'
   | 'attack'
   | 'victory'
-  | 'defeat';
+  | 'defeat'
+  | 'all_done'
+  | 'tap';
 
 export type MusicKey = 'duel';
 

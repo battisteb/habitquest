@@ -3,6 +3,7 @@ import { Pressable, Text, StyleSheet, type ViewStyle } from 'react-native';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../theme/tokens';
 import { useTheme } from '../theme/theme-context';
 import { hapticLight } from '../../lib/haptics';
+import { playSfx } from '../../lib/audio/sound-service';
 import { PixelFrame } from './pixel-frame';
 
 interface PixelButtonProps {
@@ -24,6 +25,7 @@ export function PixelButton({
   const styles = useMemo(createStyles, [themeKey]);
   const handlePress = () => {
     hapticLight();
+    void playSfx('tap', 0.3);
     onPress();
   };
 

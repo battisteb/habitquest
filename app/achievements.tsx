@@ -90,12 +90,16 @@ export default function AchievementsScreen() {
     minWidth: 70,
     textAlign: 'right',
   },
+  // Never squashed by the list below (the chips were cut in half).
   filterScroll: {
     flexGrow: 0,
+    flexShrink: 0,
   },
   filterRow: {
     paddingHorizontal: spacing.md,
+    paddingTop: spacing.xs,
     paddingBottom: spacing.sm,
+    alignItems: 'center',
     gap: spacing.xs,
     flexDirection: 'row',
   },
