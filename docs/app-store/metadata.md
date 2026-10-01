@@ -37,14 +37,17 @@ HabitQuest works for fitness, learning, mindfulness, productivity, creativity �
 ## Keywords (100 chars max)
 habits,streaks,gamification,RPG,pixel art,productivity,tracker,XP,level up,consistency
 
+## Marketing URL
+https://gethabitquest.com
+
 ## Support URL
-https://battisteb.github.io/habitquest/support
+https://gethabitquest.com/support
 
 ## Privacy Policy URL
-https://battisteb.github.io/habitquest/privacy-policy
+https://gethabitquest.com/privacy-policy
 
 ## Terms of Use (EULA)
-https://battisteb.github.io/habitquest/terms — also add this link at the end of the App Description (required for auto-renewable subscriptions, guideline 3.1.2).
+https://gethabitquest.com/terms — also add this link at the end of the App Description (required for auto-renewable subscriptions, guideline 3.1.2).
 
 ## Age Rating
 4+
