@@ -1,0 +1,5 @@
+{
+  "confirmation": "{{ if eq .Data.language \"fr\" }}Confirme ton compte HabitQuest ⚔️{{ else }}Confirm your HabitQuest account ⚔️{{ end }}",
+  "recovery": "{{ if eq .Data.language \"fr\" }}Réinitialise ton mot de passe HabitQuest 🔑{{ else }}Reset your HabitQuest password 🔑{{ end }}",
+  "email_change": "{{ if eq .Data.language \"fr\" }}Confirme ta nouvelle adresse HabitQuest ✉️{{ else }}Confirm your new HabitQuest e-mail ✉️{{ end }}"
+}

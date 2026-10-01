@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>HabitQuest</title>
+</head>
+<body style="margin:0;padding:0;background:#0D0D1A;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D1A;">
+  <tr><td align="center" style="padding:32px 12px;">
+    {{ if eq .Data.language "fr" }}<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#1A1A2E;border:4px solid #2D2D4E;">
+      <tr><td style="padding:32px 28px 8px 28px;text-align:center;">
+        <img src="https://habitquest.expo.app/icon-192.png" width="72" height="72" alt="HabitQuest" style="display:block;margin:0 auto;border:3px solid #2D2D4E;image-rendering:pixelated;">
+        <div style="margin-top:16px;font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:bold;letter-spacing:3px;color:#FFD700;">HABITQUEST</div>
+      </td></tr>
+      <tr><td style="padding:12px 28px 0 28px;text-align:center;">
+        <h1 style="margin:0;font-family:'Courier New',Courier,monospace;font-size:22px;letter-spacing:2px;color:#E8E8FF;">NOUVEAU MOT DE PASSE</h1>
+      </td></tr>
+      <tr><td style="padding:16px 28px 0 28px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#9999CC;">
+        Tu as demandé à réinitialiser ton mot de passe. Touche le bouton pour en choisir un nouveau : ton héros, tes séries et ton or sont en sécurité.
+      </td></tr>
+      <tr><td style="padding:28px 28px 8px 28px;text-align:center;">
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 22px;background:#6C63FF;border:3px solid #4A44B3;box-shadow:0 4px 0 #4A44B3;color:#ffffff;font-family:'Courier New',Courier,monospace;font-size:15px;font-weight:bold;letter-spacing:1px;text-decoration:none;">CHOISIR UN MOT DE PASSE</a>
+      </td></tr>
+      <tr><td style="padding:20px 28px 28px 28px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#555580;">
+        Ce n’est pas toi ? Ignore cet e-mail : ton mot de passe ne change pas.
+      </td></tr>
+    </table>{{ else }}<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#1A1A2E;border:4px solid #2D2D4E;">
+      <tr><td style="padding:32px 28px 8px 28px;text-align:center;">
+        <img src="https://habitquest.expo.app/icon-192.png" width="72" height="72" alt="HabitQuest" style="display:block;margin:0 auto;border:3px solid #2D2D4E;image-rendering:pixelated;">
+        <div style="margin-top:16px;font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:bold;letter-spacing:3px;color:#FFD700;">HABITQUEST</div>
+      </td></tr>
+      <tr><td style="padding:12px 28px 0 28px;text-align:center;">
+        <h1 style="margin:0;font-family:'Courier New',Courier,monospace;font-size:22px;letter-spacing:2px;color:#E8E8FF;">NEW PASSWORD</h1>
+      </td></tr>
+      <tr><td style="padding:16px 28px 0 28px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#9999CC;">
+        You asked to reset your password. Tap the button to choose a new one: your hero, streaks and gold are safe.
+      </td></tr>
+      <tr><td style="padding:28px 28px 8px 28px;text-align:center;">
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 22px;background:#6C63FF;border:3px solid #4A44B3;box-shadow:0 4px 0 #4A44B3;color:#ffffff;font-family:'Courier New',Courier,monospace;font-size:15px;font-weight:bold;letter-spacing:1px;text-decoration:none;">CHOOSE A NEW PASSWORD</a>
+      </td></tr>
+      <tr><td style="padding:20px 28px 28px 28px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#555580;">
+        You didn't ask for this? Ignore this e-mail: your password stays the same.
+      </td></tr>
+    </table>{{ end }}
+    <div style="margin-top:20px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#555580;">
+      <a href="https://habitquest.expo.app" style="color:#555580;">habitquest.expo.app</a>
+    </div>
+  </td></tr>
+</table>
+</body>
+</html>

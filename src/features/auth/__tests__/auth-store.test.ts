@@ -74,7 +74,7 @@ describe('authStore$', () => {
     expect(authStore$.isLoading.get()).toBe(false);
   });
 
-  it('signUp passes username in metadata', async () => {
+  it('signUp passes username and language in metadata', async () => {
     const { supabase } = require('../../../lib/supabase/client');
     supabase.auth.signUp.mockResolvedValue({ error: null });
     supabase.rpc.mockResolvedValue({ data: true, error: null });
@@ -85,7 +85,7 @@ describe('authStore$', () => {
     expect(supabase.auth.signUp).toHaveBeenCalledWith({
       email: 'test@test.com',
       password: 'password',
-      options: { data: { username: 'hero123' } },
+      options: { data: { username: 'hero123', language: expect.stringMatching(/^(en|fr)$/) } },
     });
   });
 
