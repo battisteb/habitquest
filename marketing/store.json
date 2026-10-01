@@ -1,0 +1,24 @@
+{
+  "screens": ["today", "profile", "battle", "arena", "shop", "journey"],
+  "en": {
+    "today": { "badge": "DAILY QUESTS", "title": "Turn habits<br>into <em>quests</em>", "sub": "Check off a habit, earn XP and gold, keep your streak alive." },
+    "profile": { "badge": "YOUR HERO", "title": "Level up<br>a <em>pixel hero</em>", "sub": "Six ranks from Novice to Legend, with gear you choose." },
+    "battle": { "badge": "DUELS", "title": "Challenge<br>your <em>friends</em>", "sub": "Turn-based duels against your friends' heroes." },
+    "arena": { "badge": "ARENA", "title": "Climb the<br><em>league</em>", "sub": "One fight a day in your league. The most consistent go up." },
+    "shop": { "badge": "SHOP", "title": "Spend your<br><em>gold</em>", "sub": "Hats, outfits, accessories and themes for your hero." },
+    "journey": { "badge": "PROGRESS", "title": "Watch your<br><em>progress</em>", "sub": "XP history, streaks and every level you reached." }
+  },
+  "fr": {
+    "today": { "badge": "QUÊTES DU JOUR", "title": "Tes habitudes<br>en <em>quêtes</em>", "sub": "Valide une habitude, gagne de l'XP et de l'or, garde ta série." },
+    "profile": { "badge": "TON HÉROS", "title": "Fais évoluer<br>ton <em>héros</em>", "sub": "Six rangs, de Novice à Légende, avec l'équipement de ton choix." },
+    "battle": { "badge": "DUELS", "title": "Défie<br>tes <em>amis</em>", "sub": "Des duels au tour par tour contre les héros de tes amis." },
+    "arena": { "badge": "ARÈNE", "title": "Grimpe<br>dans ta <em>ligue</em>", "sub": "Un combat par jour dans ta ligue. Les plus réguliers montent." },
+    "shop": { "badge": "BOUTIQUE", "title": "Dépense<br>ton <em>or</em>", "sub": "Chapeaux, tenues, accessoires et thèmes pour ton héros." },
+    "journey": { "badge": "PROGRESSION", "title": "Suis tes<br><em>progrès</em>", "sub": "Historique d'XP, séries et chaque niveau atteint." }
+  },
+  "sizes": {
+    "ios-6.7": [1290, 2796],
+    "ios-6.5": [1242, 2688],
+    "android": [1080, 1920]
+  }
+}
