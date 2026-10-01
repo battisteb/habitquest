@@ -9,3 +9,8 @@ exclude:
   - app-store/
   - play-store/
   - game-design/
+  - review/
+  - support-messages.md
+  - auth-emails.md
+  - web-testing.md
+  - ux-review.md

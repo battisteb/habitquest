@@ -4,7 +4,7 @@ title: Politique de confidentialité — HabitQuest
 
 # HabitQuest — Politique de confidentialité
 
-*Dernière mise à jour : 28 septembre 2026*
+*Dernière mise à jour : 1ᵉʳ octobre 2026*
 
 HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cette politique explique quelles données l'app collecte, pourquoi, et quels choix vous avez. Contact : **batto060504@gmail.com**.
 
@@ -16,8 +16,9 @@ HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cett
 | Pseudo, couleurs de l'avatar, niveau, XP, or, objets équipés | Faire fonctionner le jeu et montrer votre héros à vos amis | Supabase |
 | Habitudes, validations, séries, notes facultatives | Suivi des habitudes | Supabase, et en cache sur votre appareil |
 | Amis, duels, défis, notifications in-app | Fonctions sociales | Supabase |
-| Fuseau horaire (ex. Europe/Paris) | Compter les séries et limites quotidiennes selon votre jour local | Supabase |
-| Jeton de notifications push | Envoyer les rappels et invitations de duel | Supabase |
+| Fuseau horaire (ex. Europe/Paris) et langue de l'app | Compter les séries et limites quotidiennes selon votre jour local ; envoyer notifications et e-mails dans votre langue | Supabase |
+| Jeton de notifications push | Envoyer les rappels et notifications du jeu | Supabase |
+| Messages envoyés au Support, avec la version de l'app, la plateforme et la langue | Vous répondre et corriger les problèmes | Supabase |
 | Historique d'achats et statut d'abonnement | Débloquer Premium | RevenueCat, Apple / Google |
 | Identifiant publicitaire (IDFA / identifiant Android) — **uniquement si vous autorisez le suivi** | Afficher des publicités aux utilisateurs gratuits | Google AdMob |
 
@@ -32,12 +33,13 @@ Les utilisateurs gratuits voient des publicités fournies par Google AdMob. Sur 
 - **Supabase** — base de données, authentification et fonctions serveur ([confidentialité](https://supabase.com/privacy))
 - **RevenueCat** — gestion des abonnements ([confidentialité](https://www.revenuecat.com/privacy))
 - **Google AdMob** — publicité ([confidentialité](https://policies.google.com/privacy))
-- **Expo** — envoi des notifications push ([confidentialité](https://expo.dev/privacy))
+- **Expo** — envoi des notifications push et hébergement du site ([confidentialité](https://expo.dev/privacy))
+- **Resend** — e-mails du compte, comme la réinitialisation du mot de passe ([confidentialité](https://resend.com/legal/privacy-policy))
 - **Apple / Google** — paiements via l'App Store et Google Play
 
 ## 4. Qui voit vos données
 
-Les autres joueurs peuvent vous trouver par votre pseudo et voir votre pseudo, votre avatar, votre niveau, votre XP et votre meilleure série (classement global, recherche d'amis). Vos amis voient aussi vos résultats de duels et de défis. Vos habitudes et vos notes sont privées.
+Les autres joueurs peuvent vous trouver par votre pseudo et voir votre profil public : pseudo, avatar et objets équipés, niveau, XP, rang, or, meilleure série et date d'inscription (classement global, recherche d'amis). Vos amis voient aussi vos résultats de duels et de défis. Vos habitudes, vos notes, votre fuseau horaire, votre abonnement et vos messages au Support sont privés.
 
 ## 5. Conservation et suppression
 

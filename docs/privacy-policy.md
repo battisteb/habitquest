@@ -4,7 +4,7 @@ title: Privacy Policy — HabitQuest
 
 # HabitQuest — Privacy Policy
 
-*Last updated: September 28, 2026*
+*Last updated: October 1, 2026*
 
 HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy explains what data the app collects, why, and the choices you have. Contact: **batto060504@gmail.com**.
 
@@ -16,8 +16,9 @@ HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy e
 | Username, avatar colors, level, XP, gold, equipped items | Run the game and show your hero to your friends | Supabase |
 | Habits, completions, streaks, optional completion notes | Core habit-tracking features | Supabase, and cached on your device |
 | Friends, duels, challenges, in-app notifications | Social features | Supabase |
-| Time zone (e.g. Europe/Paris) | Count streaks and daily limits on your local day | Supabase |
-| Push notification token | Send reminders and duel invitations | Supabase |
+| Time zone (e.g. Europe/Paris) and app language | Count streaks and daily limits on your local day; send notifications and e-mails in your language | Supabase |
+| Push notification token | Send reminders and game notifications | Supabase |
+| Messages you send to Support, with the app version, platform and language | Answer you and fix problems | Supabase |
 | Purchase history and subscription status | Unlock Premium | RevenueCat, Apple / Google |
 | Advertising identifier (IDFA / Android advertising ID) — **only if you allow tracking** | Show ads to free users | Google AdMob |
 
@@ -32,12 +33,13 @@ Free users see ads served by Google AdMob. On iOS, the app asks for permission (
 - **Supabase** — database, authentication and server functions ([privacy](https://supabase.com/privacy))
 - **RevenueCat** — subscription management ([privacy](https://www.revenuecat.com/privacy))
 - **Google AdMob** — advertising ([privacy](https://policies.google.com/privacy))
-- **Expo** — push notification delivery ([privacy](https://expo.dev/privacy))
+- **Expo** — push notification delivery and website hosting ([privacy](https://expo.dev/privacy))
+- **Resend** — account e-mails such as password reset ([privacy](https://resend.com/legal/privacy-policy))
 - **Apple / Google** — payments through the App Store and Google Play
 
 ## 4. Who can see your data
 
-Other players can find you by username and see your username, avatar, level, XP and best streak (global leaderboard, friend search). Your friends also see your duel and challenge results. Your habits and notes are private.
+Other players can find you by username and see your public profile: username, avatar and equipped items, level, XP, rank, gold, best streak and sign-up date (global leaderboard, friend search). Your friends also see your duel and challenge results. Your habits, notes, time zone, subscription and Support messages are private.
 
 ## 5. Retention and deletion
 

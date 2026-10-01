@@ -20,5 +20,6 @@ title: HabitQuest
 
 ---
 
-- [Politique de confidentialité](privacy-policy.fr) · [Privacy Policy](privacy-policy)
+- [Privacy Policy](privacy-policy) · [Politique de confidentialité](privacy-policy.fr)
+- [Terms of Use · Conditions d'utilisation](terms)
 - [Support](support)

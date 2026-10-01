@@ -17,6 +17,7 @@ Réponses à donner, d'après l'inventaire des données (`docs/privacy-policy.md
 | Identifiers → User ID | Oui | Oui | Non | App Functionality |
 | Identifiers → Device ID (IDFA) | Oui, si ATT accepté | Non | **Oui** | Third-Party Advertising |
 | User Content → Other User Content (habitudes, notes, pseudo) | Oui | Oui | Non | App Functionality |
+| User Content → Customer Support (messages envoyés via Réglages → Support) | Oui | Oui | Non | App Functionality |
 | Purchases → Purchase History | Oui | Oui | Non | App Functionality |
 | Usage Data → Product Interaction | Oui (collectée par AdMob) | Non | Oui | Third-Party Advertising |
 | Usage Data → Advertising Data | Oui (AdMob) | Non | Oui | Third-Party Advertising |
@@ -28,5 +29,5 @@ Pas de collecte : localisation, santé, contacts, données financières, histori
 
 - Aucune violence réaliste, contenu sexuel, jeux d'argent, alcool ou drogue.
 - Duels : combats pixel art stylisés, sans sang → « Cartoon or Fantasy Violence : Infrequent/Mild ».
-- Pas de chat. Seuls le pseudo, l'avatar et le niveau sont visibles par les autres joueurs (classement global, recherche d'amis).
+- Pas de chat. Seul le profil public (pseudo, avatar, niveau, XP, rang, or, meilleure série) est visible des autres joueurs ; le fuseau horaire, l'abonnement et les messages au Support restent privés (vérifié côté serveur, `supabase/tests/privacy.test.sql`).
 - Résultat attendu : **9+** (à cause de la violence cartoon légère) — à confirmer dans le questionnaire.
