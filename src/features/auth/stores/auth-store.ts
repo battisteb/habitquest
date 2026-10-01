@@ -2,6 +2,7 @@ import { observable } from '@legendapp/state';
 import { Platform } from 'react-native';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../../../lib/supabase/client';
+import { lang$ } from '../../../lib/i18n';
 import { clearUserData } from '../../../lib/storage/user-data';
 
 interface AuthState {
@@ -65,7 +66,8 @@ export async function signUp(email: string, password: string, username: string) 
       email,
       password,
       options: {
-        data: { username: name },
+        // The language picks French or English auth e-mails (supabase/templates).
+        data: { username: name, language: lang$.get() },
       },
     });
     if (error) throw error;
