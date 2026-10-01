@@ -19,7 +19,8 @@ Conventions complètes : `CLAUDE.md` (racine du repo). Économie et règles de j
 
 - Migration `supabase/migrations/AAAAMMJJHHMMSS_description.sql` : RLS sur chaque table, policies minimales, index utiles.
 - Toute règle de jeu (XP, or, limites, résultats) se décide côté serveur : fonctions `security definer` qui vérifient l'appelant, triggers de garde pour les écritures des joueurs.
-- Tests pgTAP dans `supabase/tests/<domaine>.test.sql`, y compris ce qu'un joueur ne doit **pas** pouvoir faire.
+- Tests pgTAP dans `supabase/tests/<domaine>.test.sql`, y compris ce qu'un joueur ne doit **pas** pouvoir faire. Les lancer sur une base neuve : `npx supabase db start` (ports 553xx, applique toutes les migrations) puis `npx supabase test db` ; la CI fait de même.
+- Nouvelle table : RLS **et** `grant` explicites pour `authenticated` (rien n'est accordé par défaut, voir la migration `20261001230000_explicit_table_grants`).
 - Mettre à jour `src/lib/supabase/types.ts`.
 
 ## 3. App

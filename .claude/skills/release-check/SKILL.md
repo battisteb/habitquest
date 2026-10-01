@@ -12,7 +12,7 @@ Références : `docs/app-store/ios-release-checklist.md`, `docs/app-store/review
 ## 1. Qualité (doit être vert)
 
 - `npm run typecheck`, `npm run lint` (0 erreur), `npm test`.
-- Tests pgTAP : chaque fichier de `supabase/tests/` sur le Supabase local, 0 `not ok`.
+- Tests pgTAP sur une base neuve : `npx supabase db start` puis `npx supabase test db` (toutes les migrations depuis zéro), « All tests successful ».
 - `npx expo-doctor` : aucun problème bloquant.
 - `npm run check:bundle` : les bundles iOS, Android et web se construisent.
 - `scripts/smoke-web.js` en FR et EN : 0 problème sur tous les écrans.
