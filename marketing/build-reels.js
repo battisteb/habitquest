@@ -10,6 +10,9 @@
  *   still — app screenshot (assets/screens/<src>.png) in the phone frame, slow zoom
  * Output: marketing/exports/reels/<reel>.mp4 and a silent copy in
  * marketing/exports/reels/sans-musique/ (git-ignored).
+ *
+ * English version: LANG=en REC_DIR=<English recordings> node marketing/build-reels.js
+ * → reels.en.json, screenshots from assets/screens-en, output exports/reels-en.
  */
 const fs = require('fs');
 const path = require('path');
@@ -20,10 +23,13 @@ const ffmpeg = process.env.FFMPEG || require('ffmpeg-static');
 
 const root = __dirname;
 const repo = path.join(root, '..');
-const reels = JSON.parse(fs.readFileSync(path.join(root, 'reels.json'), 'utf8'));
+const lang = process.env.LANG === 'en' ? 'en' : 'fr';
+const reels = JSON.parse(fs.readFileSync(path.join(root, lang === 'en' ? 'reels.en.json' : 'reels.json'), 'utf8'));
+const screens = lang === 'en' ? 'screens-en' : 'screens';
+const outDir = path.join(root, 'exports', lang === 'en' ? 'reels-en' : 'reels');
 const template = pathToFileURL(path.join(root, 'templates', 'reel.html')).href;
 const recDir = process.env.REC_DIR || path.join(root, 'recordings');
-const work = path.join(root, 'exports', 'reels', '.work');
+const work = path.join(outDir, '.work');
 const PHONE = { x: 267, y: 600, w: 546, h: 1182, radius: 44 };
 const FPS = 30;
 
@@ -78,7 +84,7 @@ async function roundedMask(page, file) {
         await renderLayer(page, { layout: 'phone', ...seg }, overlay);
         const screenInput = seg.type === 'clip'
           ? ['-ss', String(seg.start || 0), '-i', path.join(recDir, `${seg.src}.webm`)]
-          : ['-loop', '1', '-i', path.join(root, 'assets', 'screens', `${seg.src}.png`)];
+          : ['-loop', '1', '-i', path.join(root, 'assets', screens, `${seg.src}.png`)];
         const screen = seg.type === 'clip'
           ? `[1:v]setpts=PTS/${seg.speed || 1},fps=${FPS},scale=${PHONE.w}:${PHONE.h}`
           : `[1:v]scale=${PHONE.w * 2}:-1,zoompan=z='min(1+0.0008*on,1.08)':d=1:x='iw/2-(iw/zoom/2)':y=0:s=${PHONE.w}x${PHONE.h}:fps=${FPS}`;
@@ -94,7 +100,7 @@ async function roundedMask(page, file) {
     const list = path.join(work, `${name}.txt`);
     fs.writeFileSync(list, parts.map((p) => `file '${p.replace(/\\/g, '/')}'`).join('\n'));
     const total = reel.segments.reduce((s, x) => s + x.dur, 0);
-    const out = path.join(root, 'exports', 'reels', `${name}.mp4`);
+    const out = path.join(outDir, `${name}.mp4`);
     run(['-f', 'concat', '-safe', '0', '-i', list,
       '-ss', String(reel.music.start), '-i', path.join(repo, reel.music.file),
       '-filter_complex', `[1:a]volume=0.7,afade=in:st=0:d=0.5,afade=out:st=${(total - 1.2).toFixed(2)}:d=1.2[a]`,
@@ -102,7 +108,7 @@ async function roundedMask(page, file) {
     console.log(`${name}: ${total.toFixed(1)} s → ${path.relative(repo, out)}`);
 
     // Silent twin, to add a trending sound in the TikTok/Instagram editor.
-    const silent = path.join(root, 'exports', 'reels', 'sans-musique', `${name}.mp4`);
+    const silent = path.join(outDir, 'sans-musique', `${name}.mp4`);
     fs.mkdirSync(path.dirname(silent), { recursive: true });
     run(['-f', 'concat', '-safe', '0', '-i', list, '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo',
       '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-t', String(total), '-movflags', '+faststart', silent]);
