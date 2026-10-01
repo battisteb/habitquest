@@ -43,7 +43,7 @@ const T = {
       ['🤝', 'Co-op challenges', 'Team up with friends on a shared goal and earn bonus XP together.'],
     ],
     shotsTitle: 'A look <em>inside</em>',
-    shots: [['today', 'Your quests'], ['profile', 'Your hero'], ['arena', 'The arena'], ['journey', 'Your progress']],
+    shots: [['today', 'Your quests'], ['profile', 'Your hero'], ['arena', 'The arena'], ['stats', 'Your progress']],
     stepsTitle: 'How it <em>works</em>',
     steps: [
       ['Create your hero', 'Pick your look and your first quests in under a minute.'],
@@ -91,7 +91,7 @@ const T = {
       ['🤝', 'Défis coop', 'Fais équipe avec tes amis sur un objectif commun et gagnez de l\'XP bonus ensemble.'],
     ],
     shotsTitle: 'Un aperçu de <em>l\'app</em>',
-    shots: [['today', 'Tes quêtes'], ['profile', 'Ton héros'], ['arena', 'L\'arène'], ['journey', 'Ta progression']],
+    shots: [['today', 'Tes quêtes'], ['profile', 'Ton héros'], ['arena', 'L\'arène'], ['stats', 'Ta progression']],
     stepsTitle: 'Comment ça <em>marche</em>',
     steps: [
       ['Crée ton héros', 'Choisis ton apparence et tes premières quêtes en moins d\'une minute.'],
