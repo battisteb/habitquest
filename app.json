@@ -4,14 +4,6 @@
     "slug": "habitquest",
     "version": "1.0.0",
     "description": "Level up your habits with pixel art gamification. Build streaks, earn XP, and become a legend.",
-    "keywords": [
-      "habits",
-      "gamification",
-      "productivity",
-      "pixel art",
-      "streaks",
-      "RPG"
-    ],
     "platforms": [
       "ios",
       "android",
@@ -20,11 +12,10 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1e2448"
+      "backgroundColor": "#0D0D1A"
     },
     "ios": {
       "supportsTablet": false,
@@ -90,9 +81,9 @@
       "output": "single",
       "name": "HabitQuest",
       "shortName": "HabitQuest",
-      "themeColor": "#1e2448",
-      "backgroundColor": "#1e2448",
-      "lang": "fr",
+      "themeColor": "#0D0D1A",
+      "backgroundColor": "#0D0D1A",
+      "lang": "en",
       "description": "Level up your habits with pixel art gamification."
     },
     "plugins": [
@@ -101,7 +92,7 @@
         "expo-notifications",
         {
           "icon": "./assets/icon.png",
-          "color": "#e94560"
+          "color": "#6C63FF"
         }
       ],
       [
@@ -126,7 +117,8 @@
         {
           "userTrackingPermission": "This identifier will be used to show you personalized ads."
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "scheme": "habitquest",
     "extra": {
