@@ -55,6 +55,17 @@ EXPO_TOKEN=$(getv EXPO_TOKEN) npm run deploy:web
 rm -f .env.production.local                            # toujours, même en cas d'échec
 ```
 
+## 4 bis. Mise à jour à distance des apps (EAS Update, ADR 014)
+
+Pour un correctif **JavaScript uniquement** des apps iOS/Android déjà publiées (rien de natif : voir le tableau de l'ADR 014) :
+
+```bash
+EXPO_TOKEN=$(getv EXPO_TOKEN) npm run update:preview -- --message "fix: …"      # puis vérifier sur un build preview
+EXPO_TOKEN=$(getv EXPO_TOKEN) npm run update:production -- --message "fix: …"
+```
+
+Si la mise à jour dépend d'une migration : migration d'abord, compatible avec la version précédente de l'app. Retour en arrière : `npx eas-cli update:republish --group <id précédent>`.
+
 ## 5. Vérifier
 
 ```bash

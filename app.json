@@ -126,6 +126,14 @@
         "projectId": "a26ea746-5484-4859-9fcd-403f164eb2ad"
       }
     },
-    "owner": "battisteb"
+    "owner": "battisteb",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a26ea746-5484-4859-9fcd-403f164eb2ad",
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    }
   }
 }
