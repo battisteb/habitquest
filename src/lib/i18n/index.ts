@@ -187,6 +187,7 @@ const FR = {
   tuto_next: 'Suivant',
   tuto_done: "C'est parti !",
   tuto_skip: 'Passer le tutoriel',
+  habit_swipe_done: '✓ FAIT',
   settings_replay_tutorial: 'Revoir le tutoriel',
   // Onboarding — avatar step
   onb_avatar_title: 'CRÉE TON HÉROS',
@@ -1175,6 +1176,7 @@ const EN = {
   tuto_next: 'Next',
   tuto_done: "Let's go!",
   tuto_skip: 'Skip tutorial',
+  habit_swipe_done: '✓ DONE',
   settings_replay_tutorial: 'Replay tutorial',
   // Onboarding — avatar step
   onb_avatar_title: 'MEET YOUR HERO',
