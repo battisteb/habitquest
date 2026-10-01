@@ -1,5 +1,7 @@
 ---
 title: Politique de confidentialité — HabitQuest
+lang: fr
+alt: /privacy-policy
 ---
 
 # HabitQuest — Politique de confidentialité

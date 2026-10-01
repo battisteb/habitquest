@@ -1,5 +1,5 @@
 <!doctype html>
-{% assign fr = false %}{% if page.url contains '.fr' or page.url contains '/fr/' %}{% assign fr = true %}{% endif %}
+{% assign fr = false %}{% if page.lang == 'fr' %}{% assign fr = true %}{% endif %}
 <html lang="{% if fr %}fr{% else %}en{% endif %}">
 <head>
 <meta charset="utf-8">
@@ -15,7 +15,8 @@
 <header class="top"><div class="wrap">
   <a class="brand pixel" href="{% if fr %}{{ '/fr/' | relative_url }}{% else %}{{ '/' | relative_url }}{% endif %}"><img src="{{ '/assets/icon.png' | relative_url }}" alt="">HabitQuest</a>
   <nav class="nav">
-    <a href="{{ '/support' | relative_url }}">{% if fr %}Aide{% else %}Support{% endif %}</a>
+    <a href="{% if fr %}{{ '/support.fr' | relative_url }}{% else %}{{ '/support' | relative_url }}{% endif %}">{% if fr %}Aide{% else %}Support{% endif %}</a>
+    {% if page.alt %}<a class="lang" href="{{ page.alt | relative_url }}" hreflang="{% if fr %}en{% else %}fr{% endif %}">{% if fr %}EN{% else %}FR{% endif %}</a>{% endif %}
   </nav>
 </div></header>
 <main class="page">
@@ -23,9 +24,9 @@
 </main>
 <footer><div class="wrap">
   <nav>
-    <a href="{{ '/support' | relative_url }}">{% if fr %}Aide{% else %}Support{% endif %}</a>
+    <a href="{% if fr %}{{ '/support.fr' | relative_url }}{% else %}{{ '/support' | relative_url }}{% endif %}">{% if fr %}Aide{% else %}Support{% endif %}</a>
     <a href="{% if fr %}{{ '/privacy-policy.fr' | relative_url }}{% else %}{{ '/privacy-policy' | relative_url }}{% endif %}">{% if fr %}Confidentialité{% else %}Privacy Policy{% endif %}</a>
-    <a href="{{ '/terms' | relative_url }}">{% if fr %}Conditions d'utilisation{% else %}Terms of Use{% endif %}</a>
+    <a href="{% if fr %}{{ '/terms.fr' | relative_url }}{% else %}{{ '/terms' | relative_url }}{% endif %}">{% if fr %}Conditions d'utilisation{% else %}Terms of Use{% endif %}</a>
     <a href="mailto:habitquest.application@gmail.com">Contact</a>
   </nav>
   <span>© 2026 HabitQuest</span>

@@ -7,8 +7,8 @@ export type LegalPage = 'privacy' | 'terms' | 'support';
 
 /** Public pages required by the stores (privacy policy, terms of use) and the help page. */
 export function legalUrl(page: LegalPage, lang: Lang): string {
-  if (page === 'privacy') return `${SITE}/${lang === 'fr' ? 'privacy-policy.fr' : 'privacy-policy'}`;
-  return `${SITE}/${page}`;
+  const name = page === 'privacy' ? 'privacy-policy' : page;
+  return `${SITE}/${lang === 'fr' ? `${name}.fr` : name}`;
 }
 
 export function openLegalPage(page: LegalPage, lang: Lang): void {

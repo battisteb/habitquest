@@ -8,8 +8,10 @@ describe('legalUrl', () => {
     expect(legalUrl('privacy', 'en')).toBe('https://gethabitquest.com/privacy-policy');
   });
 
-  it('has bilingual terms and support pages', () => {
-    expect(legalUrl('terms', 'fr')).toBe('https://gethabitquest.com/terms');
+  it('opens terms and help in the player language too', () => {
+    expect(legalUrl('terms', 'fr')).toBe('https://gethabitquest.com/terms.fr');
+    expect(legalUrl('terms', 'en')).toBe('https://gethabitquest.com/terms');
+    expect(legalUrl('support', 'fr')).toBe('https://gethabitquest.com/support.fr');
     expect(legalUrl('support', 'en')).toBe('https://gethabitquest.com/support');
   });
 });
