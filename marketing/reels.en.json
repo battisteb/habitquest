@@ -6,38 +6,85 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2.4,
-        "icon": true,
-        "title": "What if your life<br>was an <em>RPG</em>? ⚔️"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "What if your life<br>was an <em>RPG</em>? ⚔️",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
-        "type": "clip",
-        "dur": 4.2,
+        "type": "full",
+        "dur": 1.8,
         "src": "today",
-        "start": 0.6,
-        "title": "Every habit<br>= a <em>quest</em>"
+        "start": 0.4,
+        "title": "Every habit<br>= a <em>quest</em>",
+        "flash": true
       },
       {
-        "type": "still",
-        "dur": 3,
-        "src": "habit",
-        "title": "Keep your <em>streak</em> 🔥"
+        "type": "full",
+        "dur": 1.3,
+        "src": "milestone",
+        "start": 0.5,
+        "title": "Tick it.",
+        "zoom": {
+          "at": 0.4,
+          "to": 1.8,
+          "x": 0.87,
+          "y": 0.56
+        },
+        "sfx": "complete",
+        "sfxAt": 0.7
       },
       {
-        "type": "clip",
-        "dur": 3.2,
-        "src": "profile",
-        "start": 0.3,
-        "title": "Level up.<br>Become a <em>legend</em>."
+        "type": "full",
+        "dur": 1.5,
+        "src": "milestone",
+        "start": 1.6,
+        "title": "Keep your <em>streak</em> 🔥",
+        "flash": true,
+        "sfx": "streak-milestone"
       },
       {
-        "type": "card",
-        "dur": 2.8,
+        "type": "hero",
+        "dur": 2.6,
+        "title": "Level up.<br>Become a <em>legend</em>.",
+        "every": 0.5,
+        "sfx": "level-up",
+        "looks": [
+          {},
+          {
+            "hat": "hat_adventurer",
+            "outfit": "outfit_leather",
+            "label": "APPRENTICE"
+          },
+          {
+            "hat": "hat_knight",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_shield",
+            "label": "KNIGHT"
+          },
+          {
+            "hat": "hat_samurai",
+            "outfit": "outfit_shadow",
+            "accessory": "acc_flame_sword",
+            "label": "CHAMPION"
+          },
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_golden",
+            "accessory": "acc_wings",
+            "label": "LEGEND"
+          }
+        ]
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.4,
         "icon": true,
         "title": "HabitQuest",
         "subtitle": "Coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -48,30 +95,75 @@
     },
     "segments": [
       {
-        "type": "card",
+        "type": "kinetic",
+        "dur": 1.5,
+        "title": "My hero<br><em>levels up</em>.",
+        "sfx": "attack",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "full",
+        "dur": 1.2,
+        "src": "levelup",
+        "start": 0.6,
+        "title": "Because I kept<br>my <em>habits</em>.",
+        "zoom": {
+          "at": 0.4,
+          "to": 1.6,
+          "x": 0.87,
+          "y": 0.6
+        },
+        "sfx": "complete",
+        "sfxAt": 0.6,
+        "flash": true
+      },
+      {
+        "type": "full",
         "dur": 2.2,
-        "title": "My hero <em>levels up</em>."
+        "src": "levelup",
+        "start": 1.8,
+        "title": "<em>LEVEL UP!</em>",
+        "zoom": {
+          "at": 0.1,
+          "to": 1.25,
+          "x": 0.5,
+          "y": 0.5
+        },
+        "sfx": "level-up",
+        "flash": true
       },
       {
-        "type": "clip",
-        "dur": 3.6,
-        "src": "profile",
-        "start": 0.2,
-        "title": "Because I kept<br>my <em>habits</em>."
+        "type": "hero",
+        "dur": 2.2,
+        "title": "Next step:<br><em>Knight</em> 🛡️",
+        "every": 0.7,
+        "looks": [
+          {
+            "hat": "hat_adventurer",
+            "outfit": "outfit_leather",
+            "label": "WARRIOR"
+          },
+          {
+            "hat": "hat_knight",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_shield",
+            "label": "KNIGHT"
+          },
+          {
+            "hat": "hat_knight",
+            "outfit": "outfit_royal",
+            "accessory": "acc_sword",
+            "label": "KNIGHT"
+          }
+        ]
       },
       {
-        "type": "still",
-        "dur": 3.2,
-        "src": "journey",
-        "title": "Next step:<br><em>Knight</em> 🛡️"
-      },
-      {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Your hero is waiting.",
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Your hero<br>is <em>waiting</em>.",
         "subtitle": "HabitQuest · coming soon",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -82,30 +174,36 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "Challenge your friends… ⚔️"
+        "type": "kinetic",
+        "dur": 1.4,
+        "title": "Challenge<br>your <em>friends</em>… ⚔️",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
         "type": "clip",
-        "dur": 4.2,
+        "dur": 3.4,
         "src": "battle",
-        "start": 0.6,
-        "speed": 1.3,
-        "title": "…with your <em>real</em><br>habits 💪"
+        "start": 0.8,
+        "speed": 1.4,
+        "title": "…with your <em>real</em><br>habits 💪",
+        "flash": true,
+        "sfx": "attack",
+        "sfxAt": 1.2
       },
       {
         "type": "still",
-        "dur": 2.6,
+        "dur": 1.8,
         "src": "duels",
-        "title": "The most <em>consistent</em><br>wins."
+        "title": "The most <em>consistent</em><br>wins.",
+        "sfx": "victory"
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Tag the friend you'd beat 👇",
-        "cta": "HABITQUEST"
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Tag the friend<br>you'd <em>beat</em> 👇",
+        "cta": "HABITQUEST",
+        "flash": true
       }
     ]
   },
@@ -116,24 +214,42 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "Every morning,<br>3 new <em>missions</em> 📜"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "Every morning:<br>3 new <em>missions</em> 📜",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
-        "type": "clip",
-        "dur": 5,
+        "type": "full",
+        "dur": 2.0,
         "src": "quests",
-        "start": 0.3,
-        "title": "You complete them<br>by living your <em>day</em>"
+        "start": 0.9,
+        "title": "Live your <em>day</em>…",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Claim your <em>loot</em> 💰",
+        "type": "full",
+        "dur": 1.6,
+        "src": "quests",
+        "start": 2.9,
+        "title": "…claim your <em>loot</em> 💰",
+        "zoom": {
+          "at": 0.2,
+          "to": 1.7,
+          "x": 0.5,
+          "y": 0.34
+        },
+        "sfx": "coin",
+        "sfxAt": 0.4
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Daily <em>loot</em>,<br>daily <em>XP</em>.",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -144,22 +260,48 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "What happens when<br>you last <em>14 days</em> 🔥"
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "What happens when<br>you last <em>14 days</em> 🔥",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
-        "type": "clip",
-        "dur": 5.2,
+        "type": "full",
+        "dur": 1.2,
         "src": "milestone",
-        "start": 0.4,
-        "title": "One box ticked…"
+        "start": 0.5,
+        "title": "One box…",
+        "zoom": {
+          "at": 0.3,
+          "to": 2.0,
+          "x": 0.87,
+          "y": 0.56
+        },
+        "sfx": "complete",
+        "sfxAt": 0.7
       },
       {
-        "type": "card",
-        "dur": 2.2,
-        "title": "What's your longest <em>streak</em>?",
-        "subtitle": "Tell us in the comments 👇"
+        "type": "full",
+        "dur": 2.4,
+        "src": "milestone",
+        "start": 1.6,
+        "title": "…and <em>this</em>.",
+        "zoom": {
+          "at": 0.1,
+          "to": 1.2,
+          "x": 0.5,
+          "y": 0.45
+        },
+        "flash": true,
+        "sfx": "streak-milestone"
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.4,
+        "title": "What's your longest<br><em>streak</em>?",
+        "subtitle": "Tell us in the comments 👇",
+        "flash": true
       }
     ]
   },
@@ -170,24 +312,49 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2.2,
-        "title": "POV: you hit <em>level 6</em><br>by going to bed 🌙"
+        "type": "kinetic",
+        "dur": 2.0,
+        "title": "POV: you hit <em>level 6</em><br>by going to bed 🌙",
+        "step": 0.13
       },
       {
-        "type": "clip",
-        "dur": 6.2,
+        "type": "full",
+        "dur": 1.2,
         "src": "levelup",
-        "start": 0.5,
-        "title": "In bed before midnight.<br><em>+16 XP.</em>"
+        "start": 0.6,
+        "title": "In bed before midnight.",
+        "zoom": {
+          "at": 0.4,
+          "to": 1.7,
+          "x": 0.87,
+          "y": 0.6
+        },
+        "sfx": "complete",
+        "sfxAt": 0.6,
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Even your small habits<br>make you <em>level up</em>.",
+        "type": "full",
+        "dur": 2.2,
+        "src": "levelup",
+        "start": 1.8,
+        "title": "<em>+16 XP.</em> LEVEL UP.",
+        "zoom": {
+          "at": 0.1,
+          "to": 1.25,
+          "x": 0.5,
+          "y": 0.5
+        },
+        "sfx": "level-up",
+        "flash": true
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.4,
+        "title": "Even small habits<br>make you <em>level up</em>.",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -198,22 +365,29 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "My friends vs me<br>this <em>week</em> 🏆"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "My friends vs me<br>this <em>week</em> 🏆",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
         "type": "clip",
-        "dur": 5,
+        "dur": 3.6,
         "src": "social",
-        "start": 0.3,
-        "title": "The most <em>consistent</em><br>takes the podium"
+        "start": 0.8,
+        "speed": 1.3,
+        "title": "The most <em>consistent</em><br>takes the podium",
+        "flash": true
       },
       {
-        "type": "card",
+        "type": "kinetic",
         "dur": 2.4,
-        "title": "Tag the one who'd finish<br><em>last</em> 👇",
-        "cta": "HABITQUEST"
+        "title": "Tag the one who'd<br>finish <em>last</em> 👇",
+        "cta": "HABITQUEST",
+        "flash": true,
+        "sfx": "defeat",
+        "sfxAt": 0.6
       }
     ]
   },
@@ -224,25 +398,80 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "Your gold actually matters 💰"
+        "type": "kinetic",
+        "dur": 1.5,
+        "title": "Your gold<br>actually <em>matters</em> 💰",
+        "sfx": "coin",
+        "sfxAt": 0.4
       },
       {
-        "type": "clip",
-        "dur": 6.5,
+        "type": "hero",
+        "dur": 3.6,
+        "title": "Dress up<br>your <em>hero</em> 👑",
+        "every": 0.45,
+        "sfx": "coin",
+        "sfxAt": 0.5,
+        "looks": [
+          {},
+          {
+            "hat": "hat_pirate",
+            "outfit": "outfit_leather",
+            "label": "PIRATE"
+          },
+          {
+            "hat": "hat_wizard",
+            "outfit": "outfit_mage",
+            "accessory": "acc_cape",
+            "label": "WIZARD"
+          },
+          {
+            "hat": "hat_viking",
+            "outfit": "outfit_forest",
+            "accessory": "acc_shield_wood",
+            "label": "VIKING"
+          },
+          {
+            "hat": "hat_samurai",
+            "outfit": "outfit_shadow",
+            "accessory": "acc_flame_sword",
+            "label": "SAMURAI"
+          },
+          {
+            "hat": "hat_halo",
+            "outfit": "outfit_ice",
+            "accessory": "acc_wings",
+            "label": "ANGEL"
+          },
+          {
+            "hat": "hat_dragon",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_aura",
+            "label": "DRAGON"
+          },
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_cape",
+            "label": "KING"
+          }
+        ]
+      },
+      {
+        "type": "full",
+        "dur": 2.0,
         "src": "shop",
-        "start": 0.4,
-        "speed": 1.2,
-        "title": "Hats, outfits, scenes…<br>dress up your <em>hero</em> 👑"
+        "start": 0.8,
+        "speed": 1.3,
+        "title": "Hats, outfits, scenes…",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
+        "type": "kinetic",
+        "dur": 2.2,
         "title": "Every habit<br>= <em>gold</em>.",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -253,24 +482,70 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "From <em>Novice</em> to <em>Legend</em>:<br>6 ranks ⚔️"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "From <em>Novice</em><br>to <em>Legend</em> ⚔️",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
-        "type": "clip",
-        "dur": 5,
+        "type": "hero",
+        "dur": 3.6,
+        "title": "6 ranks.",
+        "every": 0.6,
+        "sfx": "level-up",
+        "sfxAt": 3.0,
+        "looks": [
+          {
+            "label": "NOVICE"
+          },
+          {
+            "hat": "hat_adventurer",
+            "outfit": "outfit_peasant",
+            "label": "APPRENTICE"
+          },
+          {
+            "hat": "hat_adventurer",
+            "outfit": "outfit_leather",
+            "accessory": "acc_sword",
+            "label": "WARRIOR"
+          },
+          {
+            "hat": "hat_knight",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_shield",
+            "label": "KNIGHT"
+          },
+          {
+            "hat": "hat_samurai",
+            "outfit": "outfit_shadow",
+            "accessory": "acc_flame_sword",
+            "label": "CHAMPION"
+          },
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_golden",
+            "accessory": "acc_wings",
+            "label": "LEGEND"
+          }
+        ]
+      },
+      {
+        "type": "full",
+        "dur": 2.0,
         "src": "journey",
-        "start": 0.3,
-        "title": "Your XP journey,<br>day after <em>day</em>"
+        "start": 0.6,
+        "speed": 1.4,
+        "title": "Your XP journey,<br>day after <em>day</em>",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "What <em>rank</em> are you?",
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "What <em>rank</em><br>are you?",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -281,25 +556,30 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "23 <em>achievements</em> to unlock 🏅"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "<em>23</em> achievements<br>to unlock 🏅",
+        "sfx": "victory",
+        "sfxAt": 0.4
       },
       {
-        "type": "clip",
-        "dur": 5,
+        "type": "full",
+        "dur": 3.2,
         "src": "achievements",
-        "start": 0.3,
-        "speed": 1.2,
-        "title": "Each one gives<br><em>XP</em> and <em>gold</em>"
+        "start": 0.4,
+        "speed": 1.5,
+        "title": "Each one pays<br><em>XP</em> and <em>gold</em>",
+        "flash": true,
+        "sfx": "coin",
+        "sfxAt": 1.4
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "How many would you <em>already</em> have?",
+        "type": "kinetic",
+        "dur": 2.4,
+        "title": "How many would<br>you <em>already</em> have?",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -310,24 +590,28 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "Your discipline,<br>in a <em>chart</em> 📊"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "Your discipline,<br>in a <em>chart</em> 📊",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
         "type": "clip",
-        "dur": 4.5,
+        "dur": 3.2,
         "src": "stats",
-        "start": 0.2,
-        "title": "Your week at a glance.<br>The calendar never <em>lies</em>."
+        "start": 0.6,
+        "speed": 1.3,
+        "title": "The calendar<br>never <em>lies</em>.",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Track your <em>progress</em>.",
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Track your<br><em>progress</em>.",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -338,24 +622,30 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 1.8,
-        "title": "Create a quest<br>in <em>10 seconds</em> ⏱️"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "Create a quest<br>in <em>10 seconds</em> ⏱️",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
-        "type": "clip",
-        "dur": 6.5,
+        "type": "full",
+        "dur": 3.6,
         "src": "create",
-        "start": 0.3,
-        "title": "A name, a category,<br>a frequency. <em>That's it.</em>"
+        "start": 0.4,
+        "speed": 1.5,
+        "title": "Name. Category.<br>Frequency. <em>Done.</em>",
+        "flash": true,
+        "sfx": "complete",
+        "sfxAt": 3.1
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
+        "type": "kinetic",
+        "dur": 2.2,
         "title": "What's your<br><em>first</em> quest?",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -366,25 +656,29 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "No habit ideas? 🤔"
+        "type": "kinetic",
+        "dur": 1.4,
+        "title": "No habit <em>ideas</em>? 🤔",
+        "sfx": "attack",
+        "sfxAt": 0.2
       },
       {
         "type": "clip",
-        "dur": 5,
+        "dur": 3.0,
         "src": "templates",
-        "start": 0.3,
-        "speed": 1.2,
-        "title": "Dozens of <em>templates</em><br>ready in one tap"
+        "start": 0.4,
+        "speed": 1.6,
+        "title": "Dozens of <em>templates</em>,<br>one tap away",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Sleep, sport, reading…<br>pick your <em>quest</em>.",
+        "type": "kinetic",
+        "dur": 2.4,
+        "title": "Sleep. Sport. Reading.<br>Pick your <em>quest</em>.",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true,
+        "step": 0.12
       }
     ]
   },
@@ -395,22 +689,30 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
-        "title": "Challenge your friend.<br><em>Bet gold.</em> 💰"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "Challenge your friend.<br><em>Bet gold.</em> 💰",
+        "sfx": "coin",
+        "sfxAt": 0.6,
+        "step": 0.13
       },
       {
-        "type": "clip",
-        "dur": 4.8,
+        "type": "full",
+        "dur": 3.0,
         "src": "challenge",
-        "start": 0.3,
-        "title": "XP race or<br>number of <em>completions</em>"
+        "start": 0.5,
+        "speed": 1.2,
+        "title": "XP race or<br><em>completions</em>",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.4,
-        "title": "The most consistent<br>takes the <em>pot</em>.",
-        "cta": "LINK IN BIO ▲"
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Most consistent<br>takes the <em>pot</em>.",
+        "cta": "LINK IN BIO ▲",
+        "flash": true,
+        "sfx": "victory",
+        "sfxAt": 0.5
       }
     ]
   },
@@ -421,24 +723,28 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2.2,
-        "title": "<em>Exam</em> week? 📚"
+        "type": "kinetic",
+        "dur": 1.4,
+        "title": "<em>Exam</em> week? 📚",
+        "sfx": "attack",
+        "sfxAt": 0.2
       },
       {
-        "type": "clip",
-        "dur": 5,
+        "type": "full",
+        "dur": 3.0,
         "src": "focus",
-        "start": 0.2,
-        "title": "Exam mode: keep<br>what <em>matters</em>, the rest waits"
+        "start": 0.6,
+        "speed": 1.3,
+        "title": "Exam mode:<br>keep what <em>matters</em>",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Your streaks are <em>frozen</em>,<br>not lost.",
+        "type": "kinetic",
+        "dur": 2.4,
+        "title": "Streaks <em>frozen</em>,<br>not lost. ❄️",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -449,25 +755,61 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 1.8,
-        "title": "A <em>turn-based</em><br>battle ⚔️"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "A <em>turn-based</em><br>battle ⚔️",
+        "sfx": "attack",
+        "sfxAt": 0.3
       },
       {
         "type": "clip",
-        "dur": 7,
+        "dur": 3.8,
         "src": "battle",
-        "start": 0.5,
+        "start": 0.6,
         "speed": 1.6,
-        "title": "Your attacks come<br>from your <em>habits</em>"
+        "title": "Your attacks come<br>from your <em>habits</em>",
+        "flash": true,
+        "sfx": "attack",
+        "sfxAt": 1.0
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Who do you <em>challenge</em> first?",
+        "type": "hero",
+        "dur": 1.8,
+        "title": "Gear up.<br><em>Fight.</em>",
+        "every": 0.45,
+        "flash": true,
+        "sfx": "victory",
+        "sfxAt": 1.2,
+        "looks": [
+          {
+            "hat": "hat_knight",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_sword"
+          },
+          {
+            "hat": "hat_samurai",
+            "outfit": "outfit_shadow",
+            "accessory": "acc_flame_sword"
+          },
+          {
+            "hat": "hat_viking",
+            "outfit": "outfit_forest",
+            "accessory": "acc_shield_wood"
+          },
+          {
+            "hat": "hat_dragon",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_aura"
+          }
+        ]
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Who do you<br><em>challenge</em> first?",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -478,25 +820,48 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2,
+        "type": "kinetic",
+        "dur": 1.6,
         "title": "The joy of a<br><em>perfect day</em> ✅"
       },
       {
-        "type": "clip",
-        "dur": 5.5,
-        "src": "today",
+        "type": "full",
+        "dur": 1.3,
+        "src": "milestone",
         "start": 0.5,
-        "speed": 1.3,
-        "title": "5 quests out of 5.<br>Streak <em>intact</em>."
+        "title": "Last quest…",
+        "zoom": {
+          "at": 0.4,
+          "to": 1.8,
+          "x": 0.87,
+          "y": 0.56
+        },
+        "sfx": "complete",
+        "sfxAt": 0.7,
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.6,
-        "icon": true,
-        "title": "Tomorrow, we go <em>again</em>.",
+        "type": "full",
+        "dur": 2.0,
+        "src": "levelup",
+        "start": 1.8,
+        "title": "<em>All done.</em> Streak intact.",
+        "zoom": {
+          "at": 0.1,
+          "to": 1.2,
+          "x": 0.5,
+          "y": 0.5
+        },
+        "flash": true,
+        "sfx": "level-up"
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Tomorrow,<br>we go <em>again</em>.",
         "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -507,24 +872,52 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2.4,
-        "icon": true,
-        "title": "<em>7 days</em> to go ⏳",
-        "subtitle": "HabitQuest is coming to iOS & Android"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "<em>7</em> days ⏳",
+        "subtitle": "HabitQuest is coming to iOS & Android",
+        "sfx": "attack",
+        "sfxAt": 0.1
       },
       {
-        "type": "clip",
-        "dur": 4.2,
+        "type": "full",
+        "dur": 2.0,
         "src": "today",
-        "start": 0.5,
-        "title": "Your habits are about<br>to become <em>quests</em>"
+        "start": 0.4,
+        "title": "Your habits are about<br>to become <em>quests</em>",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.4,
-        "title": "Follow so you<br>don't <em>miss</em> the launch",
-        "cta": "FOLLOW ▲"
+        "type": "hero",
+        "dur": 1.8,
+        "title": "Meet your <em>hero</em>.",
+        "every": 0.45,
+        "looks": [
+          {},
+          {
+            "hat": "hat_wizard",
+            "outfit": "outfit_mage"
+          },
+          {
+            "hat": "hat_knight",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_shield"
+          },
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_golden",
+            "accessory": "acc_wings"
+          }
+        ],
+        "flash": true,
+        "sfx": "coin"
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Follow so you<br>don't <em>miss</em> it",
+        "cta": "FOLLOW ▲",
+        "flash": true
       }
     ]
   },
@@ -535,24 +928,28 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2.4,
-        "icon": true,
-        "title": "<em>3 days</em> to go ⏳",
-        "subtitle": "Get your first quest ready"
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "<em>3</em> days ⏳",
+        "subtitle": "Get your first quest ready",
+        "sfx": "attack",
+        "sfxAt": 0.1
       },
       {
         "type": "clip",
-        "dur": 4.6,
+        "dur": 3.0,
         "src": "create",
-        "start": 0.3,
-        "title": "Which habit will<br>you <em>transform</em>?"
+        "start": 0.4,
+        "speed": 1.5,
+        "title": "Which habit will<br>you <em>transform</em>?",
+        "flash": true
       },
       {
-        "type": "card",
-        "dur": 2.4,
-        "title": "Tell us in the comments 👇",
-        "cta": "LINK IN BIO ▲"
+        "type": "kinetic",
+        "dur": 2.0,
+        "title": "Tell us in the<br><em>comments</em> 👇",
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   },
@@ -563,24 +960,34 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2.4,
-        "icon": true,
+        "type": "kinetic",
+        "dur": 1.6,
         "title": "<em>Tomorrow</em>. ⚔️",
-        "subtitle": "HabitQuest launches on iOS & Android"
+        "subtitle": "HabitQuest launches on iOS & Android",
+        "sfx": "attack",
+        "sfxAt": 0.1
       },
       {
-        "type": "clip",
-        "dur": 5,
+        "type": "full",
+        "dur": 2.2,
         "src": "levelup",
-        "start": 0.5,
-        "title": "Level <em>up</em><br>for real"
+        "start": 1.8,
+        "title": "Level <em>up</em><br>for real",
+        "zoom": {
+          "at": 0.1,
+          "to": 1.25,
+          "x": 0.5,
+          "y": 0.5
+        },
+        "flash": true,
+        "sfx": "level-up"
       },
       {
-        "type": "card",
-        "dur": 2.4,
-        "title": "Turn on notifications 🔔",
-        "cta": "FOLLOW ▲"
+        "type": "kinetic",
+        "dur": 2.0,
+        "title": "Turn on<br><em>notifications</em> 🔔",
+        "cta": "FOLLOW ▲",
+        "flash": true
       }
     ]
   },
@@ -591,33 +998,70 @@
     },
     "segments": [
       {
-        "type": "card",
-        "dur": 2.4,
-        "icon": true,
+        "type": "kinetic",
+        "dur": 1.6,
         "title": "It's <em>out</em>! 🎉",
-        "subtitle": "HabitQuest · iOS & Android"
+        "subtitle": "HabitQuest · iOS & Android",
+        "sfx": "victory",
+        "sfxAt": 0.2
       },
       {
-        "type": "clip",
-        "dur": 3.4,
+        "type": "full",
+        "dur": 1.6,
         "src": "milestone",
-        "start": 0.4,
-        "title": "Your habits =<br><em>quests</em>"
+        "start": 1.6,
+        "title": "Habits =<br><em>quests</em>",
+        "flash": true,
+        "sfx": "streak-milestone"
       },
       {
         "type": "clip",
-        "dur": 3.4,
-        "src": "social",
-        "start": 0.3,
-        "title": "Challenge your <em>friends</em>"
+        "dur": 1.6,
+        "src": "battle",
+        "start": 0.8,
+        "speed": 1.5,
+        "title": "Duel your <em>friends</em>",
+        "flash": true,
+        "sfx": "attack",
+        "sfxAt": 0.5
       },
       {
-        "type": "card",
-        "dur": 2.6,
+        "type": "hero",
+        "dur": 1.6,
+        "title": "Dress your <em>hero</em>",
+        "every": 0.4,
+        "looks": [
+          {
+            "hat": "hat_pirate",
+            "outfit": "outfit_leather"
+          },
+          {
+            "hat": "hat_wizard",
+            "outfit": "outfit_mage",
+            "accessory": "acc_cape"
+          },
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings"
+          },
+          {
+            "hat": "hat_dragon",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_aura"
+          }
+        ],
+        "flash": true,
+        "sfx": "coin"
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.2,
         "icon": true,
         "title": "Download it 👇",
         "subtitle": "Free · link in bio",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "flash": true
       }
     ]
   }
