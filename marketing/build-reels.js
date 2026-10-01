@@ -14,6 +14,8 @@
  *   hero    — the hero drawn big in its scene, outfits swapping every `every` s
  *             (looks: [{ hat, outfit, accessory, label }])
  * Any segment: `flash` (cut from white), `speed` (clips), `sfx` (sound from assets/sounds at `sfxAt` s).
+ * clip/still: `zoom: [{ t, z, x, y }]` zooms the whole phone (title stays fixed): keyframes at t s,
+ *   zoom z, centered on (x, y) of the app screen (0-1), eased in between.
  * Output: marketing/exports/reels/<reel>.mp4 and a silent copy in
  * marketing/exports/reels/sans-musique/ (git-ignored).
  *
@@ -60,10 +62,26 @@ function loadHeroModules() {
   return { ...require(path.join(dir, 'compose-hero.js')), ...require(path.join(dir, 'hero-scene.js')) };
 }
 
+/** ffmpeg expression of a keyframed value (smoothstep between keys), time = output frame / FPS. */
+function keyframes(keys, value) {
+  const T = `(on/${FPS})`;
+  let expr = String(value(keys[keys.length - 1]));
+  for (let i = keys.length - 2; i >= 0; i--) {
+    const a = keys[i], b = keys[i + 1];
+    const u = `((${T}-${a.t})/${(b.t - a.t).toFixed(3)})`;
+    const ease = `(${u}*${u}*(3-2*${u}))`;
+    const va = value(a), vb = value(b);
+    expr = `if(lt(${T},${a.t}),${va},if(lt(${T},${b.t}),${va}+(${(vb - va).toFixed(4)})*${ease},${expr}))`;
+  }
+  return expr;
+}
+
 /** Renders an animated layer (window.frame(t)) frame by frame into a video. */
 async function renderAnimated(page, spec, dur, out, enc) {
   await page.goto(template, { waitUntil: 'networkidle0' });
   await page.evaluate((s) => window.render(s), spec);
+  // The text is inserted after load: request the fonts explicitly, or a capture can fall back to a serif.
+  await page.evaluate(() => Promise.all(['52px "Press Start 2P"', '800 46px Inter', '600 46px Inter'].map((f) => document.fonts.load(f))));
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
   const dir = `${out}.frames`;
@@ -81,6 +99,8 @@ async function renderAnimated(page, spec, dur, out, enc) {
 async function renderLayer(page, spec, file) {
   await page.goto(template, { waitUntil: 'networkidle0' });
   await page.evaluate((s) => window.render(s), spec);
+  // The text is inserted after load: request the fonts explicitly, or a capture can fall back to a serif.
+  await page.evaluate(() => Promise.all(['52px "Press Start 2P"', '800 46px Inter', '600 46px Inter'].map((f) => document.fonts.load(f))));
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
   await page.screenshot({ path: file, omitBackground: true });
@@ -160,11 +180,31 @@ async function roundedMask(page, file) {
         const screen = seg.type === 'clip'
           ? `[1:v]setpts=PTS/${seg.speed || 1},fps=${FPS},tpad=stop_mode=clone:stop_duration=3,scale=${PHONE.w}:${PHONE.h}`
           : `[1:v]scale=${PHONE.w * 2}:-1,zoompan=z='min(1+0.0008*on,1.08)':d=1:x='iw/2-(iw/zoom/2)':y=0:s=${PHONE.w}x${PHONE.h}:fps=${FPS}`;
-        run(['-loop', '1', '-i', bg, ...screenInput, '-loop', '1', '-i', mask, '-loop', '1', '-i', overlay, '-t', String(seg.dur),
-          '-filter_complex',
-          `${screen},format=rgba[s];[2:v]format=gray,scale=${PHONE.w}:${PHONE.h}[m];[s][m]alphamerge[sr];` +
-          `[0:v][sr]overlay=${PHONE.x}:${PHONE.y}[b];[b][3:v]overlay=0:0,format=yuv420p`,
-          ...enc]);
+        if (Array.isArray(seg.zoom)) {
+          // The phone zooms (rendered at 2x for a smooth move), the title stays on top.
+          const frame = path.join(work, `${name}-${i}-frame.png`);
+          const title = path.join(work, `${name}-${i}-title.png`);
+          await renderLayer(page, { layout: 'frame' }, frame);
+          await renderLayer(page, { layout: 'title', title: seg.title }, title);
+          const fx = (k) => (PHONE.x + (k.x ?? 0.5) * PHONE.w) / 1080;
+          const fy = (k) => (PHONE.y + (k.y ?? 0.5) * PHONE.h) / 1920;
+          const z = keyframes(seg.zoom, (k) => k.z);
+          const x = keyframes(seg.zoom, fx);
+          const y = keyframes(seg.zoom, fy);
+          run(['-loop', '1', '-i', bg, ...screenInput, '-loop', '1', '-i', mask, '-loop', '1', '-i', frame, '-loop', '1', '-i', title,
+            '-t', String(seg.dur), '-filter_complex',
+            `${screen},format=rgba[s];[2:v]format=gray,scale=${PHONE.w}:${PHONE.h}[m];[s][m]alphamerge[sr];` +
+            `[0:v][sr]overlay=${PHONE.x}:${PHONE.y}[b];[b][3:v]overlay=0:0,scale=2160:3840,` +
+            `zoompan=z='${z}':x='(iw-iw/zoom)*(${x})':y='(ih-ih/zoom)*(${y})':d=1:s=1080x1920:fps=${FPS}[zz];` +
+            `[zz][4:v]overlay=0:0,format=yuv420p`,
+            ...enc]);
+        } else {
+          run(['-loop', '1', '-i', bg, ...screenInput, '-loop', '1', '-i', mask, '-loop', '1', '-i', overlay, '-t', String(seg.dur),
+            '-filter_complex',
+            `${screen},format=rgba[s];[2:v]format=gray,scale=${PHONE.w}:${PHONE.h}[m];[s][m]alphamerge[sr];` +
+            `[0:v][sr]overlay=${PHONE.x}:${PHONE.y}[b];[b][3:v]overlay=0:0,format=yuv420p`,
+            ...enc]);
+        }
       }
       if (seg.flash) {
         const flashed = out.replace(/\.mp4$/, '-flash.mp4');
