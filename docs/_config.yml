@@ -2,7 +2,7 @@
 title: HabitQuest
 description: Level up your habits — a pixel art RPG habit tracker.
 theme: jekyll-theme-minimal
-lang: fr
+lang: en
 # Internal project docs stay in the repo but are not published on the site.
 exclude:
   - adr/

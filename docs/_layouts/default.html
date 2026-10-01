@@ -1,0 +1,34 @@
+<!doctype html>
+{% assign fr = false %}{% if page.url contains '.fr' or page.url contains '/fr/' %}{% assign fr = true %}{% endif %}
+<html lang="{% if fr %}fr{% else %}en{% endif %}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title | default: site.title }}</title>
+<meta name="theme-color" content="#0D0D1A">
+<link rel="icon" href="{{ '/assets/icon.png' | relative_url }}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand pixel" href="{% if fr %}{{ '/fr/' | relative_url }}{% else %}{{ '/' | relative_url }}{% endif %}"><img src="{{ '/assets/icon.png' | relative_url }}" alt="">HabitQuest</a>
+  <nav class="nav">
+    <a href="{{ '/support' | relative_url }}">{% if fr %}Aide{% else %}Support{% endif %}</a>
+  </nav>
+</div></header>
+<main class="page">
+{{ content }}
+</main>
+<footer><div class="wrap">
+  <nav>
+    <a href="{{ '/support' | relative_url }}">{% if fr %}Aide{% else %}Support{% endif %}</a>
+    <a href="{% if fr %}{{ '/privacy-policy.fr' | relative_url }}{% else %}{{ '/privacy-policy' | relative_url }}{% endif %}">{% if fr %}Confidentialité{% else %}Privacy Policy{% endif %}</a>
+    <a href="{{ '/terms' | relative_url }}">{% if fr %}Conditions d'utilisation{% else %}Terms of Use{% endif %}</a>
+    <a href="mailto:habitquest.application@gmail.com">Contact</a>
+  </nav>
+  <span>© 2026 HabitQuest</span>
+</div></footer>
+</body>
+</html>
