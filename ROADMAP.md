@@ -38,7 +38,7 @@
 
 ## ✅ Phase 5 — Polish
 - Sound effects (CC0 SFX) and duel battle music
-- Animations (Reanimated 3), pixel art rendering (React Native Skia)
+- Animations (Reanimated), pixel art design system and 32×32 hero
 
 ## 🚧 Phase 6 — Release preparation (in progress)
 - [x] LICENSE

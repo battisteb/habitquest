@@ -10,14 +10,12 @@
 
 ## Overview
 
-**HabitQuest** turns your daily habits into an RPG-style adventure. Complete habits, earn XP and Gold, build streaks, and level up. Face other players in **duels**, take on **challenges**, unlock **achievements**, and climb the leaderboards.
-
-Every habit can be personalized with a custom emoji, an assigned category and a target frequency (daily or weekly), and each completion is rewarded with visible progression --- animated XP gains, streak counters, heatmaps, cosmetics.
+**HabitQuest** turns your daily habits into an RPG-style adventure. Complete quests, earn XP and Gold, keep your streaks, level up and dress your pixel hero. Challenge friends in **duels** and **1v1 challenges**, team up in **co-op challenges**, climb an **arena league**, unlock **achievements** and finish your **daily missions**. Available in English and French, on iOS, Android and the web.
 
 <p align="center">
   <img src="docs/screenshots/homepage.png" width="230" alt="Today"/>
   <img src="docs/screenshots/import_personalized_sessions.png" width="230" alt="Habit detail"/>
-  <img src="docs/screenshots/new_quest.png" width="230" alt="Duel"/>
+  <img src="docs/screenshots/new_quest.png" width="230" alt="New quest"/>
 </p>
 
 
@@ -25,17 +23,16 @@ Every habit can be personalized with a custom emoji, an assigned category and a 
 
 ## Features
 
-- ✅ Daily and weekly habit tracking with categories and custom emojis
-- ✅ **XP** and **Gold** rewards, streaks, cumulative daily XP display
-- ✅ Per-habit **monthly heatmap** on the detail screen
-- ✅ **Duels** — real-time PvP battles between players (HP bars, sound effects)
-- ✅ **Challenges** with progress tracking and Gold rewards on completion
-- ✅ **Achievements** system
-- ✅ **Social layer** — friends, inbox notifications, friend requests
-- ✅ **Leaderboards** (streaks, XP)
-- ✅ Statistics — history screen, per-category breakdown, win/loss counts
-- ✅ Sound effects and battle music
-- ✅ Pull-to-refresh, animations, pixel art aesthetics (Skia)
+- Daily, weekly and "N times a week" quests with categories, emojis, templates, pause and archive
+- XP, Gold, levels and 6 ranks (Novice → Legend), streaks, streak freezes and Focus mode (exams, holidays, illness)
+- 32×32 pixel hero with hats, outfits, accessories and themes from the shop
+- Daily missions, 23 achievements, weekly recap, stats and heatmaps
+- Social: friends, invite links, leaderboards, asynchronous duels, 1v1 challenges with gold stakes, co-op challenges, arena leagues
+- Notifications (in-app and push) in the player's language, reminders
+- Premium subscription (RevenueCat) and ads for free players (AdMob, not on the web)
+- In-app Support, account deletion, guided tutorial
+- Server-authoritative economy: XP, gold and results are computed by the database (ADR 008)
+
 
 ---
 
@@ -43,13 +40,14 @@ Every habit can be personalized with a custom emoji, an assigned category and a 
 
 | Layer | Technology |
 |---|---|
-| Mobile framework | **React Native** + **Expo SDK 55** (iOS priority) |
-| Language | **TypeScript** |
-| Rendering | **React Native Skia** (pixel art) |
-| Animations | **Reanimated 3** |
-| State management | **Legend-State** |
-| Backend / Auth / DB | **Supabase** (PostgreSQL + Auth + Realtime) |
-| Testing | Jest, Detox (e2e) |
+| App | **React Native** + **Expo SDK 55**, Expo Router, **TypeScript** (strict) |
+| UI | Pixel art design system (`src/ui`), Reanimated |
+| State | **Legend-State** + MMKV |
+| Backend | **Supabase**: Postgres with RLS, RPC functions, Edge Functions, Auth (e-mails via Resend) |
+| Payments / ads | RevenueCat, Google AdMob |
+| Web | Expo web export on EAS Hosting (https://habitquest.expo.app) |
+| Testing | Jest + React Native Testing Library, pgTAP (`supabase/tests`), web smoke test (`scripts/smoke-web.js`) |
+
 
 ---
 
@@ -57,15 +55,17 @@ Every habit can be personalized with a custom emoji, an assigned category and a 
 
 ```
 habitquest/
-├── app/                 # Expo Router — routing layer
-├── src/                 # Feature modules, UI components, shared libraries
-├── assets/              # Fonts, images, audio (SFX + music)
-├── supabase/            # Database schema, migrations, RLS policies
-├── docs/adr/            # Architecture Decision Records
-├── e2e/                 # End-to-end tests (Detox)
-├── scripts/
-└── README.md
+├── app/                 # Expo Router routes (thin, re-export feature screens)
+├── src/features/        # Feature modules: screens, stores, hooks, utils, tests
+├── src/ui/              # Pixel art design system
+├── src/lib/             # Supabase client, i18n (FR/EN), storage, game constants
+├── supabase/            # Migrations, pgTAP tests, Edge Functions, e-mail templates
+├── scripts/             # Smoke test, demo data, sprites, auth e-mails
+├── marketing/           # Social media posts and reels (English)
+├── docs/                # ADRs, store listings, public site (privacy, terms, support)
+└── e2e/flows/           # Maestro flows for device builds (to refresh before release)
 ```
+
 
 ---
 
@@ -108,10 +108,12 @@ Scan the QR code with **Expo Go** on your device.
 | Command | Description |
 |---|---|
 | `npm start` | Start the Expo dev server |
-| `npm test` | Run unit tests (Jest) |
-| `npm run lint` | Run ESLint |
-| `npm run typecheck` | Run the TypeScript compiler in check mode |
-| `npm run e2e` | Run end-to-end tests (Detox) |
+| `npm test` | Unit and component tests (Jest) |
+| `npm run lint` / `npm run typecheck` | ESLint / TypeScript check |
+| `npx supabase db start && npx supabase test db` | Apply every migration to a fresh database and run the pgTAP tests |
+| `npm run check:bundle` | Build the iOS, Android and web bundles |
+| `npm run deploy:web` | Export and deploy the web app (EAS Hosting) |
+
 
 ---
 
