@@ -55,6 +55,8 @@ export const ShareCard = forwardRef<View, ShareCardProps>(function ShareCard(
         <YearPixels weeks={weeks} lockedBefore={lockedBefore} cell={5} showLabels={false} />
         <YearLegend />
       </View>
+
+      <Text style={styles.site}>gethabitquest.com</Text>
     </View>
   );
 });
@@ -98,6 +100,7 @@ function createStyles() {
     numberValue: { fontSize: pixelSize(17), fontFamily: fonts.bold },
     numberLabel: { color: colors.textMuted, fontSize: pixelSize(7), fontFamily: fonts.bold, letterSpacing: 1, textAlign: 'center' },
     year: { gap: spacing.xs },
+    site: { color: colors.primary, fontSize: pixelSize(10), fontFamily: fonts.bold, textAlign: 'center', letterSpacing: 1 },
     yearTitle: { color: colors.textSecondary, fontSize: pixelSize(9), fontFamily: fonts.bold, letterSpacing: 1 },
   });
 }

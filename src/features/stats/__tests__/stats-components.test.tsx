@@ -11,6 +11,7 @@ jest.mock('../../../lib/storage/persist', () => ({ persistPlugin: undefined }));
 jest.mock('../../../lib/supabase/client', () => ({ supabase: {} }));
 
 import { WeekBars } from '../components/stats-charts';
+import { ShareCard } from '../components/share-card';
 import { cellColor, LEVEL_COLORS, LOCKED_COLOR } from '../components/year-pixels';
 import { isServerPremium } from '../../gamification/stores/profile-store';
 
@@ -24,6 +25,14 @@ describe('stats components', () => {
     expect(screen.getByText('50%')).toBeTruthy();
     expect(screen.getByText('100%')).toBeTruthy();
     expect(screen.getByText('stats_today')).toBeTruthy();
+  });
+
+  it('puts the site address on the share card', () => {
+    const screen = render(
+      <ShareCard username="PixelHero" rank="Warrior" look={{}} bestStreak={21} rate30={0.81} total={1220} weeks={[]} lockedBefore={null} />,
+    );
+    expect(screen.getByText('gethabitquest.com')).toBeTruthy();
+    expect(screen.getByText('81%')).toBeTruthy();
   });
 
   it('colors a day by its rate and locks days beyond the free history', () => {
