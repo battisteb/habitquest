@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+  /* App Store / Google Play screenshot, in the app's pixel art direction (ADR 011). */
+  :root {
+    --bg: #0D0D1A; --surface: #1A1A2E; --border: #2D2D4E; --primary: #6C63FF;
+    --primary-dark: #4A44B3; --accent: #FFD700; --text: #E8E8FF; --muted: #9999CC;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { overflow: hidden; background: var(--bg); }
+  body { color: var(--text); position: relative; display: flex; flex-direction: column; align-items: center; }
+  body::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .05;
+    background-image: linear-gradient(#fff 2px, transparent 2px), linear-gradient(90deg, #fff 2px, transparent 2px);
+    background-size: var(--grid) var(--grid);
+  }
+  body::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 38%; pointer-events: none;
+    background: linear-gradient(transparent, rgba(108, 99, 255, .18));
+  }
+  .head { width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 1; }
+  .badge {
+    font-family: 'Jersey 10', monospace; color: var(--accent); letter-spacing: .12em;
+    border: var(--px) solid var(--accent); padding: .1em .6em; background: rgba(255, 215, 0, .08);
+  }
+  h1 { font-family: 'Jersey 10', monospace; font-weight: 400; line-height: .95; letter-spacing: .02em; }
+  h1 em { font-style: normal; color: var(--accent); }
+  p.sub { font-family: 'Inter', sans-serif; font-weight: 600; color: var(--muted); line-height: 1.3; }
+  .frame {
+    position: relative; z-index: 1; background: var(--surface);
+    border: var(--px) solid var(--border);
+    box-shadow: 0 0 0 var(--px) #000, var(--px) var(--px) 0 var(--px) var(--primary-dark);
+    overflow: hidden;
+  }
+  .frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <div class="badge" id="badge"></div>
+    <h1 id="title"></h1>
+    <p class="sub" id="sub"></p>
+  </div>
+  <div class="frame" id="frame"><img id="shot" alt="" /></div>
+<script>
+  // Filled by render-store.js: window.render({ width, height, badge, title, sub, image })
+  window.render = ({ width, height, badge, title, sub, image }) => {
+    // Every size scales from the 6.7" layout; shorter screens (Android 16:9) by their height.
+    const u = Math.min(width / 1290, height / 2796);
+    const s = document.documentElement.style;
+    s.setProperty('--px', `${Math.round(8 * u)}px`);
+    s.setProperty('--grid', `${Math.round(48 * u)}px`);
+    document.body.style.width = `${width}px`;
+    document.body.style.height = `${height}px`;
+    const head = document.querySelector('.head');
+    head.style.paddingTop = `${Math.round(150 * u)}px`;
+    head.style.gap = `${Math.round(34 * u)}px`;
+    const b = document.getElementById('badge');
+    b.textContent = badge; b.style.fontSize = `${Math.round(54 * u)}px`;
+    const t = document.getElementById('title');
+    t.innerHTML = title; t.style.fontSize = `${Math.round(150 * u)}px`; t.style.padding = `0 ${Math.round(60 * u)}px`;
+    const p = document.getElementById('sub');
+    p.textContent = sub; p.style.fontSize = `${Math.round(48 * u)}px`; p.style.padding = `0 ${Math.round(110 * u)}px`;
+    // The app screen fills the rest, phone-shaped (390 × 844), cut at the bottom edge.
+    const frame = document.getElementById('frame');
+    const top = head.getBoundingClientRect().height + Math.round(80 * u);
+    const w = Math.round(width * 0.8);
+    frame.style.width = `${w}px`;
+    frame.style.height = `${Math.round((w * 844) / 390)}px`;
+    frame.style.marginTop = `${top - head.getBoundingClientRect().height}px`;
+    document.getElementById('shot').src = image;
+  };
+</script>
+</body>
+</html>
