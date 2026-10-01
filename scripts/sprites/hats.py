@@ -16,7 +16,7 @@ HATS = {
 ".....ooooooooooo",
   ]),
   'hat_knight': top([
-"................", "................",
+"................",
 "...........ooooo",  # 2
 ".........ooaaaaa",
 "........oagaaaaa",
@@ -31,7 +31,7 @@ HATS = {
 "........o.......",
   ]),
   'hat_pirate': top([
-"................", "................", "................",
+"................", "................",
 ".............ooo",  # 3
 "...........ooaaa",
 ".....oo...oaaaaa",
@@ -42,23 +42,20 @@ HATS = {
 "......oxxxxxxxxx",  # 10 gold trim
 ".......ooooooooo",
   ]),
-  'hat_wizard': grid([
-"..................oo............",
-".................oxo............",
-"................oaao............",
-"...............oaaao............",
-"..............oagaaao...........",
-".............oagaaaao...........",
-"............oaaaaxaaao..........",
-"...........oaaaaxyxaaao.........",
-"..........oaaaaaaxaaaaao........",
-".........oAAAAAAAAAAAAAAo.......",
-"......ooAxxxxxxxxxxxxxxxxAoo....",
-".....oaaaaaaaaaaaaaaaaaaaaaaao..",
-"......ooooooooooooooooooooooo...",
+  'hat_wizard': top([
+"...............o",  # 0 tip
+"..............oa",
+".............oaa",
+"............oaga",
+"...........oagax",  # 5 star
+"..........oaaaxy",
+".........oaaaaax",
+"........oAAAAAAA",
+".......oAxxxxxxx",  # 9 gold band
+"....ooaaaaaaaaaa",  # 10 brim, above the eyes
+".....ooooooooooo",
   ]),
   'hat_viking': top([
-"................",
 ".....oo.........",
 "....oxxo........",
 "....oxyo........",
@@ -72,9 +69,7 @@ HATS = {
 "........ooooooo.",
   ]),
   'hat_samurai': top([
-"................",
-"........oo......",
-".......oxxo.....",
+".........oo.....",
 "........oxxo....",
 ".........oxxooo.",  # 4 crescent crest
 "..........oxxaaa",
