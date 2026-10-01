@@ -5,9 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../../ui/components/pixel-button';
 import { CategoryBreakdown } from '../../habits/components/category-breakdown';
-import { sessionsStore$ } from '../../training/stores/sessions-store';
-import { decksStore$ } from '../../training/stores/decks-store';
-import { getDueCards } from '../../training/types/flashcard';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { AdBanner } from '../../monetization/components/ad-banner';
 import { usePremium } from '../../monetization/hooks/use-premium';
@@ -46,8 +43,6 @@ export default function StatsScreen() {
   const router = useRouter();
   const data = useStatsData();
   const { canViewFullHistory } = usePremium();
-  const sessions = use$(sessionsStore$.sessions);
-  const decks = use$(decksStore$.decks);
   const profile = use$(profileStore$.profile);
   const colorsLook = use$(avatarConfigStore$);
   const gear = use$(shopStore$.equippedSlots);
@@ -95,9 +90,6 @@ export default function StatsScreen() {
     };
   }, [data.habits, data.completions, habitFilter, lockedBefore, today]);
 
-  const totalWorkouts = sessions.reduce((sum, s) => sum + s.completedCount, 0);
-  const totalCardReviews = decks.reduce((sum, d) => sum + d.totalReviews, 0);
-  const dueCardsTotal = decks.reduce((sum, d) => sum + getDueCards(d).length, 0);
 
   const level = profile?.level ?? 1;
   const look = {
@@ -219,28 +211,6 @@ export default function StatsScreen() {
 
           <CategoryBreakdown />
         </>
-      )}
-
-      {(sessions.length > 0 || decks.length > 0) && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{T.stats_section_training}</Text>
-          <View style={styles.statRow}>
-            <StatCard value={sessions.length} label={T.stats_sessions} color={colors.accent} styles={styles} />
-            <StatCard value={totalWorkouts} label={T.stats_workouts} color={colors.success} styles={styles} />
-          </View>
-          {decks.length > 0 && (
-            <View style={styles.statRow}>
-              <StatCard value={decks.length} label={T.stats_decks} color={colors.primary} styles={styles} />
-              <StatCard value={totalCardReviews} label={T.stats_cards_reviewed} color={colors.xp} styles={styles} />
-              <StatCard
-                value={dueCardsTotal}
-                label={T.stats_due_today}
-                color={dueCardsTotal > 0 ? colors.streak : colors.textMuted}
-                styles={styles}
-              />
-            </View>
-          )}
-        </View>
       )}
 
       <PixelButton title={T.stats_btn_recap} onPress={() => router.push('/weekly-recap')} variant="secondary" />

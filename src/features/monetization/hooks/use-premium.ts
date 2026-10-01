@@ -1,7 +1,6 @@
 import { use$ } from '@legendapp/state/react';
 import { useRouter } from 'expo-router';
 import { subscriptionStore$ } from '../stores/subscription-store';
-import { profileStore$, isServerPremium } from '../../gamification/stores/profile-store';
 import {
   getMaxFreezeTokens,
   getFreezeCost,
@@ -11,11 +10,10 @@ import {
   getStatsHistoryDays,
   canViewShopItem,
 } from '../utils/feature-gates';
+import { premium$ } from '../stores/premium';
 
 export function usePremium() {
-  const profile = use$(profileStore$.profile);
-  // RevenueCat on phones, or the server status (webhook), the only source on the web.
-  const isPremium = use$(subscriptionStore$.isPremium) || (!!profile && isServerPremium(profile));
+  const isPremium = use$(premium$);
   const isLoading = use$(subscriptionStore$.isLoading);
   const router = useRouter();
 

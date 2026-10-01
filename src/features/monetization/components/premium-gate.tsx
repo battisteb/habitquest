@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useRouter } from 'expo-router';
-import { subscriptionStore$ } from '../stores/subscription-store';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+import { premium$ } from '../stores/premium';
 
 interface PremiumGateProps {
   children: React.ReactNode;
@@ -67,7 +67,7 @@ export function PremiumGate({ children, lockedLabel, lockedIcon = '👑' }: Prem
   const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
-  const isPremium = use$(subscriptionStore$.isPremium);
+  const isPremium = use$(premium$);
   const router = useRouter();
 
   if (isPremium) return <>{children}</>;

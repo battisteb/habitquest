@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
-import { subscriptionStore$ } from '../stores/subscription-store';
 import { canPersonalizeAds } from './tracking-consent';
+import { premium$ } from '../stores/premium';
 
 // AdMob is native-only — not available on web
 const isNative = Platform.OS !== 'web';
@@ -77,7 +77,7 @@ export function showInterstitial(onComplete?: () => void): void {
     onComplete?.();
     return;
   }
-  if (subscriptionStore$.isPremium.get()) {
+  if (premium$.get()) {
     onComplete?.();
     return;
   }
@@ -133,5 +133,5 @@ export function showRewardedInterstitial(
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 export function shouldShowAds(): boolean {
-  return isNative && (__DEV__ || isAdMobConfigured) && !subscriptionStore$.isPremium.get();
+  return isNative && (__DEV__ || isAdMobConfigured) && !premium$.get();
 }

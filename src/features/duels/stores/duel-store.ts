@@ -1,9 +1,9 @@
 import { observable } from '@legendapp/state';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
-import { subscriptionStore$ } from '../../monetization/stores/subscription-store';
 import { LIMITS } from '../../monetization/utils/feature-gates';
 import { simulateDuel, PlayerState } from '../utils/combat-engine';
+import { premium$ } from '../../monetization/stores/premium';
 
 export interface DuelChallenge {
   id: string;
@@ -106,7 +106,7 @@ export async function getWeeklyDuelsUsed(): Promise<number> {
 
 /** Returns true when the user can still start a duel this week (free: 3, premium: unlimited) */
 export async function canStartDuel(): Promise<boolean> {
-  if (subscriptionStore$.isPremium.get()) return true;
+  if (premium$.get()) return true;
   const used = await getWeeklyDuelsUsed();
   return used < LIMITS.FREE_DUELS_PER_WEEK;
 }

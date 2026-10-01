@@ -4,7 +4,7 @@
  * when a gate returns false.
  */
 
-import { subscriptionStore$ } from '../stores/subscription-store';
+import { premium$ } from '../stores/premium';
 
 // ─── Limits ───────────────────────────────────────────────────────────────────
 
@@ -43,7 +43,7 @@ export const LIMITS = {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function isPremium(): boolean {
-  return subscriptionStore$.isPremium.get();
+  return premium$.get();
 }
 
 // ─── Freeze gates ─────────────────────────────────────────────────────────────
