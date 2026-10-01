@@ -303,6 +303,11 @@ export default function SettingsScreen() {
           variant="secondary"
         />
         <PixelButton
+          title={T.settings_support}
+          onPress={() => router.push('/settings/support')}
+          variant="secondary"
+        />
+        <PixelButton
           title={T.settings_archived}
           onPress={() => router.push('/habit/archive')}
           variant="secondary"

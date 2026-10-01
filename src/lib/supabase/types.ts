@@ -685,6 +685,42 @@ export type Database = {
           },
         ];
       };
+      support_messages: {
+        Row: {
+          app_version: string | null;
+          category: string;
+          created_at: string;
+          id: string;
+          language: string | null;
+          message: string;
+          platform: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          app_version?: string | null;
+          category: string;
+          created_at?: string;
+          id?: string;
+          language?: string | null;
+          message: string;
+          platform?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Update: {
+          app_version?: string | null;
+          category?: string;
+          created_at?: string;
+          id?: string;
+          language?: string | null;
+          message?: string;
+          platform?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       user_achievements: {
         Row: {
           achievement_id: string;
