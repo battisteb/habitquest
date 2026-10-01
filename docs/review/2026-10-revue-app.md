@@ -6,7 +6,8 @@ Revue complète avant la sortie sur les stores, demandée par Battiste. Pour cha
 
 - **`scripts/smoke-web.js`** : se connecte puis ouvre les 38 écrans en français et en anglais. Il signale les erreurs JS, les clés de traduction affichées brutes, les débordements à 390 px, les mots coupés sur deux lignes et les écrans bloqués en chargement. Il a été lancé avant chaque déploiement et après chaque mise en prod ; résultat final : 0 problème.
 - **`scripts/demo/reset-local-demo.sql`** : remet le compte démo local dans un état récent, avec des séries à jour.
-- **Tests** : 311 tests Jest (contre 256 au début) et 189 assertions pgTAP réparties en 13 fichiers (contre 101 au début).
+- **Tests** : 317 tests Jest (contre 256 au début) et 206 assertions pgTAP réparties en 16 fichiers (contre 101 au début).
+- **Parcours de bout en bout** (nuit du 1ᵉʳ octobre) : un nouveau joueur, de l'inscription à la fin du tutoriel ; un duel complet entre deux comptes.
 
 ## Constats
 
@@ -39,6 +40,12 @@ Gravité : 🔴 triche ou sécurité · 🟠 bug visible par les joueurs · 🟡
 | 23 | 🟡 | Boutique | Noms anglais et « ON / EQUIPPED » en anglais dans l'interface française | Traduits | #42 |
 | 24 | 🟡 | DA | Ronds restants (aura, carte de rang, pastilles, célébrations…) | Tout carré, sauf la jauge du minuteur | #46, #48, #55 |
 | 25 | 🟡 | Tests | Tests d'écran instables sous charge | Délais relevés | #50 |
+| 26 | 🟠 | Duels | Duels entre amis jamais enregistrés : ni résultat, ni récompense, compteur Victoires/Défaites toujours à 0 ; l'écran de fin promettait un cosmétique, un succès et de l'XP jamais versés ; adversaire affiché « Rival niv. 5 », joueur toujours niveau 8 | Duel enregistré avant le combat, seul le challenger écrit le résultat (une fois), vraie récompense affichée, résultat notifié à l'ami | #63 |
+| 27 | 🟠 | Notifications | Notifications du serveur en anglais pour tout le monde, push compris | Langue du joueur sur le profil, traduction côté serveur | #60 |
+| 28 | 🟡 | Coop | Pas de célébration quand la récompense coop fait passer un niveau | Niveau lu avant la validation | #59 |
+| 29 | 🟡 | Duels | Message de limite « 2 duels » au lieu de 3 ; délai entre duels sans explication | Texte corrigé, message dédié | #63 |
+| 30 | 🟡 | Quêtes | « ✓ DONE » en anglais en glissant une quête | Traduit | #62 |
+| 31 | 🟡 | Code | 179 avertissements de lint (code mort, imports en double) | 145 restants, tous volontaires | #61 |
 
 ## Vérifié sans problème
 
@@ -53,6 +60,6 @@ Gravité : 🔴 triche ou sécurité · 🟠 bug visible par les joueurs · 🟡
 
 - Le combat des duels est simulé sur le téléphone (ADR 008) : borné par les limites de duels.
 - La pub qui rapporte un jeton de gel n'est pas vérifiée par le serveur.
-- Les textes des notifications générées par le serveur sont en anglais (tâche A5).
 - La suppression de compte et l'e-mail « mot de passe oublié » n'ont pas pu être testés en local : le test B1 revient à Battiste, en prod.
-- Les reels montrent encore l'ancien héros ; les carrousels ont été refaits en anglais (#54).
+- Les reels ont été refaits en anglais avec le héros 32×32 ; les carrousels aussi (#54).
+- Après connexion, un joueur revient sur « Moi » et non sur « Aujourd'hui » : choix d'avril, conservé.
