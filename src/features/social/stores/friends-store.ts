@@ -8,7 +8,24 @@ import type { Database } from '../../../lib/supabase/types';
 import { resetOnSignOut } from '../../../lib/storage/user-data';
 import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 
-type Profile = Database['public']['Tables']['profiles']['Row'];
+/** What any player may read about another one (the other columns are private). */
+export const PUBLIC_PROFILE_COLUMNS =
+  'id, username, xp, level, rank, created_at, gold, active_theme, skin_color, hair_color, eye_color, best_streak';
+type Profile = Pick<
+  Database['public']['Tables']['profiles']['Row'],
+  | 'id'
+  | 'username'
+  | 'xp'
+  | 'level'
+  | 'rank'
+  | 'created_at'
+  | 'gold'
+  | 'active_theme'
+  | 'skin_color'
+  | 'hair_color'
+  | 'eye_color'
+  | 'best_streak'
+>;
 
 interface Friendship {
   id: string;
@@ -55,14 +72,14 @@ export async function fetchFriends() {
     // Fetch accepted friendships where I'm requester
     const { data: asRequester } = await supabase
       .from('friendships')
-      .select('*, profile:profiles!friendships_addressee_id_fkey(*)')
+      .select(`*, profile:profiles!friendships_addressee_id_fkey(${PUBLIC_PROFILE_COLUMNS})`)
       .eq('requester_id', userId)
       .eq('status', 'accepted');
 
     // Fetch accepted friendships where I'm addressee
     const { data: asAddressee } = await supabase
       .from('friendships')
-      .select('*, profile:profiles!friendships_requester_id_fkey(*)')
+      .select(`*, profile:profiles!friendships_requester_id_fkey(${PUBLIC_PROFILE_COLUMNS})`)
       .eq('addressee_id', userId)
       .eq('status', 'accepted');
 
@@ -75,7 +92,7 @@ export async function fetchFriends() {
     // Fetch pending requests received
     const { data: received } = await supabase
       .from('friendships')
-      .select('*, profile:profiles!friendships_requester_id_fkey(*)')
+      .select(`*, profile:profiles!friendships_requester_id_fkey(${PUBLIC_PROFILE_COLUMNS})`)
       .eq('addressee_id', userId)
       .eq('status', 'pending');
 
@@ -86,7 +103,7 @@ export async function fetchFriends() {
     // Fetch pending requests sent
     const { data: sent } = await supabase
       .from('friendships')
-      .select('*, profile:profiles!friendships_addressee_id_fkey(*)')
+      .select(`*, profile:profiles!friendships_addressee_id_fkey(${PUBLIC_PROFILE_COLUMNS})`)
       .eq('requester_id', userId)
       .eq('status', 'pending');
 
@@ -108,7 +125,7 @@ export async function searchUsers(query: string) {
 
   const { data } = await supabase
     .from('profiles')
-    .select('*')
+    .select(PUBLIC_PROFILE_COLUMNS)
     .ilike('username', `%${query}%`)
     .neq('id', userId ?? '')
     .limit(10);
