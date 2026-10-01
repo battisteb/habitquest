@@ -8,6 +8,12 @@
  *   card  — full-screen title card
  *   clip  — app screen recording (REC_DIR/<src>.webm) in a phone frame, title above
  *   still — app screenshot (assets/screens/<src>.png) in the phone frame, slow zoom
+ *   full    — app recording full screen, caption on top; optional punch zoom
+ *             { zoom: { at, to, x, y } } on a detail (x, y: 0-1 in the screen), { y } to scroll the crop
+ *   kinetic — title whose words slam in one by one (hook); optional subtitle, icon, cta
+ *   hero    — the hero drawn big in its scene, outfits swapping every `every` s
+ *             (looks: [{ hat, outfit, accessory, label }])
+ * Any segment: `flash` (cut from white), `speed` (clips), `sfx` (sound from assets/sounds at `sfxAt` s).
  * Output: marketing/exports/reels/<reel>.mp4 and a silent copy in
  * marketing/exports/reels/sans-musique/ (git-ignored).
  *
@@ -34,6 +40,43 @@ const PHONE = { x: 267, y: 600, w: 546, h: 1182, radius: 44 };
 const FPS = 30;
 
 const run = (args) => execFileSync(ffmpeg, ['-v', 'error', '-y', ...args], { stdio: 'inherit' });
+
+/** The app's hero renderer and scenes (TypeScript, no React Native), compiled for Node. */
+function loadHeroModules() {
+  const ts = require('typescript');
+  const dir = path.join(work, 'ts');
+  fs.mkdirSync(dir, { recursive: true });
+  const files = {
+    sprites: 'src/features/avatar/renderer/sprites.ts',
+    'compose-hero': 'src/features/avatar/renderer/compose-hero.ts',
+    'hero-scene': 'src/features/avatar/utils/hero-scene.ts',
+  };
+  for (const [name, file] of Object.entries(files)) {
+    const out = ts.transpileModule(fs.readFileSync(path.join(repo, file), 'utf8'), {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2019 },
+    });
+    fs.writeFileSync(path.join(dir, `${name}.js`), out.outputText);
+  }
+  return { ...require(path.join(dir, 'compose-hero.js')), ...require(path.join(dir, 'hero-scene.js')) };
+}
+
+/** Renders an animated layer (window.frame(t)) frame by frame into a video. */
+async function renderAnimated(page, spec, dur, out, enc) {
+  await page.goto(template, { waitUntil: 'networkidle0' });
+  await page.evaluate((s) => window.render(s), spec);
+  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
+  const dir = `${out}.frames`;
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+  const n = Math.round(dur * FPS);
+  for (let f = 0; f < n; f++) {
+    await page.evaluate((t) => window.frame(t), f / FPS);
+    await page.screenshot({ path: path.join(dir, `${String(f).padStart(4, '0')}.jpg`), type: 'jpeg', quality: 92 });
+  }
+  run(['-framerate', String(FPS), '-i', path.join(dir, '%04d.jpg'), ...enc]);
+  fs.rmSync(dir, { recursive: true, force: true });
+}
 
 async function renderLayer(page, spec, file) {
   await page.goto(template, { waitUntil: 'networkidle0' });
@@ -65,14 +108,43 @@ async function roundedMask(page, file) {
   await roundedMask(page, mask);
   const bg = path.join(work, 'bg.png');
   await renderLayer(page, { layout: 'bg' }, bg);
+  const hero = loadHeroModules();
 
   for (const [name, reel] of Object.entries(reels)) {
     if (process.argv[2] && process.argv[2] !== name) continue;
     const parts = [];
+    const sfx = [];
+    let clock = 0;
     for (const [i, seg] of reel.segments.entries()) {
       const out = path.join(work, `${name}-${i}.mp4`);
       const enc = ['-r', String(FPS), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', out];
-      if (seg.type === 'card') {
+      if (seg.sfx) sfx.push({ file: path.join(repo, 'assets', 'sounds', `${seg.sfx}.m4a`), at: clock + (seg.sfxAt || 0) });
+      clock += seg.dur;
+      if (seg.type === 'kinetic') {
+        await renderAnimated(page, { layout: 'kinetic', ...seg }, seg.dur, out, enc);
+      } else if (seg.type === 'hero') {
+        const looks = seg.looks.map((l) => ({
+          label: l.label,
+          grid: hero.composeHero({ skin: hero.DEFAULTS.skin, hair: hero.DEFAULTS.hair, eye: hero.DEFAULTS.eye, ...l }),
+        }));
+        const scene = hero.heroScene(seg.theme || 'default', 36);
+        await renderAnimated(page, { layout: 'hero', ...seg, looks, scene }, seg.dur, out, enc);
+      } else if (seg.type === 'full') {
+        const overlay = path.join(work, `${name}-${i}-full.png`);
+        await renderLayer(page, { layout: 'full', ...seg }, overlay);
+        const z = seg.zoom;
+        // Punch zoom: reaches `to` in 0.2 s from `at`, centered on (x, y).
+        const a = z ? Math.round(z.at * FPS) : 0;
+        const zoom = z
+          ? `,zoompan=z='if(lt(on,${a}),1,min(1+(on-${a})*${((z.to - 1) / 6).toFixed(4)},${z.to}))'` +
+            `:x='(iw-iw/zoom)*${z.x}':y='(ih-ih/zoom)*${z.y}':d=1:s=1080x1920:fps=${FPS}`
+          : '';
+        run(['-ss', String(seg.start || 0), '-i', path.join(recDir, `${seg.src}.webm`), '-loop', '1', '-i', overlay, '-t', String(seg.dur),
+          '-filter_complex',
+          `[0:v]setpts=PTS/${seg.speed || 1},fps=${FPS},scale=1080:-2,crop=1080:1920:0:(ih-1920)*${seg.y || 0}${zoom},format=rgba[s];` +
+          `[s][1:v]overlay=0:0,format=yuv420p`,
+          ...enc]);
+      } else if (seg.type === 'card') {
         const png = path.join(work, `${name}-${i}.png`);
         await renderLayer(page, { layout: 'card', ...seg }, png);
         // Short fade-in and a gentle push-in so the card is not a frozen frame.
@@ -94,6 +166,11 @@ async function roundedMask(page, file) {
           `[0:v][sr]overlay=${PHONE.x}:${PHONE.y}[b];[b][3:v]overlay=0:0,format=yuv420p`,
           ...enc]);
       }
+      if (seg.flash) {
+        const flashed = out.replace(/\.mp4$/, '-flash.mp4');
+        run(['-i', out, '-vf', 'fade=in:0:5:color=white', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', flashed]);
+        fs.renameSync(flashed, out);
+      }
       parts.push(out);
     }
 
@@ -101,9 +178,15 @@ async function roundedMask(page, file) {
     fs.writeFileSync(list, parts.map((p) => `file '${p.replace(/\\/g, '/')}'`).join('\n'));
     const total = reel.segments.reduce((s, x) => s + x.dur, 0);
     const out = path.join(outDir, `${name}.mp4`);
+    // Music, plus the sound effects of the segments on top.
+    const sfxIn = sfx.flatMap((x) => ['-i', x.file]);
+    const sfxMix = sfx.map((x, k) => `[${k + 2}:a]adelay=${Math.round(x.at * 1000)}|${Math.round(x.at * 1000)},volume=1.6[s${k}];`).join('');
+    const mix = sfx.length
+      ? `${sfxMix}[m]${sfx.map((_, k) => `[s${k}]`).join('')}amix=inputs=${sfx.length + 1}:duration=first:normalize=0[a]`
+      : '[m]anull[a]';
     run(['-f', 'concat', '-safe', '0', '-i', list,
-      '-ss', String(reel.music.start), '-i', path.join(repo, reel.music.file),
-      '-filter_complex', `[1:a]volume=0.7,afade=in:st=0:d=0.5,afade=out:st=${(total - 1.2).toFixed(2)}:d=1.2[a]`,
+      '-ss', String(reel.music.start), '-i', path.join(repo, reel.music.file), ...sfxIn,
+      '-filter_complex', `[1:a]volume=0.7,afade=in:st=0:d=0.3,afade=out:st=${(total - 1.2).toFixed(2)}:d=1.2[m];${mix}`,
       '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-t', String(total), '-movflags', '+faststart', out]);
     console.log(`${name}: ${total.toFixed(1)} s → ${path.relative(repo, out)}`);
 

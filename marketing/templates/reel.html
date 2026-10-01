@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@600;800&display=swap" rel="stylesheet" />
 <style>
-  /* 1080×1920 reel layers, composited by build-reels.js:
-     'bg' (background) → app recording → 'phone' (transparent, frame + title on top).
-     'card' is a full-screen title card. */
+  /* 1080×1920 reel layers, composited by build-reels.js.
+     Static layers: 'bg' (background), 'phone' (frame + title over a recording),
+     'full' (caption over a full-screen recording), 'card' (title card).
+     Animated layers, drawn frame by frame with window.frame(t):
+     'kinetic' (words that slam in one by one) and 'hero' (big hero, outfits that swap). */
   * { margin: 0; box-sizing: border-box; }
   html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
   body { font-family: 'Inter', sans-serif; color: #f0f0ff; position: relative; }
@@ -17,45 +19,180 @@
       radial-gradient(circle at 90% 95%, #4a1e4a 0%, transparent 50%),
       #0d0f1c;
   }
+  .grid { position: absolute; inset: -60px; opacity: .07;
+    background-image: linear-gradient(#fff 2px, transparent 2px), linear-gradient(90deg, #fff 2px, transparent 2px);
+    background-size: 60px 60px; }
   .bg::after {
     content: ''; position: absolute; inset: 0; opacity: .06;
     background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
     background-size: 30px 30px;
   }
+  .glow { position: absolute; left: 50%; top: 45%; width: 1400px; height: 1400px; margin: -700px 0 0 -700px;
+          background: radial-gradient(circle, rgba(123,104,238,.45) 0%, transparent 60%); }
   /* Frame around the app recording; the screen rect (PHONE in build-reels.js) is 546×1182 at (267, 600). */
   .frame { position: absolute; left: 255px; top: 588px; width: 570px; height: 1206px; border-radius: 56px;
            border: 12px solid #05060d; box-shadow: 0 0 0 4px #2e3870, 0 0 140px rgba(123,104,238,.35); }
   .title { position: absolute; left: 80px; right: 80px; top: 230px; height: 330px; display: flex; align-items: center; justify-content: center; text-align: center;
            font-family: 'Press Start 2P'; font-size: 52px; line-height: 1.45; text-shadow: 0 6px 0 #000; }
-  .title em { font-style: normal; color: #f5c518; }
+  .title em, .card h1 em, .caption em, .kin em, .hero-title em { font-style: normal; color: #f5c518; }
   .card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 56px; padding: 0 90px; text-align: center; }
   .card img { width: 300px; height: 300px; border-radius: 64px; image-rendering: pixelated; box-shadow: 0 0 120px rgba(245,197,24,.25); }
   .card h1 { font-family: 'Press Start 2P'; font-size: 64px; line-height: 1.45; text-shadow: 0 8px 0 #000; }
-  .card h1 em { font-style: normal; color: #f5c518; }
   .card p { font-size: 46px; font-weight: 800; color: #c9cbef; }
   .cta { font-family: 'Press Start 2P'; font-size: 34px; padding: 34px 44px; background: #e94560; border-bottom: 10px solid #a8304a; border-radius: 14px; }
   .handle { position: absolute; left: 0; right: 0; bottom: 70px; text-align: center; font-size: 34px; font-weight: 800; color: #9a9cc4; }
+
+  /* Full-screen recording: dark band at the top for the caption, handle at the bottom. */
+  .band { position: absolute; left: 0; right: 0; top: 0; height: 560px;
+          background: linear-gradient(#0d0f1c 0%, rgba(13,15,28,.92) 55%, rgba(13,15,28,0) 100%); }
+  .caption { position: absolute; left: 70px; right: 70px; top: 150px; text-align: center;
+             font-family: 'Press Start 2P'; font-size: 54px; line-height: 1.45; text-shadow: 0 6px 0 #000; }
+  .bottom { position: absolute; left: 0; right: 0; bottom: 0; height: 260px;
+            background: linear-gradient(rgba(13,15,28,0), rgba(13,15,28,.9)); }
+
+  /* Kinetic title. */
+  .kin { position: absolute; left: 70px; right: 70px; top: 0; bottom: 0; display: flex; flex-direction: column;
+         align-items: center; justify-content: center; gap: 70px; text-align: center; }
+  .kin h1 { font-family: 'Press Start 2P'; font-size: 78px; line-height: 1.5; text-shadow: 0 10px 0 #000; }
+  .kin .w { display: inline-block; opacity: 0; }
+  .kin p { font-size: 50px; font-weight: 800; color: #c9cbef; opacity: 0; }
+  .kin img { width: 260px; height: 260px; border-radius: 56px; image-rendering: pixelated; opacity: 0; }
+
+  /* Big hero. */
+  .hero-title { position: absolute; left: 70px; right: 70px; top: 170px; text-align: center;
+                font-family: 'Press Start 2P'; font-size: 60px; line-height: 1.45; text-shadow: 0 8px 0 #000; }
+  canvas { position: absolute; left: 0; top: 0; }
+  .tag { position: absolute; left: 0; right: 0; top: 1560px; text-align: center; }
+  .tag span { display: inline-block; font-family: 'Press Start 2P'; font-size: 40px; padding: 26px 36px; color: #0d0f1c;
+              background: #f5c518; border-bottom: 8px solid #b38d0f; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
-  // window.render({ layout: 'bg' | 'phone' | 'card', title, subtitle, cta, icon })
-  window.render = (s) => {
-    const root = document.getElementById('root');
-    if (s.layout === 'bg') {
-      root.innerHTML = '<div class="bg"></div><div class="handle">@habitquest.app</div>';
-    } else if (s.layout === 'phone') {
-      root.innerHTML = `<div class="frame"></div><div class="title"><div>${s.title}</div></div>`;
-    } else {
+  // window.render(spec) builds a layer; for animated layers, window.frame(t) draws time t (seconds).
+  const root = document.getElementById('root');
+  const ease = (x) => 1 - Math.pow(1 - Math.min(Math.max(x, 0), 1), 3);
+  const back = (x) => { x = Math.min(Math.max(x, 0), 1); const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  const rand = (i) => { const s = Math.sin(i * 12.9898) * 43758.5453; return s - Math.floor(s); };
+
+  /** Splits a title ("Level up.<br>Become a <em>legend</em>.") into words, keeping line breaks and highlights. */
+  function words(html) {
+    const out = [];
+    let lineStart = true;
+    for (const m of html.matchAll(/<em>(.*?)<\/em>|<br>|([^\s<]+)/g)) {
+      if (m[0] === '<br>') { out.push({ br: true }); lineStart = true; continue; }
+      // Punctuation glued to the previous word ("<em>RPG</em>?") stays glued.
+      const space = !lineStart && /\s/.test(html[m.index - 1] || '');
+      const parts = m[1] !== undefined ? m[1].split(/\s+/).filter(Boolean) : [m[2]];
+      parts.forEach((w, k) => out.push({ w, em: m[1] !== undefined, space: k > 0 || space }));
+      lineStart = false;
+    }
+    return out;
+  }
+
+  const layouts = {
+    bg: () => { root.innerHTML = '<div class="bg"></div><div class="handle">@habitquest.app</div>'; },
+    phone: (s) => { root.innerHTML = `<div class="frame"></div><div class="title"><div>${s.title}</div></div>`; },
+    full: (s) => { root.innerHTML = `<div class="band"></div><div class="caption">${s.title}</div><div class="bottom"></div><div class="handle">@habitquest.app</div>`; },
+    card: (s) => {
       root.innerHTML = `<div class="bg"></div><div class="card">
           ${s.icon ? '<img src="../assets/icon.png" />' : ''}
           <h1>${s.title}</h1>
           ${s.subtitle ? `<p>${s.subtitle}</p>` : ''}
           ${s.cta ? `<div class="cta">${s.cta}</div>` : ''}
         </div><div class="handle">@habitquest.app</div>`;
-    }
+    },
+
+    kinetic: (s) => {
+      const ws = words(s.title);
+      root.innerHTML = `<div class="bg"></div><div class="grid"></div><div class="glow"></div><div class="kin">
+          ${s.icon ? '<img src="../assets/icon.png" />' : ''}
+          <h1>${ws.map((w) => (w.br ? '<br>' : `<span class="w"${w.space ? ' style="margin-left:.5em"' : ''}>${w.em ? `<em>${w.w}</em>` : w.w}</span>`)).join('')}</h1>
+          ${s.subtitle ? `<p>${s.subtitle}</p>` : ''}
+          ${s.cta ? '<div class="cta" style="opacity:0">' + s.cta + '</div>' : ''}
+        </div><div class="handle">@habitquest.app</div>`;
+      const spans = [...root.querySelectorAll('.w')];
+      const step = s.step || 0.16;
+      const last = (spans.length - 1) * step;
+      window.frame = (t) => {
+        root.querySelector('.grid').style.transform = `translate(${(t * 40) % 60}px, ${(t * 60) % 60}px)`;
+        root.querySelector('.glow').style.opacity = String(0.6 + 0.4 * Math.sin(t * 5));
+        let shake = 0;
+        spans.forEach((el, i) => {
+          const k = (t - i * step) / 0.2;
+          el.style.opacity = k <= 0 ? '0' : '1';
+          const sc = k <= 0 ? 2.4 : 2.4 - 1.4 * back(k);
+          const rot = (1 - ease(k)) * (rand(i) * 16 - 8);
+          el.style.transform = `scale(${sc}) rotate(${rot}deg)`;
+          if (k > 0.8 && k < 1.6) shake = Math.max(shake, 1.6 - k);
+        });
+        const kin = root.querySelector('.kin');
+        kin.style.transform = `translate(${(rand(Math.floor(t * 30)) - 0.5) * 22 * shake}px, ${(rand(Math.floor(t * 30) + 7) - 0.5) * 22 * shake}px)`;
+        const after = (t - last - 0.25) / 0.3;
+        const p = root.querySelector('.kin p');
+        if (p) { p.style.opacity = String(ease(after)); p.style.transform = `translateY(${(1 - ease(after)) * 60}px)`; }
+        const img = root.querySelector('.kin img');
+        if (img) { const k = t / 0.35; img.style.opacity = String(ease(k)); img.style.transform = `scale(${0.4 + 0.6 * back(k)})`; }
+        const cta = root.querySelector('.kin .cta');
+        if (cta) { const k = (t - last - 0.45) / 0.3; cta.style.opacity = k > 0 ? '1' : '0'; cta.style.transform = `scale(${k > 0 ? back(k) * (1 + 0.05 * Math.sin(t * 9)) : 0})`; }
+      };
+    },
+
+    hero: (s) => {
+      root.innerHTML = `<div class="bg"></div><div class="grid"></div><div class="glow"></div>
+        <canvas width="1080" height="1920"></canvas>
+        <div class="hero-title">${s.title}</div><div class="tag"><span></span></div><div class="handle">@habitquest.app</div>`;
+      const ctx = root.querySelector('canvas').getContext('2d');
+      const tag = root.querySelector('.tag span');
+      const every = s.every || 0.5;
+      // Stage: the hero's scene (as in the app), framed, centered.
+      const stage = { x: 90, y: 520, w: 900, h: 900 };
+      const rows = 36, cell = stage.h / rows;
+      window.frame = (t) => {
+        ctx.clearRect(0, 0, 1080, 1920);
+        root.querySelector('.grid').style.transform = `translate(${(t * 40) % 60}px, ${(t * 60) % 60}px)`;
+        const pop = ease(t / 0.3);
+        ctx.save();
+        ctx.translate(540, stage.y + stage.h / 2);
+        ctx.scale(0.6 + 0.4 * back(t / 0.35), 0.6 + 0.4 * back(t / 0.35));
+        ctx.translate(-540, -(stage.y + stage.h / 2));
+        ctx.globalAlpha = pop;
+        ctx.fillStyle = s.frame || '#e94560';
+        ctx.fillRect(stage.x - 14, stage.y - 14, stage.w + 28, stage.h + 28);
+        ctx.save();
+        ctx.beginPath(); ctx.rect(stage.x, stage.y, stage.w, stage.h); ctx.clip();
+        for (const [x, y, w, h, c] of s.scene) { ctx.fillStyle = c; ctx.fillRect(stage.x + x * cell, stage.y + y * cell, w * cell + 0.6, h * cell + 0.6); }
+        // Hero: 32×32 grid, feet on the floor, one-pixel bounce.
+        const i = Math.min(Math.floor(t / every), s.looks.length - 1);
+        const look = s.looks[i];
+        const px = 22, size = 32 * px;
+        const hx = 540 - size / 2, hy = stage.y + stage.h - size - 30 - (Math.floor(t / 0.3) % 2) * px;
+        look.grid.forEach((row, y) => row.forEach((c, x) => { if (c) { ctx.fillStyle = c; ctx.fillRect(hx + x * px, hy + y * px, px + 0.6, px + 0.6); } }));
+        // White flash and sparkles on each outfit change.
+        const since = t - i * every;
+        if (i > 0 && since < 0.12) { ctx.fillStyle = `rgba(255,255,255,${0.8 * (1 - since / 0.12)})`; ctx.fillRect(stage.x, stage.y, stage.w, stage.h); }
+        if (since < 0.35) {
+          for (let k = 0; k < 10; k++) {
+            const a = rand(i * 31 + k) * Math.PI * 2, d = 200 + 260 * ease(since / 0.35);
+            ctx.fillStyle = k % 2 ? '#f5c518' : '#ffffff';
+            const sz = 18 * (1 - since / 0.35);
+            ctx.fillRect(540 + Math.cos(a) * d - sz / 2, hy + size / 2 + Math.sin(a) * d * 0.7 - sz / 2, sz, sz);
+          }
+        }
+        ctx.restore();
+        ctx.restore();
+        tag.textContent = look.label || '';
+        tag.style.display = look.label ? 'inline-block' : 'none';
+        tag.style.transform = `scale(${since < 0.2 ? back(since / 0.2) : 1})`;
+        const title = root.querySelector('.hero-title');
+        title.style.opacity = String(ease(t / 0.25));
+        title.style.transform = `translateY(${(1 - ease(t / 0.25)) * -50}px)`;
+      };
+    },
   };
+
+  window.render = (s) => { window.frame = null; layouts[s.layout](s); if (window.frame) window.frame(0); };
 </script>
 </body>
 </html>
