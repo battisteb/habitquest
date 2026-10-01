@@ -1,7 +1,7 @@
 import { Linking } from 'react-native';
 import type { Lang } from './i18n';
 
-const SITE = 'https://battisteb.github.io/habitquest';
+const SITE = 'https://gethabitquest.com';
 
 export type LegalPage = 'privacy' | 'terms' | 'support';
 

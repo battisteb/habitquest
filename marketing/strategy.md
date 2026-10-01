@@ -17,7 +17,7 @@
 | Nom proposé | `@habitquest.app` | `@habitquest.app` |
 | Nom affiché | HabitQuest ⚔️ Habit RPG | HabitQuest ⚔️ |
 | Bio | Transforme tes habitudes en quêtes 🗡️ · XP, séries 🔥, duels entre amis · Bientôt sur iOS & Android 👇 | Ta vie en mode RPG 🎮 · Tracker d'habitudes pixel art · Sortie bientôt 👇 |
-| Lien | https://battisteb.github.io/habitquest/ (liste d'attente plus tard) | idem |
+| Lien | https://gethabitquest.com/ (liste d'attente plus tard) | idem |
 | Photo de profil | Icône de l'app (`assets/icon.png`) | idem |
 
 Créer les deux comptes le même jour, en compte **professionnel/créateur** (statistiques). Réserver aussi le nom sur YouTube Shorts pour y republier les reels sans effort.

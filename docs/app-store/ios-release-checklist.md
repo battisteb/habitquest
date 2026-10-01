@@ -19,14 +19,14 @@
 
 ## Exigences App Review
 - ✅ Suppression de compte depuis l'app (règle 5.1.1(v)) — PR #4 ; ⏳ déployer la migration et la fonction `delete-account` en prod
-- ✅ Politique de confidentialité complétée ; ⏳ activer GitHub Pages (main, dossier `/docs`) → `https://battisteb.github.io/habitquest/privacy-policy`
+- ✅ Politique de confidentialité complétée ; ⏳ activer GitHub Pages (main, dossier `/docs`) → `https://gethabitquest.com/privacy-policy`
 - ⏳ Fiche « App Privacy » : réponses prêtes dans `review-and-privacy.md`
 - ⏳ Compte de démo pour l'équipe de revue ; notes de revue prêtes dans `review-and-privacy.md`
 - ⏳ Classification d'âge : réponses proposées dans `review-and-privacy.md` (9+ attendu, la fiche actuelle indique 4+)
 
 ## Métadonnées (`docs/app-store/metadata.md`)
 - ✅ Nom, sous-titre, description, mots-clés, catégories — anglais (`metadata.md`) et français (`metadata.fr.md`)
-- ✅ URL de support : `https://battisteb.github.io/habitquest/support`
+- ✅ URL de support : `https://gethabitquest.com/support`
 - ⏳ Captures d'écran iPhone 6,9" (1320×2868) — au moins 3
 
 ## Build et envoi (avec l'accord de Battiste uniquement)
