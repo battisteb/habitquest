@@ -18,6 +18,7 @@ import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme
 import { getUnlockedAttacks, ATTACKS, Attack } from '../../src/features/duels/utils/attacks';
 import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
 import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-store';
+import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { playMusic, stopMusic, playSfx } from '../../src/lib/audio/sound-service';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { PixelAvatar, type PixelAvatarProps } from '../../src/features/avatar/renderer/pixel-avatar';
@@ -324,7 +325,8 @@ export default function BattleScreen() {
   const [attackingId, setAttackingId] = useState<string | null>(null);
   const [hitId, setHitId] = useState<string | null>(null);
   const [winnerId, setWinnerId] = useState<string | null | 'draw'>('draw'); // initial dummy
-  const [xpBonus, setXpBonus] = useState(0);
+  // What the server paid for a friend duel (null while it answers).
+  const [reward, setReward] = useState<{ gold: number; xp: number } | null>(null);
 
   const logScrollRef = useRef<ScrollView>(null);
 
@@ -451,16 +453,15 @@ export default function BattleScreen() {
     else if (curOpp.hp <= 0) winner = ME_ID;
     else winner = OPP_ID;
 
-    const levelDiff = Math.abs(myLevel - oppLevel);
-    const bonus = 20 + levelDiff * 5;
-    setXpBonus(bonus);
     setWinnerId(winner);
 
-    // Award gold/XP and persist result (non-blocking)
-    if (winner !== 'draw') {
-      const winnerId = winner === ME_ID ? ME_ID : OPP_ID;
-      const loserId = winner === ME_ID ? OPP_ID : ME_ID;
-      resolveDuel(params.duelId ?? null, winnerId, loserId).catch(() => {});
+    // A friend duel is saved and rewarded by the server; a training fight pays nothing.
+    if (params.duelId) {
+      const myId = authStore$.user.get()?.id ?? null;
+      const winnerUserId = winner === 'draw' ? null : winner === ME_ID ? myId : params.opponentId ?? null;
+      resolveDuel(params.duelId, winnerUserId)
+        .then(setReward)
+        .catch(() => setReward({ gold: 0, xp: 0 }));
     }
 
     const endMsg =
@@ -569,20 +570,19 @@ export default function BattleScreen() {
               : T.duels_battle_end_defeat}
           </Text>
           <View style={s.rewardBox}>
-            {winnerId === ME_ID ? (
+            {!params.duelId ? (
+              <Text style={s.rewardLine}>{T.duels_battle_reward_training}</Text>
+            ) : !reward ? (
+              <Text style={s.rewardLine}>{T.duels_battle_reward_saving}</Text>
+            ) : reward.gold > 0 ? (
+              <Text style={s.rewardLine}>{T.duels_battle_reward_gold.replace('{n}', String(reward.gold))}</Text>
+            ) : reward.xp > 0 ? (
               <>
-                <Text style={s.rewardLine}>{T.duels_battle_reward_cosmetic}</Text>
-                <Text style={s.rewardLine}>{T.duels_battle_reward_achievement}</Text>
-              </>
-            ) : winnerId === 'draw' ? (
-              <Text style={s.rewardLine}>
-                {T.duels_battle_reward_draw.replace('{n}', String(Math.round(xpBonus * 0.5)))}
-              </Text>
-            ) : (
-              <>
-                <Text style={s.rewardLine}>{T.duels_battle_reward_xp.replace('{n}', String(xpBonus))}</Text>
+                <Text style={s.rewardLine}>{T.duels_battle_reward_xp.replace('{n}', String(reward.xp))}</Text>
                 <Text style={s.rewardLine}>{T.duels_battle_reward_stronger}</Text>
               </>
+            ) : (
+              <Text style={s.rewardLine}>{T.duels_battle_reward_none}</Text>
             )}
           </View>
           <Pressable style={s.exitBtn} onPress={() => router.replace('/duels')}>
