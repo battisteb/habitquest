@@ -6,6 +6,13 @@ Build: record the app in English (`REC_DIR` = folder of the `.webm` clips), then
 
 Nothing is published: posting waits for Battiste.
 
+## Full tour (60 s) — `tour-habitquest`
+
+The whole app in one video, for people who want to understand everything at once: concept, then 8 chapters (quests, streaks, XP and ranks, daily missions, the hero and the shop, friends and duels, achievements and stats, focus mode). Good as a pinned post, on the YouTube channel, and as the link to share.
+
+**Caption**: Habits are boring. So we made them a game. ⚔️ HabitQuest turns every habit into a quest: earn XP, keep your streaks, level up your hero from Novice to Legend, and challenge your friends. Free, coming soon to iOS & Android. Which habit would you turn into a quest first? 👇
+`#habitquest #habittracker #gamification #pixelart #productivity #selfimprovement #rpg #indiedev`
+
 Base hashtags: `#habitquest #habittracker #gamification #pixelart #productivity`
 
 | Reel | Caption | Extra hashtags |
