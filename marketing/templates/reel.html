@@ -35,6 +35,8 @@
   .title { position: absolute; left: 80px; right: 80px; top: 230px; height: 330px; display: flex; align-items: center; justify-content: center; text-align: center;
            font-family: 'Press Start 2P'; font-size: 52px; line-height: 1.45; text-shadow: 0 6px 0 #000; }
   .title em, .card h1 em, .caption em, .kin em, .hero-title em { font-style: normal; color: #f5c518; }
+  /* Title over a zoomed phone: on a dark plate so it stays readable. */
+  .plate { background: rgba(13,15,28,.88); padding: 34px 44px; border: 4px solid #2e3870; }
   .card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 56px; padding: 0 90px; text-align: center; }
   .card img { width: 300px; height: 300px; border-radius: 64px; image-rendering: pixelated; box-shadow: 0 0 120px rgba(245,197,24,.25); }
   .card h1 { font-family: 'Press Start 2P'; font-size: 64px; line-height: 1.45; text-shadow: 0 8px 0 #000; }
@@ -94,6 +96,9 @@
   const layouts = {
     bg: () => { root.innerHTML = '<div class="bg"></div><div class="handle">@habitquest.app</div>'; },
     phone: (s) => { root.innerHTML = `<div class="frame"></div><div class="title"><div>${s.title}</div></div>`; },
+    // Phone frame and title as separate layers, for a phone that zooms under a fixed title.
+    frame: () => { root.innerHTML = '<div class="frame"></div>'; },
+    title: (s) => { root.innerHTML = `<div class="title"><div class="plate">${s.title}</div></div>`; },
     full: (s) => { root.innerHTML = `<div class="band"></div><div class="caption">${s.title}</div><div class="bottom"></div><div class="handle">@habitquest.app</div>`; },
     card: (s) => {
       root.innerHTML = `<div class="bg"></div><div class="card">
