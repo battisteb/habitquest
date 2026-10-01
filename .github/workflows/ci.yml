@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -44,11 +44,31 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
       - name: ESLint
-        run: npx eslint . --max-warnings 0 || true
+        # Errors fail the build; the remaining warnings are deliberate (see docs/review).
+        run: npx eslint .
+
+  db-tests:
+    name: Database (migrations from scratch + pgTAP)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Postgres and apply every migration
+        run: supabase db start
+
+      - name: Run pgTAP tests
+        run: supabase test db
