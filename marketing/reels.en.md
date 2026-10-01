@@ -1,6 +1,6 @@
 # Reels in English (TikTok / Instagram / YouTube Shorts)
 
-Same 21 reels as the French ones, with English on-screen text and app screens recorded in English with the 32×32 hero. Texts are in [`reels.en.json`](reels.en.json).
+21 reels of 6 to 11 s, scripted in [`reels.en.json`](reels.en.json): a kinetic hook in the first second, then quick cuts mixing the app full screen (punch zoom on the action), the hero drawn big with outfits swapping, and the app in a phone frame now and then; white-flash cuts and game sounds over the music. App screens are recorded in English (`REC_SCALE=2` for full-screen sharpness).
 
 Build: record the app in English (`REC_DIR` = folder of the `.webm` clips), then `LANG=en node marketing/build-reels.js [reel]` → `exports/reels-en/` (and `exports/reels-en/sans-musique/` without music, to add a trending sound in the app).
 
