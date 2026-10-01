@@ -16,7 +16,7 @@
  * Any segment: `flash` (cut from white), `speed` (clips), `sfx` (sound from assets/sounds at `sfxAt` s).
  * clip/still: `zoom: [{ t, z, x, y }]` zooms the whole phone (title stays fixed): keyframes at t s,
  *   zoom z, centered on (x, y) of the app screen (0-1), eased in between.
- * Output: marketing/exports/reels/<reel>.mp4 and a silent copy in
+ * Output: marketing/exports/reels/<reel>.mp4 and a copy without the music (game sounds only) in
  * marketing/exports/reels/sans-musique/ (git-ignored).
  *
  * English version: LANG=en REC_DIR=<English recordings> node marketing/build-reels.js
@@ -230,11 +230,17 @@ async function roundedMask(page, file) {
       '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-t', String(total), '-movflags', '+faststart', out]);
     console.log(`${name}: ${total.toFixed(1)} s → ${path.relative(repo, out)}`);
 
-    // Silent twin, to add a trending sound in the TikTok/Instagram editor.
+    // Twin without the music, to add a trending sound in the TikTok/Instagram
+    // editor: it keeps the game sounds, so it is never silent.
     const silent = path.join(outDir, 'sans-musique', `${name}.mp4`);
     fs.mkdirSync(path.dirname(silent), { recursive: true });
-    run(['-f', 'concat', '-safe', '0', '-i', list, '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo',
-      '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-t', String(total), '-movflags', '+faststart', silent]);
+    const base = `[1:a]atrim=0:${total.toFixed(2)}[b]`;
+    const sfxOnly = sfx.length
+      ? `${base};${sfxMix}[b]${sfx.map((_, k) => `[s${k}]`).join('')}amix=inputs=${sfx.length + 1}:duration=first:normalize=0[a]`
+      : `${base};[b]anull[a]`;
+    run(['-f', 'concat', '-safe', '0', '-i', list, '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', ...sfxIn,
+      '-filter_complex', sfxOnly,
+      '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-t', String(total), '-movflags', '+faststart', silent]);
   }
   await browser.close();
 })();
