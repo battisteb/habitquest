@@ -37,14 +37,14 @@ select lives_ok($$update profiles set active_theme = 'nature' where id = auth.ui
 select add_freeze_token(auth.uid());
 select add_freeze_token(auth.uid());
 select add_freeze_token(auth.uid());
-select is((select freeze_tokens from profiles where id = auth.uid()), 1, 'free players hold 1 earned token at most');
+select is((select freeze_tokens from get_my_profile()), 1, 'free players hold 1 earned token at most');
 
 select pg_temp.act_as('00000000-0000-0000-0000-000000044002');
 select add_freeze_token(auth.uid());
 select add_freeze_token(auth.uid());
 select add_freeze_token(auth.uid());
 select add_freeze_token(auth.uid());
-select is((select freeze_tokens from profiles where id = auth.uid()), 3, 'Premium players hold up to 3');
+select is((select freeze_tokens from get_my_profile()), 3, 'Premium players hold up to 3');
 select throws_ok($$select add_freeze_token('00000000-0000-0000-0000-000000044001')$$, '42501', null,
   'nobody earns tokens for someone else');
 

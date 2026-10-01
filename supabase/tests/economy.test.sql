@@ -120,7 +120,7 @@ reset role;
 update profiles set freeze_tokens = 1 where id = '00000000-0000-0000-0000-0000000000a1';
 set local role authenticated;
 select is(activate_streak_freeze() ->> 'source', 'token', 'a token earned with an ad pays for it');
-select is((select freeze_tokens from profiles where id = auth.uid()), 0, 'and is consumed');
+select is((select freeze_tokens from get_my_profile()), 0, 'and is consumed');
 select throws_ok($$ insert into streak_freezes (user_id, freeze_date, source) values (auth.uid(), current_date + 1, 'weekly') $$,
   '42501', null, 'freezes can only be created by activate_streak_freeze');
 

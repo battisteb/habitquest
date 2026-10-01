@@ -34,7 +34,8 @@ export async function fetchProfile(): Promise<void> {
   if (!userId) return;
 
   profileStore$.isLoading.set(true);
-  const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
+  // Private fields (time zone, subscription, tokens…) are only readable through this RPC.
+  const { data } = await supabase.rpc('get_my_profile').maybeSingle();
   profileStore$.isLoading.set(false);
 
   if (data) {
