@@ -2,12 +2,12 @@
 (function () {
   if (!('IntersectionObserver' in window)) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var targets = document.querySelectorAll('section h2, .sub, .card, .shots figure, .step, .premium > *, details, .cta');
+  const targets = document.querySelectorAll('section h2, .sub, .card, .shots figure, .step, .premium > *, details, .cta');
   document.documentElement.classList.add('js-reveal');
-  var io = new IntersectionObserver(function (entries) {
+  const io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       if (!e.isIntersecting) return;
-      var el = e.target;
+      const el = e.target;
       el.classList.add('in');
       io.unobserve(el);
       // Once shown, hand the element back to its own hover effects.
