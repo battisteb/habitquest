@@ -14,9 +14,10 @@ interface StreakBreaksResult {
 }
 
 /**
- * Asks the server to reset streaks whose missed days were not frozen and to
- * apply the XP/gold penalty (see process_streak_breaks). Idempotent: a broken
- * streak is at 0 afterwards, so calling it again changes nothing.
+ * Asks the server to reset streaks whose missed days were not frozen (see
+ * process_streak_breaks). There is no penalty: a break opens a 24-hour
+ * comeback window with double XP (ADR 019). Idempotent: a broken streak is at
+ * 0 afterwards, so calling it again changes nothing.
  */
 export async function checkAndApplyPunishments(): Promise<{
   totalXpLoss: number;

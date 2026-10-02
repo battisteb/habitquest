@@ -5,6 +5,16 @@ export const XP_CONFIG = {
 } as const;
 
 /**
+ * No penalty when a streak breaks: the next 24 hours earn double XP, to
+ * reward getting back on track (ADR 019). Mirrored in SQL by
+ * process_streak_breaks / complete_habit.
+ */
+export const COMEBACK = {
+  XP_MULTIPLIER: 2,
+  WINDOW_HOURS: 24,
+} as const;
+
+/**
  * XP needed for levels 1 to 11 (level 1 = 0 XP). Players start at level 1.
  * Past the table, one level every LEVEL_XP_BEYOND_TABLE XP.
  * Mirrored in SQL by public.level_for_xp — change both together (ADR 010).
