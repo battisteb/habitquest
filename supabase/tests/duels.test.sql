@@ -9,6 +9,8 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-000000077001', 'duel-a@test.dev', '{"username":"Attaquant"}'),
   ('00000000-0000-0000-0000-000000077002', 'duel-b@test.dev', '{"username":"Defenseur"}');
 update profiles set language = 'fr' where id = '00000000-0000-0000-0000-000000077002';
+insert into friendships (requester_id, addressee_id, status)
+values ('00000000-0000-0000-0000-000000077001', '00000000-0000-0000-0000-000000077002', 'accepted');
 
 create function pg_temp.act_as(p_uid uuid) returns void language sql as $$
   select set_config('request.jwt.claims', json_build_object('sub', p_uid, 'role', 'authenticated')::text, true);
@@ -37,7 +39,7 @@ select throws_ok($$ update duels set winner_id = auth.uid() where id = '00000000
 select pg_temp.act_as('00000000-0000-0000-0000-000000077001');
 select lives_ok($$ update duels set status = 'resolved', winner_id = '00000000-0000-0000-0000-000000077002' where id = '00000000-0000-0000-0000-00000007d001' $$,
   'the challenger records the result');
-select is((claim_duel_reward('00000000-0000-0000-0000-00000007d001') ->> 'xp')::int, 25, 'the loser gets the catch-up XP');
+select is((select xp from profiles where id = '00000000-0000-0000-0000-000000077001'), 0, 'a friendly loss pays nothing either');
 select throws_ok($$ update duels set winner_id = auth.uid() where id = '00000000-0000-0000-0000-00000007d001' $$,
   '42501', 'Duel already over', 'the result is final');
 
@@ -51,7 +53,7 @@ values ('00000000-0000-0000-0000-00000007d002', '00000000-0000-0000-0000-0000000
 select pg_temp.act_as('00000000-0000-0000-0000-000000077001');
 set local role authenticated;
 update duels set status = 'resolved' where id = '00000000-0000-0000-0000-00000007d002';
-select is(claim_duel_reward('00000000-0000-0000-0000-00000007d002') ->> 'reason', 'not_resolved', 'a draw pays nothing');
+select is((select status from duels where id = '00000000-0000-0000-0000-00000007d002'), 'resolved', 'a draw closes the duel');
 
 select * from finish();
 rollback;

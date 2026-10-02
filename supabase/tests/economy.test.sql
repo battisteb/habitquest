@@ -166,40 +166,27 @@ select is((select count(*)::int from notifications where type = 'challenge_compl
              and user_id in ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000b2')),
   2, 'both players are notified');
 
--- ─── Duels ───────────────────────────────────────────────────────────────────
+-- ─── Duels (friendly: unlimited between friends, no reward) ──────────────────
 select pg_temp.act_as('00000000-0000-0000-0000-0000000000a1');
 set local role authenticated;
 insert into duels (id, challenger_id, opponent_id, status)
 values ('00000000-0000-0000-0000-00000000e001', auth.uid(), '00000000-0000-0000-0000-0000000000b2', 'pending');
-select throws_ok($$ insert into duels (challenger_id, opponent_id, status) values (auth.uid(), '00000000-0000-0000-0000-0000000000b2', 'pending') $$,
-  '42501', 'Duel cooldown not over', 'free players wait 48 h between duels');
-
-reset role;
-update duels set created_at = now() - interval '25 hours' where id = '00000000-0000-0000-0000-00000000e001';
-update profiles set subscription_status = 'premium' where id = '00000000-0000-0000-0000-0000000000a1';
-set local role authenticated;
 select lives_ok($$ insert into duels (challenger_id, opponent_id, status) values (auth.uid(), '00000000-0000-0000-0000-0000000000b2', 'pending') $$,
-  'premium players only wait 24 h');
-
-reset role;
-update profiles set subscription_status = 'free' where id = '00000000-0000-0000-0000-0000000000a1';
--- Three duels this week, all past the cooldown (only testable once the week is > 2 days old).
-update duels set created_at = date_trunc('week', now()) + interval '1 minute'
-where challenger_id = '00000000-0000-0000-0000-0000000000a1';
-insert into duels (challenger_id, opponent_id, status, created_at)
-values ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000b2', 'resolved',
-        date_trunc('week', now()) + interval '2 minutes');
-set local role authenticated;
-select case when now() - date_trunc('week', now()) > interval '49 hours'
-  then throws_ok($$ insert into duels (challenger_id, opponent_id, status) values (auth.uid(), '00000000-0000-0000-0000-0000000000b2', 'pending') $$,
-         '42501', 'Weekly duel limit reached', 'free players get 3 duels per week')
-  else skip('the week started less than 49 h ago', 1)
-end;
+  'no cooldown between two friendly duels');
+select lives_ok($$ insert into duels (challenger_id, opponent_id, status) values (auth.uid(), '00000000-0000-0000-0000-0000000000b2', 'pending') $$,
+  'no weekly limit either');
+select throws_ok($$ insert into duels (challenger_id, opponent_id, status) values (auth.uid(), '00000000-0000-0000-0000-0000000000c9', 'pending') $$,
+  '42501', 'Duels are between friends', 'only friends can be challenged');
 select throws_ok($$ update duels set status = 'resolved', winner_id = '00000000-0000-0000-0000-0000000000c9' where id = '00000000-0000-0000-0000-00000000e001' $$,
   '42501', null, 'the winner must be a player of the duel');
+reset role;
+create temp table gold_before on commit drop as select gold from profiles where id = '00000000-0000-0000-0000-0000000000a1';
+set local role authenticated;
 update duels set status = 'resolved', winner_id = auth.uid() where id = '00000000-0000-0000-0000-00000000e001';
-select is((claim_duel_reward('00000000-0000-0000-0000-00000000e001') ->> 'gold')::int, 30, 'the winner claims 30 gold');
-select is(claim_duel_reward('00000000-0000-0000-0000-00000000e001') ->> 'reason', 'already_claimed', 'only once');
+reset role;
+select is((select gold from profiles where id = '00000000-0000-0000-0000-0000000000a1'), (select gold from gold_before), 'a friendly win pays nothing');
+set local role authenticated;
+select ok(not exists (select 1 from pg_proc where proname = 'claim_duel_reward'), 'there is no duel reward to claim');
 select throws_ok($$ update duels set winner_id = '00000000-0000-0000-0000-0000000000b2' where id = '00000000-0000-0000-0000-00000000e001' $$,
   '42501', null, 'a resolved duel cannot be rewritten');
 

@@ -1,9 +1,7 @@
 import { observable } from '@legendapp/state';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
-import { LIMITS } from '../../monetization/utils/feature-gates';
 import { simulateDuel, PlayerState } from '../utils/combat-engine';
-import { premium$ } from '../../monetization/stores/premium';
 
 export interface DuelChallenge {
   id: string;
@@ -75,42 +73,6 @@ export async function fetchUnlockedCategories(): Promise<void> {
   duelStore$.myUnlockedCategories.set([...new Set(categories)]);
 }
 
-/** Returns the start of the current ISO week (Monday 00:00 UTC) */
-function getWeekStart(): string {
-  const now = new Date();
-  const day = now.getUTCDay(); // 0 = Sunday, 1 = Monday ...
-  const diff = day === 0 ? 6 : day - 1; // days since Monday
-  const monday = new Date(now);
-  monday.setUTCDate(now.getUTCDate() - diff);
-  monday.setUTCHours(0, 0, 0, 0);
-  return monday.toISOString();
-}
-
-/** Count the user's non-cancelled duels created since Monday 00:00 UTC */
-export async function getWeeklyDuelsUsed(): Promise<number> {
-  const userId = authStore$.user.get()?.id;
-  if (!userId) return 0;
-
-  const weekStart = getWeekStart();
-
-  const { count, error } = await supabase
-    .from('duels')
-    .select('*', { count: 'exact', head: true })
-    .or(`challenger_id.eq.${userId},opponent_id.eq.${userId}`)
-    .gte('created_at', weekStart)
-    .neq('status', 'cancelled');
-
-  if (error) return 0;
-  return count ?? 0;
-}
-
-/** Returns true when the user can still start a duel this week (free: 3, premium: unlimited) */
-export async function canStartDuel(): Promise<boolean> {
-  if (premium$.get()) return true;
-  const used = await getWeeklyDuelsUsed();
-  return used < LIMITS.FREE_DUELS_PER_WEEK;
-}
-
 /** Load all of the user's duels from Supabase into the store */
 export async function fetchDuels(): Promise<void> {
   const userId = authStore$.user.get()?.id;
@@ -159,15 +121,10 @@ export async function fetchDuels(): Promise<void> {
   duelStore$.resolvedDuels.set(resolved);
 }
 
-/** Records a duel against a friend (server limits apply) and returns its id. */
+/** Records a friendly duel against a friend and returns its id (the server checks friendship). */
 export async function createDuel(opponentId: string, attackId: string): Promise<string> {
   const userId = authStore$.user.get()?.id;
   if (!userId) throw new Error('Not authenticated');
-
-  const allowed = await canStartDuel();
-  if (!allowed) {
-    throw new Error(`Weekly duel limit reached — ${LIMITS.FREE_DUELS_PER_WEEK} duels per week maximum`);
-  }
 
   const { data, error } = await supabase
     .from('duels')
@@ -187,26 +144,16 @@ export async function createDuel(opponentId: string, attackId: string): Promise<
 }
 
 /**
- * Records the result of a friend duel (winnerId null for a draw), then
- * claims this player's reward on the server: 30 gold for a win, 25 XP for
- * a loss, nothing for a draw. Returns what the server actually paid.
+ * Records the result of a friendly duel (winnerId null for a draw). Friendly
+ * duels pay nothing: the friend is told the result by the server.
  */
-export async function resolveDuel(
-  duelId: string,
-  winnerId: string | null,
-): Promise<{ gold: number; xp: number }> {
-  const none = { gold: 0, xp: 0 };
+export async function resolveDuel(duelId: string, winnerId: string | null): Promise<void> {
   const { error } = await supabase
     .from('duels')
     .update({ status: 'resolved', winner_id: winnerId })
     .eq('id', duelId);
   if (error) throw new Error(error.message);
-
   void fetchDuels();
-  if (!winnerId) return none;
-  const { data } = await supabase.rpc('claim_duel_reward', { p_duel_id: duelId });
-  const reward = data as { success?: boolean; gold?: number; xp?: number } | null;
-  return reward?.success ? { gold: reward.gold ?? 0, xp: reward.xp ?? 0 } : none;
 }
 
 // Re-export simulateDuel so screens can import from a single location if desired
