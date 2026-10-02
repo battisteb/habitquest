@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useT, lang$ } from '../src/lib/i18n';
 import { openLegalPage } from '../src/lib/legal-links';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import {
@@ -25,6 +25,13 @@ import {
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 import { premium$ } from '../src/features/monetization/stores/premium';
+import { recordTrialOfferRefused, trialDaysLeft, TRIAL_DAYS } from '../src/features/monetization/utils/trial-offer';
+
+const STORE_NAME = Platform.OS === 'android' ? 'Google Play' : 'App Store';
+
+function formatDate(date: Date, lang: string): string {
+  return date.toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long' });
+}
 
 
 export default function PaywallScreen() {
@@ -189,6 +196,12 @@ export default function PaywallScreen() {
     textAlign: 'center',
     lineHeight: 20,
   },
+  trialNote: {
+    fontSize: fontSizes.sm,
+    color: colors.text,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
   legal: {
     fontSize: 9,
     color: colors.textMuted,
@@ -209,7 +222,16 @@ export default function PaywallScreen() {
   const isLoading = use$(subscriptionStore$.isLoading);
   const offering = use$(subscriptionStore$.offering);
   const isPremium = use$(premium$);
+  const trialProducts = use$(subscriptionStore$.trialProducts);
+  const trialEndsAt = use$(subscriptionStore$.trialEndsAt);
+  // Opened by the post-tutorial offer or a reminder: closing it is a "no thanks".
+  const { from } = useLocalSearchParams<{ from?: string }>();
   const [selected, setSelected] = useState<'monthly' | 'annual'>('annual');
+
+  function close() {
+    if ((from === 'tutorial' || from === 'reminder') && !premium$.get()) recordTrialOfferRefused();
+    router.back();
+  }
 
   useEffect(() => {
     loadOfferings();
@@ -230,9 +252,14 @@ export default function PaywallScreen() {
     ? T.paywall_per_month.replace('{price}', `${(annualPkg.product.price / 12).toFixed(2)} €`)
     : T.paywall_per_month.replace('{price}', '2,92 €');
 
+  const selectedId = selected === 'monthly' ? PRODUCT_MONTHLY : PRODUCT_ANNUAL;
+  const hasTrial = trialProducts.length > 0;
+  const selectedTrial = trialProducts.includes(selectedId);
+  const trialStart = new Date(Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000);
+  const daysLeft = trialDaysLeft(trialEndsAt);
+
   async function handlePurchase() {
-    const productId = selected === 'monthly' ? PRODUCT_MONTHLY : PRODUCT_ANNUAL;
-    const success = await purchaseSubscription(productId);
+    const success = await purchaseSubscription(selectedId);
     const error = subscriptionStore$.error.get();
     if (!success && error) {
       // Cancelling is silent; any other failure is explained.
@@ -261,7 +288,7 @@ export default function PaywallScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Header */}
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.closeBtn}>
+        <Pressable onPress={close} style={styles.closeBtn} accessibilityLabel="close">
           <Text style={styles.closeText}>✕</Text>
         </Pressable>
         <Text style={styles.badge}>{T.paywall_badge}</Text>
@@ -288,6 +315,14 @@ export default function PaywallScreen() {
               </View>
             ))}
           </View>
+          {daysLeft !== null && trialEndsAt && (
+            <Text style={styles.trialNote} testID="paywall-trial-active">
+              {T.paywall_trial_active
+                .replace('{n}', String(daysLeft))
+                .replace('{date}', formatDate(new Date(trialEndsAt), lang))
+                .replace('{store}', STORE_NAME)}
+            </Text>
+          )}
           <Text style={styles.legal}>{Platform.OS === 'web' ? T.paywall_active_manage_web : T.paywall_active_manage}</Text>
         </ScrollView>
       ) : (
@@ -295,8 +330,8 @@ export default function PaywallScreen() {
         {/* Hero */}
         <View style={styles.hero}>
           <Text style={styles.heroEmoji}>👑</Text>
-          <Text style={styles.heroTitle}>{T.paywall_hero_title}</Text>
-          <Text style={styles.heroSub}>{T.paywall_hero_sub}</Text>
+          <Text style={styles.heroTitle}>{hasTrial ? T.paywall_trial_title : T.paywall_hero_title}</Text>
+          <Text style={styles.heroSub}>{hasTrial ? T.paywall_trial_sub : T.paywall_hero_sub}</Text>
         </View>
 
         {/* Feature comparison */}
@@ -367,10 +402,23 @@ export default function PaywallScreen() {
             <ActivityIndicator color="#000" />
           ) : (
             <Text style={styles.ctaText}>
-              {T.paywall_cta_start.replace('{price}', selected === 'annual' ? annualPrice : monthlyPrice)}
+              {selectedTrial
+                ? T.paywall_trial_cta
+                : T.paywall_cta_start.replace('{price}', selected === 'annual' ? annualPrice : monthlyPrice)}
             </Text>
           )}
         </Pressable>
+        )}
+
+        {selectedTrial && Platform.OS !== 'web' && (
+          // Exactly what happens and when, before the player commits.
+          <Text style={styles.trialNote} testID="paywall-trial-terms">
+            {T.paywall_trial_terms
+              .replace('{price}', selected === 'annual' ? annualPrice : monthlyPrice)
+              .replace('{period}', selected === 'annual' ? T.paywall_period_year : T.paywall_period_month)
+              .replace('{date}', formatDate(trialStart, lang))
+              .replace('{store}', STORE_NAME)}
+          </Text>
         )}
 
         <Text style={styles.legal}>{T.paywall_legal}</Text>

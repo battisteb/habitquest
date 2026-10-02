@@ -4,12 +4,13 @@ import { storage } from '../../../lib/storage/mmkv';
 import { getRandomMessage } from './notification-messages';
 import { getOptimalNotificationHour } from './adaptive-timing';
 import { supabase } from '../../../lib/supabase/client';
-import { lang$ } from '../../../lib/i18n';
+import { lang$, getStrings } from '../../../lib/i18n';
 import { onUserDataCleared } from '../../../lib/storage/user-data';
 
 const DAILY_REMINDER_ID = 'daily-reminder';
 const STREAK_RISK_ID = 'streak-risk';
 const WEEKLY_RECAP_ID = 'weekly-recap';
+const TRIAL_ENDING_ID = 'trial-ending';
 
 const PREFS_KEY = 'notification-prefs';
 
@@ -195,6 +196,31 @@ export async function cancelWeeklyRecap(): Promise<void> {
   if (!isNative()) return;
   const Notifications = await getNotifications();
   await Notifications.cancelScheduledNotificationAsync(WEEKLY_RECAP_ID);
+}
+
+// ── Free trial ending ─────────────────────────────────────────────────────────
+
+/**
+ * Warns the player 2 days before the free trial turns into a paid
+ * subscription (null cancels it: no trial, or the warning time is past).
+ */
+export async function scheduleTrialEndingNotice(at: Date | null): Promise<void> {
+  if (!isNative()) return;
+  const Notifications = await getNotifications();
+  await Notifications.cancelScheduledNotificationAsync(TRIAL_ENDING_ID);
+  if (!at) return;
+  const T = getStrings();
+  const store = Platform.OS === 'android' ? 'Google Play' : 'App Store';
+  await Notifications.scheduleNotificationAsync({
+    identifier: TRIAL_ENDING_ID,
+    content: {
+      title: T.trial_ending_title,
+      body: T.trial_ending_body.replace('{store}', store),
+      sound: true,
+      data: { route: '/paywall' },
+    },
+    trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: at },
+  });
 }
 
 // ── Per-habit reminders ────────────────────────────────────────────────────────

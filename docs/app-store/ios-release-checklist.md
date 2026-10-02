@@ -15,6 +15,7 @@
 - ⏳ App créée dans App Store Connect → renseigner `appleId`, `ascAppId`, `appleTeamId` dans `eas.json` (`submit.production.ios`)
 - ⏳ App iOS enregistrée dans AdMob → iOS App ID (dans `app.json`, plugin `react-native-google-mobile-ads`) + blocs bannière, interstitiel et interstitiel avec récompense (dans `src/features/monetization/utils/ad-service.ts`)
 - ⏳ RevenueCat : clé API iOS de production (`appl_…`) à la place de la clé `test_…` dans `subscription-store.ts`, produits IAP créés dans App Store Connect
+- ⏳ Essai gratuit de 14 jours : dans App Store Connect, sur chaque abonnement (mensuel et annuel), « Offre de lancement » → « Essai gratuit » de 2 semaines, tous pays. L'app le détecte seule (`introPrice` à 0 + éligibilité RevenueCat) et l'affiche après le tutoriel ; sans offre configurée, elle montre le Premium normal
 - ⏳ Variables `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` configurées comme variables d'environnement EAS
 
 ## Exigences App Review
