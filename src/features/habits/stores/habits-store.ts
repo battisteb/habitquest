@@ -154,7 +154,7 @@ export async function fetchHabits() {
       });
       habitsStore$.weekCompletions.set(weekCompletionMap);
 
-      // Check for broken streaks and apply punishment (non-blocking)
+      // Check for broken streaks (no penalty: a comeback window opens, ADR 019)
       checkAndApplyPunishments().then(({ brokenStreaks, autoFrozenDays }) => {
         // A forgotten day was covered by a freeze: tell the player their streak is safe.
         if (autoFrozenDays.length > 0) {
@@ -166,6 +166,7 @@ export async function fetchHabits() {
           refreshProfile();
         }
         if (brokenStreaks.length > 0) {
+          refreshProfile(); // shows the comeback window
           for (const b of brokenStreaks) {
             if (habitsStore$.streaks[b.habitId].get()) {
               habitsStore$.streaks[b.habitId].current_count.set(0);

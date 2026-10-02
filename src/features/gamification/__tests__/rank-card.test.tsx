@@ -5,7 +5,7 @@ import { render } from '@testing-library/react-native';
 
 jest.mock('../../../lib/i18n', () => {
   const T = new Proxy({}, { get: (_t, key) => String(key) });
-  return { useT: () => T };
+  return { useT: () => T, useLang: () => 'fr' };
 });
 jest.mock('../../../lib/i18n/labels', () => ({
   titleLabel: (_T: unknown, name: string) => name,
@@ -32,6 +32,15 @@ describe('RankCard', () => {
       expect(getByText(rank.name.toUpperCase())).toHaveStyle({ color: rank.color });
       unmount();
     }
+  });
+
+  it('shows when the next rank comes at the recent pace', () => {
+    const { getByTestId, queryByTestId, rerender } = render(
+      <RankCard level={3} currentXp={420} nextLevelXp={600} progress={0.5} recentXp={700} />,
+    );
+    expect(getByTestId('rank-eta')).toBeTruthy();
+    rerender(<RankCard level={3} currentXp={420} nextLevelXp={600} progress={0.5} recentXp={0} />);
+    expect(queryByTestId('rank-eta')).toBeNull();
   });
 
   it('says when the highest rank is reached', () => {

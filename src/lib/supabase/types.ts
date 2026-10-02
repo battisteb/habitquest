@@ -464,6 +464,7 @@ export type Database = {
         Row: {
           active_theme: string;
           best_streak: number;
+          comeback_until: string | null;
           created_at: string;
           eye_color: string;
           language: string;
@@ -485,6 +486,7 @@ export type Database = {
         Insert: {
           active_theme?: string;
           best_streak?: number;
+          comeback_until?: string | null;
           created_at?: string;
           eye_color?: string;
           language?: string;
@@ -506,6 +508,7 @@ export type Database = {
         Update: {
           active_theme?: string;
           best_streak?: number;
+          comeback_until?: string | null;
           created_at?: string;
           eye_color?: string;
           language?: string;

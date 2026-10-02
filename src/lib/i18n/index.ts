@@ -674,6 +674,7 @@ const FR = {
   profile_edit_hint: 'Appuie pour modifier →',
   profile_next_stage: 'Prochain : {title} au Niveau {level}',
   profile_max_rank: 'Rang maximal atteint !',
+  profile_rank_eta: 'À ce rythme : {title} le {date}',
   profile_xp_journey_hint: 'VOIR MON PARCOURS XP →',
   profile_stat_gold: 'OR',
   profile_stat_wins: 'VICTOIRES',
@@ -938,7 +939,9 @@ const FR = {
   habit_unpin_confirm: 'Désépingler',
   // Streak recovery
   streak_broken_title: '💔 Série brisée',
-  streak_broken_msg: 'Ta série de {n} jours pour « {name} » est terminée. Recommence aujourd\'hui !',
+  comeback_title: '⚡ RETOUR DU HÉROS : XP ×{x}',
+  comeback_msg: 'Chaque quête validée rapporte le double d’XP. Encore {h} h.',
+  streak_broken_msg: 'Ta série de {n} jours pour « {name} » s’est arrêtée. Pas de pénalité : reviens aujourd’hui, tes XP sont doublés pendant 24 h !',
   streak_broken_restart: '▶ RECOMMENCER',
   notif_streak_risk_title: '💧 Pip s’inquiète pour ta série !',
   // Dynamic goal suggestions
@@ -1732,6 +1735,7 @@ const EN = {
   profile_edit_hint: 'Tap to edit →',
   profile_next_stage: 'Next: {title} at Level {level}',
   profile_max_rank: 'Highest rank reached!',
+  profile_rank_eta: 'At this pace: {title} on {date}',
   profile_xp_journey_hint: 'VIEW MY XP JOURNEY →',
   profile_stat_gold: 'GOLD',
   profile_stat_wins: 'WINS',
@@ -1996,7 +2000,9 @@ const EN = {
   habit_unpin_confirm: 'Unpin',
   // Streak recovery
   streak_broken_title: '💔 Streak broken',
-  streak_broken_msg: 'Your {n}-day streak for "{name}" is gone. Start a new one today!',
+  comeback_title: '⚡ HERO’S RETURN: XP ×{x}',
+  comeback_msg: 'Every quest you complete earns double XP. {h} h left.',
+  streak_broken_msg: 'Your {n}-day streak for "{name}" stopped. No penalty: come back today, your XP is doubled for 24 h!',
   streak_broken_restart: '▶ RESTART',
   notif_streak_risk_title: '💧 Pip is worried about your streak!',
   // Dynamic goal suggestions

@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = public, extensions;
 
-select plan(58);
+select plan(61);
 
 -- ─── Fixtures ────────────────────────────────────────────────────────────────
 insert into auth.users (id, email, raw_user_meta_data) values
@@ -88,11 +88,31 @@ where habit_id = '00000000-0000-0000-0000-00000000c001';
 update profiles set xp = 100, gold = 50 where id = '00000000-0000-0000-0000-0000000000a1';
 set local role authenticated;
 
-select is((process_streak_breaks() ->> 'xp_loss')::int, 20, 'a broken 10-day streak costs 20 XP');
+select is(jsonb_array_length((process_streak_breaks() -> 'broken')::jsonb), 1, 'a long absence breaks the streak');
 select is((select current_count from streaks where habit_id = '00000000-0000-0000-0000-00000000c001'),
   0, 'the broken streak is reset');
-select is((select gold from profiles where id = auth.uid()), 40, 'and 10 gold');
-select is((process_streak_breaks() ->> 'xp_loss')::int, 0, 'processing breaks twice punishes once');
+select is((select array[xp, gold] from get_my_profile()), array[100, 50],
+  'a broken streak costs nothing any more (ADR 019)');
+select ok((select comeback_until > now() + interval '23 hours' from get_my_profile()),
+  'it opens a 24-hour comeback window');
+select is(jsonb_array_length((process_streak_breaks() -> 'broken')::jsonb), 0, 'processing breaks twice changes nothing');
+-- Coming back during the window: double XP (streak 1 = 11 XP, so 22).
+select is((select (r ->> 'xp_earned')::int * 10 + (r ->> 'comeback')::boolean::int
+           from complete_habit('00000000-0000-0000-0000-00000000c001') r), 221,
+  'the first validation back earns double XP');
+reset role;
+delete from completions where habit_id = '00000000-0000-0000-0000-00000000c001'
+  and user_local_date('00000000-0000-0000-0000-0000000000a1', completed_at) = user_today('00000000-0000-0000-0000-0000000000a1');
+update streaks set current_count = 0, last_completed_at = now() - interval '12 days'
+where habit_id = '00000000-0000-0000-0000-00000000c001';
+update profiles set comeback_until = now() - interval '1 minute' where id = '00000000-0000-0000-0000-0000000000a1';
+set local role authenticated;
+select is((complete_habit('00000000-0000-0000-0000-00000000c001') ->> 'xp_earned')::int, 11,
+  'after the window, XP is back to normal');
+reset role;
+delete from completions where habit_id = '00000000-0000-0000-0000-00000000c001'
+  and user_local_date('00000000-0000-0000-0000-0000000000a1', completed_at) = user_today('00000000-0000-0000-0000-0000000000a1');
+set local role authenticated;
 
 select is(activate_streak_freeze() ->> 'source', 'weekly', 'the first freeze of the week is free');
 select is((activate_streak_freeze() ->> 'already_active')::boolean, true, 'freezing twice the same day is a no-op');
@@ -105,7 +125,7 @@ update streaks set current_count = 5, last_completed_at = now() - interval '2 da
 where habit_id = '00000000-0000-0000-0000-00000000c001';
 set local role authenticated;
 
-select is((process_streak_breaks() ->> 'xp_loss')::int, 0, 'a frozen day does not break the streak');
+select is(jsonb_array_length((process_streak_breaks() -> 'broken')::jsonb), 0, 'a frozen day does not break the streak');
 select is((complete_habit('00000000-0000-0000-0000-00000000c001') ->> 'current_streak')::int,
   6, 'the streak continues across a frozen day');
 
