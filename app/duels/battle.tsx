@@ -29,6 +29,9 @@ import { shopStore$, fetchEquipmentOf } from '../../src/features/shop/stores/sho
 import { supabase } from '../../src/lib/supabase/client';
 import { useT } from '../../src/lib/i18n';
 import { attackName } from '../../src/lib/i18n/labels';
+import { Companion } from '../../src/features/companion/components/companion';
+import { useCompanion } from '../../src/features/companion/hooks/use-companion';
+import { COMPANION_ASSIST } from '../../src/features/companion/utils/companion-stage';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -263,6 +266,9 @@ const log_s = StyleSheet.create({
 
 export default function BattleScreen() {
   const T = useT();
+  const companion = useCompanion();
+  const companionAssist = companion.locked ? 0 : COMPANION_ASSIST[companion.stage];
+  const companionName = companion.label;
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const params = useLocalSearchParams<{
@@ -441,6 +447,17 @@ export default function BattleScreen() {
       if (curMe.hp > 0) await doAttack(ME_ID, myAtk, OPP_ID);
     }
 
+    // Premium companion: once per fight, after the first round, a small flame.
+    if (round === 1 && companionAssist > 0 && curMe.hp > 0 && curOpp.hp > 0) {
+      curOpp = { ...curOpp, hp: Math.max(0, curOpp.hp - companionAssist) };
+      setHitId(OPP_ID);
+      await delay(110);
+      setHitId(null);
+      setOpp({ ...curOpp });
+      pushLog(T.duels_companion_assist.replace('{name}', companionName).replace('{n}', String(companionAssist)), 'special');
+      await delay(600);
+    }
+
     const ko = curMe.hp <= 0 || curOpp.hp <= 0;
 
     if (!ko) {
@@ -523,6 +540,11 @@ export default function BattleScreen() {
             isAttacking={attackingId === ME_ID}
             isHit={hitId === ME_ID}
           />
+          {companionAssist > 0 && (
+            <View style={s.companion} pointerEvents="none">
+              <Companion stage={companion.stage} size={40} accessibilityLabel={companionName} />
+            </View>
+          )}
           <PlayerPanel player={me} align="right" hpLabel={formatHp(me.hp, me.maxHp)} />
         </View>
       </View>
@@ -611,6 +633,7 @@ const s = StyleSheet.create({
   },
   arenaSlot: { flex: 1, gap: spacing.sm },
   arenaSlotRight: { alignItems: 'flex-end' },
+  companion: { position: 'absolute', left: -6, bottom: 52 },
   vsDivider: {
     width: 32, height: 32, borderRadius: 0,
     backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.border,

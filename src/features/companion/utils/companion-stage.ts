@@ -16,6 +16,18 @@ export function companionStage(streak: number): CompanionStage {
   return current;
 }
 
+/**
+ * Duel help (Premium): once per fight the dragon breathes a small flame.
+ * Kept below one normal attack (~15) so consistency stays what wins.
+ */
+export const COMPANION_ASSIST: Record<CompanionStage, number> = {
+  egg: 0,
+  hatchling: 3,
+  young: 5,
+  adult: 7,
+  legend: 10,
+};
+
 /** Streak needed for the next stage, or null at the last one. */
 export function nextStageStreak(streak: number): number | null {
   return COMPANION_STAGES.find((s) => s.minStreak > streak)?.minStreak ?? null;
