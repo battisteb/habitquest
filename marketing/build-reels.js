@@ -102,7 +102,8 @@ async function renderAnimated(page, spec, dur, out, enc) {
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
-const TRANSITION = 0.5;
+// Long enough to be seen (Battiste: the 0.5 s dissolves went unnoticed).
+const TRANSITION = 0.8;
 
 /**
  * 3D card flip between two segments: the last image of `fromVideo` turns over around the vertical
@@ -137,7 +138,7 @@ async function renderFlip(page, fromVideo, toVideo, bgFile, out, enc) {
   await page.setViewport({ width: 1080, height: 1920 });
 }
 // 'flip' is rendered in 3D by renderFlip; the others are ffmpeg xfade transitions.
-const XFADE = { flip: 'flip', slide: 'smoothleft', up: 'smoothup', zoom: 'zoomin', fade: 'fade', circle: 'circleopen' };
+const XFADE = { flip: 'flip', slide: 'slideleft', push: 'slideleft', up: 'slideup', zoom: 'zoomin', fade: 'fade', circle: 'circleopen' };
 
 /** Transition into segment i (null = hard cut). */
 function transitionInto(reel, i) {
@@ -148,8 +149,10 @@ function transitionInto(reel, i) {
   if (seg.transition) return XFADE[seg.transition] || XFADE.fade;
   // Two pieces of the same recording: a soft dissolve, never a cut.
   if (seg.src && seg.src === prev.src && seg.type === prev.type) return XFADE.fade;
-  if (seg.type === 'clip' || seg.type === 'still') return XFADE.flip;
-  return XFADE.fade;
+  // From one phone screen to another: the phone turns over.
+  if ((seg.type === 'clip' || seg.type === 'still') && (prev.type === 'clip' || prev.type === 'still')) return XFADE.flip;
+  // Otherwise the next scene pushes the previous one out (no zoom, no cut).
+  return XFADE.push;
 }
 
 /** Start time of each segment once transitions overlap them, and the total length. */
