@@ -228,6 +228,8 @@ const FR = {
   onb_skip_intro: 'Passer l\'intro',
   onb_skip: 'Passer',
   // First-run tutorial (Today screen)
+  tuto_pip_title: 'Salut, moi c’est Pip !',
+  tuto_pip_body: 'Je suis ton guide. Je change de couleur selon ta journée : vert quand tout va bien, doré quand tu as tout fini, bleu si ta série est en danger.',
   tuto_hero_title: 'TON HÉROS',
   tuto_hero_body: 'Il évolue quand tu montes de niveau et te dit chaque jour où tu en es.',
   tuto_complete_title: 'VALIDE UNE QUÊTE',
@@ -625,6 +627,7 @@ const FR = {
   // Today screen
   today_title: "AUJOURD'HUI",
   hero_no_habits: 'Crée ta première quête, je suis prêt !',
+  hero_rest_day: 'Repos aujourd’hui. On reprend demain, en forme !',
   hero_all_done: 'Toutes les quêtes sont faites. Repos bien mérité !',
   hero_level_up_one: 'Encore 1 quête et on passe niveau {level} !',
   hero_level_up_many: 'Encore {n} quêtes et on passe niveau {level} !',
@@ -652,6 +655,8 @@ const FR = {
   today_empty_tip2: '🔥 Les séries démarrent après 3 jours',
   today_empty_tip3: "⚡ Chaque complétion rapporte de l'XP",
   today_empty_cta: '+ CRÉER MA PREMIÈRE QUÊTE',
+  today_rest_title: 'Jour de repos 💤',
+  today_rest_body: 'Aucune quête prévue aujourd’hui. Pip fait la sieste, profites-en toi aussi !',
   // Profile screen
   profile_edit_hint: 'Appuie pour modifier →',
   profile_next_stage: 'Prochain : {title} au Niveau {level}',
@@ -1267,6 +1272,8 @@ const EN = {
   onb_skip_intro: 'Skip intro',
   onb_skip: 'Skip',
   // First-run tutorial (Today screen)
+  tuto_pip_title: 'Hi, I’m Pip!',
+  tuto_pip_body: 'I’m your guide. I change colour with your day: green when all is well, gold when you’re done, blue if your streak is in danger.',
   tuto_hero_title: 'YOUR HERO',
   tuto_hero_body: 'It evolves as you level up and tells you every day where you stand.',
   tuto_complete_title: 'COMPLETE A QUEST',
@@ -1664,6 +1671,7 @@ const EN = {
   // Today screen
   today_title: 'TODAY',
   hero_no_habits: 'Create your first quest, I’m ready!',
+  hero_rest_day: 'Rest day today. Back at it tomorrow!',
   hero_all_done: 'All quests done. Well-earned rest!',
   hero_level_up_one: '1 more quest and we reach level {level}!',
   hero_level_up_many: '{n} more quests and we reach level {level}!',
@@ -1691,6 +1699,8 @@ const EN = {
   today_empty_tip2: '🔥 Streaks start after 3 days',
   today_empty_tip3: '⚡ Every completion earns XP',
   today_empty_cta: '+ CREATE YOUR FIRST QUEST',
+  today_rest_title: 'Rest day 💤',
+  today_rest_body: 'No quest planned today. Pip is taking a nap, enjoy yours too!',
   // Profile screen
   profile_edit_hint: 'Tap to edit →',
   profile_next_stage: 'Next: {title} at Level {level}',

@@ -60,6 +60,7 @@ const MONTH_NAMES_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû'
 const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 import { categoryLabel } from '../../src/lib/i18n/labels';
+import { Pip } from '../../src/features/mascot/components/pip';
 
 function todayLabel(): string {
   const d = new Date();
@@ -582,6 +583,7 @@ export default function TodayScreen() {
   const hero = (
     <HeroGreeting
       totalHabits={totalCount}
+      restDay={habits.length > 0 && totalCount === 0}
       pendingStreaks={pendingStreaks}
       xp={profile?.xp ?? 0}
       level={profile?.level ?? 1}
@@ -860,7 +862,7 @@ export default function TodayScreen() {
         <View>
           {hero}
           <View style={styles.empty}>
-            <Text style={styles.emptyEmoji}>⚔️</Text>
+            <Pip expression="happy" size={72} accessibilityLabel="Pip" />
             <Text style={styles.emptyTitle}>{T.today_empty_title}</Text>
             <Text style={styles.emptySubtitle}>{T.today_empty_subtitle}</Text>
             <View style={styles.emptyTips}>
@@ -888,6 +890,16 @@ export default function TodayScreen() {
           }
           contentContainerStyle={styles.listContent}
           style={styles.list}
+          ListEmptyComponent={
+            activeHabits.length === 0 ? (
+              // Rest day: none of the quests is planned today (chosen days).
+              <View style={styles.empty} testID="rest-day">
+                <Pip expression="sleepy" size={72} accessibilityLabel="Pip" />
+                <Text style={styles.emptyTitle}>{T.today_rest_title}</Text>
+                <Text style={styles.emptySubtitle}>{T.today_rest_body}</Text>
+              </View>
+            ) : null
+          }
           renderItem={({ item, index }) => {
             const pinned = pinnedIds.includes(item.id);
             return (
