@@ -11,7 +11,10 @@ export type SfxKey =
   | 'victory'
   | 'defeat'
   | 'all_done'
-  | 'tap';
+  | 'tap'
+  | 'mission_done'
+  | 'missions_all'
+  | 'reward_coins';
 
 export type MusicKey = 'duel';
 

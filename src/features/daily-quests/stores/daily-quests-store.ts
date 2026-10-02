@@ -4,6 +4,8 @@ import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { persistPlugin } from '../../../lib/storage/persist';
 import { resetOnSignOut } from '../../../lib/storage/user-data';
+import { playSfx } from '../../../lib/audio/sound-service';
+import { localDateKey } from '../../../lib/local-date';
 
 export type QuestType = 'complete_habits' | 'complete_category' | 'earn_xp' | 'maintain_streak';
 export type QuestDifficulty = 'easy' | 'normal' | 'hard';
@@ -58,6 +60,19 @@ syncObservable(dailyQuestsStore$, {
   },
 });
 
+/**
+ * A mission just completed (seen on refresh after a quest): a chime, or a
+ * fanfare when it was the last one. Played after the quest's own sound.
+ */
+export function playMissionSounds(before: DailyQuestWithTemplate[], after: DailyQuestWithTemplate[]): void {
+  const done = new Set(before.filter((q) => q.is_completed).map((q) => q.id));
+  const known = new Set(before.map((q) => q.id));
+  const newlyDone = after.filter((q) => q.is_completed && known.has(q.id) && !done.has(q.id));
+  if (newlyDone.length === 0) return;
+  const allDone = after.length > 0 && after.every((q) => q.is_completed);
+  setTimeout(() => void playSfx(allDone ? 'missions_all' : 'mission_done', 0.8), 700);
+}
+
 export async function fetchDailyQuests() {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
@@ -69,8 +84,9 @@ export async function fetchDailyQuests() {
       p_user_id: userId,
     });
 
-    // Fetch today's quests with template join
-    const today = new Date().toISOString().split('T')[0];
+    // Fetch today's quests with template join (the player's local day, like the server).
+    const today = localDateKey();
+    const before = dailyQuestsStore$.quests.get();
     const { data, error } = await supabase
       .from('user_daily_quests')
       .select('*, template:daily_quest_templates(*)')
@@ -101,6 +117,7 @@ export async function fetchDailyQuests() {
     quests.sort((a, b) => difficultyOrder[a.template.difficulty] - difficultyOrder[b.template.difficulty]);
 
     dailyQuestsStore$.quests.set(quests);
+    playMissionSounds(before, quests);
   } finally {
     dailyQuestsStore$.isLoading.set(false);
   }
@@ -121,6 +138,8 @@ export async function claimQuest(questId: string) {
   if (!result.success) {
     throw new Error(result.error ?? 'Failed to claim quest');
   }
+
+  void playSfx('reward_coins', 0.8);
 
   // Optimistic update
   const quests = dailyQuestsStore$.quests.get();
