@@ -8,6 +8,7 @@ import { PixelFrame } from '../../src/ui/components/pixel-frame';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { RankCard } from '../../src/features/gamification/components/rank-card';
+import { useRecentXp } from '../../src/features/gamification/hooks/use-recent-xp';
 import { HeroStage } from '../../src/features/avatar/components/hero-stage';
 import { Companion } from '../../src/features/companion/components/companion';
 import { useCompanion } from '../../src/features/companion/hooks/use-companion';
@@ -122,6 +123,8 @@ export default function ProfileScreen() {
   },
 }), [themeKey]);
   const { profile, xpForNextLevel, xpProgress, isLoading } = useProfileStats();
+  // Pace of the last two weeks, refreshed when the XP changes.
+  const recentXp = useRecentXp(profile?.xp);
   const equippedSlots = use$(shopStore$.equippedSlots);
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -201,7 +204,7 @@ export default function ProfileScreen() {
 
             {/* Rank and level, one card that evolves with the rank */}
             <Pressable onPress={() => router.push('/xp-journey')} accessibilityRole="button">
-              <RankCard level={level} currentXp={profile?.xp ?? 0} nextLevelXp={xpForNextLevel} progress={xpProgress} />
+              <RankCard level={level} currentXp={profile?.xp ?? 0} nextLevelXp={xpForNextLevel} progress={xpProgress} recentXp={recentXp} />
               <Text style={styles.cardHint}>{T.profile_xp_journey_hint}</Text>
             </Pressable>
 
