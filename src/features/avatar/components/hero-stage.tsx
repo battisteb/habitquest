@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { View, StyleSheet, type LayoutChangeEvent } from 'react-native';
 import { PixelFrame } from '../../../ui/components/pixel-frame';
 import { useTheme } from '../../../ui/theme/theme-context';
@@ -13,6 +13,8 @@ interface HeroStageProps extends Omit<PixelAvatarProps, 'bare'> {
   size?: number;
   /** Scene of this theme instead of the current one (shop previews). */
   theme?: ThemeKey;
+  /** Drawn on the ground next to the hero (the Premium companion). */
+  companion?: ReactNode;
 }
 
 /**
@@ -20,7 +22,7 @@ interface HeroStageProps extends Omit<PixelAvatarProps, 'bare'> {
  * the theme (or the background bought in the shop), the frame takes the
  * rank color.
  */
-export function HeroStage({ level, size = 180, background, theme, ...avatarProps }: HeroStageProps) {
+export function HeroStage({ level, size = 180, background, theme, companion, ...avatarProps }: HeroStageProps) {
   const current = useTheme().themeKey;
   const themeKey = theme ?? current;
   const [width, setWidth] = useState(0);
@@ -51,6 +53,7 @@ export function HeroStage({ level, size = 180, background, theme, ...avatarProps
         <View style={styles.hero}>
           <PixelAvatar size={size} bare {...avatarProps} />
         </View>
+        {companion && <View style={[styles.companion, { marginLeft: size * 0.42 }]}>{companion}</View>}
       </View>
     </PixelFrame>
   );
@@ -60,4 +63,5 @@ const styles = StyleSheet.create({
   frame: { alignSelf: 'stretch' },
   scene: { overflow: 'hidden', justifyContent: 'flex-end', alignItems: 'center' },
   hero: { marginBottom: 8 },
+  companion: { position: 'absolute', bottom: 8, left: '50%' },
 });

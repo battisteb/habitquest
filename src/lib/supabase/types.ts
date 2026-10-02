@@ -721,6 +721,12 @@ export type Database = {
         };
         Relationships: [];
       };
+      premium_monthly_items: {
+        Row: { month: string; item_id: string };
+        Insert: { month: string; item_id: string };
+        Update: { month?: string; item_id?: string };
+        Relationships: [];
+      };
       user_achievements: {
         Row: {
           achievement_id: string;
@@ -867,6 +873,10 @@ export type Database = {
       get_my_profile: {
         Args: Record<string, never>;
         Returns: Database['public']['Tables']['profiles']['Row'][];
+      };
+      claim_monthly_item: {
+        Args: Record<string, never>;
+        Returns: Json;
       };
       create_notification: {
         Args: { p_body: string; p_data?: Json; p_title: string; p_type: string; p_user_id: string };

@@ -13,7 +13,9 @@ function mockQuery(table: string) {
   const chain: any = {
     select: jest.fn(() => chain),
     eq: jest.fn(() => chain),
+    or: jest.fn(() => chain),
     order: jest.fn(() => chain),
+    maybeSingle: jest.fn(() => Promise.resolve({ data: (mockTables[table] ?? [])[0] ?? null, error: null })),
     delete: jest.fn(() => chain),
     upsert: (...args: unknown[]) => {
       mockUpsert(table, ...args);
@@ -69,6 +71,29 @@ describe('shop store', () => {
     mockTables.equipped_items = [{ slot: 'hat', item_id: 'hat-1', item: { id: 'hat-1', sprite_key: 'knight_helm' } }];
     await fetchShop();
     expect(shopStore$.equippedSlots.peek().hat.item?.sprite_key).toBe('knight_helm');
+  });
+
+  it('hands the item of the month to Premium players and says so once', async () => {
+    mockRpc.mockResolvedValue({ data: { granted: true, item_id: 'pumpkin', month: '2026-10-01' }, error: null });
+    mockTables.purchases = [{ item_id: 'pumpkin' }];
+    mockTables.shop_items = [{ id: 'pumpkin', name: 'Pumpkin Hat', category: 'avatar_hat', sprite_key: 'hat_pumpkin' }];
+    await fetchShop();
+    expect(mockRpc).toHaveBeenCalledWith('claim_monthly_item');
+    const monthly = shopStore$.monthly.peek();
+    expect(monthly.item?.sprite_key).toBe('hat_pumpkin');
+    expect(monthly.owned).toBe(true);
+    expect(monthly.justGranted).toBe(true);
+  });
+
+  it('shows the item of the month to free players without giving it', async () => {
+    mockRpc.mockResolvedValue({ data: { granted: false, reason: 'not_premium', item_id: 'pumpkin', month: '2026-10-01' }, error: null });
+    mockTables.purchases = [];
+    mockTables.shop_items = [{ id: 'pumpkin', name: 'Pumpkin Hat', category: 'avatar_hat', sprite_key: 'hat_pumpkin' }];
+    await fetchShop();
+    const monthly = shopStore$.monthly.peek();
+    expect(monthly.item?.id).toBe('pumpkin');
+    expect(monthly.owned).toBe(false);
+    expect(monthly.justGranted).toBe(false);
   });
 
   it("reads a friend's equipment by slot", async () => {

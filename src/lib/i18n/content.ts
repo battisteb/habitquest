@@ -60,6 +60,9 @@ const ACHIEVEMENTS_FR: Record<string, Text> = {
 
 const SHOP_FR: Record<string, Text> = {
   'Wooden Shield': { title: 'Bouclier en bois', description: 'Une protection de base' },
+  'Pumpkin Hat': { title: 'Chapeau citrouille', description: 'Objet du mois — octobre 2026. Exclusivité Premium.' },
+  'Autumn Scarf': { title: "Écharpe d'automne", description: 'Objet du mois — novembre 2026. Exclusivité Premium.' },
+  'Winter Hat': { title: "Bonnet d'hiver", description: 'Objet du mois — décembre 2026. Exclusivité Premium.' },
   'Adventurer Scarf': { title: "Écharpe d'aventurier", description: 'Te tient chaud en quête' },
   'Iron Shield': { title: 'Bouclier de fer', description: 'Un bouclier solide' },
   'Steel Sword': { title: "Épée d'acier", description: 'Une lame fidèle' },

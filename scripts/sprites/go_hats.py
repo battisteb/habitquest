@@ -7,4 +7,5 @@ C = {'hat_adventurer': ('#8B7355', '#b5402f'), 'hat_knight': ('#8a95a5', '#c0c0c
 from base import HAIR
 from hats import SHOWS_HAIR
 C['hat_halo']=('#fff6c2','#FFD700'); C['hat_dragon']=('#5a0a0a','#c0392b')
+C['hat_pumpkin']=('#e8742a','#4a8a2a'); C['hat_winter']=('#c0392b','#f2f2f2')
 sheet([([BODY, TUNIC] + ([HAIR] if k in SHOWS_HAIR else []) + [HATS[k]], palette(a=a, x=x)) for k, (a, x) in C.items()], 'hats.png', 7)
