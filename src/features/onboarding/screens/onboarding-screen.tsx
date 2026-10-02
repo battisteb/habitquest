@@ -12,6 +12,7 @@ import { markOnboardingComplete } from '../onboarding-state';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+import { LanguageSwitch } from '../../../ui/components/language-switch';
 
 const SLIDE_EMOJIS = ['⚔️', '🔥', '🏆'];
 
@@ -143,6 +144,9 @@ export default function OnboardingScreen() {
       style={[styles.container, { paddingTop: insets.top + spacing.xl, paddingBottom: insets.bottom }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      {/* Language first: the device one is preselected */}
+      {slideIndex === 0 && <LanguageSwitch style={styles.langSwitch} />}
+
       {/* Progress dots */}
       <View style={styles.dots}>
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
@@ -294,6 +298,7 @@ export default function OnboardingScreen() {
 
 function createStyles() {
   return StyleSheet.create({
+  langSwitch: { position: 'absolute', top: spacing.md, right: spacing.md, zIndex: 1 },
   container: {
     flex: 1,
     backgroundColor: colors.background,

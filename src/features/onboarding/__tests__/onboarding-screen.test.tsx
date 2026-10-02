@@ -19,7 +19,8 @@ jest.mock('react-native-safe-area-context', () => ({
 // Strings resolve to their own key so assertions stay language-independent.
 jest.mock('../../../lib/i18n', () => {
   const T = new Proxy({}, { get: (_target, key) => String(key) });
-  return { useT: () => T };
+  const { observable } = jest.requireActual('@legendapp/state');
+  return { useT: () => T, lang$: observable('en'), setLang: jest.fn() };
 });
 
 jest.mock('../../../ui/theme/theme-context', () => ({
