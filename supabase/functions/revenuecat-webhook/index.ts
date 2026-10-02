@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { premiumUpdate } from './premium-update.ts';
 
 // RevenueCat → Supabase: the only writer of profiles.subscription_* (clients
 // cannot update those columns). Configure in RevenueCat → Integrations →
@@ -15,6 +16,7 @@ interface RevenueCatEvent {
   original_app_user_id?: string;
   aliases?: string[];
   entitlement_ids?: string[] | null;
+  product_id?: string | null;
   expiration_at_ms?: number | null;
 }
 
@@ -47,28 +49,34 @@ serve(async (req: Request) => {
     return json({ ok: true, skipped: 'other entitlement' }, 200);
   }
 
-  const expiresAt = event.expiration_at_ms ? new Date(event.expiration_at_ms) : null;
-  const active =
-    event.type !== 'EXPIRATION' && (expiresAt === null || expiresAt.getTime() > Date.now());
-
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
   );
+  // Current status: a lifetime Premium is never taken away by a subscription event.
+  const { data: current, error: readError } = await supabase
+    .from('profiles')
+    .select('subscription_status, subscription_expires_at')
+    .eq('id', userId)
+    .maybeSingle();
+  if (readError) {
+    return json({ error: 'Read failed' }, 500);
+  }
+  const update = premiumUpdate(event, current);
+  if (!update) {
+    return json({ ok: true, skipped: 'lifetime premium kept' }, 200);
+  }
+
   const { error } = await supabase
     .from('profiles')
-    .update({
-      subscription_status: active ? 'premium' : 'free',
-      subscription_expires_at: expiresAt?.toISOString() ?? null,
-      revenue_cat_id: event.original_app_user_id ?? event.app_user_id,
-    })
+    .update({ ...update, revenue_cat_id: event.original_app_user_id ?? event.app_user_id })
     .eq('id', userId);
 
   // A non-2xx makes RevenueCat retry later.
   if (error) {
     return json({ error: 'Update failed' }, 500);
   }
-  return json({ ok: true, status: active ? 'premium' : 'free' }, 200);
+  return json({ ok: true, status: update.subscription_status }, 200);
 });
 
 function json(body: Record<string, unknown>, status: number): Response {

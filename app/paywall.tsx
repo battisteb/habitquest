@@ -22,6 +22,7 @@ import {
   restorePurchases,
   PRODUCT_MONTHLY,
   PRODUCT_ANNUAL,
+  PRODUCT_LIFETIME,
 } from '../src/features/monetization/stores/subscription-store';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
@@ -154,6 +155,7 @@ export default function PaywallScreen() {
     alignItems: 'center',
   },
   planSelected: { borderColor: gold, backgroundColor: gold + '11' },
+  planLifetime: { flex: 0, marginTop: spacing.sm, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   planBadgeRow: { height: 20, justifyContent: 'center' },
   popularBadge: {
     backgroundColor: gold,
@@ -227,7 +229,7 @@ export default function PaywallScreen() {
   const trialEndsAt = use$(subscriptionStore$.trialEndsAt);
   // Opened by the post-tutorial offer or a reminder: closing it is a "no thanks".
   const { from } = useLocalSearchParams<{ from?: string }>();
-  const [selected, setSelected] = useState<'monthly' | 'annual'>('annual');
+  const [selected, setSelected] = useState<'monthly' | 'annual' | 'lifetime'>('annual');
 
   function close() {
     if ((from === 'tutorial' || from === 'reminder') && !premium$.get()) recordTrialOfferRefused();
@@ -245,6 +247,9 @@ export default function PaywallScreen() {
   const annualPkg = offering?.availablePackages.find(
     (p: any) => p.product.identifier === PRODUCT_ANNUAL,
   );
+  const lifetimePkg = offering?.availablePackages.find(
+    (p: any) => p.product.identifier === PRODUCT_LIFETIME,
+  );
 
   // Store prices (RevenueCat); dollar fallbacks before they load and on the web.
   const currency = annualPkg?.product.currencyCode ?? monthlyPkg?.product.currencyCode ?? FALLBACK_PRICES.currency;
@@ -254,8 +259,10 @@ export default function PaywallScreen() {
   const annualPrice = annualPkg?.product.priceString ?? formatPrice(FALLBACK_PRICES.annual, currency, lang);
   const annualMonthly = T.paywall_per_month.replace('{price}', formatPrice(annualPerMonth(annualAmount), currency, lang));
   const annualSavings = annualSavingsPercent(monthlyAmount, annualAmount);
+  const lifetimePrice = lifetimePkg?.product.priceString ?? formatPrice(FALLBACK_PRICES.lifetime, currency, lang);
+  const selectedPrice = selected === 'lifetime' ? lifetimePrice : selected === 'annual' ? annualPrice : monthlyPrice;
 
-  const selectedId = selected === 'monthly' ? PRODUCT_MONTHLY : PRODUCT_ANNUAL;
+  const selectedId = selected === 'monthly' ? PRODUCT_MONTHLY : selected === 'lifetime' ? PRODUCT_LIFETIME : PRODUCT_ANNUAL;
   const hasTrial = trialProducts.length > 0;
   const selectedTrial = trialProducts.includes(selectedId);
   const trialStart = new Date(Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000);
@@ -390,6 +397,19 @@ export default function PaywallScreen() {
           </Pressable>
         </View>
 
+        {/* Lifetime (I10): one payment, Premium for good, no subscription. */}
+        <Pressable
+          style={[styles.plan, styles.planLifetime, selected === 'lifetime' && styles.planSelected]}
+          onPress={() => setSelected('lifetime')}
+          testID="paywall-plan-lifetime"
+        >
+          <View>
+            <Text style={styles.planPeriod}>{T.paywall_plan_lifetime}</Text>
+            <Text style={styles.planSub}>{T.paywall_plan_lifetime_sub}</Text>
+          </View>
+          <Text style={styles.planPrice}>{lifetimePrice}</Text>
+        </Pressable>
+
         {/* CTA: subscriptions are sold through the App Store / Play Store only. */}
         {Platform.OS === 'web' ? (
           <View style={styles.webNotice}>
@@ -407,7 +427,9 @@ export default function PaywallScreen() {
             <Text style={styles.ctaText}>
               {selectedTrial
                 ? T.paywall_trial_cta
-                : T.paywall_cta_start.replace('{price}', selected === 'annual' ? annualPrice : monthlyPrice)}
+                : selected === 'lifetime'
+                  ? T.paywall_cta_lifetime.replace('{price}', lifetimePrice)
+                  : T.paywall_cta_start.replace('{price}', selectedPrice)}
             </Text>
           )}
         </Pressable>
@@ -424,7 +446,7 @@ export default function PaywallScreen() {
           </Text>
         )}
 
-        <Text style={styles.legal}>{T.paywall_legal}</Text>
+        <Text style={styles.legal}>{selected === 'lifetime' ? T.paywall_legal_lifetime : T.paywall_legal}</Text>
         <View style={styles.legalLinks}>
           <Pressable onPress={() => openLegalPage('terms', lang)} accessibilityRole="link">
             <Text style={styles.legalLink}>{T.legal_terms}</Text>

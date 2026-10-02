@@ -27,6 +27,8 @@ export const ENTITLEMENT_PREMIUM = 'premium';
 // Product identifiers must match App Store Connect / Google Play Console
 export const PRODUCT_MONTHLY = 'habitquest_premium_monthly';
 export const PRODUCT_ANNUAL = 'habitquest_premium_annual';
+/** One-time purchase, Premium for life (I10). Same id in the webhook (premium-update.ts). */
+export const PRODUCT_LIFETIME = 'habitquest_premium_lifetime';
 
 // ─── State ───────────────────────────────────────────────────────────────────
 interface SubscriptionState {
