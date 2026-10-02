@@ -15,10 +15,11 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
-import { getUnlockedAttacks, ATTACKS, Attack } from '../../src/features/duels/utils/attacks';
+import { getUnlockedAttacks, battleLoadout, ATTACK_CATEGORIES, ATTACKS, Attack } from '../../src/features/duels/utils/attacks';
 import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
 import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-store';
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
+import { profileStore$ } from '../../src/features/gamification/stores/profile-store';
 import { playMusic, stopMusic, playSfx } from '../../src/lib/audio/sound-service';
 import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { PixelAvatar, type PixelAvatarProps } from '../../src/features/avatar/renderer/pixel-avatar';
@@ -299,13 +300,18 @@ export default function BattleScreen() {
     T.duels_battle_hp.replace('{hp}', String(hp)).replace('{max}', String(max));
 
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
-  const allAttacks = getUnlockedAttacks(unlockedCategories).slice(0, 4);
+  // Real levels: the challenge passes both; a training fight uses yours.
+  const ownLevel = use$(profileStore$.profile)?.level ?? 1;
+  const myLevel = params.myLevel ? parseInt(params.myLevel, 10) : ownLevel;
+  const oppLevel = params.opponentLevel ? parseInt(params.opponentLevel, 10) : Math.max(1, ownLevel - 1);
+  // Your 4 best attacks for your level (the opening one first); the opponent
+  // draws from what a hero of its level can know.
+  const allAttacks = battleLoadout(getUnlockedAttacks(unlockedCategories, myLevel), params.openingAttackId);
+  const oppAttacks = getUnlockedAttacks(ATTACK_CATEGORIES, oppLevel);
   const myAttacks = allAttacks.length > 0
     ? allAttacks
     : [ATTACKS.find(a => a.id === 'balanced_attack')!];
 
-  const myLevel = parseInt(params.myLevel ?? '8', 10);
-  const oppLevel = parseInt(params.opponentLevel ?? '6', 10);
 
   const [round, setRound] = useState(1);
   const [me, setMe] = useState<LivePlayer>({
@@ -349,7 +355,7 @@ export default function BattleScreen() {
     if (!selectedAttackId || phase !== 'pick') return;
 
     const myAtk = myAttacks.find(a => a.id === selectedAttackId) ?? myAttacks[0];
-    const oppAtk = ATTACKS[Math.floor(Math.random() * ATTACKS.length)];
+    const oppAtk = oppAttacks[Math.floor(Math.random() * oppAttacks.length)];
 
     setPhase('resolving');
     pushLog(T.duels_battle_opp_thinking.replace('{name}', oppRef.current.name), 'info');
@@ -474,7 +480,7 @@ export default function BattleScreen() {
 
     await delay(600);
     setPhase('end');
-  }, [selectedAttackId, phase, myAttacks, myLevel, oppLevel, pushLog, T]);
+  }, [selectedAttackId, phase, myAttacks, oppAttacks, myLevel, oppLevel, pushLog, T]);
 
   const isPickPhase = phase === 'pick';
   const isEnd = phase === 'end';

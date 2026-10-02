@@ -79,7 +79,7 @@ export default function ChallengeScreen() {
   const [isSending, setIsSending] = useState(false);
   const profile = use$(profileStore$.profile);
 
-  const attacks = getUnlockedAttacks(unlockedCategories);
+  const attacks = getUnlockedAttacks(unlockedCategories, profile?.level ?? 1);
 
   useEffect(() => {
     fetchFriends();
