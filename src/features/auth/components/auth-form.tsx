@@ -7,6 +7,7 @@ import { authErrorMessage } from '../utils/auth-error';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+import { LanguageSwitch } from '../../../ui/components/language-switch';
 
 type Notice = { kind: 'error' | 'info'; text: string } | null;
 
@@ -24,6 +25,7 @@ export function AuthForm() {
     alignItems: 'center',
     marginBottom: spacing.xxl,
   },
+  langSwitch: { alignSelf: 'flex-end' },
   title: {
     fontSize: pixelSize(fontSizes.title),
     fontFamily: fonts.bold,
@@ -115,6 +117,7 @@ export function AuthForm() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
+      <LanguageSwitch style={styles.langSwitch} />
       <View style={styles.header}>
         <Text style={styles.title}>HabitQuest</Text>
         <Text style={styles.subtitle}>
