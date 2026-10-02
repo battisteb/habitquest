@@ -925,7 +925,9 @@ const FR = {
   habit_unpin_confirm: 'Désépingler',
   // Streak recovery
   streak_broken_title: '💔 Série brisée',
-  streak_broken_msg: 'Ta série de {n} jours pour « {name} » est terminée. Recommence aujourd\'hui !',
+  comeback_title: '⚡ RETOUR DU HÉROS : XP ×{x}',
+  comeback_msg: 'Chaque quête validée rapporte le double d’XP. Encore {h} h.',
+  streak_broken_msg: 'Ta série de {n} jours pour « {name} » s’est arrêtée. Pas de pénalité : reviens aujourd’hui, tes XP sont doublés pendant 24 h !',
   streak_broken_restart: '▶ RECOMMENCER',
   notif_streak_risk_title: '💧 Pip s’inquiète pour ta série !',
   // Dynamic goal suggestions
@@ -1970,7 +1972,9 @@ const EN = {
   habit_unpin_confirm: 'Unpin',
   // Streak recovery
   streak_broken_title: '💔 Streak broken',
-  streak_broken_msg: 'Your {n}-day streak for "{name}" is gone. Start a new one today!',
+  comeback_title: '⚡ HERO’S RETURN: XP ×{x}',
+  comeback_msg: 'Every quest you complete earns double XP. {h} h left.',
+  streak_broken_msg: 'Your {n}-day streak for "{name}" stopped. No penalty: come back today, your XP is doubled for 24 h!',
   streak_broken_restart: '▶ RESTART',
   notif_streak_risk_title: '💧 Pip is worried about your streak!',
   // Dynamic goal suggestions

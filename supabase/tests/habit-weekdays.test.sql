@@ -58,7 +58,7 @@ select is(habit_missed_days('00000000-0000-0000-0000-0000000000d1',
   (select h from habits h where id = '00000000-0000-0000-0000-00000000d002'), current_date - 7, current_date),
   '{}'::date[], 'rest days are not missed days');
 set local role authenticated;
-select is((process_streak_breaks() ->> 'xp_loss')::int, 0, 'rest days do not break the streak');
+select is(jsonb_array_length((process_streak_breaks() -> 'broken')::jsonb), 0, 'rest days do not break the streak');
 select is((complete_habit('00000000-0000-0000-0000-00000000d002') ->> 'current_streak')::int, 5,
   'and the streak continues the next due day');
 
@@ -88,7 +88,7 @@ select is(habit_missed_days('00000000-0000-0000-0000-0000000000d1',
   (select h from habits h where id = '00000000-0000-0000-0000-00000000d003'), (select last_monday + 4 from w), current_date),
   '{}'::date[], 'a week that reached its target keeps the streak, whatever the gaps');
 set local role authenticated;
-select is((process_streak_breaks() ->> 'xp_loss')::int, 0, 'no penalty for the days off of a weekly habit');
+select is(jsonb_array_length((process_streak_breaks() -> 'broken')::jsonb), 0, 'the days off of a weekly habit do not break it');
 select is((select current_count from streaks where habit_id = '00000000-0000-0000-0000-00000000d003'), 3,
   'the weekly streak is kept');
 
