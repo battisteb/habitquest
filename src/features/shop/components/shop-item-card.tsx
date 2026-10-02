@@ -8,6 +8,8 @@ import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 import { HeroStage } from '../../avatar/components/hero-stage';
 import { themeKeyOfItem } from '../utils/owned-themes';
+import { itemGearBonus } from '../../../lib/constants/game-config';
+import { gearBonusLabel } from '../utils/gear-label';
 
 const RARITY_BORDER: Record<string, string> = {
   common: colors.border,
@@ -63,6 +65,7 @@ export function ShopItemCard({
 }: ShopItemCardProps) {
   const { themeKey } = useTheme();
   const T = useT();
+  const gearBonus = itemGearBonus(category, rarity);
   const styles = useMemo(() => StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
@@ -152,6 +155,7 @@ export function ShopItemCard({
     textAlign: 'center',
     lineHeight: 12,
   },
+  gearBonus: { color: colors.success, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, marginTop: 2 },
   badgeRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -220,6 +224,9 @@ export function ShopItemCard({
         <RarityBadge rarity={rarity} />
         {isPremiumLocked && <PremiumBadge />}
       </View>
+      {gearBonus && (
+        <Text style={styles.gearBonus} testID="gear-bonus">{gearBonusLabel(T, gearBonus)}</Text>
+      )}
 
       {!isOwned && !canUnlock && unlockLabel && (
         <Text style={styles.unlockLabel} numberOfLines={2}>

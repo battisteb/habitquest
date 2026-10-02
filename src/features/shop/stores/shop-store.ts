@@ -7,6 +7,7 @@ import { checkAndUnlockAchievements } from '../../gamification/stores/achievemen
 import { persistPlugin } from '../../../lib/storage/persist';
 import type { Database } from '../../../lib/supabase/types';
 import { resetOnSignOut } from '../../../lib/storage/user-data';
+import { gearStats, type GearStats } from '../../../lib/constants/game-config';
 
 type ShopItem = Database['public']['Tables']['shop_items']['Row'];
 
@@ -174,6 +175,29 @@ export async function fetchEquipmentOf(userId: string): Promise<Equipment> {
     if (e.item?.sprite_key) gear[e.slot as keyof Equipment] = e.item.sprite_key;
   });
   return gear;
+}
+
+/** Combat points of a player's equipment (ADR 017); the server uses the same rule in arenas. */
+export async function fetchGearStatsOf(userId: string): Promise<GearStats> {
+  const { data } = await supabase
+    .from('equipped_items')
+    .select('item:shop_items(category, rarity)')
+    .eq('user_id', userId);
+  return gearStats(
+    (data ?? [])
+      .map((e: any) => e.item)
+      .filter((i: any): i is { category: string; rarity: string } => !!i?.category && !!i?.rarity),
+  );
+}
+
+/** Combat points of the signed-in player's equipment. */
+export function myGearStats(): GearStats {
+  const slots = shopStore$.equippedSlots.get();
+  return gearStats(
+    Object.values(slots)
+      .map((s) => s.item)
+      .filter((i): i is ShopItem => !!i),
+  );
 }
 
 /** Saves the app theme on the profile (the server checks it is owned). */
