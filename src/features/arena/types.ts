@@ -29,6 +29,12 @@ export interface ArenaSeasonResult {
   to_tier: number;
 }
 
+/** Returned instead of the state while the arena is locked (I6). */
+export interface ArenaLocked {
+  locked: true;
+  unlock_level: number;
+}
+
 export interface ArenaState {
   season: number;
   /** 1 (Bronze) to 6 (Master). */

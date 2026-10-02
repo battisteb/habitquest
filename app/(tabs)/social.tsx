@@ -38,6 +38,9 @@ import { useT } from '../../src/lib/i18n';
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { titleLabel } from '../../src/lib/i18n/labels';
 import { shareInvite } from '../../src/features/social/utils/invite';
+import { UNLOCKS, isUnlocked, type UnlockFeature } from '../../src/lib/constants/game-config';
+import { showDialog } from '../../src/lib/app-alert';
+import { profileStore$ } from '../../src/features/gamification/stores/profile-store';
 
 type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
 
@@ -530,6 +533,14 @@ export default function SocialScreen() {
     );
   };
 
+  // Progressive unlocks (I6): the server enforces the same levels.
+  const myLevel = use$(profileStore$.profile)?.level ?? 1;
+  const arenaOpen = isUnlocked('arena', myLevel);
+  const duelsOpen = isUnlocked('duels', myLevel);
+  const coopOpen = isUnlocked('coop', myLevel);
+  const explainLocked = (feature: UnlockFeature) =>
+    showDialog(T.unlock_locked_title, T.unlock_locked_body.replace('{n}', String(UNLOCKS[feature])));
+
   // ── Challenges ───────────────────────────────────────────────────────────────
   const renderChallenges = () => {
     const allChallenges = [
@@ -541,13 +552,13 @@ export default function SocialScreen() {
     return (
       <>
       <PixelButton
-        title={T.social_duel_arena_btn}
-        onPress={() => router.push('/duels')}
+        title={duelsOpen ? T.social_duel_arena_btn : `🔒 ${T.social_duel_arena_btn}`}
+        onPress={() => (duelsOpen ? router.push('/duels') : explainLocked('duels'))}
         style={styles.duelArenaBtn}
       />
       <PixelButton
-        title={T.social_coop_btn}
-        onPress={() => router.push('/coop')}
+        title={coopOpen ? T.social_coop_btn : `🔒 ${T.social_coop_btn}`}
+        onPress={() => (coopOpen ? router.push('/coop') : explainLocked('coop'))}
         variant="secondary"
         style={styles.duelArenaBtn}
       />
@@ -740,8 +751,10 @@ export default function SocialScreen() {
           >
             <Text style={styles.arenaEntryIcon}>⚔️</Text>
             <View style={styles.arenaEntryText}>
-              <Text style={styles.arenaEntryTitle}>{T.arena_title}</Text>
-              <Text style={styles.arenaEntryBody}>{T.arena_entry_body}</Text>
+              <Text style={styles.arenaEntryTitle}>{arenaOpen ? T.arena_title : `🔒 ${T.arena_title}`}</Text>
+              <Text style={styles.arenaEntryBody}>
+                {arenaOpen ? T.arena_entry_body : T.unlock_at_level.replace('{n}', String(UNLOCKS.arena))}
+              </Text>
             </View>
             <Text style={styles.arenaEntryChevron}>›</Text>
           </PixelFrame>

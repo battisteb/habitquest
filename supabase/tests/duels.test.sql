@@ -8,6 +8,8 @@ select plan(9);
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-000000077001', 'duel-a@test.dev', '{"username":"Attaquant"}'),
   ('00000000-0000-0000-0000-000000077002', 'duel-b@test.dev', '{"username":"Defenseur"}');
+-- Progressive unlocks (I6): these players have reached the feature's level.
+update profiles set xp = xp + 850, level = level_for_xp(xp + 850) where id::text like '00000000-0000-0000-0000-000000077%';
 update profiles set language = 'fr' where id = '00000000-0000-0000-0000-000000077002';
 insert into friendships (requester_id, addressee_id, status)
 values ('00000000-0000-0000-0000-000000077001', '00000000-0000-0000-0000-000000077002', 'accepted');
@@ -39,7 +41,7 @@ select throws_ok($$ update duels set winner_id = auth.uid() where id = '00000000
 select pg_temp.act_as('00000000-0000-0000-0000-000000077001');
 select lives_ok($$ update duels set status = 'resolved', winner_id = '00000000-0000-0000-0000-000000077002' where id = '00000000-0000-0000-0000-00000007d001' $$,
   'the challenger records the result');
-select is((select xp from profiles where id = '00000000-0000-0000-0000-000000077001'), 0, 'a friendly loss pays nothing either');
+select is((select xp from profiles where id = '00000000-0000-0000-0000-000000077001'), 850, 'a friendly loss pays nothing either');
 select throws_ok($$ update duels set winner_id = auth.uid() where id = '00000000-0000-0000-0000-00000007d001' $$,
   '42501', 'Duel already over', 'the result is final');
 

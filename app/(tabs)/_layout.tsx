@@ -14,6 +14,7 @@ import { useOwnedThemes } from '../../src/features/shop/hooks/use-owned-themes';
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
 import { FREE_THEME } from '../../src/features/shop/utils/owned-themes';
 import { playSfx } from '../../src/lib/audio/sound-service';
+import { UnlockAnnouncer } from '../../src/features/unlocks/components/unlock-announcer';
 
 function usePendingHabitCount(): number {
   const habits = use$(habitsStore$.habits);
@@ -87,6 +88,8 @@ export default function TabsLayout() {
   }, []);
 
   return (
+    <>
+    <UnlockAnnouncer />
     <Tabs
       screenListeners={{ tabPress: () => void playSfx('tap', 0.3) }}
       screenOptions={{
@@ -164,5 +167,6 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
+    </>
   );
 }

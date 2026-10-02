@@ -10,6 +10,8 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000cc002', 'ben@test.dev', '{"username":"ben"}'),
   ('00000000-0000-0000-0000-0000000cc003', 'cleo@test.dev', '{"username":"cleo"}'),
   ('00000000-0000-0000-0000-0000000cc004', 'stranger@test.dev', '{"username":"stranger"}');
+-- Progressive unlocks (I6): these players have reached the feature's level.
+update profiles set xp = xp + 850, level = level_for_xp(xp + 850) where id::text like '00000000-0000-0000-0000-0000000cc%';
 
 insert into friendships (requester_id, addressee_id, status) values
   ('00000000-0000-0000-0000-0000000cc001', '00000000-0000-0000-0000-0000000cc002', 'accepted'),
