@@ -78,7 +78,7 @@ describe('habitsStore$', () => {
     habitsStore$.streaks.set({
       h1: {
         id: 's1',
-        habit_id: 'h1',
+        habit_id: 'h1', broken_at: null, broken_count: 0, broken_last_day: null,
         current_count: 3,
         longest_count: 5,
         last_completed_at: new Date(Date.now() - 86400000).toISOString(), // yesterday
@@ -117,7 +117,7 @@ describe('habitsStore$', () => {
       },
     ]);
     habitsStore$.streaks.set({
-      h1: { id: 's1', habit_id: 'h1', current_count: 3, longest_count: 5, last_completed_at: null },
+      h1: { id: 's1', habit_id: 'h1', broken_at: null, broken_count: 0, broken_last_day: null, current_count: 3, longest_count: 5, last_completed_at: null },
     });
 
     const { supabase } = require('../../../lib/supabase/client');
@@ -151,7 +151,7 @@ describe('habitsStore$', () => {
       habitsStore$.todayCompletions.set({ h1: true });
       habitsStore$.weekCompletions.set({ h1: 2 });
       habitsStore$.streaks.set({
-        h1: { id: 's1', habit_id: 'h1', current_count: 4, longest_count: 5, last_completed_at: new Date().toISOString() },
+        h1: { id: 's1', habit_id: 'h1', broken_at: null, broken_count: 0, broken_last_day: null, current_count: 4, longest_count: 5, last_completed_at: new Date().toISOString() },
       });
     });
 
@@ -187,6 +187,39 @@ describe('habitsStore$', () => {
       expect(await uncompleteHabit('h1')).toBeUndefined();
       expect(habitsStore$.todayCompletions.get()['h1']).toBe(false);
       expect(habitsStore$.streaks.get()['h1'].current_count).toBe(4);
+    });
+  });
+
+  describe('repairStreak (ADR 021)', () => {
+    it('costs 3 gold per streak day, between 15 and 150', () => {
+      const { streakRepairCost } = require('../../../lib/constants/game-config');
+      expect(streakRepairCost(2)).toBe(15);
+      expect(streakRepairCost(12)).toBe(36);
+      expect(streakRepairCost(80)).toBe(150);
+    });
+
+    it('puts the streak back when the server agrees', async () => {
+      habitsStore$.streaks.set({
+        h1: { id: 's1', habit_id: 'h1', broken_at: null, broken_count: 0, broken_last_day: null, current_count: 0, longest_count: 12, last_completed_at: null },
+      });
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.rpc.mockResolvedValueOnce({ data: { success: true, cost: 36, current_streak: 12 }, error: null });
+      const { repairStreak } = require('../stores/habits-store');
+      const result = await repairStreak('h1');
+      expect(supabase.rpc).toHaveBeenCalledWith('repair_streak', { p_habit_id: 'h1', p_with_ad: false });
+      expect(result.success).toBe(true);
+      expect(habitsStore$.streaks.get()['h1'].current_count).toBe(12);
+    });
+
+    it('changes nothing when the player lacks gold', async () => {
+      habitsStore$.streaks.set({
+        h1: { id: 's1', habit_id: 'h1', broken_at: null, broken_count: 0, broken_last_day: null, current_count: 0, longest_count: 12, last_completed_at: null },
+      });
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.rpc.mockResolvedValueOnce({ data: { success: false, reason: 'not_enough_gold', cost: 36 }, error: null });
+      const { repairStreak } = require('../stores/habits-store');
+      expect((await repairStreak('h1')).reason).toBe('not_enough_gold');
+      expect(habitsStore$.streaks.get()['h1'].current_count).toBe(0);
     });
   });
 

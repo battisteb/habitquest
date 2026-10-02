@@ -19,7 +19,7 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { XpToast } from '../../src/ui/animations/xp-toast';
 import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
 import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
-import { habitsStore$, fetchHabits, completeHabit, uncompleteHabit, isHabitCompletedEnough, isActiveToday } from '../../src/features/habits/stores/habits-store';
+import { habitsStore$, fetchHabits, completeHabit, uncompleteHabit, repairStreak, isHabitCompletedEnough, isActiveToday } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../src/features/habits/stores/burnout-store';
@@ -29,6 +29,7 @@ import { TakeBreakModal } from '../../src/features/habits/components/take-break-
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import { TrialBanner } from '../../src/features/monetization/components/trial-banner';
 import { ComebackBanner } from '../../src/features/habits/components/comeback-banner';
+import { streakRepairCost } from '../../src/lib/constants/game-config';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
 import { useTourTarget } from '../../src/features/onboarding/tour/tour-targets';
 import {
@@ -331,6 +332,7 @@ export default function TodayScreen() {
     gap: spacing.sm,
   },
   streakRecoveryText: { flex: 1, gap: 2 },
+  streakRecoveryActions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs },
   streakRecoveryTitle: {
     color: colors.streak,
     fontSize: pixelSize(fontSizes.xs),
@@ -611,6 +613,34 @@ export default function TodayScreen() {
     }
   }, [streaks, activeHabits, todayCompletions, totalCount]);
 
+  // Repair a broken streak (ADR 021): confirm the gold price, or watch an ad.
+  const handleRepair = useCallback((habitId: string, wasCount: number, withAd: boolean) => {
+    const run = async () => {
+      const result = await repairStreak(habitId, withAd).catch(() => null);
+      if (!result) {
+        Alert.alert(T.today_freeze_error_title, T.today_freeze_error_msg);
+      } else if (result.success) {
+        Alert.alert(T.streak_repair_done_title, T.streak_repair_done_msg.replace('{n}', String(result.current_streak ?? wasCount)));
+      } else if (result.reason === 'not_enough_gold') {
+        Alert.alert(T.streak_repair_no_gold_title, T.streak_repair_no_gold_msg.replace('{cost}', String(result.cost ?? streakRepairCost(wasCount))));
+      } else {
+        Alert.alert(T.streak_repair_unavailable_title, result.reason === 'ad_used_today' ? T.streak_repair_ad_used : T.streak_repair_expired);
+      }
+    };
+    if (withAd) {
+      showRewardedInterstitial(() => void run());
+      return;
+    }
+    Alert.alert(
+      T.streak_repair_confirm_title,
+      T.streak_repair_confirm_msg.replace('{n}', String(wasCount)).replace('{cost}', String(streakRepairCost(wasCount))),
+      [
+        { text: T.common_cancel, style: 'cancel' },
+        { text: T.streak_repair_confirm, onPress: () => void run() },
+      ],
+    );
+  }, [T]);
+
   // Undo a validation tapped by mistake: confirm first, it takes the rewards back.
   const handleUncomplete = useCallback((habitId: string, name: string) => {
     Alert.alert(T.habit_undo_title, T.habit_undo_msg.replace('{name}', name), [
@@ -682,10 +712,23 @@ export default function TodayScreen() {
             <Text style={styles.streakRecoveryMsg}>
               {T.streak_broken_msg.replace('{n}', String(b.wasCount)).replace('{name}', b.habitName)}
             </Text>
+            <View style={styles.streakRecoveryActions}>
+              {/* Repair within 48 h (ADR 021): gold, or a rewarded ad for free players. */}
+              <Pressable style={styles.streakRecoveryBtn} onPress={() => handleRepair(b.habitId, b.wasCount, false)} hitSlop={4} testID="streak-repair">
+                <Text style={styles.streakRecoveryBtnText}>
+                  {T.streak_repair_btn.replace('{cost}', String(streakRepairCost(b.wasCount)))}
+                </Text>
+              </Pressable>
+              {shouldShowAds() && (
+                <Pressable style={styles.streakRecoveryBtn} onPress={() => handleRepair(b.habitId, b.wasCount, true)} hitSlop={4}>
+                  <Text style={styles.streakRecoveryBtnText}>{T.streak_repair_ad_btn}</Text>
+                </Pressable>
+              )}
+              <Pressable style={styles.streakRecoveryBtn} onPress={() => handleComplete(b.habitId)} hitSlop={4}>
+                <Text style={styles.streakRecoveryBtnText}>{T.streak_broken_restart}</Text>
+              </Pressable>
+            </View>
           </View>
-          <Pressable style={styles.streakRecoveryBtn} onPress={() => handleComplete(b.habitId)} hitSlop={4}>
-            <Text style={styles.streakRecoveryBtnText}>{T.streak_broken_restart}</Text>
-          </Pressable>
           <Pressable onPress={() => dismissBrokenStreak(b.habitId)} hitSlop={8}>
             <Text style={styles.streakRecoveryClose}>✕</Text>
           </Pressable>

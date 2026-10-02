@@ -661,6 +661,9 @@ export type Database = {
       };
       streaks: {
         Row: {
+          broken_at: string | null;
+          broken_count: number;
+          broken_last_day: string | null;
           current_count: number;
           habit_id: string;
           id: string;
@@ -877,6 +880,7 @@ export type Database = {
       claim_duel_reward: { Args: { p_duel_id: string }; Returns: Json };
       complete_habit: { Args: { p_habit_id: string; p_note?: string }; Returns: Json };
       uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json };
+      repair_streak: { Args: { p_habit_id: string; p_with_ad?: boolean }; Returns: Json };
       get_my_profile: {
         Args: Record<string, never>;
         Returns: Database['public']['Tables']['profiles']['Row'][];
