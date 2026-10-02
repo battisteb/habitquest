@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useT } from '../../../lib/i18n';
+import { useT, useLang } from '../../../lib/i18n';
+import { projectLevelDate } from '../utils/rank-projection';
 import { titleLabel, stageDescription } from '../../../lib/i18n/labels';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
@@ -19,18 +20,22 @@ interface RankCardProps {
   nextLevelXp: number;
   /** Progress to the next level, 0 to 1. */
   progress: number;
+  /** XP earned over the last days, to show when the next rank comes at this pace. */
+  recentXp?: number | null;
 }
 
 /**
  * Rank and level in one card. It changes with the rank: the frame and title
  * take the rank color, and the badge gains a pip per rank reached.
  */
-export function RankCard({ level, currentXp, nextLevelXp, progress }: RankCardProps) {
+export function RankCard({ level, currentXp, nextLevelXp, progress, recentXp }: RankCardProps) {
   const T = useT();
   const { themeKey } = useTheme();
   const stage = getAvatarStage(level);
   const next = getNextAvatarStage(level);
   const index = getAvatarStageIndex(level);
+  const lang = useLang();
+  const eta = next && recentXp ? projectLevelDate(currentXp, next.minLevel, recentXp) : null;
   const styles = useMemo(() => createStyles(), [themeKey]);
 
   return (
@@ -72,6 +77,13 @@ export function RankCard({ level, currentXp, nextLevelXp, progress }: RankCardPr
           {currentXp} / {nextLevelXp} XP
         </Text>
       </View>
+      {eta && next && (
+        <Text style={[styles.eta, { color: next.aura }]} testID="rank-eta">
+          {T.profile_rank_eta
+            .replace('{title}', titleLabel(T, next.title))
+            .replace('{date}', eta.toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long' }))}
+        </Text>
+      )}
     </PixelFrame>
   );
 }
@@ -99,6 +111,7 @@ function createStyles() {
     description: { fontSize: fontSizes.sm, color: colors.textSecondary },
     footer: { flexDirection: 'row', justifyContent: 'space-between', gap: spacing.sm },
     next: { flex: 1, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, color: colors.textMuted, letterSpacing: 1 },
+    eta: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
     xp: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, color: colors.textMuted, letterSpacing: 0.5 },
   });
 }
