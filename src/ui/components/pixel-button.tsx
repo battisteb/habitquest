@@ -12,6 +12,7 @@ interface PixelButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost';
   disabled?: boolean;
   style?: ViewStyle;
+  testID?: string;
 }
 
 export function PixelButton({
@@ -20,6 +21,7 @@ export function PixelButton({
   variant = 'primary',
   disabled = false,
   style,
+  testID,
 }: PixelButtonProps) {
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
@@ -40,6 +42,7 @@ export function PixelButton({
       onPress={handlePress}
       disabled={disabled}
       accessibilityRole="button"
+      testID={testID}
       style={[disabled && styles.disabled, style]}
     >
       {({ pressed }) =>

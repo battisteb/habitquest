@@ -6,7 +6,7 @@ alt: /privacy-policy
 
 # HabitQuest — Politique de confidentialité
 
-*Dernière mise à jour : 1ᵉʳ octobre 2026*
+*Dernière mise à jour : 2 octobre 2026*
 
 HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cette politique explique quelles données l'app collecte, pourquoi, et quels choix vous avez. Contact : **batto060504@gmail.com**.
 
@@ -15,6 +15,7 @@ HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cett
 | Donnée | Finalité | Stockage |
 |---|---|---|
 | Adresse e-mail et mot de passe (haché) | Créer et sécuriser votre compte | Supabase (authentification) |
+| Si vous choisissez « Continuer avec Google » : l'adresse e-mail, le nom et le lien de photo de profil transmis par Google | Créer votre compte et vous connecter (nous gardons l'e-mail ; l'app n'utilise ni votre nom ni votre photo Google) | Supabase (authentification) |
 | Pseudo, couleurs de l'avatar, niveau, XP, or, objets équipés | Faire fonctionner le jeu et montrer votre héros à vos amis | Supabase |
 | Habitudes, validations, séries, notes facultatives | Suivi des habitudes | Supabase, et en cache sur votre appareil |
 | Amis, duels, défis, notifications in-app | Fonctions sociales | Supabase |
@@ -24,7 +25,7 @@ HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cett
 | Historique d'achats et statut d'abonnement | Débloquer Premium | RevenueCat, Apple / Google |
 | Identifiant publicitaire (IDFA / identifiant Android) — **uniquement si vous autorisez le suivi** | Afficher des publicités aux utilisateurs gratuits | Google AdMob |
 
-Les decks de cartes importés dans Entraînement restent sur votre appareil. Nous n'utilisons aucun SDK d'analyse ni de rapport de plantage, et nous ne vendons pas vos données.
+Nous n'utilisons aucun SDK d'analyse ni de rapport de plantage, et nous ne vendons pas vos données.
 
 ## 2. Publicité et suivi
 
@@ -38,6 +39,7 @@ Les utilisateurs gratuits voient des publicités fournies par Google AdMob. Sur 
 - **Expo** — envoi des notifications push et hébergement du site ([confidentialité](https://expo.dev/privacy))
 - **Resend** — e-mails du compte, comme la réinitialisation du mot de passe ([confidentialité](https://resend.com/legal/privacy-policy))
 - **Apple / Google** — paiements via l'App Store et Google Play
+- **Google** — connexion, uniquement si vous choisissez « Continuer avec Google » ([confidentialité](https://policies.google.com/privacy))
 
 ## 4. Qui voit vos données
 
