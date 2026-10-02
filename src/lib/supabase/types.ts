@@ -870,6 +870,7 @@ export type Database = {
       claim_daily_quest: { Args: { p_quest_id: string; p_user_id: string }; Returns: Json };
       claim_duel_reward: { Args: { p_duel_id: string }; Returns: Json };
       complete_habit: { Args: { p_habit_id: string; p_note?: string }; Returns: Json };
+      uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json };
       get_my_profile: {
         Args: Record<string, never>;
         Returns: Database['public']['Tables']['profiles']['Row'][];

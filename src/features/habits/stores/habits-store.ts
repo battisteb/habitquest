@@ -332,3 +332,46 @@ export async function completeHabit(
 
   return result;
 }
+
+interface UncompleteHabitResult {
+  success: boolean;
+  reason?: 'not_completed_today';
+  xp_lost: number;
+  gold_lost: number;
+  old_level: number;
+  new_level: number;
+  current_streak: number;
+}
+
+/**
+ * Undoes today's validation of a habit tapped by mistake. The server takes
+ * back everything it gave (XP, gold, streak, missions, challenges).
+ */
+export async function uncompleteHabit(habitId: string): Promise<UncompleteHabitResult | undefined> {
+  if (!habitsStore$.todayCompletions.get()[habitId]) return;
+
+  const { data, error } = await supabase.rpc('uncomplete_habit', { p_habit_id: habitId });
+  if (error) throw error;
+  const result = data as unknown as UncompleteHabitResult;
+  if (!result.success) {
+    if (result.reason === 'not_completed_today') habitsStore$.todayCompletions[habitId].set(false);
+    return undefined;
+  }
+
+  habitsStore$.todayCompletions[habitId].set(false);
+  const weekCount = habitsStore$.weekCompletions.get()[habitId] ?? 0;
+  habitsStore$.weekCompletions[habitId].set(Math.max(0, weekCount - 1));
+  const streak = habitsStore$.streaks.get()[habitId];
+  if (streak) {
+    habitsStore$.streaks[habitId].set({
+      ...streak,
+      current_count: result.current_streak,
+      last_completed_at: result.current_streak > 0 ? streak.last_completed_at : null,
+    });
+  }
+
+  refreshProfile();
+  fetchDailyQuests().catch(() => {});
+  fetchChallenges().catch(() => {});
+  return result;
+}
