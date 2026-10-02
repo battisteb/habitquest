@@ -8,6 +8,7 @@ import { HabitTimer } from '../../src/features/habits/components/habit-timer';
 import { HabitChecklist } from '../../src/features/habits/components/habit-checklist';
 import { CompletionNoteModal } from '../../src/features/habits/components/completion-note-modal';
 import { habitsStore$, archiveHabit, completeHabit, pauseHabit, resumeHabit } from '../../src/features/habits/stores/habits-store';
+import { daysLabel, isDueOn } from '../../src/features/habits/utils/schedule';
 import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
 import { useDynamicGoal } from '../../src/features/habits/hooks/use-dynamic-goal';
 import { CONTENT_TYPE_CONFIG } from '../../src/features/habits/types/habit-content';
@@ -276,6 +277,9 @@ export default function HabitDetailScreen() {
   const habit = habits.find((h) => h.id === id);
   const streak = id ? streaks[id] : undefined;
   const isCompletedToday = id ? !!todayCompletions[id] : false;
+  // A chosen-days quest cannot be completed on its rest days (server rule).
+  const restDay = !!habit && !isDueOn(habit);
+  const canComplete = !isCompletedToday && !restDay;
   const content = habit?.content as HabitContent | null | undefined;
   const streakCount = id ? (streaks[id]?.current_count ?? 0) : 0;
   const goalSuggestion = useDynamicGoal(habit?.id ?? '', streakCount);
@@ -437,13 +441,13 @@ export default function HabitDetailScreen() {
                 <HabitTimer
                   duration={content.duration}
                   label={content.label}
-                  onComplete={isCompletedToday ? () => {} : handleComplete}
+                  onComplete={canComplete ? handleComplete : () => {}}
                 />
               )}
               {content.type === 'checklist' && (
                 <HabitChecklist
                   items={content.items}
-                  onComplete={isCompletedToday ? () => {} : handleComplete}
+                  onComplete={canComplete ? handleComplete : () => {}}
                 />
               )}
               {content.type === 'link' && (
@@ -454,7 +458,7 @@ export default function HabitDetailScreen() {
                     onPress={handleLinkOpen}
                     variant="secondary"
                   />
-                  {!isCompletedToday && (
+                  {canComplete && (
                     <PixelButton
                       title={T.habit_detail_mark_done}
                       onPress={handleComplete}
@@ -471,12 +475,17 @@ export default function HabitDetailScreen() {
       )}
 
       {/* Quick complete (no content, or no content set) */}
-      {!content && !isCompletedToday && (
+      {!content && canComplete && (
         <PixelButton
           title={T.habit_detail_mark_done}
           onPress={handleComplete}
           style={styles.quickComplete}
         />
+      )}
+      {restDay && !isCompletedToday && habit && (
+        <Text style={styles.alreadyDone}>
+          {T.habit_detail_rest_day.replace('{days}', daysLabel(habit.days, T.weekdays_short.split(',')))}
+        </Text>
       )}
 
       {/* Dynamic goal suggestion */}

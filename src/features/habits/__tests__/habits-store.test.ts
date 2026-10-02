@@ -71,6 +71,7 @@ describe('habitsStore$', () => {
         paused_at: null,
         content: null,
         emoji: null,
+        days: null,
         created_at: new Date().toISOString(),
       },
     ]);
@@ -111,7 +112,7 @@ describe('habitsStore$', () => {
     habitsStore$.habits.set([
       {
         id: 'h1', user_id: 'user-123', name: 'Run', category: 'sport', frequency: 'daily',
-        is_archived: false, is_paused: false, paused_at: null, content: null, emoji: null,
+        is_archived: false, is_paused: false, paused_at: null, content: null, emoji: null, days: null,
         created_at: new Date().toISOString(),
       },
     ]);
@@ -192,7 +193,7 @@ describe('habitsStore$', () => {
   describe('3 times a week', () => {
     const weekly = {
       id: 'w1', user_id: 'user-123', name: 'Gym', category: 'fitness', frequency: '3x_week',
-      is_archived: false, is_paused: false, paused_at: null, content: null, emoji: null,
+      is_archived: false, is_paused: false, paused_at: null, content: null, emoji: null, days: null,
       created_at: new Date().toISOString(),
     };
 

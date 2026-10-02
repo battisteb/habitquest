@@ -14,17 +14,12 @@ import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../.
 import { useTheme } from '../../../src/ui/theme/theme-context';
 import { useT } from '../../../src/lib/i18n';
 import { categoryLabel } from '../../../src/lib/i18n/labels';
+import { DayPicker } from '../../../src/features/habits/components/day-picker';
+import { defaultDays, scheduleToSave } from '../../../src/features/habits/utils/schedule';
 
 export default function EditHabitScreen() {
   const T = useT();
   const { themeKey } = useTheme();
-  const FREQUENCY_OPTIONS = useMemo(() => [
-    { value: 'daily', label: T.habit_edit_freq_daily },
-    { value: '2x_week', label: T.habit_edit_freq_2x },
-    { value: '3x_week', label: T.habit_edit_freq_3x },
-    { value: '4x_week', label: T.habit_edit_freq_4x },
-    { value: '5x_week', label: T.habit_edit_freq_5x },
-  ], [T]);
 
   const styles = useMemo(() => StyleSheet.create({
   scroll: { flex: 1, backgroundColor: colors.background },
@@ -97,6 +92,16 @@ export default function EditHabitScreen() {
     (habit?.content as HabitContent | null) ?? null,
   );
   const [frequency, setFrequency] = useState(habit?.frequency ?? 'daily');
+  const [days, setDays] = useState<number[]>(habit?.days ?? defaultDays(habit?.frequency));
+  // Every day, chosen days, and an older "N times a week" quest keeps its option.
+  const legacyPerWeek = /^(\d)x_week$/.exec(habit?.frequency ?? '');
+  const frequencyOptions = [
+    { value: 'daily', label: T.habit_edit_freq_daily },
+    { value: 'days', label: T.habit_create_some_days },
+    ...(legacyPerWeek
+      ? [{ value: legacyPerWeek[0], label: T.habit_freq_per_week.replace('{n}', legacyPerWeek[1]) }]
+      : []),
+  ];
   const [emoji, setEmoji] = useState<string | null>((habit as any)?.emoji ?? null);
   const [loading, setLoading] = useState(false);
 
@@ -112,7 +117,8 @@ export default function EditHabitScreen() {
     if (!name.trim()) return;
     setLoading(true);
     try {
-      await updateHabit(habit.id, { name: name.trim(), category, content, frequency, emoji });
+      const schedule = frequency === 'days' ? scheduleToSave(days) : { frequency, days: null };
+      await updateHabit(habit.id, { name: name.trim(), category, content, emoji, ...schedule });
       router.back();
     } catch (e: unknown) {
       Alert.alert(T.habit_edit_error_title, e instanceof Error ? e.message : T.habit_edit_error_msg);
@@ -173,7 +179,7 @@ export default function EditHabitScreen() {
       <View style={styles.frequencySection}>
         <Text style={styles.frequencyLabel}>{T.habit_edit_frequency}</Text>
         <View style={styles.frequencyRow}>
-          {FREQUENCY_OPTIONS.map((opt) => (
+          {frequencyOptions.map((opt) => (
             <Pressable
               key={opt.value}
               style={[
@@ -181,6 +187,7 @@ export default function EditHabitScreen() {
                 frequency === opt.value && styles.frequencyChipActive,
               ]}
               onPress={() => setFrequency(opt.value)}
+              testID={`freq-${opt.value}`}
             >
               <Text
                 style={[
@@ -193,6 +200,7 @@ export default function EditHabitScreen() {
             </Pressable>
           ))}
         </View>
+        {frequency === 'days' && <DayPicker value={days} onChange={setDays} />}
       </View>
 
       <EmojiPicker value={emoji} onChange={setEmoji} label={T.habit_edit_emoji} />

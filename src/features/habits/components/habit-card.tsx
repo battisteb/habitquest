@@ -20,6 +20,7 @@ import { getWeeklyTarget } from '../stores/habits-store';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 import { categoryLabel } from '../../../lib/i18n/labels';
+import { daysLabel } from '../utils/schedule';
 
 interface HabitCardProps {
   name: string;
@@ -33,6 +34,8 @@ interface HabitCardProps {
   onLongPress?: () => void;
   index?: number;
   frequency?: string;
+  /** ISO weekdays of a chosen-days habit. */
+  days?: number[] | null;
   weekCompletionCount?: number;
   contentType?: 'timer' | 'checklist' | 'link' | null;
   isPinned?: boolean;
@@ -93,6 +96,7 @@ export function HabitCard({
   onLongPress,
   index = 0,
   frequency = 'daily',
+  days = null,
   weekCompletionCount = 0,
   contentType = null,
   isPinned = false,
@@ -219,7 +223,7 @@ export function HabitCard({
   const flame = streakFlame(streakCount);
   const [burst, setBurst] = useState(false);
 
-  const isWeekly = frequency !== 'daily';
+  const isWeekly = /x_week$/.test(frequency);
   const weeklyTarget = isWeekly ? getWeeklyTarget(frequency) : 1;
   const isWeeklyDone = isWeekly && weekCompletionCount >= weeklyTarget;
   // A weekly quest is validated at most once a day (server rule), like a daily one.
@@ -340,6 +344,9 @@ export function HabitCard({
                       streakCount > 0 && (
                         <Text style={styles.streak}>{flame} {streakCount}d</Text>
                       )
+                    )}
+                    {frequency === 'days' && (
+                      <Text style={styles.weekProgress}>{daysLabel(days, T.weekdays_short.split(','))}</Text>
                     )}
                     {!effectiveDone && (
                       <Text style={styles.xpPreview}>+{nextXp} XP</Text>

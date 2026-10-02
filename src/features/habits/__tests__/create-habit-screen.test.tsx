@@ -35,21 +35,29 @@ describe('CreateHabitScreen', () => {
     const utils = render(<CreateHabitScreen />);
     fireEvent.press(utils.getByText('Lire 20 min'));
     fireEvent.press(utils.getByText('HABIT_CREATE_SUBMIT'));
-    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Lire 20 min', 'learning', null, 'daily', null));
+    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Lire 20 min', 'learning', null, 'daily', null, null));
     expect(mockBack).toHaveBeenCalled();
   });
 
-  it('switches to N times a week with a stepper bounded to 2..5', async () => {
+  it('switches to chosen days of the week', async () => {
     const utils = render(<CreateHabitScreen />);
     fireEvent.changeText(utils.getByPlaceholderText('habit_create_name_placeholder'), 'Gym');
     fireEvent.press(utils.getByTestId('freq-weekly'));
-    expect(utils.getByTestId('freq-value').props.children).toBe('3 fois par semaine');
-    fireEvent.press(utils.getByLabelText('habit_create_more'));
-    fireEvent.press(utils.getByLabelText('habit_create_more'));
-    fireEvent.press(utils.getByLabelText('habit_create_more'));
-    expect(utils.getByTestId('freq-value').props.children).toBe('5 fois par semaine');
+    // Monday, Wednesday, Friday preselected: add Saturday, remove Wednesday.
+    expect(utils.getByTestId('day-1').props.accessibilityState).toEqual({ checked: true });
+    fireEvent.press(utils.getByTestId('day-6'));
+    fireEvent.press(utils.getByTestId('day-3'));
     fireEvent.press(utils.getByText('HABIT_CREATE_SUBMIT'));
-    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Gym', 'general', null, '5x_week', null));
+    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Gym', 'general', null, 'days', null, [1, 5, 6]));
+  });
+
+  it('keeps at least one day, and seven days is every day', async () => {
+    const utils = render(<CreateHabitScreen />);
+    fireEvent.changeText(utils.getByPlaceholderText('habit_create_name_placeholder'), 'Walk');
+    fireEvent.press(utils.getByTestId('freq-weekly'));
+    for (const d of [2, 4, 6, 7]) fireEvent.press(utils.getByTestId(`day-${d}`));
+    fireEvent.press(utils.getByText('HABIT_CREATE_SUBMIT'));
+    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Walk', 'general', null, 'daily', null, null));
   });
 
   it('keeps icon and content options folded until asked', () => {

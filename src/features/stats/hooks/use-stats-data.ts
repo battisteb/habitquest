@@ -57,7 +57,7 @@ export function useStatsData(): StatsData {
     try {
       const { data: habits } = await supabase
         .from('habits')
-        .select('id, name, emoji, category, frequency, created_at, is_paused, paused_at')
+        .select('id, name, emoji, category, frequency, days, created_at, is_paused, paused_at')
         .eq('user_id', userId)
         .eq('is_archived', false)
         .order('created_at', { ascending: true });
