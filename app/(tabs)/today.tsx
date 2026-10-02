@@ -63,6 +63,7 @@ const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 
 
 import { categoryLabel } from '../../src/lib/i18n/labels';
 import { Pip } from '../../src/features/mascot/components/pip';
+import { BossCard } from '../../src/features/boss/components/boss-card';
 
 function todayLabel(): string {
   const d = new Date();
@@ -418,6 +419,7 @@ export default function TodayScreen() {
   listPad: { paddingHorizontal: spacing.md },
   // The list already has a horizontal padding: cancel the section's own.
   missionsSlot: { marginHorizontal: -spacing.md, marginTop: spacing.sm },
+  bossSlot: { marginTop: spacing.sm },
 
   // Empty state
   empty: {
@@ -685,6 +687,10 @@ export default function TodayScreen() {
         <DailyQuestsSection
           pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
         />
+      </View>
+      {/* Boss of the week (I9): beaten with the week's quests. */}
+      <View style={styles.bossSlot}>
+        <BossCard />
       </View>
       {/* Active mode banner */}
       {activeMode && (() => {
