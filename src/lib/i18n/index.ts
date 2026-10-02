@@ -898,6 +898,8 @@ const FR = {
   // UI components
   achievement_unlocked: 'SUCCÈS DÉBLOQUÉ',
   level_up_subtitle: 'Continue, aventurier !',
+  level_up_level: 'NIVEAU',
+  level_up_new_rank: 'NOUVEAU RANG : {rank}',
   xp_level_prefix: 'NIV',
   offline_banner_msg: '⚠ HORS LIGNE — modifications sauvegardées localement',
   // Burnout detector
@@ -1900,6 +1902,8 @@ const EN = {
   // UI components
   achievement_unlocked: 'ACHIEVEMENT UNLOCKED',
   level_up_subtitle: 'Keep going, adventurer!',
+  level_up_level: 'LEVEL',
+  level_up_new_rank: 'NEW RANK: {rank}',
   xp_level_prefix: 'LVL',
   offline_banner_msg: '⚠ NO CONNECTION — changes saved locally',
   // Burnout detector
