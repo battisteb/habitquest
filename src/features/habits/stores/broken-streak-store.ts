@@ -1,6 +1,7 @@
 import { observable } from '@legendapp/state';
 import { storage } from '../../../lib/storage/mmkv';
 import { onUserDataCleared, resetOnSignOut } from '../../../lib/storage/user-data';
+import { localDateKey } from '../../../lib/local-date';
 
 interface BrokenStreak {
   habitId: string;
@@ -23,7 +24,7 @@ const DISMISSED_KEY = 'broken-streak-dismissed';
 onUserDataCleared(() => storage.delete(DISMISSED_KEY));
 
 function getDismissedToday(): Set<string> {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateKey();
   const raw = storage.getString(DISMISSED_KEY);
   if (!raw) return new Set();
   try {
@@ -36,7 +37,7 @@ function getDismissedToday(): Set<string> {
 }
 
 function saveDismissed(ids: Set<string>) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateKey();
   storage.set(DISMISSED_KEY, JSON.stringify({ date: today, ids: [...ids] }));
 }
 

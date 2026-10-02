@@ -1,6 +1,7 @@
 import { storage } from '../../../lib/storage/mmkv';
 import { supabase } from '../../../lib/supabase/client';
 import { onUserDataCleared } from '../../../lib/storage/user-data';
+import { localDateKey } from '../../../lib/local-date';
 
 const FREEZE_KEY = 'streak-freeze';
 
@@ -21,7 +22,7 @@ function getWeekStart(): string {
   const monday = new Date(now);
   monday.setDate(now.getDate() - diff);
   monday.setHours(0, 0, 0, 0);
-  return monday.toISOString().slice(0, 10);
+  return localDateKey(monday);
 }
 
 function getFreezeData(): FreezeData {
@@ -61,7 +62,7 @@ export function getFreezesRemaining(): number {
 
 export function isFreezeActiveToday(): boolean {
   const data = getCurrentData();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateKey();
   return data.lastFreezeDate === today;
 }
 
@@ -71,7 +72,7 @@ export function isFreezeActiveToday(): boolean {
  */
 export async function activateFreeze(): Promise<boolean> {
   const data = getCurrentData();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateKey();
 
   // Already frozen today
   if (data.lastFreezeDate === today) return true;

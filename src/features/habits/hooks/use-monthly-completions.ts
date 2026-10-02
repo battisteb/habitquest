@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase/client';
 import { habitsStore$ } from '../stores/habits-store';
+import { localDateKey } from '../../../lib/local-date';
 
 export interface MonthlyCompletionData {
   /** ISO date string → completion count for that day */
@@ -42,7 +43,7 @@ export function useMonthlyCompletions(year?: number, month?: number, habitId?: s
       if (!cancelled) {
         const map: Record<string, number> = {};
         data?.forEach((c) => {
-          const d = c.completed_at.slice(0, 10); // YYYY-MM-DD
+          const d = localDateKey(new Date(c.completed_at)); // local YYYY-MM-DD
           map[d] = (map[d] ?? 0) + 1;
         });
         setCounts(map);

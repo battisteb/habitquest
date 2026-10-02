@@ -25,6 +25,7 @@ import {
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 import { titleLabel } from '../src/lib/i18n/labels';
+import { localDateKey } from '../src/lib/local-date';
 
 interface DayXp {
   date: string;       // 'YYYY-MM-DD'
@@ -87,12 +88,12 @@ async function fetchXpJourneyData(): Promise<Omit<XpJourneyData, 'isLoading'>> {
   for (let i = 13; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
+    const key = localDateKey(d);
     dayMap.set(key, { xp: 0, label: String(d.getDay()) });
   }
 
   completionsRes.data?.forEach((c) => {
-    const key = c.completed_at.slice(0, 10);
+    const key = localDateKey(new Date(c.completed_at));
     const entry = dayMap.get(key);
     if (entry) entry.xp += c.xp_earned ?? 0;
   });
