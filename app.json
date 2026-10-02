@@ -118,7 +118,8 @@
           "userTrackingPermission": "This identifier will be used to show you personalized ads."
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      "expo-web-browser"
     ],
     "scheme": "habitquest",
     "extra": {

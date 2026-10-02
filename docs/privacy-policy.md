@@ -6,7 +6,7 @@ alt: /privacy-policy.fr
 
 # HabitQuest — Privacy Policy
 
-*Last updated: October 1, 2026*
+*Last updated: October 2, 2026*
 
 HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy explains what data the app collects, why, and the choices you have. Contact: **batto060504@gmail.com**.
 
@@ -15,6 +15,7 @@ HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy e
 | Data | Why | Where it is stored |
 |---|---|---|
 | Email address and password (hashed) | Create and secure your account | Supabase (authentication) |
+| If you choose "Continue with Google": the email address, name and profile picture link Google shares | Create and sign in to your account (we keep the email; the app does not use your Google name or picture) | Supabase (authentication) |
 | Username, avatar colors, level, XP, gold, equipped items | Run the game and show your hero to your friends | Supabase |
 | Habits, completions, streaks, optional completion notes | Core habit-tracking features | Supabase, and cached on your device |
 | Friends, duels, challenges, in-app notifications | Social features | Supabase |
@@ -24,7 +25,7 @@ HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy e
 | Purchase history and subscription status | Unlock Premium | RevenueCat, Apple / Google |
 | Advertising identifier (IDFA / Android advertising ID) — **only if you allow tracking** | Show ads to free users | Google AdMob |
 
-Flashcard decks you import in Training stay on your device. We do not use analytics or crash-reporting SDKs, and we do not sell your data.
+We do not use analytics or crash-reporting SDKs, and we do not sell your data.
 
 ## 2. Advertising and tracking
 
@@ -38,6 +39,7 @@ Free users see ads served by Google AdMob. On iOS, the app asks for permission (
 - **Expo** — push notification delivery and website hosting ([privacy](https://expo.dev/privacy))
 - **Resend** — account e-mails such as password reset ([privacy](https://resend.com/legal/privacy-policy))
 - **Apple / Google** — payments through the App Store and Google Play
+- **Google** — sign-in, only if you choose "Continue with Google" ([privacy](https://policies.google.com/privacy))
 
 ## 4. Who can see your data
 

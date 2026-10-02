@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { PixelButton } from '../../../ui/components/pixel-button';
 import { PixelInput } from '../../../ui/components/pixel-input';
 import { signIn, signUp, requestPasswordReset } from '../stores/auth-store';
 import { authErrorMessage } from '../utils/auth-error';
+import { fetchEnabledProviders, signInWithProvider } from '../utils/oauth';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -40,6 +41,7 @@ export function AuthForm() {
   form: {
     gap: spacing.md,
   },
+  or: { textAlign: 'center', color: colors.textMuted, fontSize: fontSizes.sm, letterSpacing: 2 },
   submitButton: {
     marginTop: spacing.sm,
   },
@@ -67,6 +69,28 @@ export function AuthForm() {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState<Notice>(null);
+  // "Continue with Google" shows once the provider is set up in Supabase.
+  // Not on iOS yet: Apple requires Sign in with Apple next to any other
+  // social sign-in (App Review 4.8), which needs the Apple account (ADR 018).
+  const [googleReady, setGoogleReady] = useState(false);
+  useEffect(() => {
+    if (Platform.OS === 'ios') return;
+    let alive = true;
+    fetchEnabledProviders().then((p) => alive && setGoogleReady(p.google));
+    return () => { alive = false; };
+  }, []);
+
+  const handleGoogle = async () => {
+    setNotice(null);
+    setLoading(true);
+    try {
+      await signInWithProvider('google');
+    } catch {
+      setNotice({ kind: 'error', text: T.auth_oauth_failed });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!email.trim() || !password || (mode === 'sign-up' && !username.trim())) {
@@ -167,6 +191,19 @@ export function AuthForm() {
           disabled={loading}
           style={styles.submitButton}
         />
+
+        {googleReady && (
+          <>
+            <Text style={styles.or}>{T.auth_or}</Text>
+            <PixelButton
+              title={T.auth_continue_google}
+              onPress={handleGoogle}
+              disabled={loading}
+              variant="secondary"
+              testID="auth-google"
+            />
+          </>
+        )}
 
         {mode === 'sign-in' && (
           <PixelButton

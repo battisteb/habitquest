@@ -19,6 +19,7 @@
 - ⏳ Variables `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` configurées comme variables d'environnement EAS
 
 ## Exigences App Review
+- ⏳ Connexion Google cachée sur iOS tant que « Se connecter avec Apple » n'existe pas (règle 4.8, ADR 018) : à ajouter avant d'activer Google sur iOS
 - ✅ Suppression de compte depuis l'app (règle 5.1.1(v)) — PR #4 ; ⏳ déployer la migration et la fonction `delete-account` en prod
 - ✅ Politique de confidentialité complétée ; ⏳ activer GitHub Pages (main, dossier `/docs`) → `https://gethabitquest.com/privacy-policy`
 - ⏳ Fiche « App Privacy » : réponses prêtes dans `review-and-privacy.md`
