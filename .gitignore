@@ -71,3 +71,6 @@ marketing/audio/out/
 
 # Python caches (scripts/sprites)
 __pycache__/
+
+# Smoke test output (scripts/smoke-web.js), never versioned
+smoke-report/
