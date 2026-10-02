@@ -103,3 +103,43 @@ footer a:hover { color: var(--text); }
   .shots { grid-template-columns: repeat(2, minmax(0, 160px)); gap: 32px 36px; }
   .nav a:not(.lang) { display: none; }
 }
+
+/* Motion: hover lifts important elements with a hard pixel shadow and a lit
+   border; sections appear on scroll (site.js). Off for reduced motion. */
+.card, .phone, .step, details, .cta, .store, .lang, .brand img, .badge {
+  transition: transform .18s steps(3, end), box-shadow .18s steps(3, end), border-color .18s, background-color .18s, filter .18s;
+}
+.card:hover {
+  transform: translate(-4px, -4px); border-color: var(--accent);
+  box-shadow: 10px 10px 0 #000, 0 0 0 2px rgba(255,215,0,.35), 0 0 28px rgba(255,215,0,.18);
+}
+.card:hover .icon { animation: hop .5s steps(4, end); }
+.phone:hover {
+  transform: translate(-5px, -5px); border-color: var(--primary);
+  box-shadow: 0 0 0 var(--px) #000, 16px 16px 0 4px var(--primary-dark), 0 0 36px rgba(108,99,255,.35);
+}
+.shots figure:hover figcaption { color: var(--accent); }
+.step:hover { transform: translateX(6px); border-left-color: var(--accent); background: linear-gradient(90deg, rgba(255,215,0,.08), transparent 70%); }
+.step:hover b::before { color: var(--primary); }
+details:hover, details[open] { border-color: var(--primary); box-shadow: 6px 6px 0 #000, 0 0 22px rgba(108,99,255,.18); }
+summary:hover { color: var(--accent); }
+.cta:hover { box-shadow: 0 0 0 2px rgba(108,99,255,.4), 0 0 44px rgba(108,99,255,.25); }
+a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 #000) drop-shadow(0 0 12px rgba(255,215,0,.35)); }
+.lang:hover { border-color: var(--accent); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 #000; }
+.brand:hover img { border-color: var(--accent); transform: rotate(-6deg); }
+.badge:hover { background: rgba(255,215,0,.18); box-shadow: 0 0 18px rgba(255,215,0,.3); }
+.web a:hover, footer a:hover { color: var(--accent); }
+.hero .phone { animation: float 5s ease-in-out infinite; }
+.hero .phone:hover { animation-play-state: paused; }
+
+@keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+
+/* Scroll reveal: only when JS has marked the page, so the content never stays hidden. */
+.js-reveal .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.js-reveal .reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js-reveal .reveal { opacity: 1; transform: none; }
+}
