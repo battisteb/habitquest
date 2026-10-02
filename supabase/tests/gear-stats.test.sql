@@ -17,7 +17,7 @@ insert into shop_items (id, name, category, price_gold, rarity, required_level, 
   ('00000000-0000-0000-0000-0000000ee104', 'Test sky', 'avatar_background', 10, 'epic', 1, 'bg_test_sky', true);
 
 select is(gear_points('common'), 1, 'a common item is worth 1 point');
-select is(gear_points('legendary'), 5, 'a legendary item is worth 5 points');
+select is(gear_points('legendary'), 3, 'a legendary (Premium) item is capped at the rare level: no pay-to-win');
 
 select is((select (attack, defense, hp)::text from gear_stats('00000000-0000-0000-0000-0000000ee001')),
   '(0,0,0)', 'no equipment, no bonus');
@@ -33,10 +33,10 @@ insert into equipped_items (user_id, item_id, slot) values
 
 select is((select attack from gear_stats('00000000-0000-0000-0000-0000000ee001')), 3, 'the accessory gives attack');
 select is((select defense from gear_stats('00000000-0000-0000-0000-0000000ee001')), 2, 'the hat gives defense');
-select is((select hp from gear_stats('00000000-0000-0000-0000-0000000ee001')), 5, 'the outfit gives HP');
+select is((select hp from gear_stats('00000000-0000-0000-0000-0000000ee001')), 3, 'the outfit gives HP');
 
 select is(arena_gear_attack('00000000-0000-0000-0000-0000000ee001'), 12, 'arena attack: +4 per attack point');
-select is(arena_gear_defense('00000000-0000-0000-0000-0000000ee001'), 14, 'arena defense: +2 per defense or HP point; backgrounds stay cosmetic');
+select is(arena_gear_defense('00000000-0000-0000-0000-0000000ee001'), 10, 'arena defense: +2 per defense or HP point; backgrounds stay cosmetic');
 
 set local role authenticated;
 select throws_ok($$ select gear_stats('00000000-0000-0000-0000-0000000ee001') $$,

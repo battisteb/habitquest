@@ -169,7 +169,8 @@ export function suggestCoopTarget(goal: CoopGoal, players: number, days: number)
  * GEAR.ARENA — change both together. Kept light so consistency stays what wins.
  */
 export const GEAR = {
-  RARITY_POINTS: { common: 1, uncommon: 2, rare: 3, epic: 4, legendary: 5 } as Record<string, number>,
+  // Capped at the rare level: epic/legendary (Premium) items are a cosmetic upgrade, not more power (I3).
+  RARITY_POINTS: { common: 1, uncommon: 2, rare: 3, epic: 3, legendary: 3 } as Record<string, number>,
   STAT_BY_CATEGORY: { avatar_accessory: 'attack', avatar_hat: 'defense', avatar_outfit: 'hp' } as Record<string, GearStat>,
   DUEL: { DAMAGE_PCT_PER_ATTACK: 3, BLOCK_PCT_PER_DEFENSE: 3, HP_PER_POINT: 4, BASE_HP: 100 },
   ARENA: { ATTACK_PER_POINT: 4, DEFENSE_PER_POINT: 2 },

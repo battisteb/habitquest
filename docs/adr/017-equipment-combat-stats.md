@@ -32,3 +32,16 @@ Les prix, l'XP et l'or ne changent pas.
 - Les bots d'arène n'ont pas d'équipement : un joueur bien équipé gagne un peu plus souvent contre eux. L'effet est limité à +20 de puissance.
 - Les objets Premium (épiques et légendaires) donnent un petit avantage. Il reste plafonné et ne remplace pas les habitudes du jour : une seule habitude faite vaut +30 d'attaque en arène.
 - Migration `20261002220000_gear_stats.sql`, tests pgTAP `gear-stats.test.sql`, tests Jest `gear-config.test.ts`.
+
+## Amendement du 2026-10-02 : pas de « payer pour gagner » (I3)
+
+Battiste a validé, après son étude des concurrents, que le Premium doit rester esthétique et confort, sans avantage de puissance payant.
+
+- Les objets épiques et légendaires sont réservés au Premium. Leur bonus de combat est donc **plafonné au niveau rare (3 points)**. Ils restent plus beaux, pas plus forts.
+- Le meilleur équipement possible donne 3 / 3 / 3 points au lieu de 5 / 5 / 5 :
+  - en duel : +9 % de dégâts, −9 % de dégâts subis et 112 PV ;
+  - en arène : au plus +12 d'attaque et +12 de défense.
+- Tout ce qui donne de la puissance s'achète avec l'or gagné par la régularité (objets communs à rares).
+- Migration `20261003200000_gear_cap.sql` (`gear_points`) et `GEAR.RARITY_POINTS` dans `game-config.ts`.
+
+Point ouvert : le souffle du dragon compagnon (R20, Premium) donne 3 à 10 dégâts une fois par duel. C'est le dernier avantage de combat payant ; à confirmer avec Battiste (le garder, le plafonner ou le rendre purement visuel).
