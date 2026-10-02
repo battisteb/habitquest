@@ -1,22 +1,10 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
+import { ALERT_TEXT, usersAtRisk, type AlertHabit, type AlertProfile } from './at-risk.ts';
 
 const EXPO_PUSH_API = 'https://exp.host/--/api/v2/push/send';
 const CHUNK_SIZE = 100;
-
-const NOTIFICATION_TITLE = '⚡ Streak at risk!';
-const NOTIFICATION_BODY = 'Complete your habits before midnight to keep your streak alive!';
-
-interface HabitWithStreak {
-  id: string;
-  user_id: string;
-  streaks: Array<{ current_count: number }>;
-}
-
-interface Completion {
-  habit_id: string;
-}
 
 interface ExpoPushMessage {
   to: string;
@@ -106,68 +94,53 @@ serve(async (req: Request) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    // 1. Build today's date range in UTC (midnight to midnight)
     const now = new Date();
-    const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
-    const todayEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999));
 
-    console.log(`daily-streak-alert: date range ${todayStart.toISOString()} — ${todayEnd.toISOString()}`);
-
-    // 2. Query all habits that have an active streak (current_count > 0)
-    console.log('daily-streak-alert: fetching habits with active streaks...');
+    // 1. Quests with a running streak (the pure rules are in at-risk.ts).
     const { data: habitsData, error: habitsError } = await supabase
       .from('habits')
-      .select('id, user_id, streaks(current_count)')
+      .select('id, user_id, frequency, days, is_archived, is_paused, streaks!inner(current_count)')
+      .eq('is_archived', false)
+      .eq('is_paused', false)
       .gt('streaks.current_count', 0);
-
     if (habitsError) {
       throw new Error(`Failed to fetch habits with streaks: ${habitsError.message}`);
     }
-
-    const habits: HabitWithStreak[] = (habitsData ?? []) as HabitWithStreak[];
-
-    // Filter to habits that actually have a streak row with current_count > 0
-    const habitsWithActiveStreak = habits.filter(
-      (h) => Array.isArray(h.streaks) && h.streaks.some((s) => s.current_count > 0),
-    );
-
-    console.log(`daily-streak-alert: ${habitsWithActiveStreak.length} habits have active streaks`);
-
-    if (habitsWithActiveStreak.length === 0) {
+    const habits: AlertHabit[] = (habitsData ?? []).map((h: Record<string, unknown>) => {
+      const streak = h.streaks as { current_count: number } | { current_count: number }[] | null;
+      const count = Array.isArray(streak) ? (streak[0]?.current_count ?? 0) : (streak?.current_count ?? 0);
+      return { ...(h as unknown as AlertHabit), current_count: count };
+    });
+    const userIds = [...new Set(habits.map((h) => h.user_id))];
+    if (userIds.length === 0) {
       return new Response(
-        JSON.stringify({ success: true, usersNotified: 0, sent: 0, errors: 0, timestamp: now.toISOString() }),
+        JSON.stringify({ success: true, usersAtRisk: 0, sent: 0, errors: 0, timestamp: now.toISOString() }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
-    const habitIds = habitsWithActiveStreak.map((h) => h.id);
-
-    // 3. Fetch today's completions for those habits
-    console.log('daily-streak-alert: fetching today completions...');
+    // 2. Their time zone and language, and the completions of the last two days
+    //    (enough to cover "today" in every time zone).
+    const { data: profilesData, error: profilesError } = await supabase
+      .from('profiles')
+      .select('id, timezone, language')
+      .in('id', userIds);
+    if (profilesError) {
+      throw new Error(`Failed to fetch profiles: ${profilesError.message}`);
+    }
+    const profiles: AlertProfile[] = profilesData ?? [];
     const { data: completionsData, error: completionsError } = await supabase
-      .from('habit_completions')
-      .select('habit_id')
-      .in('habit_id', habitIds)
-      .gte('completed_at', todayStart.toISOString())
-      .lte('completed_at', todayEnd.toISOString());
-
+      .from('completions')
+      .select('habit_id, completed_at')
+      .in('habit_id', habits.map((h) => h.id))
+      .gte('completed_at', new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString());
     if (completionsError) {
       throw new Error(`Failed to fetch completions: ${completionsError.message}`);
     }
 
-    const completions: Completion[] = (completionsData ?? []) as Completion[];
-    const completedHabitIds = new Set(completions.map((c) => c.habit_id));
-
-    // 4. Collect unique user_ids of habits with active streak but no completion today
-    const atRiskUserIds = new Set<string>();
-    for (const habit of habitsWithActiveStreak) {
-      if (!completedHabitIds.has(habit.id)) {
-        atRiskUserIds.add(habit.user_id);
-      }
-    }
-
+    // 3. Players with a quest due today (their local day) not done yet.
+    const atRiskUserIds = usersAtRisk(habits, profiles, completionsData ?? [], now);
     console.log(`daily-streak-alert: ${atRiskUserIds.size} users have at-risk streaks`);
-
     if (atRiskUserIds.size === 0) {
       return new Response(
         JSON.stringify({ success: true, usersAtRisk: 0, sent: 0, errors: 0, timestamp: now.toISOString() }),
@@ -175,34 +148,29 @@ serve(async (req: Request) => {
       );
     }
 
-    // 5. Fetch push tokens for at-risk users
-    console.log('daily-streak-alert: fetching push tokens for at-risk users...');
+    // 4. Their push tokens, and the message in their language.
     const { data: tokensData, error: tokensError } = await supabase
       .from('push_tokens')
       .select('user_id, token')
       .in('user_id', Array.from(atRiskUserIds));
-
     if (tokensError) {
       throw new Error(`Failed to fetch push tokens: ${tokensError.message}`);
     }
-
-    const tokenRows = tokensData ?? [];
-
-    // 6. Build push messages for users with valid Expo push tokens
+    const langOf = new Map(profiles.map((p) => [p.id, p.language === 'fr' ? 'fr' : 'en'] as const));
     const messages: ExpoPushMessage[] = [];
-    for (const row of tokenRows) {
+    for (const row of tokensData ?? []) {
       const pushToken = row.token;
       if (typeof pushToken === 'string' && pushToken.startsWith('ExponentPushToken[')) {
+        const text = ALERT_TEXT[langOf.get(row.user_id) ?? 'en'];
         messages.push({
           to: pushToken,
-          title: NOTIFICATION_TITLE,
-          body: NOTIFICATION_BODY,
+          title: text.title,
+          body: text.body,
           sound: 'default',
           data: { type: 'streak_alert', timestamp: now.toISOString() },
         });
       }
     }
-
     console.log(`daily-streak-alert: ${messages.length} users have valid push tokens`);
 
     // 7. Send notifications in chunks of 100
