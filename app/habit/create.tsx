@@ -9,6 +9,9 @@ import { ContentPicker } from '../../src/features/habits/components/content-pick
 import { EmojiPicker } from '../../src/features/habits/components/emoji-picker';
 import { createHabit } from '../../src/features/habits/stores/habits-store';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
+
+// The default category first: on one scrolling line, the selected chip must be visible.
+const CATEGORY_ORDER: HabitCategory[] = ['general', ...HABIT_CATEGORIES.filter((c) => c !== 'general')];
 import type { HabitContent } from '../../src/features/habits/types/habit-content';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
@@ -38,15 +41,16 @@ export default function CreateHabitScreen() {
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.lg, gap: spacing.lg, paddingBottom: spacing.xxl },
-  topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  content: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xl },
+  topRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   backButton: { color: colors.primary, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 1 },
   title: { fontSize: pixelSize(fontSizes.xl), fontFamily: fonts.bold, color: colors.text, letterSpacing: 2 },
   section: { gap: spacing.sm },
   label: { color: colors.textSecondary, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
   labelRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   link: { color: colors.primary, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 0.5 },
-  wrapRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  // One line that scrolls sideways instead of several wrapped lines.
+  scrollRow: { flexDirection: 'row', gap: spacing.sm, paddingRight: spacing.md },
   chip: {
     paddingVertical: spacing.xs + 2,
     paddingHorizontal: spacing.sm + 2,
@@ -141,8 +145,8 @@ export default function CreateHabitScreen() {
         <Pressable onPress={() => router.back()} hitSlop={8}>
           <Text style={styles.backButton}>{T.habit_create_back}</Text>
         </Pressable>
+        <Text style={styles.title}>{T.habit_create_title}</Text>
       </View>
-      <Text style={styles.title}>{T.habit_create_title}</Text>
 
       {/* 1. Name, or a one-tap idea */}
       <View style={styles.section}>
@@ -158,20 +162,20 @@ export default function CreateHabitScreen() {
             <Text style={styles.link}>{T.habit_create_all_templates}</Text>
           </Pressable>
         </View>
-        <View style={styles.wrapRow}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollRow}>
           {ideas.map((t) => (
             <Pressable key={t.id} style={styles.chip} onPress={() => applyIdea(t)} accessibilityRole="button">
               <Text style={styles.chipText}>{templateName(t)}</Text>
             </Pressable>
           ))}
-        </View>
+        </ScrollView>
       </View>
 
       {/* 2. Category: color code instead of emojis */}
       <View style={styles.section}>
         <Text style={styles.label}>{T.habit_create_category}</Text>
-        <View style={styles.wrapRow}>
-          {HABIT_CATEGORIES.map((cat) => {
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollRow}>
+          {CATEGORY_ORDER.map((cat) => {
             const color = CATEGORY_CONFIG[cat].color;
             const active = category === cat;
             return (
@@ -187,7 +191,7 @@ export default function CreateHabitScreen() {
               </Pressable>
             );
           })}
-        </View>
+        </ScrollView>
       </View>
 
       {/* 3. Frequency: every day, or N times a week */}
