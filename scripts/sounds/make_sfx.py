@@ -20,6 +20,7 @@ FFMPEG = os.environ.get('FFMPEG', 'ffmpeg')
 # Note frequencies.
 C5, D5, E5, G5, A5, B5 = 523.25, 587.33, 659.25, 783.99, 880.0, 987.77
 C6, E6, G6, C7 = 1046.5, 1318.5, 1568.0, 2093.0
+B6 = 1975.5
 E7, G7, C8 = 2637.0, 3136.0, 4186.0
 
 
@@ -59,10 +60,8 @@ SOUNDS = {
                              (0.14, 0.08, G5, 'square', 0.5), (0.21, 0.08, C6, 'square', 0.5),
                              (0.28, 0.45, E6, 'pulse', 0.45), (0.28, 0.45, C6, 'triangle', 0.5),
                              (0.28, 0.45, G6, 'sine', 0.15)], 0.8)),
-    # Claiming a reward: a short cascade of coins.
-    'reward-coins': (render([(0.00, 0.07, B5, 'square', 0.5), (0.05, 0.16, E6, 'square', 0.5),
-                             (0.12, 0.07, B5, 'square', 0.4), (0.17, 0.16, E6, 'square', 0.4),
-                             (0.24, 0.07, B5, 'square', 0.35), (0.29, 0.22, E6, 'square', 0.35)], 0.55)),
+    # Claiming a reward: a single bright "coin" (chosen by Battiste).
+    'reward-coins': (render([(0.00, 0.06, B6, 'square', 0.5), (0.05, 0.30, E7, 'square', 0.45)], 0.4)),
     # Level up: a short "ta-da" landing on a held high C, with a sparkle
     # (Battiste kept only this part: a win ends high).
     'level-up': (render([(0.00, 0.09, G6, 'pulse', 0.55),
