@@ -138,7 +138,7 @@ async function renderFlip(page, fromVideo, toVideo, bgFile, out, enc) {
   await page.setViewport({ width: 1080, height: 1920 });
 }
 // 'flip' is rendered in 3D by renderFlip; the others are ffmpeg xfade transitions.
-const XFADE = { flip: 'flip', slide: 'slideleft', push: 'slideleft', up: 'slideup', zoom: 'zoomin', fade: 'fade', circle: 'circleopen' };
+const XFADE = { flip: 'flip', pixel: 'pixelize', slide: 'slideleft', up: 'slideup', zoom: 'zoomin', fade: 'fade', circle: 'circleopen' };
 
 /** Transition into segment i (null = hard cut). */
 function transitionInto(reel, i) {
@@ -151,8 +151,9 @@ function transitionInto(reel, i) {
   if (seg.src && seg.src === prev.src && seg.type === prev.type) return XFADE.fade;
   // From one phone screen to another: the phone turns over.
   if ((seg.type === 'clip' || seg.type === 'still') && (prev.type === 'clip' || prev.type === 'still')) return XFADE.flip;
-  // Otherwise the next scene pushes the previous one out (no zoom, no cut).
-  return XFADE.push;
+  // Otherwise the scene breaks into big pixels and rebuilds as the next one
+  // (pixel art direction; Battiste preferred it to a side swipe).
+  return XFADE.pixel;
 }
 
 /** Start time of each segment once transitions overlap them, and the total length. */
