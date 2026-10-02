@@ -810,7 +810,9 @@ export default function TodayScreen() {
               {todayXp > 0 && (
                 <Text style={styles.headerStatXp}>+{todayXp} XP</Text>
               )}
-              <Text style={styles.headerStatGold}>💰{profile.gold}</Text>
+              <Pressable onPress={() => router.push('/shop')} hitSlop={8} accessibilityRole="button" testID="header-gold">
+                <Text style={styles.headerStatGold}>💰{profile.gold}</Text>
+              </Pressable>
               <Text style={styles.headerStatLevel}>Lv.{profile.level}</Text>
             </View>
           )}

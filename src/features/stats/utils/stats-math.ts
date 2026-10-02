@@ -129,25 +129,6 @@ export function yearGrid(rates: Map<string, DayRate>, today: Date, weeks = 53): 
   return cols;
 }
 
-/** Average rate of each of the last `count` weeks (Monday-Sunday), oldest first. */
-export function weeklyTrend(rates: Map<string, DayRate>, today: Date, count = 12): (number | null)[] {
-  const current = weekStart(today);
-  const todayKey = dayKey(today);
-  const out: (number | null)[] = [];
-  for (let w = count - 1; w >= 0; w--) {
-    const start = addDays(current, -7 * w);
-    const days: DayRate[] = [];
-    for (let i = 0; i < 7; i++) {
-      const key = dayKey(addDays(start, i));
-      if (key > todayKey) break;
-      const r = rates.get(key);
-      if (r) days.push(r);
-    }
-    out.push(averageRate(days));
-  }
-  return out;
-}
-
 /**
  * Change of the average rate between the last 7 days and the 7 days before,
  * in percentage points, or null without data on both sides.

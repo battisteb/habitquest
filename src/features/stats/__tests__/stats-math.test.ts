@@ -7,7 +7,6 @@ import {
   duePerDay,
   rateLevel,
   weekOverWeek,
-  weeklyTrend,
   weekStart,
   yearGrid,
   type DayRate,
@@ -79,13 +78,9 @@ describe('stats math', () => {
     expect(last.slice(4)).toEqual([null, null, null]);
   });
 
-  it('gives the average of each of the last 12 weeks and the change vs the previous 7 days', () => {
+  it('gives the change vs the previous 7 days', () => {
     const completions = Array.from({ length: 7 }, (_, i) => done('a', -i)); // last 7 days: all done
     const rates = toMap(dayRates([habit('a'), habit('b')], completions, addDays(TODAY, -100), TODAY));
-    const trend = weeklyTrend(rates, TODAY);
-    expect(trend).toHaveLength(12);
-    expect(trend[11]).toBeCloseTo(0.5);
-    expect(trend[0]).toBe(0);
     expect(weekOverWeek(rates, TODAY)).toBe(50);
     expect(averageRate([])).toBeNull();
   });
