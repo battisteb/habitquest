@@ -17,6 +17,8 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000aa001', 'champ@test.dev', '{"username":"champ"}'),
   ('00000000-0000-0000-0000-0000000aa002', 'rookie@test.dev', '{"username":"rookie"}'),
   ('00000000-0000-0000-0000-0000000aa003', 'buddy@test.dev', '{"username":"buddy"}');
+-- Progressive unlocks (I6): these players have reached the feature's level.
+update profiles set xp = xp + 250, level = level_for_xp(xp + 250) where id::text like '00000000-0000-0000-0000-0000000aa%';
 
 create function pg_temp.act_as(p_uid uuid) returns void language sql as $$
   select set_config('request.jwt.claims', json_build_object('sub', p_uid, 'role', 'authenticated')::text, true);

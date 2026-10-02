@@ -17,8 +17,9 @@ import { useTheme } from '../../../ui/theme/theme-context';
 import { useT, type Strings } from '../../../lib/i18n';
 import { getArenaWinChance } from '../../../lib/constants/game-config';
 import { fetchArenaState, ackArenaResult, findPlayerId } from '../api';
-import type { ArenaState, ArenaFight } from '../types';
+import type { ArenaState, ArenaFight, ArenaLocked } from '../types';
 import { LEAGUE_COLORS, leagueForTier, zoneForPlace, daysLeft } from '../utils/arena-display';
+import { Pip } from '../../mascot/components/pip';
 
 function leagueName(T: Strings, tier: number): string {
   return T[`arena_league_${leagueForTier(tier)}` as keyof Strings];
@@ -34,12 +35,15 @@ export default function ArenaScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const [state, setState] = useState<ArenaState | null>(null);
+  const [locked, setLocked] = useState<ArenaLocked | null>(null);
   const [error, setError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const load = useCallback(async () => {
     try {
-      setState(await fetchArenaState());
+      const s = await fetchArenaState();
+      if ('locked' in s) setLocked(s);
+      else setState(s);
       setError(false);
     } catch {
       setError(true);
@@ -107,6 +111,19 @@ export default function ArenaScreen() {
       <Text style={styles.back}>{T.arena_back}</Text>
     </Pressable>
   );
+
+  if (locked) {
+    // Progressive unlock (I6): Pip explains when the arena opens.
+    return (
+      <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={styles.content}>{backLink}</View>
+        <View style={styles.center} testID="arena-locked">
+          <Pip expression="happy" mood="calm" size={88} />
+          <Text style={styles.empty}>{T.arena_locked.replace('{n}', String(locked.unlock_level))}</Text>
+        </View>
+      </View>
+    );
+  }
 
   if (!state) {
     return (

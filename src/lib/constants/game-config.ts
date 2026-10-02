@@ -222,3 +222,21 @@ export function applyGearToDamage(damage: number, attacker: GearStats, defender:
   const d = duelGearEffects(defender);
   return Math.max(1, Math.round(damage * a.damageMult * d.damageTakenMult));
 }
+
+/**
+ * Progressive unlocks (I6): features open as the hero levels up, announced by
+ * Pip. The server enforces them (public.unlock_level) — change both together.
+ */
+export const UNLOCKS = { arena: 3, duels: 5, coop: 5 } as const;
+export type UnlockFeature = keyof typeof UNLOCKS;
+
+export function isUnlocked(feature: UnlockFeature, level: number): boolean {
+  return level >= UNLOCKS[feature];
+}
+
+/** Features that open when the hero goes from `from` to `to`, in level order. */
+export function newlyUnlocked(from: number, to: number): UnlockFeature[] {
+  return (Object.keys(UNLOCKS) as UnlockFeature[])
+    .filter((f) => from < UNLOCKS[f] && to >= UNLOCKS[f])
+    .sort((a, b) => UNLOCKS[a] - UNLOCKS[b]);
+}

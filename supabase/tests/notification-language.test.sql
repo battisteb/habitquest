@@ -8,6 +8,8 @@ select plan(6);
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-000000066001', 'fr@test.dev', '{"username":"Camille"}'),
   ('00000000-0000-0000-0000-000000066002', 'en@test.dev', '{"username":"Jordan"}');
+-- Progressive unlocks (I6): these players have reached the feature's level.
+update profiles set xp = xp + 850, level = level_for_xp(xp + 850) where id::text like '00000000-0000-0000-0000-000000066%';
 insert into friendships (requester_id, addressee_id, status)
 values ('00000000-0000-0000-0000-000000066001', '00000000-0000-0000-0000-000000066002', 'accepted');
 
