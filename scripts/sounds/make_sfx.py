@@ -1,6 +1,6 @@
 """Synthesizes HabitQuest's own 8-bit sound effects (no third-party audio).
 
-    python scripts/sounds/make_sfx.py      # needs ffmpeg on the PATH (or FFMPEG=...)
+    python scripts/sounds/make_sfx.py [name…]   # needs ffmpeg on the PATH (or FFMPEG=...)
 
 Writes assets/sounds/<name>.m4a (AAC, mono, 44.1 kHz), like the other sounds of
 the app (src/lib/audio/sound-registry.ts). Each sound is a list of notes:
@@ -20,6 +20,7 @@ FFMPEG = os.environ.get('FFMPEG', 'ffmpeg')
 # Note frequencies.
 C5, D5, E5, G5, A5, B5 = 523.25, 587.33, 659.25, 783.99, 880.0, 987.77
 C6, E6, G6, C7 = 1046.5, 1318.5, 1568.0, 2093.0
+E7, G7, C8 = 2637.0, 3136.0, 4186.0
 
 
 def tone(t, f, wave_kind):
@@ -62,11 +63,14 @@ SOUNDS = {
     'reward-coins': (render([(0.00, 0.07, B5, 'square', 0.5), (0.05, 0.16, E6, 'square', 0.5),
                              (0.12, 0.07, B5, 'square', 0.4), (0.17, 0.16, E6, 'square', 0.4),
                              (0.24, 0.07, B5, 'square', 0.35), (0.29, 0.22, E6, 'square', 0.35)], 0.55)),
-    # Level up: a small fanfare with a held, vibrating last note.
-    'level-up': (render([(0.00, 0.11, C5, 'pulse', 0.55), (0.11, 0.11, E5, 'pulse', 0.55),
-                         (0.22, 0.11, G5, 'pulse', 0.55), (0.33, 0.13, C6, 'pulse', 0.55),
-                         (0.50, 0.10, G5, 'pulse', 0.5), (0.60, 0.65, C6, 'pulse', 0.6),
-                         (0.60, 0.65, E5, 'triangle', 0.45), (0.60, 0.65, G5, 'triangle', 0.35)], 1.3,
+    # Level up: a run that only climbs, a "ta-da" and a held high C (a win
+    # ends high: no step back down at the end).
+    'level-up': (render([(0.00, 0.08, C5, 'pulse', 0.5), (0.07, 0.08, E5, 'pulse', 0.5),
+                         (0.14, 0.08, G5, 'pulse', 0.5), (0.21, 0.08, C6, 'pulse', 0.55),
+                         (0.28, 0.08, E6, 'pulse', 0.55), (0.40, 0.09, G6, 'pulse', 0.55),
+                         (0.52, 0.75, C7, 'pulse', 0.6), (0.52, 0.75, G6, 'triangle', 0.35),
+                         (0.52, 0.75, E6, 'triangle', 0.3), (0.62, 0.06, E7, 'sine', 0.12),
+                         (0.70, 0.06, G7, 'sine', 0.12), (0.78, 0.10, C8, 'sine', 0.12)], 1.35,
                         vibrato=0.5)),
 }
 
@@ -86,5 +90,7 @@ def write_m4a(name, samples):
 
 
 if __name__ == '__main__':
-    for name, samples in SOUNDS.items():
-        write_m4a(name, samples)
+    import sys
+    names = sys.argv[1:] or list(SOUNDS)  # e.g. make_sfx.py level-up
+    for name in names:
+        write_m4a(name, SOUNDS[name])

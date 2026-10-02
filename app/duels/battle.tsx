@@ -579,6 +579,12 @@ export default function BattleScreen() {
         <Text style={s.roundSub}>
           {phase === 'pick' ? T.duels_battle_phase_pick : phase === 'resolving' ? T.duels_battle_phase_resolving : isEnd ? T.duels_battle_phase_end : ''}
         </Text>
+        {replay && (
+          // A replay can be left at any time.
+          <Pressable onPress={() => router.back()} style={s.closeBtn} hitSlop={10} accessibilityRole="button" accessibilityLabel={T.arena_replay_back} testID="replay-close">
+            <Text style={s.closeText}>✕</Text>
+          </Pressable>
+        )}
       </View>
 
       {/* ── Arena ── */}
@@ -690,6 +696,8 @@ const s = StyleSheet.create({
   },
   roundLabel: { color: colors.accent, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 2 },
   roundSub: { color: colors.textMuted, fontSize: fontSizes.xs },
+  closeBtn: { borderWidth: 2, borderColor: colors.border, backgroundColor: colors.surface, borderRadius: 0, width: 28, height: 28, alignItems: 'center', justifyContent: 'center' },
+  closeText: { color: colors.textMuted, fontSize: pixelSize(12), fontFamily: fonts.bold },
 
   // Arena
   arena: {
