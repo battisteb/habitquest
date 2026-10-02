@@ -11,6 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../theme/tokens';
 import { useT } from '../../lib/i18n';
+import { Pip } from '../../features/mascot/components/pip';
 
 interface StreakMilestoneOverlayProps {
   visible: boolean;
@@ -116,7 +117,10 @@ export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComp
   return (
     <Animated.View style={[styles.overlay, overlayStyle]}>
       <Animated.View style={[styles.card, badgeStyle, { borderColor: config.color }]}>
-        <Text style={styles.emoji}>{config.emoji}</Text>
+        <View style={styles.heroRow}>
+          <Pip expression="proud" mood="fire" size={64} />
+          <Text style={styles.emoji}>{config.emoji}</Text>
+        </View>
         <Text style={[styles.milestoneLabel, { color: config.color }]}>{T.milestone_streak.replace('{label}', config.labelKey ? T[config.labelKey] : T.milestone_days.replace('{n}', String(streakCount)))}</Text>
         <View style={[styles.countBadge, { backgroundColor: config.color }]}>
           <Text style={styles.countText}>{streakCount}</Text>
@@ -160,6 +164,7 @@ const styles = StyleSheet.create({
       web: { boxShadow: '0 8px 16px rgba(0,0,0,0.5)' },
     }),
   },
+  heroRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
   emoji: {
     fontSize: 56,
   },

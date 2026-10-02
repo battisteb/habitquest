@@ -139,7 +139,7 @@ export async function scheduleStreakRiskReminder(
   await Notifications.scheduleNotificationAsync({
     identifier: STREAK_RISK_ID,
     content: {
-      title: lang$.get() === 'fr' ? '🔥 Série en danger !' : '🔥 Streak at risk!',
+      title: getStrings().notif_streak_risk_title,
       body: getRandomMessage('streak_at_risk'),
       sound: true,
       data: { route: '/(tabs)/today' },

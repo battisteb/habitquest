@@ -674,6 +674,7 @@ export default function TodayScreen() {
       {/* Streak recovery banners */}
       {brokenStreaks.map((b) => (
         <View key={b.habitId} style={styles.streakRecoveryBanner}>
+          <Pip expression="sad" size={40} accessibilityLabel="Pip" />
           <View style={styles.streakRecoveryText}>
             <Text style={styles.streakRecoveryTitle}>{T.streak_broken_title}</Text>
             <Text style={styles.streakRecoveryMsg}>
