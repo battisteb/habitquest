@@ -6,7 +6,8 @@ import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { duelStore$, fetchUnlockedCategories, fetchDuels } from '../../src/features/duels/stores/duel-store';
-import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
+import { getUnlockedAttacks, nextLevelAttack } from '../../src/features/duels/utils/attacks';
+import { profileStore$ } from '../../src/features/gamification/stores/profile-store';
 import { showInterstitial } from '../../src/features/monetization/utils/ad-service';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
@@ -98,7 +99,9 @@ export default function DuelsIndexScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
-  const attacks = getUnlockedAttacks(unlockedCategories);
+  const level = use$(profileStore$.profile)?.level ?? 1;
+  const attacks = getUnlockedAttacks(unlockedCategories, level);
+  const next = nextLevelAttack(level);
   useEffect(() => {
     fetchUnlockedCategories();
     fetchDuels();
@@ -144,9 +147,11 @@ export default function DuelsIndexScreen() {
             </View>
           )}
         />
-        {attacks.length <= 1 && (
-          <Text style={styles.hint}>{T.duels_attacks_hint}</Text>
-        )}
+        <Text style={styles.hint}>
+          {next
+            ? T.duels_next_attack.replace('{level}', String(next.minLevel)).replace('{name}', attackName(T, next))
+            : T.duels_attacks_hint}
+        </Text>
       </View>
 
       <PixelButton
