@@ -801,7 +801,7 @@ const FR = {
   monthly_granted_msg: '{name} est dans ton inventaire. Merci de soutenir HabitQuest !',
   paywall_feat_support_label: 'Support',
   paywall_feat_support_free: 'Standard',
-  paywall_feat_support_premium: 'Prioritaire',
+  paywall_feat_support_premium: 'Sous 48 h',
   // Challenge create screen
   challenge_create_title: 'NOUVEAU DÉFI',
   challenge_create_vs: 'vs {name}',
@@ -1840,7 +1840,7 @@ const EN = {
   monthly_granted_msg: '{name} is in your inventory. Thanks for supporting HabitQuest!',
   paywall_feat_support_label: 'Support',
   paywall_feat_support_free: 'Standard',
-  paywall_feat_support_premium: 'Priority',
+  paywall_feat_support_premium: 'Within 48 h',
   // Challenge create screen
   challenge_create_title: 'NEW CHALLENGE',
   challenge_create_vs: 'vs {name}',

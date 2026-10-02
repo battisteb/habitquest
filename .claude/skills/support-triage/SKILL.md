@@ -16,14 +16,17 @@ Règles : lire et classer librement. **Demander à Battiste avant** de répondre
 Requête en lecture (API Management, `SUPABASE_ACCESS_TOKEN` lu dans `.env.deploy.local` sans l'afficher) :
 
 ```sql
-select s.id, s.created_at, s.category, s.status, p.username, s.platform, s.app_version, s.language, s.message
+select s.id, s.created_at, s.category, s.status, p.username, private.is_premium(s.user_id) as premium,
+       s.platform, s.app_version, s.language, s.message
 from support_messages s join profiles p on p.id = s.user_id
-where s.status = 'new' order by s.created_at;
+where s.status = 'new' order by premium desc, s.created_at;
 ```
 
 E-mails : `search_threads` avec `in:inbox is:unread` (ignorer les e-mails automatiques de Google, Buffer, Cloudflare, Resend, sauf alerte de sécurité ou de facturation à remonter).
 
 ## 2. Trier
+
+**Support prioritaire (promesse Premium, Q19)** : les messages des joueurs Premium (`premium = true`) passent en tête et doivent recevoir une réponse **sous 48 h**. Signaler à Battiste tout message Premium de plus de 24 h encore sans réponse.
 
 Pour chaque retour : catégorie (bug, idée, compte, autre), gravité (bloquant, gênant, cosmétique), doublon éventuel. Pour un bug : le reproduire (Supabase local, build web, plateforme et version indiquées), trouver la cause, proposer ou faire le correctif selon les règles habituelles (branche, tests, PR, `deploy-prod`).
 
