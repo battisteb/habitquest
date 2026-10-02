@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = public, extensions;
 
-select plan(53);
+select plan(58);
 
 -- ─── Fixtures ────────────────────────────────────────────────────────────────
 insert into auth.users (id, email, raw_user_meta_data) values
@@ -80,7 +80,10 @@ select is((complete_habit('00000000-0000-0000-0000-00000000c001') ->> 'current_s
 -- ─── Streak breaks and freezes ───────────────────────────────────────────────
 reset role;
 delete from completions where habit_id = '00000000-0000-0000-0000-00000000c001';
-update streaks set current_count = 10, last_completed_at = now() - interval '3 days'
+-- A long absence: too many missed days for the freezes, so the streak breaks.
+delete from streak_freezes;
+update profiles set freeze_tokens = 0 where id = '00000000-0000-0000-0000-0000000000a1';
+update streaks set current_count = 10, last_completed_at = now() - interval '12 days'
 where habit_id = '00000000-0000-0000-0000-00000000c001';
 update profiles set xp = 100, gold = 50 where id = '00000000-0000-0000-0000-0000000000a1';
 set local role authenticated;
@@ -123,6 +126,27 @@ select is(activate_streak_freeze() ->> 'source', 'token', 'a token earned with a
 select is((select freeze_tokens from get_my_profile()), 0, 'and is consumed');
 select throws_ok($$ insert into streak_freezes (user_id, freeze_date, source) values (auth.uid(), current_date + 1, 'weekly') $$,
   '42501', null, 'freezes can only be created by activate_streak_freeze');
+
+-- Automatic freeze, for everyone: a forgotten day uses the week's free freeze.
+reset role;
+delete from streak_freezes;
+update profiles set freeze_tokens = 0 where id = '00000000-0000-0000-0000-0000000000a1';
+update streaks set current_count = 7, last_completed_at = now() - interval '2 days'
+where habit_id = '00000000-0000-0000-0000-00000000c001';
+set local role authenticated;
+select is(jsonb_array_length((process_streak_breaks() -> 'auto_frozen')::jsonb), 1, 'a forgotten day is frozen automatically');
+select is((select current_count from streaks where habit_id = '00000000-0000-0000-0000-00000000c001'), 7, 'and the streak survives');
+reset role;
+select ok((select auto and source = 'weekly' from streak_freezes where user_id = '00000000-0000-0000-0000-0000000000a1'
+           and freeze_date = user_today('00000000-0000-0000-0000-0000000000a1') - 1), 'with the free freeze of the week');
+-- A gap too long to cover entirely spends nothing.
+reset role;
+update streaks set current_count = 7, last_completed_at = now() - interval '20 days'
+where habit_id = '00000000-0000-0000-0000-00000000c001';
+update profiles set freeze_tokens = 2 where id = '00000000-0000-0000-0000-0000000000a1';
+set local role authenticated;
+select is((process_streak_breaks() -> 'auto_frozen')::text, '[]', 'a long absence is not frozen');
+select is((select freeze_tokens from get_my_profile()), 2, 'and spends no token');
 
 -- ─── Challenges ──────────────────────────────────────────────────────────────
 reset role;

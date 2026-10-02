@@ -623,7 +623,7 @@ const FR = {
   today_freeze_available: '❄️ REPOS ({n})',
   today_watch_ad: '📺 +1 GEL',
   today_freeze_alert_title: 'Jour de repos',
-  today_freeze_alert_msg: "Utiliser ton jour de repos ? Toutes tes séries seront protégées aujourd'hui. Tu en as 1 par semaine.",
+  today_freeze_alert_msg: "Utiliser ton jour de repos ? Toutes tes séries seront protégées aujourd'hui. Tu en as 1 par semaine, et si tu oublies une journée il est utilisé automatiquement.",
   today_freeze_alert_cancel: 'Annuler',
   today_freeze_alert_confirm: 'Activer',
   today_mode_days: '{n}j restants',
@@ -898,6 +898,9 @@ const FR = {
   // UI components
   achievement_unlocked: 'SUCCÈS DÉBLOQUÉ',
   level_up_subtitle: 'Continue, aventurier !',
+  freeze_auto_title: '❄️ Série sauvée !',
+  freeze_auto_msg_one: 'Tu as oublié une journée : un gel a été utilisé automatiquement, ta série continue.',
+  freeze_auto_msg_many: 'Tu as oublié {n} journées : des gels ont été utilisés automatiquement, ta série continue.',
   xp_level_prefix: 'NIV',
   offline_banner_msg: '⚠ HORS LIGNE — modifications sauvegardées localement',
   // Burnout detector
@@ -1625,7 +1628,7 @@ const EN = {
   today_freeze_available: '❄️ REST ({n})',
   today_watch_ad: '📺 +1 FREEZE',
   today_freeze_alert_title: 'Rest day',
-  today_freeze_alert_msg: 'Use your rest day? All your streaks will be protected today. You get 1 per week.',
+  today_freeze_alert_msg: 'Use your rest day? All your streaks will be protected today. You get 1 per week, and if you forget a day it is used automatically.',
   today_freeze_alert_cancel: 'Cancel',
   today_freeze_alert_confirm: 'Activate',
   today_mode_days: '{n}d left',
@@ -1900,6 +1903,9 @@ const EN = {
   // UI components
   achievement_unlocked: 'ACHIEVEMENT UNLOCKED',
   level_up_subtitle: 'Keep going, adventurer!',
+  freeze_auto_title: '❄️ Streak saved!',
+  freeze_auto_msg_one: 'You missed a day: a freeze was used automatically, your streak goes on.',
+  freeze_auto_msg_many: 'You missed {n} days: freezes were used automatically, your streak goes on.',
   xp_level_prefix: 'LVL',
   offline_banner_msg: '⚠ NO CONNECTION — changes saved locally',
   // Burnout detector
@@ -2051,4 +2057,9 @@ export function useLang(): Lang {
 export function useT(): Strings {
   const lang = use$(lang$);
   return STRINGS[lang];
+}
+
+/** Current texts outside React (stores, services); not reactive. */
+export function getStrings(): Strings {
+  return STRINGS[lang$.get()];
 }

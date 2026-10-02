@@ -9,6 +9,8 @@ interface StreakBreaksResult {
   broken: { habit_id: string; was_count: number }[];
   xp_loss: number;
   gold_loss: number;
+  /** Days covered by an automatic freeze instead of breaking the streak. */
+  auto_frozen?: string[];
 }
 
 /**
@@ -21,10 +23,11 @@ export async function checkAndApplyPunishments(): Promise<{
   totalGoldLoss: number;
   brokenCount: number;
   brokenStreaks: BrokenStreakInfo[];
+  autoFrozenDays: string[];
 }> {
   const { data, error } = await supabase.rpc('process_streak_breaks');
   if (error || !data) {
-    return { totalXpLoss: 0, totalGoldLoss: 0, brokenCount: 0, brokenStreaks: [] };
+    return { totalXpLoss: 0, totalGoldLoss: 0, brokenCount: 0, brokenStreaks: [], autoFrozenDays: [] };
   }
 
   const result = data as unknown as StreakBreaksResult;
@@ -33,5 +36,6 @@ export async function checkAndApplyPunishments(): Promise<{
     totalGoldLoss: result.gold_loss,
     brokenCount: result.broken.length,
     brokenStreaks: result.broken.map((b) => ({ habitId: b.habit_id, wasCount: b.was_count })),
+    autoFrozenDays: result.auto_frozen ?? [],
   };
 }
