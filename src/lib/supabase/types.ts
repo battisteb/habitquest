@@ -345,6 +345,7 @@ export type Database = {
           category: string;
           content: Json | null;
           created_at: string;
+          days: number[] | null;
           emoji: string | null;
           frequency: string;
           id: string;
@@ -358,6 +359,7 @@ export type Database = {
           category?: string;
           content?: Json | null;
           created_at?: string;
+          days?: number[] | null;
           emoji?: string | null;
           frequency?: string;
           id?: string;
@@ -371,6 +373,7 @@ export type Database = {
           category?: string;
           content?: Json | null;
           created_at?: string;
+          days?: number[] | null;
           emoji?: string | null;
           frequency?: string;
           id?: string;

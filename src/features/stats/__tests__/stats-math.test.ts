@@ -33,6 +33,10 @@ describe('stats math', () => {
   it('counts "N times a week" quests as N/7 of a quest per day', () => {
     expect(duePerDay('daily')).toBe(1);
     expect(duePerDay('3x_week')).toBeCloseTo(3 / 7);
+    // Chosen days: due on those days only (2026-10-05 is a Monday).
+    expect(duePerDay('days', [1, 3], new Date(2026, 9, 5))).toBe(1);
+    expect(duePerDay('days', [1, 3], new Date(2026, 9, 6))).toBe(0);
+    expect(duePerDay('days', [1, 3])).toBeCloseTo(2 / 7);
   });
 
   it('rates a day as quests done / quests due, once per quest, capped at 100 %', () => {

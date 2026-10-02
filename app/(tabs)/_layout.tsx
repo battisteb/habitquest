@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { Tabs } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
-import { habitsStore$, isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
+import { habitsStore$, isHabitCompletedEnough, isActiveToday } from '../../src/features/habits/stores/habits-store';
 import { friendsStore$ } from '../../src/features/social/stores/friends-store';
 import { notificationsStore$, fetchNotifications } from '../../src/features/notifications/stores/notifications-store';
 import { colors, fonts, PIXEL, pixelSize } from '../../src/ui/theme/tokens';
@@ -21,7 +21,7 @@ function usePendingHabitCount(): number {
   use$(habitsStore$.todayCompletions);
   use$(habitsStore$.weekCompletions);
 
-  const active = habits.filter((h) => !(h as any).is_paused && !h.is_archived);
+  const active = habits.filter((h) => isActiveToday(h));
   const pending = active.filter((h) => !isHabitCompletedEnough(h.id));
   return pending.length;
 }

@@ -8,6 +8,8 @@ import { PixelFrame } from '../../src/ui/components/pixel-frame';
 import { ContentPicker } from '../../src/features/habits/components/content-picker';
 import { EmojiPicker } from '../../src/features/habits/components/emoji-picker';
 import { createHabit } from '../../src/features/habits/stores/habits-store';
+import { DayPicker } from '../../src/features/habits/components/day-picker';
+import { defaultDays, scheduleToSave } from '../../src/features/habits/utils/schedule';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
 
 // The default category first: on one scrolling line, the selected chip must be visible.
@@ -22,15 +24,6 @@ import { categoryLabel } from '../../src/lib/i18n/labels';
 
 /** One-tap ideas shown under the name (full list: templates screen). */
 const IDEA_IDS = ['read', 'run', 'meditate', 'no_phone_am', 'planning', 'call_family'];
-const MIN_PER_WEEK = 2;
-const MAX_PER_WEEK = 5;
-
-/** '3x_week' → 3; 'daily' → null. */
-function timesPerWeek(frequency: string): number | null {
-  const m = /^(\d)x_week$/.exec(frequency);
-  return m ? Number(m[1]) : null;
-}
-
 /**
  * Quest creation, reduced to what matters: a name (or a one-tap idea), a
  * category, how often. Icon and content (timer, checklist, link) are folded
@@ -67,18 +60,6 @@ export default function CreateHabitScreen() {
   segment: { flex: 1 },
   segmentFace: { paddingVertical: spacing.sm, alignItems: 'center' },
   segmentText: { fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, letterSpacing: 0.5 },
-  stepper: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.md },
-  stepBtn: {
-    width: 40,
-    height: 40,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepBtnText: { color: colors.text, fontSize: pixelSize(fontSizes.lg), fontFamily: fonts.bold },
-  stepValue: { color: colors.text, fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold, minWidth: 150, textAlign: 'center' },
   moreToggle: { paddingVertical: spacing.xs },
   moreText: { color: colors.primary, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold },
 }), [themeKey]);
@@ -97,24 +78,26 @@ export default function CreateHabitScreen() {
   const [name, setName] = useState(prefilledTemplate ? templateName(prefilledTemplate) : '');
   const [category, setCategory] = useState<HabitCategory>((prefilledTemplate?.category as HabitCategory) ?? 'general');
   const [content, setContent] = useState<HabitContent | null>(null);
-  const [frequency, setFrequency] = useState<string>(prefilledTemplate?.frequency ?? 'daily');
+  // null = every day; otherwise the chosen ISO weekdays.
+  const [days, setDays] = useState<number[] | null>(
+    prefilledTemplate && prefilledTemplate.frequency !== 'daily' ? defaultDays(prefilledTemplate.frequency) : null,
+  );
   const [emoji, setEmoji] = useState<string | null>(null);
   const [showMore, setShowMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const perWeek = timesPerWeek(frequency);
-
   const applyIdea = (t: HabitTemplate) => {
     setName(templateName(t));
     setCategory(t.category as HabitCategory);
-    setFrequency(t.frequency);
+    setDays(t.frequency === 'daily' ? null : defaultDays(t.frequency));
   };
 
   const handleCreate = async () => {
     if (!name.trim()) return;
     setLoading(true);
     try {
-      await createHabit(name.trim(), category, content, frequency, emoji);
+      const schedule = days ? scheduleToSave(days) : { frequency: 'daily', days: null };
+      await createHabit(name.trim(), category, content, schedule.frequency, emoji, schedule.days);
       router.back();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : T.habit_create_error;
@@ -194,36 +177,14 @@ export default function CreateHabitScreen() {
         </ScrollView>
       </View>
 
-      {/* 3. Frequency: every day, or N times a week */}
+      {/* 3. Frequency: every day, or chosen days of the week */}
       <View style={styles.section}>
         <Text style={styles.label}>{T.habit_create_frequency}</Text>
         <View style={styles.segmented}>
-          {segment(perWeek === null, T.habit_create_every_day, () => setFrequency('daily'), 'freq-daily')}
-          {segment(perWeek !== null, T.habit_create_some_days, () => perWeek === null && setFrequency('3x_week'), 'freq-weekly')}
+          {segment(days === null, T.habit_create_every_day, () => setDays(null), 'freq-daily')}
+          {segment(days !== null, T.habit_create_some_days, () => days === null && setDays(defaultDays()), 'freq-weekly')}
         </View>
-        {perWeek !== null && (
-          <View style={styles.stepper}>
-            <Pressable
-              style={styles.stepBtn}
-              onPress={() => setFrequency(`${Math.max(MIN_PER_WEEK, perWeek - 1)}x_week`)}
-              accessibilityLabel={T.habit_create_fewer}
-              disabled={perWeek <= MIN_PER_WEEK}
-            >
-              <Text style={styles.stepBtnText}>−</Text>
-            </Pressable>
-            <Text style={styles.stepValue} testID="freq-value">
-              {T.habit_create_times_per_week.replace('{n}', String(perWeek))}
-            </Text>
-            <Pressable
-              style={styles.stepBtn}
-              onPress={() => setFrequency(`${Math.min(MAX_PER_WEEK, perWeek + 1)}x_week`)}
-              accessibilityLabel={T.habit_create_more}
-              disabled={perWeek >= MAX_PER_WEEK}
-            >
-              <Text style={styles.stepBtnText}>+</Text>
-            </Pressable>
-          </View>
-        )}
+        {days !== null && <DayPicker value={days} onChange={setDays} />}
       </View>
 
       {/* 4. Everything else, folded */}

@@ -19,7 +19,7 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { XpToast } from '../../src/ui/animations/xp-toast';
 import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
 import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
-import { habitsStore$, fetchHabits, completeHabit, uncompleteHabit, isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
+import { habitsStore$, fetchHabits, completeHabit, uncompleteHabit, isHabitCompletedEnough, isActiveToday } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../src/features/habits/stores/burnout-store';
@@ -547,7 +547,7 @@ export default function TodayScreen() {
     const filtered = (activeCategory === ALL_KEY
       ? habits
       : habits.filter((h) => h.category === activeCategory)
-    ).filter((h) => isHabitActiveInMode(h.category, activeMode)).filter((h) => !(h as any).is_paused);
+    ).filter((h) => isHabitActiveInMode(h.category, activeMode)).filter((h) => isActiveToday(h));
     return [...filtered].sort((a, b) => {
       // Pinned always first regardless of sort mode
       const aPinned = pinnedIds.includes(a.id);
@@ -570,7 +570,7 @@ export default function TodayScreen() {
     });
   }, [habits, activeCategory, todayCompletions, weekCompletions, pinnedIds, sortMode, streaks]);
 
-  const activeHabits = habits.filter((h) => !(h as any).is_paused);
+  const activeHabits = habits.filter((h) => isActiveToday(h));
   const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
   const totalCount = activeHabits.length;
   const allDone = totalCount > 0 && completedCount === totalCount;
@@ -916,6 +916,7 @@ export default function TodayScreen() {
                 }
                 index={index}
                 frequency={item.frequency ?? 'daily'}
+                days={item.days}
                 weekCompletionCount={weekCompletions[item.id] ?? 0}
                 contentType={(item.content as { type?: string } | null)?.type as 'timer' | 'checklist' | 'link' | null ?? null}
                 isPinned={pinned}

@@ -19,6 +19,7 @@ import { reportBrokenStreaks } from './broken-streak-store';
 import { resetOnSignOut } from '../../../lib/storage/user-data';
 import { showDialog } from '../../../lib/app-alert';
 import { getStrings } from '../../../lib/i18n';
+import { isDueOn } from '../utils/schedule';
 
 type Habit = Omit<Database['public']['Tables']['habits']['Row'], 'content'> & { content?: HabitContent | null };
 type Streak = Database['public']['Tables']['streaks']['Row'];
@@ -72,10 +73,15 @@ export function getWeeklyTarget(frequency: string): number {
   return map[frequency] ?? 1;
 }
 
+/** On today's list: not paused, not archived, and due today (chosen days). */
+export function isActiveToday(habit: Habit, date: Date = new Date()): boolean {
+  return !(habit as { is_paused?: boolean }).is_paused && !habit.is_archived && isDueOn(habit, date);
+}
+
 export function isHabitCompletedEnough(habitId: string): boolean {
   const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
   const frequency = habit?.frequency ?? 'daily';
-  if (frequency === 'daily') {
+  if (frequency === 'daily' || frequency === 'days') {
     return !!habitsStore$.todayCompletions.get()[habitId];
   }
   // "N times a week" = N different days: done for today once validated today.
@@ -88,7 +94,7 @@ export function isHabitCompletedEnough(habitId: string): boolean {
 export function pendingHabitCount(): number {
   return habitsStore$.habits
     .get()
-    .filter((h) => !(h as { is_paused?: boolean }).is_paused && !h.is_archived)
+    .filter((h) => isActiveToday(h))
     .filter((h) => !isHabitCompletedEnough(h.id)).length;
 }
 
@@ -181,21 +187,28 @@ export async function fetchHabits() {
   }
 }
 
-export async function createHabit(name: string, category: string, content?: HabitContent | null, frequency?: string, emoji?: string | null) {
+export async function createHabit(
+  name: string,
+  category: string,
+  content?: HabitContent | null,
+  frequency?: string,
+  emoji?: string | null,
+  days?: number[] | null,
+) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
 
   // The streak row is created by the on_habit_created_streak trigger.
   const { error } = await supabase
     .from('habits')
-    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily', emoji: emoji ?? null });
+    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily', emoji: emoji ?? null, days: days ?? null });
 
   if (error) throw error;
 
   await fetchHabits();
 }
 
-export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null }) {
+export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null }) {
   const { error } = await supabase.from('habits').update({ ...updates, content: updates.content as Json | null | undefined }).eq('id', id);
   if (error) throw error;
   await fetchHabits();
@@ -240,7 +253,7 @@ export async function resumeHabit(id: string) {
 
 interface CompleteHabitResult {
   success: boolean;
-  reason?: 'already_completed' | 'inactive';
+  reason?: 'already_completed' | 'inactive' | 'not_scheduled';
   xp_earned: number;
   gold_earned: number;
   old_level: number;
@@ -258,7 +271,8 @@ export async function completeHabit(
   const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
   const frequency = habit?.frequency ?? 'daily';
 
-  if (frequency === 'daily') {
+  if (habit && !isDueOn(habit)) return; // rest day of a chosen-days habit
+  if (frequency === 'daily' || frequency === 'days') {
     // Already completed today?
     if (habitsStore$.todayCompletions.get()[habitId]) return;
   } else {

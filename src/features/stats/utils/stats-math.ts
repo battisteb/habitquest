@@ -10,6 +10,8 @@
 export interface StatsHabit {
   id: string;
   frequency: string;
+  /** ISO weekdays of a chosen-days quest. */
+  days?: number[] | null;
   created_at: string;
   is_paused?: boolean;
   paused_at?: string | null;
@@ -48,8 +50,13 @@ export function weekStart(d: Date): Date {
   return addDays(d, day === 0 ? -6 : 1 - day);
 }
 
-/** How many times a quest is due on one day. */
-export function duePerDay(frequency: string): number {
+/** How many times a quest is due on one day (a chosen-days quest: 0 on its rest days). */
+export function duePerDay(frequency: string, days?: number[] | null, date?: Date): number {
+  if (frequency === 'days') {
+    if (!date) return (days?.length ?? 7) / 7;
+    const dow = date.getDay() === 0 ? 7 : date.getDay();
+    return days?.includes(dow) ? 1 : 0;
+  }
   const m = /^(\d)x_week$/.exec(frequency);
   return m ? Number(m[1]) / 7 : 1;
 }
@@ -85,7 +92,7 @@ export function dayRates(
     for (const s of starts) {
       if (key < s.from) continue;
       if (s.pausedFrom && key >= s.pausedFrom) continue;
-      due += duePerDay(s.h.frequency);
+      due += duePerDay(s.h.frequency, s.h.days, d);
     }
     const done = doneByDay.get(key)?.size ?? 0;
     out.push({ date: key, done, due, rate: due > 0 ? Math.min(1, done / due) : done > 0 ? 1 : null });
