@@ -16,7 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { getUnlockedAttacks, battleLoadout, ATTACK_CATEGORIES, ATTACKS, Attack } from '../../src/features/duels/utils/attacks';
-import { resolveAttack } from '../../src/features/duels/utils/combat-engine';
+import { resolveAttack, rigReplayResult, REPLAY_FINISH_ROUND } from '../../src/features/duels/utils/combat-engine';
 import { duelStore$, resolveDuel } from '../../src/features/duels/stores/duel-store';
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { profileStore$ } from '../../src/features/gamification/stores/profile-store';
@@ -275,7 +275,10 @@ export default function BattleScreen() {
     opponentName?: string; opponentLevel?: string;
     myName?: string; myLevel?: string; openingAttackId?: string;
     duelId?: string; opponentId?: string;
+    /** Replay of an arena fight decided by the server: 'win' or 'lose' (for me). */
+    replay?: string;
   }>();
+  const replay = params.replay === 'win' || params.replay === 'lose' ? params.replay : null;
   // My hero as I dressed it; a friend's hero from the server, or a sparring partner.
   const myColors = use$(avatarConfigStore$);
   const myGear = use$(shopStore$.equippedSlots);
@@ -357,10 +360,11 @@ export default function BattleScreen() {
     setTimeout(() => logScrollRef.current?.scrollToEnd({ animated: true }), 80);
   }, []);
 
-  const handleFight = useCallback(async () => {
-    if (!selectedAttackId || phase !== 'pick') return;
+  const handleFight = useCallback(async (attackId?: string) => {
+    const chosenId = attackId ?? selectedAttackId;
+    if (!chosenId || phase !== 'pick') return;
 
-    const myAtk = myAttacks.find(a => a.id === selectedAttackId) ?? myAttacks[0];
+    const myAtk = myAttacks.find(a => a.id === chosenId) ?? myAttacks[0];
     const oppAtk = oppAttacks[Math.floor(Math.random() * oppAttacks.length)];
 
     setPhase('resolving');
@@ -385,7 +389,12 @@ export default function BattleScreen() {
       const defender = defenderId === ME_ID ? curMe : curOpp;
       if (defender.hp <= 0) return;
 
-      const result = resolveAttack(atk, attacker.level - defender.level);
+      let result = resolveAttack(atk, attacker.level - defender.level);
+      // A replay ends the way the server decided.
+      const attackerWins = (attackerId === ME_ID) === (replay === 'win');
+      if (replay) result = rigReplayResult(result, attackerWins, defender.hp, round, atk);
+      // ...and its finishing blow goes through a shield.
+      const finishing = !!replay && attackerWins && round >= REPLAY_FINISH_ROUND;
       // The engine's `effect` is English; the log is phrased here from the structured result.
       const name = attackName(T, atk);
       let logText = !result.hit
@@ -401,7 +410,7 @@ export default function BattleScreen() {
       setAttackingId(null);
 
       if (result.hit) {
-        if (defender.shield) {
+        if (defender.shield && !finishing) {
           result.damage = 0;
           logText += T.duels_battle_blocked;
           if (defenderId === ME_ID) curMe = { ...curMe, shield: false };
@@ -448,7 +457,7 @@ export default function BattleScreen() {
     }
 
     // Premium companion: once per fight, after the first round, a small flame.
-    if (round === 1 && companionAssist > 0 && curMe.hp > 0 && curOpp.hp > 0) {
+    if (!replay && round === 1 && companionAssist > 0 && curMe.hp > 0 && curOpp.hp > 0) {
       curOpp = { ...curOpp, hp: Math.max(0, curOpp.hp - companionAssist) };
       setHitId(OPP_ID);
       await delay(110);
@@ -497,7 +506,18 @@ export default function BattleScreen() {
 
     await delay(600);
     setPhase('end');
-  }, [selectedAttackId, phase, myAttacks, oppAttacks, myLevel, oppLevel, pushLog, T]);
+  }, [selectedAttackId, phase, myAttacks, oppAttacks, myLevel, oppLevel, pushLog, T, replay, round]);
+
+  // A replay plays itself: an attack is picked for me each round.
+  useEffect(() => {
+    if (!replay || phase !== 'pick') return;
+    const timer = setTimeout(() => {
+      const atk = myAttacks[Math.floor(Math.random() * myAttacks.length)];
+      setSelectedAttackId(atk.id);
+      void handleFight(atk.id);
+    }, 900);
+    return () => clearTimeout(timer);
+  }, [replay, phase, round]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isPickPhase = phase === 'pick';
   const isEnd = phase === 'end';
@@ -507,7 +527,9 @@ export default function BattleScreen() {
 
       {/* ── Top bar: round counter ── */}
       <View style={s.topBar}>
-        <Text style={s.roundLabel}>{T.duels_battle_round.replace('{n}', String(round))}</Text>
+        <Text style={s.roundLabel}>
+          {replay ? `${T.arena_replay_badge} · ` : ''}{T.duels_battle_round.replace('{n}', String(round))}
+        </Text>
         <Text style={s.roundSub}>
           {phase === 'pick' ? T.duels_battle_phase_pick : phase === 'resolving' ? T.duels_battle_phase_resolving : isEnd ? T.duels_battle_phase_end : ''}
         </Text>
@@ -574,14 +596,14 @@ export default function BattleScreen() {
                 attack={atk}
                 selected={selectedAttackId === atk.id}
                 onPress={() => isPickPhase && setSelectedAttackId(atk.id)}
-                disabled={!isPickPhase}
+                disabled={!!replay || !isPickPhase}
               />
             ))}
           </View>
           <Pressable
             style={[s.fightBtn, (!selectedAttackId || !isPickPhase) && s.fightBtnOff]}
-            onPress={handleFight}
-            disabled={!selectedAttackId || !isPickPhase}
+            onPress={() => void handleFight()}
+            disabled={!!replay || !selectedAttackId || !isPickPhase}
           >
             <Text style={s.fightBtnText}>
               {isPickPhase ? T.duels_battle_btn_fight : T.duels_battle_btn_resolving}
@@ -597,11 +619,11 @@ export default function BattleScreen() {
           </Text>
           <View style={s.rewardBox}>
             <Text style={s.rewardLine}>
-              {params.duelId ? T.duels_battle_reward_friendly : T.duels_battle_reward_training}
+              {replay ? T.arena_replay_note : params.duelId ? T.duels_battle_reward_friendly : T.duels_battle_reward_training}
             </Text>
           </View>
-          <Pressable style={s.exitBtn} onPress={() => router.replace('/duels')}>
-            <Text style={s.exitBtnText}>{T.duels_battle_back_arena}</Text>
+          <Pressable style={s.exitBtn} onPress={() => (replay ? router.back() : router.replace('/duels'))} testID="battle-exit">
+            <Text style={s.exitBtnText}>{replay ? T.arena_replay_back : T.duels_battle_back_arena}</Text>
           </Pressable>
         </View>
       )}

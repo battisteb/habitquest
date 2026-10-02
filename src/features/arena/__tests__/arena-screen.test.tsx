@@ -3,7 +3,8 @@ import ArenaScreen from '../screens/arena-screen';
 import { fetchArenaState, ackArenaResult } from '../api';
 import type { ArenaState } from '../types';
 
-jest.mock('expo-router', () => ({ useRouter: () => ({ back: jest.fn(), push: jest.fn() }) }));
+const mockPush = jest.fn();
+jest.mock('expo-router', () => ({ useRouter: () => ({ back: jest.fn(), push: mockPush }) }));
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }));
@@ -17,6 +18,7 @@ jest.mock('../../../lib/haptics', () => ({ hapticLight: jest.fn() }));
 jest.mock('../api', () => ({
   fetchArenaState: jest.fn(),
   ackArenaResult: jest.fn(() => Promise.resolve()),
+  findPlayerId: jest.fn(() => Promise.resolve('rival-id')),
 }));
 
 const standings = Array.from({ length: 11 }, (_, i) => ({
@@ -70,6 +72,22 @@ describe('ArenaScreen', () => {
     const utils = render(<ArenaScreen />);
     await waitFor(() => expect(utils.getAllByText('arena_won')).toHaveLength(2));
     expect(utils.queryByText('arena_lost')).toBeNull();
+  });
+
+  it('replays a past fight with the battle animation and its real result', async () => {
+    mockFetch.mockResolvedValue(baseState);
+    const utils = render(<ArenaScreen />);
+    await waitFor(() => expect(utils.getByTestId('arena-replay-0')).toBeTruthy());
+    fireEvent.press(utils.getByTestId('arena-replay-0'));
+    await waitFor(() => expect(mockPush).toHaveBeenCalled());
+    expect(mockPush.mock.calls[0][0]).toMatchObject({ pathname: '/duels/battle', params: { replay: 'win', opponentName: 'Sylvara' } });
+    expect(mockPush.mock.calls[0][0].params.opponentId).toBeUndefined();
+
+    mockPush.mockClear();
+    fireEvent.press(utils.getByTestId('arena-replay-1'));
+    await waitFor(() => expect(mockPush).toHaveBeenCalled());
+    // A defence the attacker failed: I won, and the real player's hero is shown.
+    expect(mockPush.mock.calls[0][0].params).toMatchObject({ replay: 'win', opponentName: 'rival', opponentId: 'rival-id' });
   });
 
   it('shows the end-of-season result once and acknowledges it', async () => {

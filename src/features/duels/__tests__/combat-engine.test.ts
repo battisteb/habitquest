@@ -1,4 +1,4 @@
-import { resolveAttack, simulateDuel, PlayerState } from '../utils/combat-engine';
+import { resolveAttack, simulateDuel, PlayerState, rigReplayResult, REPLAY_FINISH_ROUND } from '../utils/combat-engine';
 import { ATTACKS, Attack } from '../utils/attacks';
 
 const balancedAttack = ATTACKS.find((a) => a.id === 'balanced_attack') as Attack;
@@ -112,5 +112,39 @@ describe('simulateDuel', () => {
       expect(round.hpAfter['p2']).toBeGreaterThanOrEqual(0);
     }
     Math.random = originalRandom;
+  });
+});
+
+describe('rigReplayResult (arena replay ends the way the server decided)', () => {
+  const hit = (damage: number) => ({ hit: true, damage, effect: '' });
+  const miss = { hit: false, damage: 0, effect: '' };
+
+  it('never lets the loser knock the winner out', () => {
+    expect(rigReplayResult(hit(40), false, 25, 1, balancedAttack).damage).toBe(24);
+    expect(rigReplayResult(hit(10), false, 25, 1, balancedAttack).damage).toBe(10);
+    expect(rigReplayResult(miss, false, 25, 1, balancedAttack)).toEqual(miss);
+  });
+
+  it("leaves the winner's early attacks as rolled, then finishes the fight", () => {
+    expect(rigReplayResult(miss, true, 80, 1, balancedAttack)).toEqual(miss);
+    const finisher = rigReplayResult(miss, true, 80, REPLAY_FINISH_ROUND, balancedAttack);
+    expect(finisher.hit).toBe(true);
+    expect(finisher.damage).toBeGreaterThanOrEqual(80);
+  });
+
+  it('always ends with the expected winner', () => {
+    for (let n = 0; n < 200; n++) {
+      const winnerIsMe = n % 2 === 0;
+      let me = 100;
+      let opp = 100;
+      for (let round = 1; me > 0 && opp > 0 && round < 50; round++) {
+        let r = rigReplayResult(resolveAttack(balancedAttack, 0), winnerIsMe, opp, round, balancedAttack);
+        if (r.hit) opp = Math.max(0, opp - r.damage);
+        if (opp <= 0) break;
+        r = rigReplayResult(resolveAttack(balancedAttack, 0), !winnerIsMe, me, round, balancedAttack);
+        if (r.hit) me = Math.max(0, me - r.damage);
+      }
+      expect(winnerIsMe ? opp === 0 && me > 0 : me === 0 && opp > 0).toBe(true);
+    }
   });
 });
