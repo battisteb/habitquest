@@ -52,7 +52,7 @@ Principe : Premium apporte du **confort** et du **style**, jamais d'avantage dan
 - **Quand** : à la fin du tutoriel, un écran « 14 jours de Premium offerts » (bouton principal) avec « Continuer gratuitement » bien visible. Seulement sur iPhone et Android, et seulement si le joueur n'a jamais eu d'essai (vérifié par RevenueCat).
 - **Ensuite, des rappels mesurés** : après une série de 7 jours, un passage de rang ou la première semaine terminée ; au plus un rappel tous les 3 jours, plus rien après 3 refus, jamais dans les 24 h après l'inscription.
 - **Pendant l'essai** : bandeau discret « Essai Premium : X jours restants », et un message 2 jours avant la fin.
-- **Transparence** (exigée par Apple et Google) : « 14 jours gratuits, puis 34,99 €/an (ou 4,99 €/mois). Résiliable à tout moment. » affiché à côté du bouton.
+- **Transparence** (exigée par Apple et Google) : « 14 jours gratuits, puis 39,99 $/an (ou 5,99 $/mois). Résiliable à tout moment. » affiché à côté du bouton.
 - **À faire par Battiste dans les stores** : ajouter l'essai gratuit de 2 semaines aux deux abonnements (App Store Connect : « Offre de lancement → Essai gratuit, 2 semaines » ; Google Play : « Phase d'essai gratuit, 14 jours » sur l'abonnement de base). RevenueCat le détecte tout seul.
 
 ## Animation de level-up (tâche P5)
