@@ -5,25 +5,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { useT } from '../../src/lib/i18n';
 import { PixelFrame } from '../../src/ui/components/pixel-frame';
-import { PixelProgress } from '../../src/ui/components/pixel-progress';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
-import { XpBar } from '../../src/features/gamification/components/xp-bar';
+import { RankCard } from '../../src/features/gamification/components/rank-card';
 import { HeroStage } from '../../src/features/avatar/components/hero-stage';
 import { Companion } from '../../src/features/companion/components/companion';
 import { useCompanion } from '../../src/features/companion/hooks/use-companion';
-import { AvatarDisplay } from '../../src/features/avatar/components/avatar-display';
-import { getAvatarStage, getNextAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
 import { avatarConfigStore$, loadAvatarConfig } from '../../src/features/avatar/stores/avatar-config-store';
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
-import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { notificationsStore$ } from '../../src/features/notifications/stores/notifications-store';
 import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
 import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
-import { titleLabel, stageDescription } from '../../src/lib/i18n/labels';
 
 export default function ProfileScreen() {
   const T = useT();
@@ -84,11 +79,6 @@ export default function ProfileScreen() {
     letterSpacing: 1,
     marginTop: spacing.sm,
   },
-  rankBadge: {
-    fontSize: pixelSize(fontSizes.md),
-    fontFamily: fonts.bold,
-    letterSpacing: 2,
-  },
   editHint: {
     fontSize: 10,
     color: colors.textMuted,
@@ -114,7 +104,8 @@ export default function ProfileScreen() {
   },
   miniStatFrame: { flex: 1 },
   miniStat: {
-    padding: spacing.md,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xs,
     alignItems: 'center',
     gap: spacing.xs,
   },
@@ -124,35 +115,6 @@ export default function ProfileScreen() {
     color: colors.accent,
   },
   miniStatLabel: {
-    fontSize: pixelSize(fontSizes.xs),
-    fontFamily: fonts.bold,
-    color: colors.textMuted,
-    letterSpacing: 1,
-  },
-  stageCard: {
-    gap: spacing.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  stageRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-  },
-  stageInfo: {
-    flex: 1,
-    gap: spacing.xs,
-  },
-  stageTitle: {
-    fontSize: pixelSize(fontSizes.lg),
-    fontFamily: fonts.bold,
-    letterSpacing: 2,
-  },
-  stageDescription: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-  },
-  stageNext: {
     fontSize: pixelSize(fontSizes.xs),
     fontFamily: fonts.bold,
     color: colors.textMuted,
@@ -182,9 +144,6 @@ export default function ProfileScreen() {
   }, []);
 
   const level = profile?.level ?? 1;
-  const rank = getRankForLevel(level);
-  const avatarStage = getAvatarStage(level);
-  const nextAvatarStage = getNextAvatarStage(level);
   const equippedHat = equippedSlots?.hat?.item?.sprite_key;
   const equippedOutfit = equippedSlots?.outfit?.item?.sprite_key;
   const equippedAccessory = equippedSlots?.accessory?.item?.sprite_key;
@@ -237,69 +196,23 @@ export default function ProfileScreen() {
                 }
               />
               <Text style={styles.username}>{profile?.username ?? 'Adventurer'}</Text>
-              <Text style={[styles.rankBadge, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>
               <Text style={styles.editHint}>{T.profile_edit_hint}</Text>
             </Pressable>
 
-            {/* Avatar evolution stage */}
-            <PixelFrame borderColor={avatarStage.aura} backgroundColor={colors.surface} contentStyle={styles.stageCard}>
-              <View style={styles.stageRow}>
-                <AvatarDisplay level={level} size="sm" />
-                <View style={styles.stageInfo}>
-                  <Text style={[styles.stageTitle, { color: avatarStage.aura }]}>
-                    {titleLabel(T, avatarStage.title).toUpperCase()}
-                  </Text>
-                  <Text style={styles.stageDescription}>{stageDescription(T, avatarStage.title, avatarStage.description)}</Text>
-                </View>
-              </View>
-              {nextAvatarStage !== null && (
-                <>
-                  <PixelProgress
-                    progress={(level - avatarStage.minLevel) / Math.max(nextAvatarStage.minLevel - avatarStage.minLevel, 1)}
-                    color={nextAvatarStage.aura}
-                    segments={10}
-                    height={6}
-                  />
-                  <Text style={styles.stageNext}>
-                    {T.profile_next_stage.replace('{title}', titleLabel(T, nextAvatarStage.title)).replace('{level}', String(nextAvatarStage.minLevel))}
-                  </Text>
-                </>
-              )}
-            </PixelFrame>
-
-            {/* XP Bar */}
-            <Pressable onPress={() => router.push('/xp-journey')}>
-              <PixelFrame backgroundColor={colors.surface} contentStyle={styles.card}>
-              <XpBar
-                level={level}
-                currentXp={profile?.xp ?? 0}
-                nextLevelXp={xpForNextLevel}
-                progress={xpProgress}
-              />
+            {/* Rank and level, one card that evolves with the rank */}
+            <Pressable onPress={() => router.push('/xp-journey')} accessibilityRole="button">
+              <RankCard level={level} currentXp={profile?.xp ?? 0} nextLevelXp={xpForNextLevel} progress={xpProgress} />
               <Text style={styles.cardHint}>{T.profile_xp_journey_hint}</Text>
-              </PixelFrame>
             </Pressable>
 
-            {/* Stats row */}
+            {/* Gold and duel stats (level and XP are in the rank card) */}
             <View style={styles.statsRow}>
               <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
-                <Text style={styles.miniStatValue}>{profile?.xp ?? 0}</Text>
-                <Text style={styles.miniStatLabel}>{T.profile_stat_xp}</Text>
-              </PixelFrame>
-              <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
-                <Text style={[styles.miniStatValue, { color: colors.xp }]}>{level}</Text>
-                <Text style={styles.miniStatLabel}>{T.profile_stat_level}</Text>
-              </PixelFrame>
-              <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
-                <Text style={[styles.miniStatValue, { color: colors.accent }]}>
+                <Text style={[styles.miniStatValue, { color: colors.accent }]} numberOfLines={1} adjustsFontSizeToFit>
                   {profile?.gold ?? 0}
                 </Text>
-                <Text style={styles.miniStatLabel}>{T.profile_stat_gold}</Text>
+                <Text style={styles.miniStatLabel} numberOfLines={1}>{T.profile_stat_gold}</Text>
               </PixelFrame>
-            </View>
-
-            {/* Duel stats */}
-            <View style={styles.statsRow}>
               <PixelFrame style={styles.miniStatFrame} backgroundColor={colors.surface} contentStyle={styles.miniStat}>
                 <Text style={[styles.miniStatValue, { color: '#4CAF50' }]}>{duelsWon}</Text>
                 <Text style={styles.miniStatLabel}>{T.profile_stat_wins}</Text>

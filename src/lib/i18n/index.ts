@@ -640,12 +640,11 @@ const FR = {
   // Profile screen
   profile_edit_hint: 'Appuie pour modifier →',
   profile_next_stage: 'Prochain : {title} au Niveau {level}',
+  profile_max_rank: 'Rang maximal atteint !',
   profile_xp_journey_hint: 'VOIR MON PARCOURS XP →',
-  profile_stat_xp: 'XP',
-  profile_stat_level: 'NIVEAU',
   profile_stat_gold: 'OR',
-  profile_stat_wins: '⚔️ VICTOIRES',
-  profile_stat_losses: '💀 DÉFAITES',
+  profile_stat_wins: 'VICTOIRES',
+  profile_stat_losses: 'DÉFAITES',
   profile_stat_win_rate: '% VICTOIRES',
   profile_achievements_btn: '🏆 Succès',
   // Shop screen
@@ -1657,12 +1656,11 @@ const EN = {
   // Profile screen
   profile_edit_hint: 'Tap to edit →',
   profile_next_stage: 'Next: {title} at Level {level}',
+  profile_max_rank: 'Highest rank reached!',
   profile_xp_journey_hint: 'VIEW MY XP JOURNEY →',
-  profile_stat_xp: 'XP',
-  profile_stat_level: 'LEVEL',
   profile_stat_gold: 'GOLD',
-  profile_stat_wins: '⚔️ WINS',
-  profile_stat_losses: '💀 LOSSES',
+  profile_stat_wins: 'WINS',
+  profile_stat_losses: 'LOSSES',
   profile_stat_win_rate: 'WIN RATE',
   profile_achievements_btn: '🏆 Achievements',
   // Shop screen
