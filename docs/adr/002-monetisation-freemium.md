@@ -22,7 +22,7 @@ Modèle **Freemium inspiré de Duolingo** :
 - Catalogue boutique : commun/peu commun/rare
 - Publicités : bannière bas de page (Social, Stats, Shop) + interstitiel avant duel + rewarded pour freeze bonus
 
-### Niveau Premium (~4,99 €/mois, ~34,99 €/an)
+### Niveau Premium (5,99 $/mois, 39,99 $/an)
 - 3 freezes stockés max (50g d'achat, moitié prix)
 - 1 duel/jour (cooldown 24h)
 - Historique stats complet
@@ -42,4 +42,4 @@ Modèle **Freemium inspiré de Duolingo** :
 
 ## Tarif Apple
 
-Apple prélève 30% sur les abonnements (15% après la première année, programme Small Business). À 4,99 €/mois brut, le revenu net est ~3,49 €/mois.
+Apple prélève 30% sur les abonnements (15% après la première année, programme Small Business). À 5,99 $/mois brut, le revenu net est ~4,19 $/mois (prix de référence en dollars depuis le 2026-10-02, décision de Battiste ; les prix réels par pays sont ceux réglés dans App Store Connect et la Play Console, l’app affiche toujours ceux du store).

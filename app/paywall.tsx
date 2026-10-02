@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { useT, lang$ } from '../src/lib/i18n';
+import { FALLBACK_PRICES, annualPerMonth, annualSavingsPercent, formatPrice } from '../src/features/monetization/utils/pricing';
 import { openLegalPage } from '../src/lib/legal-links';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -245,12 +246,14 @@ export default function PaywallScreen() {
     (p: any) => p.product.identifier === PRODUCT_ANNUAL,
   );
 
-  // Fallback prices shown before offerings load
-  const monthlyPrice = monthlyPkg?.product.priceString ?? '4,99 €';
-  const annualPrice = annualPkg?.product.priceString ?? '34,99 €';
-  const annualMonthly = annualPkg
-    ? T.paywall_per_month.replace('{price}', `${(annualPkg.product.price / 12).toFixed(2)} €`)
-    : T.paywall_per_month.replace('{price}', '2,92 €');
+  // Store prices (RevenueCat); dollar fallbacks before they load and on the web.
+  const currency = annualPkg?.product.currencyCode ?? monthlyPkg?.product.currencyCode ?? FALLBACK_PRICES.currency;
+  const monthlyAmount = monthlyPkg?.product.price ?? FALLBACK_PRICES.monthly;
+  const annualAmount = annualPkg?.product.price ?? FALLBACK_PRICES.annual;
+  const monthlyPrice = monthlyPkg?.product.priceString ?? formatPrice(FALLBACK_PRICES.monthly, currency, lang);
+  const annualPrice = annualPkg?.product.priceString ?? formatPrice(FALLBACK_PRICES.annual, currency, lang);
+  const annualMonthly = T.paywall_per_month.replace('{price}', formatPrice(annualPerMonth(annualAmount), currency, lang));
+  const annualSavings = annualSavingsPercent(monthlyAmount, annualAmount);
 
   const selectedId = selected === 'monthly' ? PRODUCT_MONTHLY : PRODUCT_ANNUAL;
   const hasTrial = trialProducts.length > 0;
@@ -373,7 +376,7 @@ export default function PaywallScreen() {
             </View>
             <Text style={styles.planPeriod}>{T.paywall_plan_annual}</Text>
             <Text style={styles.planPrice}>{annualPrice}</Text>
-            <Text style={styles.planSub}>{T.paywall_plan_annual_sub.replace('{monthly}', annualMonthly)}</Text>
+            <Text style={styles.planSub}>{T.paywall_plan_annual_sub.replace('{monthly}', annualMonthly).replace('{pct}', String(annualSavings))}</Text>
           </Pressable>
 
           {/* Monthly */}
