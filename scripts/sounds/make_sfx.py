@@ -63,14 +63,12 @@ SOUNDS = {
     'reward-coins': (render([(0.00, 0.07, B5, 'square', 0.5), (0.05, 0.16, E6, 'square', 0.5),
                              (0.12, 0.07, B5, 'square', 0.4), (0.17, 0.16, E6, 'square', 0.4),
                              (0.24, 0.07, B5, 'square', 0.35), (0.29, 0.22, E6, 'square', 0.35)], 0.55)),
-    # Level up: a run that only climbs, a "ta-da" and a held high C (a win
-    # ends high: no step back down at the end).
-    'level-up': (render([(0.00, 0.08, C5, 'pulse', 0.5), (0.07, 0.08, E5, 'pulse', 0.5),
-                         (0.14, 0.08, G5, 'pulse', 0.5), (0.21, 0.08, C6, 'pulse', 0.55),
-                         (0.28, 0.08, E6, 'pulse', 0.55), (0.40, 0.09, G6, 'pulse', 0.55),
-                         (0.52, 0.75, C7, 'pulse', 0.6), (0.52, 0.75, G6, 'triangle', 0.35),
-                         (0.52, 0.75, E6, 'triangle', 0.3), (0.62, 0.06, E7, 'sine', 0.12),
-                         (0.70, 0.06, G7, 'sine', 0.12), (0.78, 0.10, C8, 'sine', 0.12)], 1.35,
+    # Level up: a short "ta-da" landing on a held high C, with a sparkle
+    # (Battiste kept only this part: a win ends high).
+    'level-up': (render([(0.00, 0.09, G6, 'pulse', 0.55),
+                         (0.12, 0.75, C7, 'pulse', 0.6), (0.12, 0.75, G6, 'triangle', 0.35),
+                         (0.12, 0.75, E6, 'triangle', 0.3), (0.22, 0.06, E7, 'sine', 0.12),
+                         (0.30, 0.06, G7, 'sine', 0.12), (0.38, 0.10, C8, 'sine', 0.12)], 0.95,
                         vibrato=0.5)),
 }
 
