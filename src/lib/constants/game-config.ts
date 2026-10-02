@@ -161,3 +161,53 @@ export function suggestCoopTarget(goal: CoopGoal, players: number, days: number)
   const validations = players * days;
   return clampCoopTarget(goal, goal === 'xp' ? validations * XP_CONFIG.BASE_XP_PER_COMPLETION : validations);
 }
+
+/**
+ * Equipment in combat (ADR 017): each equipped item gives points by rarity to
+ * one stat. Duels are simulated in the app with GEAR.DUEL; arena fights are
+ * resolved by the server (public.gear_stats, arena_gear_attack/defense) with
+ * GEAR.ARENA — change both together. Kept light so consistency stays what wins.
+ */
+export const GEAR = {
+  RARITY_POINTS: { common: 1, uncommon: 2, rare: 3, epic: 4, legendary: 5 } as Record<string, number>,
+  STAT_BY_CATEGORY: { avatar_accessory: 'attack', avatar_hat: 'defense', avatar_outfit: 'hp' } as Record<string, GearStat>,
+  DUEL: { DAMAGE_PCT_PER_ATTACK: 3, BLOCK_PCT_PER_DEFENSE: 3, HP_PER_POINT: 4, BASE_HP: 100 },
+  ARENA: { ATTACK_PER_POINT: 4, DEFENSE_PER_POINT: 2 },
+} as const;
+
+export type GearStat = 'attack' | 'defense' | 'hp';
+export interface GearStats { attack: number; defense: number; hp: number }
+
+/** The stat an item improves and by how many points, or null for cosmetics. */
+export function itemGearBonus(category: string, rarity: string): { stat: GearStat; points: number } | null {
+  const stat = GEAR.STAT_BY_CATEGORY[category];
+  const points = GEAR.RARITY_POINTS[rarity] ?? 0;
+  return stat && points > 0 ? { stat, points } : null;
+}
+
+/** Points per stat of a set of equipped items. */
+export function gearStats(items: { category: string; rarity: string }[]): GearStats {
+  const out: GearStats = { attack: 0, defense: 0, hp: 0 };
+  for (const i of items) {
+    const bonus = itemGearBonus(i.category, i.rarity);
+    if (bonus) out[bonus.stat] += bonus.points;
+  }
+  return out;
+}
+
+/** What the equipment changes in a duel. */
+export function duelGearEffects(stats: GearStats): { damageMult: number; damageTakenMult: number; maxHp: number } {
+  return {
+    damageMult: 1 + (GEAR.DUEL.DAMAGE_PCT_PER_ATTACK * stats.attack) / 100,
+    damageTakenMult: 1 - (GEAR.DUEL.BLOCK_PCT_PER_DEFENSE * stats.defense) / 100,
+    maxHp: GEAR.DUEL.BASE_HP + GEAR.DUEL.HP_PER_POINT * stats.hp,
+  };
+}
+
+/** Damage of a hit once both fighters' equipment is applied (at least 1). */
+export function applyGearToDamage(damage: number, attacker: GearStats, defender: GearStats): number {
+  if (damage <= 0) return damage;
+  const a = duelGearEffects(attacker);
+  const d = duelGearEffects(defender);
+  return Math.max(1, Math.round(damage * a.damageMult * d.damageTakenMult));
+}

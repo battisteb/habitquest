@@ -25,7 +25,9 @@ import { getAvatarStage } from '../../src/features/avatar/utils/avatar-evolution
 import { PixelAvatar, type PixelAvatarProps } from '../../src/features/avatar/renderer/pixel-avatar';
 import { PixelFrame } from '../../src/ui/components/pixel-frame';
 import { avatarConfigStore$ } from '../../src/features/avatar/stores/avatar-config-store';
-import { shopStore$, fetchEquipmentOf } from '../../src/features/shop/stores/shop-store';
+import { shopStore$, fetchEquipmentOf, fetchGearStatsOf } from '../../src/features/shop/stores/shop-store';
+import { applyGearToDamage, duelGearEffects, type GearStats } from '../../src/lib/constants/game-config';
+import { gearStatsLabel } from '../../src/features/shop/utils/gear-label';
 import { supabase } from '../../src/lib/supabase/client';
 import { useT } from '../../src/lib/i18n';
 import { attackName } from '../../src/lib/i18n/labels';
@@ -349,6 +351,40 @@ export default function BattleScreen() {
   useEffect(() => { meRef.current = me; }, [me]);
   useEffect(() => { oppRef.current = opp; }, [opp]);
 
+  // Equipment in combat (ADR 017): more HP before the first blow, then
+  // damage dealt and taken. Both read from the server, like the arena does.
+  const NO_GEAR: GearStats = { attack: 0, defense: 0, hp: 0 };
+  const myGearRef = useRef<GearStats>(NO_GEAR);
+  const oppGearRef = useRef<GearStats>(NO_GEAR);
+  useEffect(() => {
+    const myId = authStore$.user.get()?.id;
+    const oppId = params.opponentId;
+    let cancelled = false;
+    (async () => {
+      const [mine, theirs] = await Promise.all([
+        myId ? fetchGearStatsOf(myId) : Promise.resolve(NO_GEAR),
+        oppId ? fetchGearStatsOf(oppId) : Promise.resolve(NO_GEAR),
+      ]);
+      if (cancelled) return;
+      myGearRef.current = mine;
+      oppGearRef.current = theirs;
+      const untouched = (p: LivePlayer) => p.hp === p.maxHp && p.maxHp === 100;
+      const withHp = (p: LivePlayer, g: GearStats) => {
+        const maxHp = duelGearEffects(g).maxHp;
+        return untouched(p) ? { ...p, hp: maxHp, maxHp } : p;
+      };
+      setMe((p) => withHp(p, mine));
+      setOpp((p) => withHp(p, theirs));
+      for (const [who, g] of [[meRef.current.name, mine], [oppRef.current.name, theirs]] as const) {
+        const stats = gearStatsLabel(g);
+        if (stats) pushLog(T.duels_gear_line.replace('{name}', who).replace('{stats}', stats), 'info');
+      }
+    })().catch(() => {
+      // Offline: fight without equipment bonuses.
+    });
+    return () => { cancelled = true; };
+  }, [params.opponentId]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Duel music: start on mount, stop on unmount
   useEffect(() => {
     void playMusic('duel');
@@ -390,6 +426,16 @@ export default function BattleScreen() {
       if (defender.hp <= 0) return;
 
       let result = resolveAttack(atk, attacker.level - defender.level);
+      // Equipment of both fighters (before a replay's script, which then still ends right).
+      if (result.hit && result.damage > 0) {
+        const damage = applyGearToDamage(
+          result.damage,
+          attackerId === ME_ID ? myGearRef.current : oppGearRef.current,
+          defenderId === ME_ID ? myGearRef.current : oppGearRef.current,
+        );
+        const bonus = result.bonus ? Math.round((result.bonus * damage) / result.damage) : result.bonus;
+        result = { ...result, damage, bonus };
+      }
       // A replay ends the way the server decided.
       const attackerWins = (attackerId === ME_ID) === (replay === 'win');
       if (replay) result = rigReplayResult(result, attackerWins, defender.hp, round, atk);
