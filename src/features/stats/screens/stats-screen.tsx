@@ -24,12 +24,11 @@ import {
   dayKey,
   dayRates,
   weekOverWeek,
-  weeklyTrend,
   weekStart,
   yearGrid,
 } from '../utils/stats-math';
 import { YearPixels, YearLegend } from '../components/year-pixels';
-import { WeekBars, TrendBlocks, Insight } from '../components/stats-charts';
+import { WeekBars, Insight } from '../components/stats-charts';
 import { ShareCard } from '../components/share-card';
 import { shareViewAsImage } from '../utils/share-image';
 
@@ -73,10 +72,6 @@ export default function StatsScreen() {
     const visible = (d: { date: string }) => !lockedBefore || d.date >= lockedBefore;
     const last7 = all.slice(-7);
     const last30 = all.slice(-30);
-    const trend = weeklyTrend(allMap, today);
-    const trendLocked = lockedBefore
-      ? trend.filter((_, i) => dayKey(addDays(weekStart(today), -7 * (trend.length - 1 - i) + 6)) < lockedBefore).length
-      : 0;
     return {
       weeks: yearGrid(filteredMap, today),
       last7,
@@ -84,8 +79,6 @@ export default function StatsScreen() {
       rate30: averageRate(last30),
       delta: weekOverWeek(allMap, today),
       best: bestWeekday(all.filter(visible).slice(-84)),
-      trend,
-      trendLocked,
       perfectDays: filtered.filter((d) => visible(d) && d.rate === 1).length,
     };
   }, [data.habits, data.completions, habitFilter, lockedBefore, today]);
@@ -201,12 +194,6 @@ export default function StatsScreen() {
               value={computed.best === null ? '–' : T[WEEKDAY_KEYS[computed.best]]}
               label={T.stats_best_day}
             />
-          </View>
-
-          {/* 12-week trend */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>{T.stats_trend_title}</Text>
-            <TrendBlocks weeks={computed.trend} locked={computed.trendLocked} />
           </View>
 
           <CategoryBreakdown />

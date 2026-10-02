@@ -44,43 +44,6 @@ export function WeekBars({ days, today }: { days: DayRate[]; today: string }) {
   );
 }
 
-/** 12 weeks as columns of 10 pixel blocks (one block = 10 %), oldest left. */
-export function TrendBlocks({ weeks, locked }: { weeks: (number | null)[]; locked: number }) {
-  const T = useT();
-  const { themeKey } = useTheme();
-  const styles = useMemo(createStyles, [themeKey]);
-  return (
-    <View>
-      <View style={styles.trend} testID="stats-trend">
-        {weeks.map((r, i) => {
-          const isLocked = i < locked;
-          const filled = r === null || isLocked ? 0 : Math.round(r * 10);
-          return (
-            <View key={i} style={styles.trendCol}>
-              {Array.from({ length: 10 }, (_, b) => 9 - b).map((b) => (
-                <View
-                  key={b}
-                  style={[
-                    styles.block,
-                    {
-                      backgroundColor: isLocked ? LOCKED_COLOR : b < filled ? levelColor(r) : EMPTY_COLOR,
-                      opacity: i === weeks.length - 1 || isLocked ? 1 : 0.85,
-                    },
-                  ]}
-                />
-              ))}
-            </View>
-          );
-        })}
-      </View>
-      <View style={styles.trendLabels}>
-        <Text style={styles.trendLabel}>{T.stats_trend_12w_ago}</Text>
-        <Text style={styles.trendLabel}>{T.stats_trend_this_week}</Text>
-      </View>
-    </View>
-  );
-}
-
 /** Small highlighted fact: "+12 pts vs last week", "Best day: Tuesday". */
 export function Insight({ icon, value, label, tone = 'neutral' }: { icon: string; value: string; label: string; tone?: 'good' | 'bad' | 'neutral' }) {
   const { themeKey } = useTheme();
