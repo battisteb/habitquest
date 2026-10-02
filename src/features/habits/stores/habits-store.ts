@@ -15,7 +15,7 @@ import { playSfx } from '../../../lib/audio/sound-service';
 import { refreshProfile } from '../../gamification/stores/profile-store';
 import type { HabitContent } from '../types/habit-content';
 import type { Database, Json } from '../../../lib/supabase/types';
-import { reportBrokenStreaks } from './broken-streak-store';
+import { reportBrokenStreaks, clearBrokenStreakForHabit } from './broken-streak-store';
 import { resetOnSignOut } from '../../../lib/storage/user-data';
 import { showDialog } from '../../../lib/app-alert';
 import { getStrings } from '../../../lib/i18n';
@@ -390,3 +390,31 @@ export async function uncompleteHabit(habitId: string): Promise<UncompleteHabitR
   fetchChallenges().catch(() => {});
   return result;
 }
+
+interface RepairStreakResult {
+  success: boolean;
+  reason?: 'not_repairable' | 'not_enough_gold' | 'ad_used_today' | 'premium_no_ads';
+  cost?: number;
+  current_streak?: number;
+}
+
+/**
+ * Puts back a streak broken less than 48 hours ago (ADR 021), for gold or,
+ * for free players, after a rewarded ad. Resolves with the server's answer.
+ */
+export async function repairStreak(habitId: string, withAd = false): Promise<RepairStreakResult> {
+  const { data, error } = await supabase.rpc('repair_streak', { p_habit_id: habitId, p_with_ad: withAd });
+  if (error) throw error;
+  const result = data as unknown as RepairStreakResult;
+  if (result.success) {
+    const streak = habitsStore$.streaks.get()[habitId];
+    if (streak && result.current_streak !== undefined) {
+      habitsStore$.streaks[habitId].set({ ...streak, current_count: result.current_streak });
+    }
+    clearBrokenStreakForHabit(habitId);
+    void playSfx('streak_milestone', 0.7);
+    refreshProfile();
+  }
+  return result;
+}
+

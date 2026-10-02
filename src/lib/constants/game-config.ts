@@ -15,6 +15,22 @@ export const COMEBACK = {
 } as const;
 
 /**
+ * A broken streak can be repaired for 48 hours (ADR 021): 3 gold per streak
+ * day, 15 to 150, or one rewarded ad a day for free players. Mirrored in SQL
+ * by public.streak_repair_cost.
+ */
+export const STREAK_REPAIR = {
+  WINDOW_HOURS: 48,
+  GOLD_PER_DAY: 3,
+  MIN_GOLD: 15,
+  MAX_GOLD: 150,
+} as const;
+
+export function streakRepairCost(streakCount: number): number {
+  return Math.min(Math.max(STREAK_REPAIR.GOLD_PER_DAY * streakCount, STREAK_REPAIR.MIN_GOLD), STREAK_REPAIR.MAX_GOLD);
+}
+
+/**
  * XP needed for levels 1 to 11 (level 1 = 0 XP). Players start at level 1.
  * Past the table, one level every LEVEL_XP_BEYOND_TABLE XP.
  * Mirrored in SQL by public.level_for_xp — change both together (ADR 010).
