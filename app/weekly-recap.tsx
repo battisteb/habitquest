@@ -14,6 +14,7 @@ import { authStore$ } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
 import { useT } from '../src/lib/i18n';
+import { localDateKey } from '../src/lib/local-date';
 
 interface DayData {
   label: string;
@@ -58,7 +59,7 @@ function getWeekDates(weeksAgo = 0): { start: Date; end: Date; days: Date[] } {
 }
 
 function formatDateKey(d: Date): string {
-  return d.toISOString().split('T')[0];
+  return localDateKey(d);
 }
 
 function tpl(s: string, vars: Record<string, string | number>): string {
@@ -142,7 +143,7 @@ export default function WeeklyRecapScreen() {
       const perHabit = new Map<string, number>(habits.map((h) => [h.id, 0]));
 
       completions?.forEach((c) => {
-        const key = c.completed_at.split('T')[0];
+        const key = localDateKey(new Date(c.completed_at));
         const entry = dayMap.get(key);
         if (entry) {
           entry.completions++;

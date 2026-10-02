@@ -4,6 +4,7 @@ import { use$ } from '@legendapp/state/react';
 import { lang$ } from '../../../lib/i18n';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useMonthlyCompletions } from '../hooks/use-monthly-completions';
+import { localDateKey } from '../../../lib/local-date';
 
 const MONTH_NAMES_FR = [
   'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
@@ -114,7 +115,7 @@ export function MonthlyHeatmap({ habitId }: MonthlyHeatmapProps = {}) {
     return result;
   }, [year, month]);
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateKey();
 
   if (isLoading) return null;
 

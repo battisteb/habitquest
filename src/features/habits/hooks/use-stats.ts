@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
+import { localDateKey } from '../../../lib/local-date';
 
 interface DayCompletion {
   date: string;
@@ -77,12 +78,12 @@ export function useStats(): HabitStats {
       for (let i = 0; i < 7; i++) {
         const d = new Date();
         d.setDate(d.getDate() - (6 - i));
-        const key = d.toISOString().split('T')[0];
+        const key = localDateKey(d);
         dayMap.set(key, 0);
       }
 
       completions?.forEach((c) => {
-        const key = c.completed_at.split('T')[0];
+        const key = localDateKey(new Date(c.completed_at));
         dayMap.set(key, (dayMap.get(key) ?? 0) + 1);
       });
 
@@ -106,12 +107,12 @@ export function useStats(): HabitStats {
       for (let i = 0; i < 30; i++) {
         const d = new Date();
         d.setDate(d.getDate() - (29 - i));
-        const key = d.toISOString().split('T')[0];
+        const key = localDateKey(d);
         monthMap.set(key, 0);
       }
 
       monthlyData?.forEach((c) => {
-        const key = c.completed_at.split('T')[0];
+        const key = localDateKey(new Date(c.completed_at));
         monthMap.set(key, (monthMap.get(key) ?? 0) + 1);
       });
 
