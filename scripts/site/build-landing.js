@@ -153,6 +153,7 @@ function page(t) {
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${a}/site.css">
+<script src="${a}/site.js" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
