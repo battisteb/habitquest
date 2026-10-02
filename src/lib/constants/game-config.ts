@@ -240,3 +240,21 @@ export function newlyUnlocked(from: number, to: number): UnlockFeature[] {
     .filter((f) => from < UNLOCKS[f] && to >= UNLOCKS[f])
     .sort((a, b) => UNLOCKS[a] - UNLOCKS[b]);
 }
+
+/**
+ * Weekly boss (I9): every validated quest of the week hits it; its HP is set
+ * so that about 80 % of the week's planned quests defeat it. Resolved by the
+ * server (public.refresh_weekly_boss) — change both together.
+ */
+export const BOSS = {
+  HIT: 10,
+  HP_PER_PLANNED: 8,
+  MIN_PLANNED: 5,
+  REWARD_XP: 50,
+  REWARD_GOLD: 25,
+} as const;
+
+/** Validations still needed to defeat a boss. */
+export function hitsToDefeat(hpMax: number, damage: number): number {
+  return Math.max(0, Math.ceil((hpMax - damage) / BOSS.HIT));
+}
