@@ -11,7 +11,7 @@ alt: /support.fr
 - **In the app**: Settings → 💬 Support. Pick a type (problem, idea, other) and write your message; you will see when we have read it and when it is handled.
 - **By e-mail**: [habitquest.application@gmail.com](mailto:habitquest.application@gmail.com). Tell us your username, your phone model and what you did just before the problem.
 
-We read every message and usually answer within a few days.
+We read every message and usually answer within a few days. **Premium members** are answered first, within 48 hours.
 
 ## Frequently asked questions
 
