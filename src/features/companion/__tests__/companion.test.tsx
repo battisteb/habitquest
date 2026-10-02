@@ -1,7 +1,7 @@
 import { render, fireEvent } from '@testing-library/react-native';
 import { Companion } from '../components/companion';
 import { COMPANION_GRID, COMPANION_PALETTES, COMPANION_SPRITES } from '../sprites';
-import { bestCurrentStreak, companionStage, nextStageStreak } from '../utils/companion-stage';
+import { COMPANION_ASSIST, bestCurrentStreak, companionStage, nextStageStreak } from '../utils/companion-stage';
 
 describe('companion stages', () => {
   it('grows with the streak', () => {
@@ -24,6 +24,13 @@ describe('companion stages', () => {
   it('follows the best current streak', () => {
     expect(bestCurrentStreak([{ current_count: 4 }, { current_count: 11 }, { current_count: null }])).toBe(11);
     expect(bestCurrentStreak([])).toBe(0);
+  });
+
+  it('helps a little in duels, growing with the stage but below one normal attack', () => {
+    const values = ['egg', 'hatchling', 'young', 'adult', 'legend'].map((st) => COMPANION_ASSIST[st as keyof typeof COMPANION_ASSIST]);
+    expect(values[0]).toBe(0);
+    expect([...values].sort((a, b) => a - b)).toEqual(values);
+    expect(Math.max(...values)).toBeLessThan(15);
   });
 
   it('has a complete 16x16 sprite with a color for every pixel', () => {
