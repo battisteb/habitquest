@@ -102,8 +102,10 @@ async function renderAnimated(page, spec, dur, out, enc) {
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
-// Long enough to be seen (Battiste: the 0.5 s dissolves went unnoticed).
-const TRANSITION = 0.8;
+// Short, so the message of each scene stays on screen (Battiste, 2026-10-02).
+const TRANSITION = 0.45;
+// Largest pixel of the pixel transition, in px of the 1080×1920 frame.
+const PIXEL_MAX = 18;
 
 /**
  * 3D card flip between two segments: the last image of `fromVideo` turns over around the vertical
@@ -137,8 +139,51 @@ async function renderFlip(page, fromVideo, toVideo, bgFile, out, enc) {
   fs.rmSync(dir, { recursive: true, force: true });
   await page.setViewport({ width: 1080, height: 1920 });
 }
-// 'flip' is rendered in 3D by renderFlip; the others are ffmpeg xfade transitions.
-const XFADE = { flip: 'flip', pixel: 'pixelize', slide: 'slideleft', up: 'slideup', zoom: 'zoomin', fade: 'fade', circle: 'circleopen' };
+/**
+ * Pixel transition between two segments: the last image of `fromVideo` breaks into small pixels
+ * (up to PIXEL_MAX) and rebuilds as the first image of `toVideo`. Renders TRANSITION seconds.
+ */
+async function renderPixel(page, fromVideo, toVideo, out, enc) {
+  await page.setViewport({ width: 1080, height: 1920 });
+  const a = `${out}-a.png`;
+  const b = `${out}-b.png`;
+  run(['-sseof', '-0.05', '-i', fromVideo, '-frames:v', '1', '-update', '1', a]);
+  run(['-i', toVideo, '-frames:v', '1', b]);
+  const url = (f) => pathToFileURL(f).href;
+  await page.setContent(`<html><body style="margin:0;width:1080px;height:1920px;overflow:hidden;background:#000">
+    <canvas id="c" width="1080" height="1920" style="display:block"></canvas>
+    <img id="a" src="${url(a)}" style="display:none"><img id="b" src="${url(b)}" style="display:none"></body></html>`,
+  { waitUntil: 'load' });
+  const dir = `${out}.frames`;
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+  const n = Math.round(TRANSITION * FPS);
+  for (let f = 0; f < n; f++) {
+    const t = (f + 1) / (n + 1);
+    await page.evaluate((t, max) => {
+      const c = document.getElementById('c');
+      const ctx = c.getContext('2d');
+      // Pixels grow then shrink; the image switches in the middle, hidden by the biggest pixels.
+      const block = Math.max(1, Math.round(max * Math.sin(Math.PI * t)));
+      const img = document.getElementById(t < 0.5 ? 'a' : 'b');
+      const w = Math.ceil(c.width / block);
+      const h = Math.ceil(c.height / block);
+      const small = document.createElement('canvas');
+      small.width = w; small.height = h;
+      small.getContext('2d').drawImage(img, 0, 0, w, h);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(small, 0, 0, w * block, h * block);
+    }, t, PIXEL_MAX);
+    await page.screenshot({ path: path.join(dir, `${String(f).padStart(4, '0')}.jpg`), type: 'jpeg', quality: 92 });
+  }
+  run(['-framerate', String(FPS), '-i', path.join(dir, '%04d.jpg'), ...enc]);
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// 'flip' and 'pixel' are rendered frame by frame and inserted between the two segments (nothing
+// of either scene is cut); the others are ffmpeg xfade transitions overlapping them.
+const XFADE = { flip: 'flip', pixel: 'pixel', slide: 'slideleft', up: 'slideup', zoom: 'zoomin', fade: 'fade', circle: 'circleopen' };
+const INSERTED = new Set(['flip', 'pixel']);
 
 /** Transition into segment i (null = hard cut). */
 function transitionInto(reel, i) {
@@ -149,10 +194,10 @@ function transitionInto(reel, i) {
   if (seg.transition) return XFADE[seg.transition] || XFADE.fade;
   // Two pieces of the same recording: a soft dissolve, never a cut.
   if (seg.src && seg.src === prev.src && seg.type === prev.type) return XFADE.fade;
-  // From one phone screen to another: the phone turns over.
-  if ((seg.type === 'clip' || seg.type === 'still') && (prev.type === 'clip' || prev.type === 'still')) return XFADE.flip;
-  // Otherwise the scene breaks into big pixels and rebuilds as the next one
-  // (pixel art direction; Battiste preferred it to a side swipe).
+  // As soon as an app screen is involved, it turns over (Battiste's favourite).
+  const screen = (x) => x.type === 'clip' || x.type === 'still';
+  if (screen(seg) || screen(prev)) return XFADE.flip;
+  // Between two title scenes: small pixels.
   return XFADE.pixel;
 }
 
@@ -162,8 +207,8 @@ function timeline(reel) {
   let t = 0;
   reel.segments.forEach((seg, i) => {
     const kind = i > 0 ? transitionInto(reel, i) : null;
-    // A flip is inserted between the two segments; the other transitions overlap them.
-    if (kind === 'flip') t += TRANSITION;
+    // A flip or a pixel transition is inserted between the two segments; the others overlap them.
+    if (INSERTED.has(kind)) t += TRANSITION;
     else if (kind) t -= TRANSITION;
     starts.push(t);
     t += seg.dur;
@@ -187,7 +232,7 @@ function joinSegments(reel, parts, flips, out) {
   for (let i = 1; i < parts.length; i++) {
     const kind = transitionInto(reel, i);
     const label = `[v${i}]`;
-    if (kind === 'flip') {
+    if (INSERTED.has(kind)) {
       steps.push(`${prev}[f${i}][n${i}]concat=n=3:v=1:a=0${label}`);
       length += TRANSITION + reel.segments[i].dur;
     } else {
@@ -261,7 +306,9 @@ async function roundedMask(page, file) {
           grid: hero.composeHero({ skin: hero.DEFAULTS.skin, hair: hero.DEFAULTS.hair, eye: hero.DEFAULTS.eye, ...l }),
         }));
         const scene = hero.heroScene(seg.theme || 'default', 36);
-        await renderAnimated(page, { layout: 'hero', ...seg, looks, scene, smooth: !reel.punchy }, seg.dur, out, enc);
+        // After a flip or pixel transition the hero is already there (no fade from an empty frame).
+        const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
+        await renderAnimated(page, { layout: 'hero', ...seg, looks, scene, smooth: !reel.punchy, entered }, seg.dur, out, enc);
       } else if (seg.type === 'full') {
         const overlay = path.join(work, `${name}-${i}-full.png`);
         await renderLayer(page, { layout: 'full', ...seg }, overlay);
@@ -335,10 +382,12 @@ async function roundedMask(page, file) {
     const joined = path.join(work, `${name}-joined.mp4`);
     const flips = [];
     for (let i = 1; i < parts.length; i++) {
-      if (transitionInto(reel, i) !== 'flip') continue;
-      const flipOut = path.join(work, `${name}-flip-${i}.mp4`);
-      await renderFlip(page, parts[i - 1], parts[i], bg, flipOut,
-        ['-r', String(FPS), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', flipOut]);
+      const kind = transitionInto(reel, i);
+      if (!INSERTED.has(kind)) continue;
+      const flipOut = path.join(work, `${name}-${kind}-${i}.mp4`);
+      const enc = ['-r', String(FPS), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', flipOut];
+      if (kind === 'flip') await renderFlip(page, parts[i - 1], parts[i], bg, flipOut, enc);
+      else await renderPixel(page, parts[i - 1], parts[i], flipOut, enc);
       flips[i] = flipOut;
     }
     joinSegments(reel, parts, flips, joined);

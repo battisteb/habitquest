@@ -173,7 +173,7 @@
       window.frame = (t) => {
         ctx.clearRect(0, 0, 1080, 1920);
         root.querySelector('.grid').style.transform = `translate(${(t * 40) % 60}px, ${(t * 60) % 60}px)`;
-        const pop = s.smooth ? ease(Math.min(t / 0.5, 1)) : ease(t / 0.3);
+        const pop = s.entered ? 1 : s.smooth ? ease(Math.min(t / 0.5, 1)) : ease(t / 0.3);
         const grow = s.smooth ? 1 : 0.6 + 0.4 * back(t / 0.35);
         ctx.save();
         ctx.translate(540, stage.y + stage.h / 2);
