@@ -143,3 +143,20 @@ a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js-reveal .reveal { opacity: 1; transform: none; }
 }
+
+/* Pip, the mascot, next to the hero phone: bounces and cycles through its mood colours. */
+.hero-art { position: relative; justify-self: center; }
+.hero .hero-art .phone { max-width: 300px; }
+.pip { position: absolute; left: -190px; bottom: 40px; display: grid; justify-items: center; gap: 8px; }
+.pip-says { order: -1; max-width: 170px; background: var(--text); color: var(--bg); font-size: 13px; line-height: 1.35; font-weight: 600; padding: 8px 10px; border: 3px solid #000; box-shadow: 4px 4px 0 #000; }
+.pip-sprite { position: relative; width: 96px; height: 96px; animation: pip-hop 1.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.pip-sprite img { position: absolute; inset: 0; image-rendering: pixelated; opacity: 0; animation: pip-mood 12s steps(1, end) infinite; }
+.pip-sprite img:nth-child(1) { animation-delay: 0s; } .pip-sprite img:nth-child(2) { animation-delay: 2s; }
+.pip-sprite img:nth-child(3) { animation-delay: 4s; } .pip-sprite img:nth-child(4) { animation-delay: 6s; }
+.pip-sprite img:nth-child(5) { animation-delay: 8s; } .pip-sprite img:nth-child(6) { animation-delay: 10s; }
+@keyframes pip-mood { 0% { opacity: 1; } 16.66% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes pip-hop { 0%, 100% { transform: scale(1, 1); } 30% { transform: scale(1.08, .9); } 60% { transform: scale(.94, 1.08) translateY(-8px); } }
+.pip:hover .pip-sprite { animation-duration: .6s; }
+@media (max-width: 1100px) { .pip { position: static; grid-auto-flow: column; align-items: end; justify-content: center; margin-top: 22px; } .pip-says { order: 1; } }
+@media (max-width: 880px) { .pip-says { max-width: 190px; font-size: 12px; } .pip-sprite { width: 72px; height: 72px; } }
+@media (prefers-reduced-motion: reduce) { .pip-sprite img:first-child { opacity: 1; } }

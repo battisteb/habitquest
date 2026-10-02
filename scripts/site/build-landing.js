@@ -29,6 +29,7 @@ const T = {
     nav: { features: 'Features', faq: 'FAQ', support: 'Support', other: 'FR', otherHref: 'fr/' },
     badge: 'HABIT TRACKER RPG',
     h1: 'Turn your habits<br>into <em>quests</em>',
+    pipSays: 'Hi, I’m Pip! I change colour with your day.',
     lead: 'Complete your daily quests, keep your streaks alive, earn XP and gold, and level up a pixel hero. Then take on your friends.',
     soon: 'Coming soon',
     web: 'Or play now in your browser',
@@ -77,6 +78,7 @@ const T = {
     nav: { features: 'Fonctionnalités', faq: 'FAQ', support: 'Aide', other: 'EN', otherHref: '../' },
     badge: 'HABIT TRACKER RPG',
     h1: 'Tes habitudes<br>deviennent des <em>quêtes</em>',
+    pipSays: 'Salut, moi c’est Pip ! Je change de couleur selon ta journée.',
     lead: 'Valide tes quêtes du jour, garde tes séries, gagne de l\'XP et de l\'or, et fais évoluer ton héros pixel. Puis défie tes amis.',
     soon: 'Bientôt',
     web: 'Ou joue dès maintenant dans ton navigateur',
@@ -173,7 +175,13 @@ function page(t) {
     ${storeBadges(t)}
     <p class="web"><a href="${WEB_APP}">${t.web} →</a></p>
   </div>
-  <div class="phone"><img src="${a}/screens/today.png" alt="" width="390" height="844"></div>
+  <div class="hero-art">
+    <div class="phone"><img src="${a}/screens/today.png" alt="" width="390" height="844"></div>
+    <div class="pip" aria-label="Pip">
+      <p class="pip-says">${t.pipSays}</p>
+      <div class="pip-sprite">${['vert', 'orange', 'or', 'bleu', 'violet', 'rose'].map((m) => `<img src="${a}/pip/pip-${m}.png" alt="" width="96" height="96">`).join('')}</div>
+    </div>
+  </div>
 </div></section>
 
 <section id="features"><div class="wrap">
