@@ -68,3 +68,6 @@ marketing/exports/
 
 # Generated audio previews (marketing/audio/chiptune.py)
 marketing/audio/out/
+
+# Python caches (scripts/sprites)
+__pycache__/

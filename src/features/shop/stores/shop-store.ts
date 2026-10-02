@@ -10,9 +10,20 @@ import { resetOnSignOut } from '../../../lib/storage/user-data';
 
 type ShopItem = Database['public']['Tables']['shop_items']['Row'];
 
+/** Premium item of the month (claim_monthly_item): what the shop banner shows. */
+export interface MonthlyItemState {
+  item: ShopItem | null;
+  month: string | null;
+  /** Owned by the player (received this month or before). */
+  owned: boolean;
+  /** Just received on this visit: the shop says so once. */
+  justGranted: boolean;
+}
+
 interface ShopState {
   items: ShopItem[];
   ownedItemIds: string[];
+  monthly: MonthlyItemState;
   equippedSlots: Record<string, { itemId: string; item?: ShopItem }>;
   isLoading: boolean;
   activeCategory: string;
@@ -21,6 +32,7 @@ interface ShopState {
 const initialState = (): ShopState => ({
   items: [],
   ownedItemIds: [] as string[],
+  monthly: { item: null, month: null, owned: false, justGranted: false },
   equippedSlots: {},
   isLoading: false,
   activeCategory: 'avatar_hat',
@@ -43,14 +55,9 @@ export async function fetchShop() {
 
   shopStore$.isLoading.set(true);
   try {
-    // Fetch all available items
-    const { data: items } = await supabase
-      .from('shop_items')
-      .select('*')
-      .eq('is_available', true)
-      .order('price_gold', { ascending: true });
-
-    shopStore$.items.set(items ?? []);
+    // Premium players receive the item of the month (server-side, once).
+    const { data: claim } = await supabase.rpc('claim_monthly_item');
+    const monthly = (claim ?? null) as { granted?: boolean; reason?: string; item_id?: string; month?: string } | null;
 
     // Fetch user's purchases
     const { data: purchases } = await supabase
@@ -60,6 +67,28 @@ export async function fetchShop() {
 
     const ownedIds = (purchases ?? []).map((p) => p.item_id);
     shopStore$.ownedItemIds.set(ownedIds);
+
+    // Items for sale, plus owned items that are not sold (items of the month).
+    const notSold = ownedIds.filter(Boolean);
+    const query = supabase.from('shop_items').select('*');
+    const { data: items } = await (notSold.length
+      ? query.or(`is_available.eq.true,id.in.(${notSold.join(',')})`)
+      : query.eq('is_available', true)
+    ).order('price_gold', { ascending: true });
+
+    shopStore$.items.set(items ?? []);
+
+    let monthlyItem = (items ?? []).find((i) => i.id === monthly?.item_id) ?? null;
+    if (monthly?.item_id && !monthlyItem) {
+      const { data } = await supabase.from('shop_items').select('*').eq('id', monthly.item_id).maybeSingle();
+      monthlyItem = data ?? null;
+    }
+    shopStore$.monthly.set({
+      item: monthlyItem,
+      month: monthly?.month ?? null,
+      owned: !!monthly?.item_id && ownedIds.includes(monthly.item_id),
+      justGranted: !!monthly?.granted,
+    });
 
     // Fetch equipped items
     const { data: equipped } = await supabase

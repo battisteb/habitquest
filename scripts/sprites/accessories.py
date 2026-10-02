@@ -124,4 +124,13 @@ ACCESSORIES = {
 "...xyx..........",
 "....x...........",
   ])),
+  # Premium item of the month, November 2026: the scarf, striped in autumn colors.
+  'acc_autumn_scarf': ('front', at([
+"...........ooooooooooo..........",
+"..........oaxaxaxaxaAAo.........",
+"...........oooooooaxAxo.........",
+"..................oaAxo.........",
+"..................oxao..........",
+"...................oo...........",
+  ], 18)),
 }

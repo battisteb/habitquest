@@ -35,6 +35,8 @@ import { useTheme } from '../../src/ui/theme/theme-context';
 import { rarityLabel, unlockLabel as formatUnlock } from '../../src/lib/i18n/labels';
 import { shopItemText } from '../../src/lib/i18n/content';
 import { themeKeyOfItem } from '../../src/features/shop/utils/owned-themes';
+import { MonthlyItemBanner } from '../../src/features/shop/components/monthly-item-banner';
+import { showDialog } from '../../src/lib/app-alert';
 
 type ShopTabKey = 'shop_tab_hats' | 'shop_tab_outfits' | 'shop_tab_items' | 'shop_tab_backgrounds' | 'shop_tab_themes';
 
@@ -107,6 +109,7 @@ export default function ShopScreen() {
   },
 
   // Loadout panel
+  monthly: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
   loadoutPanel: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
@@ -299,6 +302,7 @@ export default function ShopScreen() {
   const items = use$(shopStore$.items);
   const ownedItemIds = use$(shopStore$.ownedItemIds);
   const equippedSlots = use$(shopStore$.equippedSlots);
+  const monthly = use$(shopStore$.monthly);
   const isLoading = use$(shopStore$.isLoading);
   const [activeCategory, setActiveCategory] = useState('avatar_hat');
   const [purchasing, setPurchasing] = useState<string | null>(null);
@@ -326,6 +330,13 @@ export default function ShopScreen() {
   );
 
   useEffect(() => { fetchShop(); }, []);
+
+  // The item of the month was just added to the inventory: say it once.
+  useEffect(() => {
+    if (!monthly.justGranted || !monthly.item) return;
+    shopStore$.monthly.justGranted.set(false);
+    showDialog(T.monthly_granted_title, T.monthly_granted_msg.replace('{name}', shopItemText(lang, monthly.item).title));
+  }, [monthly.justGranted, monthly.item, T, lang]);
 
   const filteredItems = items.filter((item) => item.category === activeCategory);
 
@@ -485,6 +496,22 @@ export default function ShopScreen() {
           <Text style={styles.loadoutHint}>{T.shop_tap_unequip}</Text>
         </View>
       </View>
+
+      {monthly.item && (
+        <View style={styles.monthly}>
+          <MonthlyItemBanner
+            item={monthly.item}
+            owned={monthly.owned}
+            equipped={!!monthly.item && Object.values(equippedSlots).some((e) => e?.itemId === monthly.item?.id)}
+            look={{ hat: currentHat, outfit: currentOutfit, accessory: currentAccessory }}
+            onEquip={() => {
+              const slot = monthly.item && CATEGORY_TO_SLOT[monthly.item.category];
+              if (slot && monthly.item) void equipItem(monthly.item.id, slot);
+            }}
+            onUnlock={() => router.push('/paywall')}
+          />
+        </View>
+      )}
 
       {/* Category tabs */}
       <ScrollView

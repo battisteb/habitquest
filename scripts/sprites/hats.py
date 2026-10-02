@@ -92,6 +92,34 @@ HATS = {
 ".......oxxxxxxxx",
 "........oooooooo",
   ]),
+  # Premium item of the month, October 2026.
+  'hat_pumpkin': top([
+"...............o",
+"..............ox",
+"..........ooooox",
+"........ooaagaAa",
+".......oaagaaAaa",
+"......oaagaaaAaa",
+"......oaaaaaaAaa",
+"......oaaaaaaAaa",
+"......oAaaaaaAaa",
+".....ooAAAAAAAAA",
+".....ooooooooooo",
+  ]),
+  # Premium item of the month, December 2026.
+  'hat_winter': top([
+"..............oo",
+".............oxy",
+".............oxx",
+"..........oooooo",
+"........ooaagaaa",
+".......oaagaaaaa",
+"......oaaaaaaaaa",
+"......oAaaaaaaaa",
+".....oxxxxxxxxxx",
+".....oxXxxXxxXxx",
+".....ooooooooooo",
+  ]),
 }
 
 # These two keep the hair visible (drawn over it).

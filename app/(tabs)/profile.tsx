@@ -10,6 +10,8 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { XpBar } from '../../src/features/gamification/components/xp-bar';
 import { HeroStage } from '../../src/features/avatar/components/hero-stage';
+import { Companion } from '../../src/features/companion/components/companion';
+import { useCompanion } from '../../src/features/companion/hooks/use-companion';
 import { AvatarDisplay } from '../../src/features/avatar/components/avatar-display';
 import { getAvatarStage, getNextAvatarStage } from '../../src/features/avatar/utils/avatar-evolution';
 import { shopStore$, fetchShop } from '../../src/features/shop/stores/shop-store';
@@ -161,6 +163,7 @@ export default function ProfileScreen() {
   const equippedSlots = use$(shopStore$.equippedSlots);
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const companion = useCompanion();
 
   const skinColor = use$(avatarConfigStore$.skinColor);
   const hairColor = use$(avatarConfigStore$.hairColor);
@@ -223,6 +226,15 @@ export default function ProfileScreen() {
                 skinColor={skinColor}
                 hairColor={hairColor}
                 eyeColor={eyeColor}
+                companion={
+                  <Companion
+                    stage={companion.stage}
+                    locked={companion.locked}
+                    size={64}
+                    onPress={companion.onPress}
+                    accessibilityLabel={companion.label}
+                  />
+                }
               />
               <Text style={styles.username}>{profile?.username ?? 'Adventurer'}</Text>
               <Text style={[styles.rankBadge, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>

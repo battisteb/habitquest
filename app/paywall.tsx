@@ -37,6 +37,8 @@ export default function PaywallScreen() {
     { icon: '📊', label: T.paywall_feat_stats_label, free: T.paywall_feat_stats_free, premium: T.paywall_feat_stats_premium },
     { icon: '🛍️', label: T.paywall_feat_shop_label, free: T.paywall_feat_shop_free, premium: T.paywall_feat_shop_premium },
     { icon: '🚫', label: T.paywall_feat_ads_label, free: T.paywall_feat_ads_free, premium: T.paywall_feat_ads_premium },
+    { icon: '🐉', label: T.paywall_feat_companion_label, free: T.paywall_feat_companion_free, premium: T.paywall_feat_companion_premium },
+    { icon: '🎁', label: T.paywall_feat_monthly_label, free: T.paywall_feat_monthly_free, premium: T.paywall_feat_monthly_premium },
     { icon: '⚡', label: T.paywall_feat_support_label, free: T.paywall_feat_support_free, premium: T.paywall_feat_support_premium },
   ];
   const styles = useMemo(() => StyleSheet.create({
