@@ -18,6 +18,8 @@ jest.mock('../../auth/stores/auth-store', () => ({
   },
 }));
 
+const mockRefreshProfile = jest.fn();
+jest.mock('../../gamification/stores/profile-store', () => ({ refreshProfile: () => mockRefreshProfile() }));
 jest.mock('../../habits/stores/habits-store', () => ({
   habitsStore$: {
     habits: { get: () => [] },
@@ -164,6 +166,8 @@ describe('dailyQuestsStore$', () => {
       });
       expect(result.success).toBe(true);
       expect(dailyQuestsStore$.quests.get()[0].is_claimed).toBe(true);
+      // The header shows the new gold right away.
+      expect(mockRefreshProfile).toHaveBeenCalled();
     });
 
     it('throws on failed claim', async () => {

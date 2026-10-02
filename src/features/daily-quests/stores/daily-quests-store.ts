@@ -6,6 +6,7 @@ import { persistPlugin } from '../../../lib/storage/persist';
 import { resetOnSignOut } from '../../../lib/storage/user-data';
 import { playSfx } from '../../../lib/audio/sound-service';
 import { localDateKey } from '../../../lib/local-date';
+import { refreshProfile } from '../../gamification/stores/profile-store';
 
 export type QuestType = 'complete_habits' | 'complete_category' | 'earn_xp' | 'maintain_streak';
 export type QuestDifficulty = 'easy' | 'normal' | 'hard';
@@ -148,6 +149,8 @@ export async function claimQuest(questId: string) {
     dailyQuestsStore$.quests[questIndex].is_claimed.set(true);
     dailyQuestsStore$.quests[questIndex].claimed_at.set(new Date().toISOString());
   }
+  // The reward is on the server: show the new gold and XP right away.
+  refreshProfile();
 
   return result;
 }
