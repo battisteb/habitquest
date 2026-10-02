@@ -191,6 +191,8 @@ select is((select count(*)::int from notifications where type = 'challenge_compl
   2, 'both players are notified');
 
 -- ─── Duels (friendly: unlimited between friends, no reward) ──────────────────
+-- Duels open at level 5 (I6): alice gets there.
+update profiles set xp = xp + 850, level = level_for_xp(xp + 850) where id = '00000000-0000-0000-0000-0000000000a1';
 select pg_temp.act_as('00000000-0000-0000-0000-0000000000a1');
 set local role authenticated;
 insert into duels (id, challenger_id, opponent_id, status)
