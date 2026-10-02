@@ -16,7 +16,7 @@ import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT, type Strings } from '../../../lib/i18n';
 import { getArenaWinChance } from '../../../lib/constants/game-config';
-import { fetchArenaState, ackArenaResult } from '../api';
+import { fetchArenaState, ackArenaResult, findPlayerId } from '../api';
 import type { ArenaState, ArenaFight } from '../types';
 import { LEAGUE_COLORS, leagueForTier, zoneForPlace, daysLeft } from '../utils/arena-display';
 
@@ -93,6 +93,8 @@ export default function ArenaScreen() {
     fightRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.xs },
     fightRole: { width: 64, fontSize: fontSizes.xs, color: colors.textMuted },
     fightResult: { fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold },
+    replayBtn: { borderWidth: 2, borderColor: colors.primary, backgroundColor: colors.surface, borderRadius: 0, paddingHorizontal: 6, paddingVertical: 1 },
+    replayText: { color: colors.primary, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold },
     empty: { fontSize: fontSizes.sm, color: colors.textMuted, fontStyle: 'italic' },
     banner: { padding: spacing.md, gap: spacing.sm, alignItems: 'center' },
     bannerText: { fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold, color: colors.text, textAlign: 'center' },
@@ -140,6 +142,21 @@ export default function ArenaScreen() {
   const pts = (n: number) => fill(n === 1 ? T.arena_point_one : T.arena_points, { n });
   const nameWithTag = (name: string, isBot: boolean) => (isBot ? `${name} [${T.arena_bot_tag}]` : name);
 
+  // Replay the fight with the battle animation; it ends the way the server decided.
+  const replayFight = async (fight: ArenaFight, iWon: boolean) => {
+    const opponentId = fight.opponent_is_bot ? null : await findPlayerId(fight.opponent).catch(() => null);
+    const level = state.standings.find((st) => st.username === fight.opponent)?.level;
+    router.push({
+      pathname: '/duels/battle',
+      params: {
+        replay: iWon ? 'win' : 'lose',
+        opponentName: fight.opponent,
+        ...(level ? { opponentLevel: String(level) } : {}),
+        ...(opponentId ? { opponentId } : {}),
+      },
+    });
+  };
+
   const renderFight = (fight: ArenaFight, index: number) => {
     // `won` is the attacker's outcome: when defending, a win for them is a loss for me.
     const iWon = fight.role === 'attack' ? fight.won : !fight.won;
@@ -158,6 +175,16 @@ export default function ArenaScreen() {
         {details.filter(Boolean).length > 0 && (
           <Text style={styles.attackedBy}>{details.filter(Boolean).join(' ')}</Text>
         )}
+        <Pressable
+          onPress={() => void replayFight(fight, iWon)}
+          style={styles.replayBtn}
+          hitSlop={6}
+          accessibilityRole="button"
+          accessibilityLabel={T.arena_replay_btn}
+          testID={`arena-replay-${index}`}
+        >
+          <Text style={styles.replayText}>▶</Text>
+        </Pressable>
       </View>
     );
   };

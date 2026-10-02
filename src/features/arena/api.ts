@@ -13,3 +13,9 @@ export async function ackArenaResult(): Promise<void> {
   const { error } = await supabase.rpc('arena_ack_result');
   if (error) throw error;
 }
+
+/** Id of a real player met in the arena (to show their hero in a replay). */
+export async function findPlayerId(username: string): Promise<string | null> {
+  const { data } = await supabase.from('profiles').select('id').eq('username', username).maybeSingle();
+  return data?.id ?? null;
+}

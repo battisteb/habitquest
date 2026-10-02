@@ -132,3 +132,29 @@ export function simulateDuel(
 
   return { rounds, winnerId, loserXpBonus };
 }
+
+/** From this round on, the winner of a replay lands a finishing blow. */
+export const REPLAY_FINISH_ROUND = 5;
+
+/**
+ * Replays a fight already decided by the server (arena): the attacks are
+ * rolled as usual, then nudged so the known winner wins. The loser can hurt
+ * the winner but never knock them out; past a few rounds the winner's
+ * attack always hits hard enough to end it.
+ */
+export function rigReplayResult(
+  result: CombatResult,
+  attackerWins: boolean,
+  defenderHp: number,
+  round: number,
+  attack: Attack,
+): CombatResult {
+  if (attackerWins) {
+    if (round < REPLAY_FINISH_ROUND) return result;
+    const damage = Math.max(result.hit ? result.damage : 0, attack.baseDamage, defenderHp);
+    return { ...result, hit: true, damage, bonus: undefined, effect: `${attack.name} hits for ${damage} damage!` };
+  }
+  if (!result.hit || result.damage < defenderHp) return result;
+  const damage = Math.max(0, defenderHp - 1);
+  return { ...result, damage, bonus: undefined, effect: `${attack.name} hits for ${damage} damage!` };
+}
