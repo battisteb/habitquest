@@ -927,6 +927,7 @@ const FR = {
   streak_broken_title: '💔 Série brisée',
   streak_broken_msg: 'Ta série de {n} jours pour « {name} » est terminée. Recommence aujourd\'hui !',
   streak_broken_restart: '▶ RECOMMENCER',
+  notif_streak_risk_title: '💧 Pip s’inquiète pour ta série !',
   // Dynamic goal suggestions
   goal_level_up_msg: '🚀 Prêt à passer au niveau supérieur ?',
   goal_level_up_detail: '{n}/{total} jours — tu assures. Augmente la difficulté ou ajoute une nouvelle habitude.',
@@ -1971,6 +1972,7 @@ const EN = {
   streak_broken_title: '💔 Streak broken',
   streak_broken_msg: 'Your {n}-day streak for "{name}" is gone. Start a new one today!',
   streak_broken_restart: '▶ RESTART',
+  notif_streak_risk_title: '💧 Pip is worried about your streak!',
   // Dynamic goal suggestions
   goal_level_up_msg: '🚀 Ready to level up?',
   goal_level_up_detail: '{n}/{total} days done — you\'re crushing it. Consider increasing difficulty or adding a new habit.',
