@@ -13,7 +13,12 @@
  *   kinetic — title whose words slam in one by one (hook); optional subtitle, icon, cta
  *   hero    — the hero drawn big in its scene, outfits swapping every `every` s
  *             (looks: [{ hat, outfit, accessory, label }])
- * Any segment: `flash` (cut from white), `speed` (clips), `sfx` (sound at `sfxAt` s, from marketing/audio/sfx
+ * Transitions (0.4 s) instead of hard cuts. Default by the incoming segment: phone screens (clip,
+ *   still) arrive with a 3D card flip (the last image turns over to reveal the next one), full-screen
+ *   recordings slide up, titles and the hero slide in; two pieces of the same recording stay cut together.
+ *   Per segment: `transition: 'flip' | 'slide' | 'zoom' | 'fade' | 'circle' | 'cut'`; per reel:
+ *   `transitions: false` for the old hard cuts (and `flash`).
+ * Any segment: `flash` (cut from white, only without transitions), `speed` (clips), `sfx` (sound at `sfxAt` s, from marketing/audio/sfx
  * if it exists there, else from the app's assets/sounds). Music: marketing/audio (chiptune.py).
  * clip/still: `zoom: [{ t, z, x, y }]` zooms the whole phone (title stays fixed): keyframes at t s,
  *   zoom z, centered on (x, y) of the app screen (0-1), eased in between.
@@ -97,6 +102,107 @@ async function renderAnimated(page, spec, dur, out, enc) {
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
+const TRANSITION = 0.4;
+
+/**
+ * 3D card flip between two segments: the last image of `fromVideo` turns over around the vertical
+ * axis and the first image of `toVideo` is on its back. Renders TRANSITION seconds of video.
+ */
+async function renderFlip(page, fromVideo, toVideo, bgFile, out, enc) {
+  const a = `${out}-a.png`;
+  const b = `${out}-b.png`;
+  run(['-sseof', '-0.05', '-i', fromVideo, '-frames:v', '1', '-update', '1', a]);
+  run(['-i', toVideo, '-frames:v', '1', b]);
+  const url = (f) => pathToFileURL(f).href;
+  await page.setContent(`<html><body style="margin:0;width:1080px;height:1920px;overflow:hidden;
+    background:url('${url(bgFile)}');perspective:2600px">
+    <div id="card" style="position:absolute;inset:0;transform-style:preserve-3d">
+      <div style="position:absolute;inset:0;backface-visibility:hidden;background:url('${url(a)}') center/cover"></div>
+      <div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);background:url('${url(b)}') center/cover"></div>
+    </div></body></html>`, { waitUntil: 'load' });
+  const dir = `${out}.frames`;
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+  const n = Math.round(TRANSITION * FPS);
+  for (let f = 0; f < n; f++) {
+    const t = (f + 1) / (n + 1);
+    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    // Shrinks a little at mid-turn, so the card visibly turns in depth.
+    const scale = 1 - 0.12 * Math.sin(Math.PI * eased);
+    await page.evaluate((deg, s) => {
+      document.getElementById('card').style.transform = `scale(${s}) rotateY(${deg}deg)`;
+    }, 180 * eased, scale);
+    await page.screenshot({ path: path.join(dir, `${String(f).padStart(4, '0')}.jpg`), type: 'jpeg', quality: 92 });
+  }
+  run(['-framerate', String(FPS), '-i', path.join(dir, '%04d.jpg'), ...enc]);
+  fs.rmSync(dir, { recursive: true, force: true });
+  await page.setViewport({ width: 1080, height: 1920 });
+}
+// 'flip' is rendered in 3D by renderFlip; the others are ffmpeg xfade transitions.
+const XFADE = { flip: 'flip', slide: 'smoothleft', up: 'smoothup', zoom: 'zoomin', fade: 'fade', circle: 'circleopen' };
+
+/** Transition into segment i (null = hard cut). */
+function transitionInto(reel, i) {
+  if (i === 0 || reel.transitions === false) return null;
+  const seg = reel.segments[i];
+  const prev = reel.segments[i - 1];
+  if (seg.transition === 'cut') return null;
+  if (seg.transition) return XFADE[seg.transition] || XFADE.fade;
+  // Two pieces of the same recording (e.g. a speed change): keep them joined.
+  if (seg.src && seg.src === prev.src && seg.type === prev.type) return null;
+  if (seg.type === 'clip' || seg.type === 'still') return XFADE.flip;
+  if (seg.type === 'full') return XFADE.up;
+  return XFADE.slide;
+}
+
+/** Start time of each segment once transitions overlap them, and the total length. */
+function timeline(reel) {
+  const starts = [];
+  let t = 0;
+  reel.segments.forEach((seg, i) => {
+    const kind = i > 0 ? transitionInto(reel, i) : null;
+    // A flip is inserted between the two segments; the other transitions overlap them.
+    if (kind === 'flip') t += TRANSITION;
+    else if (kind) t -= TRANSITION;
+    starts.push(t);
+    t += seg.dur;
+  });
+  return { starts, total: t };
+}
+
+/** Joins the segment videos with their transitions into one file (flips: rendered clips in `flips`). */
+function joinSegments(reel, parts, flips, out) {
+  const inputs = [...parts, ...flips.filter(Boolean)].flatMap((p) => ['-i', p]);
+  const flipInput = {};
+  flips.forEach((f, i) => { if (f) flipInput[i] = parts.length + Object.keys(flipInput).length; });
+  // Same frame rate, pixel format, aspect and timebase everywhere: xfade requires it.
+  const norm = (input, label) => `[${input}:v]fps=${FPS},scale=1080:1920,setsar=1,format=yuv420p,settb=AVTB[${label}]`;
+  const steps = [
+    ...parts.map((_, i) => norm(i, `n${i}`)),
+    ...Object.entries(flipInput).map(([i, input]) => norm(input, `f${i}`)),
+  ];
+  let prev = '[n0]';
+  let length = reel.segments[0].dur;
+  for (let i = 1; i < parts.length; i++) {
+    const kind = transitionInto(reel, i);
+    const label = `[v${i}]`;
+    if (kind === 'flip') {
+      steps.push(`${prev}[f${i}][n${i}]concat=n=3:v=1:a=0${label}`);
+      length += TRANSITION + reel.segments[i].dur;
+    } else {
+      steps.push(
+        kind
+          ? `${prev}[n${i}]xfade=transition=${kind}:duration=${TRANSITION}:offset=${(length - TRANSITION).toFixed(3)}${label}`
+          : `${prev}[n${i}]concat=n=2:v=1:a=0${label}`,
+      );
+      length += reel.segments[i].dur - (kind ? TRANSITION : 0);
+    }
+    prev = label;
+  }
+  run([...inputs, '-filter_complex', steps.join(';'), '-map', prev,
+    '-r', String(FPS), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', out]);
+}
+
 async function renderLayer(page, spec, file) {
   await page.goto(template, { waitUntil: 'networkidle0' });
   await page.evaluate((s) => window.render(s), spec);
@@ -135,8 +241,9 @@ async function roundedMask(page, file) {
     if (process.argv[2] && process.argv[2] !== name) continue;
     const parts = [];
     const sfx = [];
-    let clock = 0;
+    const { starts, total } = timeline(reel);
     for (const [i, seg] of reel.segments.entries()) {
+      const clock = starts[i];
       const out = path.join(work, `${name}-${i}.mp4`);
       const enc = ['-r', String(FPS), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', out];
       if (seg.sfx) {
@@ -145,7 +252,6 @@ async function roundedMask(page, file) {
         const file = fs.existsSync(own) ? own : path.join(repo, 'assets', 'sounds', `${seg.sfx}.m4a`);
         sfx.push({ file, at: clock + (seg.sfxAt || 0) });
       }
-      clock += seg.dur;
       if (seg.type === 'kinetic') {
         await renderAnimated(page, { layout: 'kinetic', ...seg }, seg.dur, out, enc);
       } else if (seg.type === 'hero') {
@@ -212,7 +318,7 @@ async function roundedMask(page, file) {
             ...enc]);
         }
       }
-      if (seg.flash) {
+      if (seg.flash && reel.transitions === false) {
         const flashed = out.replace(/\.mp4$/, '-flash.mp4');
         run(['-i', out, '-vf', 'fade=in:0:5:color=white', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', flashed]);
         fs.renameSync(flashed, out);
@@ -220,9 +326,19 @@ async function roundedMask(page, file) {
       parts.push(out);
     }
 
+    // One video with the transitions, then music and sounds on top.
+    const joined = path.join(work, `${name}-joined.mp4`);
+    const flips = [];
+    for (let i = 1; i < parts.length; i++) {
+      if (transitionInto(reel, i) !== 'flip') continue;
+      const flipOut = path.join(work, `${name}-flip-${i}.mp4`);
+      await renderFlip(page, parts[i - 1], parts[i], bg, flipOut,
+        ['-r', String(FPS), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', flipOut]);
+      flips[i] = flipOut;
+    }
+    joinSegments(reel, parts, flips, joined);
     const list = path.join(work, `${name}.txt`);
-    fs.writeFileSync(list, parts.map((p) => `file '${p.replace(/\\/g, '/')}'`).join('\n'));
-    const total = reel.segments.reduce((s, x) => s + x.dur, 0);
+    fs.writeFileSync(list, `file '${joined.replace(/\\/g, '/')}'`);
     const out = path.join(outDir, `${name}.mp4`);
     // Music, plus the sound effects of the segments on top.
     const sfxIn = sfx.flatMap((x) => ['-i', x.file]);
