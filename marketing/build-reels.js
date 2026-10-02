@@ -13,11 +13,11 @@
  *   kinetic — title whose words slam in one by one (hook); optional subtitle, icon, cta
  *   hero    — the hero drawn big in its scene, outfits swapping every `every` s
  *             (looks: [{ hat, outfit, accessory, label }])
- * Transitions (0.4 s) instead of hard cuts. Default by the incoming segment: phone screens (clip,
- *   still) arrive with a 3D card flip (the last image turns over to reveal the next one), full-screen
- *   recordings slide up, titles and the hero slide in; two pieces of the same recording stay cut together.
- *   Per segment: `transition: 'flip' | 'slide' | 'zoom' | 'fade' | 'circle' | 'cut'`; per reel:
- *   `transitions: false` for the old hard cuts (and `flash`).
+ * Smooth by default (Battiste): no hard cut, no zoom into the screens, no shake or flash. Every
+ *   segment dissolves into the next (0.5 s); phone screens (clip, still) arrive with a gentle 3D
+ *   card flip; titles fade in word by word; the hero's outfits dissolve into each other.
+ *   Per segment: `transition: 'flip' | 'fade' | 'slide' | 'cut'`; per reel `punchy: true` brings back
+ *   the old style (hard cuts, punch zooms, slams, flashes).
  * Any segment: `flash` (cut from white, only without transitions), `speed` (clips), `sfx` (sound at `sfxAt` s, from marketing/audio/sfx
  * if it exists there, else from the app's assets/sounds). Music: marketing/audio (chiptune.py).
  * clip/still: `zoom: [{ t, z, x, y }]` zooms the whole phone (title stays fixed): keyframes at t s,
@@ -102,7 +102,7 @@ async function renderAnimated(page, spec, dur, out, enc) {
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
-const TRANSITION = 0.4;
+const TRANSITION = 0.5;
 
 /**
  * 3D card flip between two segments: the last image of `fromVideo` turns over around the vertical
@@ -127,11 +127,9 @@ async function renderFlip(page, fromVideo, toVideo, bgFile, out, enc) {
   for (let f = 0; f < n; f++) {
     const t = (f + 1) / (n + 1);
     const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-    // Shrinks a little at mid-turn, so the card visibly turns in depth.
-    const scale = 1 - 0.12 * Math.sin(Math.PI * eased);
-    await page.evaluate((deg, s) => {
-      document.getElementById('card').style.transform = `scale(${s}) rotateY(${deg}deg)`;
-    }, 180 * eased, scale);
+    await page.evaluate((deg) => {
+      document.getElementById('card').style.transform = `rotateY(${deg}deg)`;
+    }, 180 * eased);
     await page.screenshot({ path: path.join(dir, `${String(f).padStart(4, '0')}.jpg`), type: 'jpeg', quality: 92 });
   }
   run(['-framerate', String(FPS), '-i', path.join(dir, '%04d.jpg'), ...enc]);
@@ -143,16 +141,15 @@ const XFADE = { flip: 'flip', slide: 'smoothleft', up: 'smoothup', zoom: 'zoomin
 
 /** Transition into segment i (null = hard cut). */
 function transitionInto(reel, i) {
-  if (i === 0 || reel.transitions === false) return null;
+  if (i === 0 || reel.punchy) return null;
   const seg = reel.segments[i];
   const prev = reel.segments[i - 1];
   if (seg.transition === 'cut') return null;
   if (seg.transition) return XFADE[seg.transition] || XFADE.fade;
-  // Two pieces of the same recording (e.g. a speed change): keep them joined.
-  if (seg.src && seg.src === prev.src && seg.type === prev.type) return null;
+  // Two pieces of the same recording: a soft dissolve, never a cut.
+  if (seg.src && seg.src === prev.src && seg.type === prev.type) return XFADE.fade;
   if (seg.type === 'clip' || seg.type === 'still') return XFADE.flip;
-  if (seg.type === 'full') return XFADE.up;
-  return XFADE.slide;
+  return XFADE.fade;
 }
 
 /** Start time of each segment once transitions overlap them, and the total length. */
@@ -253,18 +250,18 @@ async function roundedMask(page, file) {
         sfx.push({ file, at: clock + (seg.sfxAt || 0) });
       }
       if (seg.type === 'kinetic') {
-        await renderAnimated(page, { layout: 'kinetic', ...seg }, seg.dur, out, enc);
+        await renderAnimated(page, { layout: 'kinetic', ...seg, smooth: !reel.punchy }, seg.dur, out, enc);
       } else if (seg.type === 'hero') {
         const looks = seg.looks.map((l) => ({
           label: l.label,
           grid: hero.composeHero({ skin: hero.DEFAULTS.skin, hair: hero.DEFAULTS.hair, eye: hero.DEFAULTS.eye, ...l }),
         }));
         const scene = hero.heroScene(seg.theme || 'default', 36);
-        await renderAnimated(page, { layout: 'hero', ...seg, looks, scene }, seg.dur, out, enc);
+        await renderAnimated(page, { layout: 'hero', ...seg, looks, scene, smooth: !reel.punchy }, seg.dur, out, enc);
       } else if (seg.type === 'full') {
         const overlay = path.join(work, `${name}-${i}-full.png`);
         await renderLayer(page, { layout: 'full', ...seg }, overlay);
-        const z = seg.zoom;
+        const z = reel.punchy ? seg.zoom : null;
         // Zoom: reaches `to` in 0.5 s from `at`, centered on (x, y).
         const a = z ? Math.round(z.at * FPS) : 0;
         const zoom = z
@@ -281,7 +278,9 @@ async function roundedMask(page, file) {
         await renderLayer(page, { layout: 'card', ...seg }, png);
         // Short fade-in and a gentle push-in so the card is not a frozen frame.
         run(['-loop', '1', '-t', String(seg.dur), '-i', png,
-          '-vf', `scale=1188:2112,zoompan=z='min(1+0.0009*on,1.1)':d=1:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=1080x1920:fps=${FPS},fade=in:0:6`,
+          '-vf', reel.punchy
+            ? `scale=1188:2112,zoompan=z='min(1+0.0009*on,1.1)':d=1:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=1080x1920:fps=${FPS},fade=in:0:6`
+            : `scale=1080:1920,fps=${FPS}`,
           ...enc]);
       } else {
         const overlay = path.join(work, `${name}-${i}-phone.png`);
@@ -291,8 +290,10 @@ async function roundedMask(page, file) {
           : ['-loop', '1', '-i', path.join(root, 'assets', screens, `${seg.src}.png`)];
         const screen = seg.type === 'clip'
           ? `[1:v]setpts=PTS/${seg.speed || 1},fps=${FPS},tpad=stop_mode=clone:stop_duration=3,scale=${PHONE.w}:${PHONE.h}`
-          : `[1:v]scale=${PHONE.w * 2}:-1,zoompan=z='min(1+0.0008*on,1.08)':d=1:x='iw/2-(iw/zoom/2)':y=0:s=${PHONE.w}x${PHONE.h}:fps=${FPS}`;
-        if (Array.isArray(seg.zoom)) {
+          : reel.punchy
+            ? `[1:v]scale=${PHONE.w * 2}:-1,zoompan=z='min(1+0.0008*on,1.08)':d=1:x='iw/2-(iw/zoom/2)':y=0:s=${PHONE.w}x${PHONE.h}:fps=${FPS}`
+            : `[1:v]scale=${PHONE.w}:-1,crop=${PHONE.w}:${PHONE.h}:0:0,fps=${FPS}`;
+        if (reel.punchy && Array.isArray(seg.zoom)) {
           // The phone zooms (rendered at 2x for a smooth move), the title stays on top.
           const frame = path.join(work, `${name}-${i}-frame.png`);
           const title = path.join(work, `${name}-${i}-title.png`);
@@ -318,7 +319,7 @@ async function roundedMask(page, file) {
             ...enc]);
         }
       }
-      if (seg.flash && reel.transitions === false) {
+      if (seg.flash && reel.punchy) {
         const flashed = out.replace(/\.mp4$/, '-flash.mp4');
         run(['-i', out, '-vf', 'fade=in:0:5:color=white', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '20', '-an', flashed]);
         fs.renameSync(flashed, out);

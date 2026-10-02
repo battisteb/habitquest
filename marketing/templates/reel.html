@@ -123,6 +123,22 @@
       window.frame = (t) => {
         root.querySelector('.grid').style.transform = `translate(${(t * 40) % 60}px, ${(t * 60) % 60}px)`;
         root.querySelector('.glow').style.opacity = String(0.6 + 0.4 * Math.sin(t * 5));
+        if (s.smooth) {
+          // Smooth: each word fades in while rising a little; no slam, no shake.
+          spans.forEach((el, i) => {
+            const k = Math.min(Math.max((t - i * step) / 0.45, 0), 1);
+            el.style.opacity = String(ease(k));
+            el.style.transform = `translateY(${(1 - ease(k)) * 36}px)`;
+          });
+          const after = Math.min(Math.max((t - last - 0.3) / 0.5, 0), 1);
+          const p = root.querySelector('.kin p');
+          if (p) { p.style.opacity = String(ease(after)); p.style.transform = `translateY(${(1 - ease(after)) * 30}px)`; }
+          const img = root.querySelector('.kin img');
+          if (img) img.style.opacity = String(ease(Math.min(t / 0.5, 1)));
+          const cta = root.querySelector('.kin .cta');
+          if (cta) { const k = Math.min(Math.max((t - last - 0.5) / 0.5, 0), 1); cta.style.opacity = String(ease(k)); cta.style.transform = 'none'; }
+          return;
+        }
         let shake = 0;
         spans.forEach((el, i) => {
           const k = (t - i * step) / 0.3;
@@ -157,10 +173,11 @@
       window.frame = (t) => {
         ctx.clearRect(0, 0, 1080, 1920);
         root.querySelector('.grid').style.transform = `translate(${(t * 40) % 60}px, ${(t * 60) % 60}px)`;
-        const pop = ease(t / 0.3);
+        const pop = s.smooth ? ease(Math.min(t / 0.5, 1)) : ease(t / 0.3);
+        const grow = s.smooth ? 1 : 0.6 + 0.4 * back(t / 0.35);
         ctx.save();
         ctx.translate(540, stage.y + stage.h / 2);
-        ctx.scale(0.6 + 0.4 * back(t / 0.35), 0.6 + 0.4 * back(t / 0.35));
+        ctx.scale(grow, grow);
         ctx.translate(-540, -(stage.y + stage.h / 2));
         ctx.globalAlpha = pop;
         ctx.fillStyle = s.frame || '#e94560';
@@ -173,11 +190,20 @@
         const look = s.looks[i];
         const px = 22, size = 32 * px;
         const hx = 540 - size / 2, hy = stage.y + stage.h - size - 30 - (Math.floor(t / 0.3) % 2) * px;
-        look.grid.forEach((row, y) => row.forEach((c, x) => { if (c) { ctx.fillStyle = c; ctx.fillRect(hx + x * px, hy + y * px, px + 0.6, px + 0.6); } }));
-        // White flash and sparkles on each outfit change.
         const since = t - i * every;
-        if (i > 0 && since < 0.18) { ctx.fillStyle = `rgba(255,255,255,${0.45 * (1 - since / 0.18)})`; ctx.fillRect(stage.x, stage.y, stage.w, stage.h); }
-        if (since < 0.35) {
+        const drawLook = (g) => g.forEach((row, y) => row.forEach((c, x) => { if (c) { ctx.fillStyle = c; ctx.fillRect(hx + x * px, hy + y * px, px + 0.6, px + 0.6); } }));
+        if (s.smooth && i > 0 && since < 0.4) {
+          // Smooth: the previous outfit dissolves into the new one.
+          const k = ease(since / 0.4);
+          ctx.globalAlpha = pop * (1 - k); drawLook(s.looks[i - 1].grid);
+          ctx.globalAlpha = pop * k; drawLook(look.grid);
+          ctx.globalAlpha = pop;
+        } else {
+          drawLook(look.grid);
+        }
+        // White flash and sparkles on each outfit change (punchy mode only).
+        if (!s.smooth && i > 0 && since < 0.18) { ctx.fillStyle = `rgba(255,255,255,${0.45 * (1 - since / 0.18)})`; ctx.fillRect(stage.x, stage.y, stage.w, stage.h); }
+        if (!s.smooth && since < 0.35) {
           for (let k = 0; k < 10; k++) {
             const a = rand(i * 31 + k) * Math.PI * 2, d = 200 + 260 * ease(since / 0.35);
             ctx.fillStyle = k % 2 ? '#f5c518' : '#ffffff';
@@ -189,7 +215,8 @@
         ctx.restore();
         tag.textContent = look.label || '';
         tag.style.display = look.label ? 'inline-block' : 'none';
-        tag.style.transform = `scale(${since < 0.2 ? back(since / 0.2) : 1})`;
+        tag.style.transform = s.smooth ? 'none' : `scale(${since < 0.2 ? back(since / 0.2) : 1})`;
+        if (s.smooth) tag.style.opacity = String(ease(Math.min(since / 0.4, 1)));
         const title = root.querySelector('.hero-title');
         title.style.opacity = String(ease(t / 0.25));
         title.style.transform = `translateY(${(1 - ease(t / 0.25)) * -50}px)`;
