@@ -1,6 +1,6 @@
 /**
- * Duel store: a friend duel is recorded before the fight, its result is saved
- * by the challenger and the reward shown is the one the server paid.
+ * Duel store: a friendly duel is recorded before the fight and its result is
+ * saved by the challenger; friendly duels pay nothing.
  * Server-side rules are in supabase/tests/duels.test.sql.
  */
 
@@ -54,20 +54,14 @@ describe('duel store', () => {
     );
   });
 
-  it('saves a win and shows the gold the server paid', async () => {
-    mockRpc.mockResolvedValueOnce({ data: { success: true, gold: 30, xp: 0 } });
-    await expect(resolveDuel('duel-1', 'me')).resolves.toEqual({ gold: 30, xp: 0 });
+  it('saves the result of a friendly duel and pays nothing', async () => {
+    await expect(resolveDuel('duel-1', 'me')).resolves.toBeUndefined();
     expect(mockUpdate).toHaveBeenCalledWith({ status: 'resolved', winner_id: 'me' });
-    expect(mockRpc).toHaveBeenCalledWith('claim_duel_reward', { p_duel_id: 'duel-1' });
+    expect(mockRpc).not.toHaveBeenCalled();
   });
 
-  it('shows nothing when the server pays nothing', async () => {
-    mockRpc.mockResolvedValueOnce({ data: { success: false, reason: 'already_claimed' } });
-    await expect(resolveDuel('duel-1', 'friend')).resolves.toEqual({ gold: 0, xp: 0 });
-  });
-
-  it('closes a draw without a winner or a reward', async () => {
-    await expect(resolveDuel('duel-1', null)).resolves.toEqual({ gold: 0, xp: 0 });
+  it('closes a draw without a winner', async () => {
+    await resolveDuel('duel-1', null);
     expect(mockUpdate).toHaveBeenCalledWith({ status: 'resolved', winner_id: null });
     expect(mockRpc).not.toHaveBeenCalled();
   });

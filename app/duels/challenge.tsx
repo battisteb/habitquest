@@ -8,7 +8,6 @@ import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme
 import { friendsStore$, fetchFriends } from '../../src/features/social/stores/friends-store';
 import { duelStore$, fetchUnlockedCategories, createDuel } from '../../src/features/duels/stores/duel-store';
 import { profileStore$ } from '../../src/features/gamification/stores/profile-store';
-import { LIMITS } from '../../src/features/monetization/utils/feature-gates';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
@@ -97,18 +96,16 @@ export default function ChallengeScreen() {
     const friendName = friend?.username ?? T.duels_battle_default_rival;
     const friendLevel = friend?.level ?? 1;
 
-    // The duel is recorded first: the server enforces the weekly limit and
-    // the cooldown, and the battle screen needs its id to save the result.
+    // The duel is recorded first (the server checks the friendship and the
+    // daily anti-spam cap), and the battle screen needs its id for the result.
     setIsSending(true);
     let duelId: string;
     try {
       duelId = await createDuel(selectedFriendId, selectedAttackId);
     } catch (err) {
       const message = err instanceof Error ? err.message.toLowerCase() : '';
-      if (message.includes('limit')) {
-        Alert.alert(T.duels_challenge_limit_title, T.duels_challenge_limit_msg.replace('{n}', String(LIMITS.FREE_DUELS_PER_WEEK)));
-      } else if (message.includes('cooldown')) {
-        Alert.alert(T.duels_challenge_cooldown_title, T.duels_challenge_cooldown_msg);
+      if (message.includes('too many duels')) {
+        Alert.alert(T.duels_challenge_limit_title, T.duels_challenge_limit_msg);
       } else {
         Alert.alert(T.duels_challenge_error_title, T.duels_challenge_error_msg);
       }

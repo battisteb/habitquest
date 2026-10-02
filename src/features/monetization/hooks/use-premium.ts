@@ -4,9 +4,6 @@ import { subscriptionStore$ } from '../stores/subscription-store';
 import {
   getMaxFreezeTokens,
   getFreezeCost,
-  getDuelCooldownHours,
-  canStartDuel,
-  duelCooldownRemainingMinutes,
   getStatsHistoryDays,
   canViewShopItem,
 } from '../utils/feature-gates';
@@ -28,11 +25,6 @@ export function usePremium() {
     // Freeze
     maxFreezeTokens: getMaxFreezeTokens(),
     freezeCost: getFreezeCost(),
-    // Duels
-    duelCooldownHours: getDuelCooldownHours(),
-    canStartDuel: (lastDuelAt: string | null) => canStartDuel(lastDuelAt),
-    duelCooldownRemainingMinutes: (lastDuelAt: string | null) =>
-      duelCooldownRemainingMinutes(lastDuelAt),
     // Stats
     statsHistoryDays: getStatsHistoryDays(),
     canViewFullHistory: isPremium,

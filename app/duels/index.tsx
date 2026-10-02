@@ -1,16 +1,13 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
-import { duelStore$, fetchUnlockedCategories, fetchDuels, getWeeklyDuelsUsed } from '../../src/features/duels/stores/duel-store';
+import { duelStore$, fetchUnlockedCategories, fetchDuels } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks } from '../../src/features/duels/utils/attacks';
-import { usePremium } from '../../src/features/monetization/hooks/use-premium';
-import { LIMITS } from '../../src/features/monetization/utils/feature-gates';
 import { showInterstitial } from '../../src/features/monetization/utils/ad-service';
-import { useProfileStats } from '../../src/features/gamification/hooks/use-profile-stats';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 import { attackName } from '../../src/lib/i18n/labels';
@@ -102,31 +99,10 @@ export default function DuelsIndexScreen() {
   const router = useRouter();
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
   const attacks = getUnlockedAttacks(unlockedCategories);
-  const [weeklyUsed, setWeeklyUsed] = useState(0);
-  const { isPremium, canStartDuel, duelCooldownRemainingMinutes, duelCooldownHours, openPaywall } = usePremium();
-  const { profile } = useProfileStats();
-  const lastDuelAt = (profile as any)?.last_duel_at ?? null;
-
   useEffect(() => {
     fetchUnlockedCategories();
     fetchDuels();
-    getWeeklyDuelsUsed().then((n) => setWeeklyUsed(n));
   }, []);
-
-  const cooldownOk = canStartDuel(lastDuelAt);
-  const cooldownMinutes = duelCooldownRemainingMinutes(lastDuelAt);
-  const cooldownHours = Math.ceil(cooldownMinutes / 60);
-
-  // Legacy weekly limit for free users (3 per week = at most 1 every 2 days + max 3)
-  const weeklyLimitReached = !isPremium && weeklyUsed >= LIMITS.FREE_DUELS_PER_WEEK;
-  const limitReached = !cooldownOk || weeklyLimitReached;
-
-  const badgeColor =
-    weeklyUsed === 0
-      ? colors.success
-      : weeklyUsed < LIMITS.FREE_DUELS_PER_WEEK
-      ? colors.warning
-      : colors.danger;
 
   function handleChallengeFriend() {
     showInterstitial(() => router.push('/duels/challenge'));
@@ -144,16 +120,12 @@ export default function DuelsIndexScreen() {
       <View style={styles.header}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>{T.duels_title}</Text>
-          <View style={[styles.weeklyBadge, { borderColor: badgeColor }]}>
-            <Text style={[styles.weeklyBadgeText, { color: badgeColor }]}>
-              {isPremium
-                ? T.duels_week_count.replace('{n}', String(weeklyUsed))
-                : T.duels_week_count_limit.replace('{n}', String(weeklyUsed))}
-            </Text>
+          <View style={[styles.weeklyBadge, { borderColor: colors.success }]}>
+            <Text style={[styles.weeklyBadgeText, { color: colors.success }]}>{T.duels_friendly_badge}</Text>
           </View>
         </View>
         <Text style={styles.sub}>{T.duels_subtitle}</Text>
-        <Text style={styles.resetNote}>{T.duels_reset_note}</Text>
+        <Text style={styles.resetNote}>{T.duels_friendly_note}</Text>
       </View>
 
       <View style={styles.section}>
@@ -177,35 +149,11 @@ export default function DuelsIndexScreen() {
         )}
       </View>
 
-      {limitReached ? (
-        <View style={styles.lockedContainer}>
-          <Text style={styles.lockedIcon}>🔒</Text>
-          <Text style={styles.lockedTitle}>
-            {weeklyLimitReached ? T.duels_locked_weekly : T.duels_locked_cooldown}
-          </Text>
-          <Text style={styles.lockedMessage}>
-            {weeklyLimitReached
-              ? T.duels_locked_weekly_msg
-              : T.duels_locked_cooldown_msg
-                  .replace('{h}', String(cooldownHours))
-                  .replace('{hh}', String(duelCooldownHours))}
-          </Text>
-          {!isPremium && (
-            <PixelButton
-              title={T.duels_premium_cta}
-              onPress={openPaywall}
-              variant="secondary"
-              style={{ marginTop: spacing.sm }}
-            />
-          )}
-        </View>
-      ) : (
-        <PixelButton
-          title={T.duels_btn_challenge}
-          onPress={handleChallengeFriend}
-          style={styles.challengeBtn}
-        />
-      )}
+      <PixelButton
+        title={T.duels_btn_challenge}
+        onPress={handleChallengeFriend}
+        style={styles.challengeBtn}
+      />
 
       <PixelButton
         title={T.duels_btn_quick}

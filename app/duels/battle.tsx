@@ -325,8 +325,6 @@ export default function BattleScreen() {
   const [attackingId, setAttackingId] = useState<string | null>(null);
   const [hitId, setHitId] = useState<string | null>(null);
   const [winnerId, setWinnerId] = useState<string | null | 'draw'>('draw'); // initial dummy
-  // What the server paid for a friend duel (null while it answers).
-  const [reward, setReward] = useState<{ gold: number; xp: number } | null>(null);
 
   const logScrollRef = useRef<ScrollView>(null);
 
@@ -455,13 +453,13 @@ export default function BattleScreen() {
 
     setWinnerId(winner);
 
-    // A friend duel is saved and rewarded by the server; a training fight pays nothing.
+    // A friend duel is saved (the friend is told the result); nothing is paid.
     if (params.duelId) {
       const myId = authStore$.user.get()?.id ?? null;
       const winnerUserId = winner === 'draw' ? null : winner === ME_ID ? myId : params.opponentId ?? null;
-      resolveDuel(params.duelId, winnerUserId)
-        .then(setReward)
-        .catch(() => setReward({ gold: 0, xp: 0 }));
+      resolveDuel(params.duelId, winnerUserId).catch(() => {
+        // Offline: the duel stays open, nothing is lost.
+      });
     }
 
     const endMsg =
@@ -570,20 +568,9 @@ export default function BattleScreen() {
               : T.duels_battle_end_defeat}
           </Text>
           <View style={s.rewardBox}>
-            {!params.duelId ? (
-              <Text style={s.rewardLine}>{T.duels_battle_reward_training}</Text>
-            ) : !reward ? (
-              <Text style={s.rewardLine}>{T.duels_battle_reward_saving}</Text>
-            ) : reward.gold > 0 ? (
-              <Text style={s.rewardLine}>{T.duels_battle_reward_gold.replace('{n}', String(reward.gold))}</Text>
-            ) : reward.xp > 0 ? (
-              <>
-                <Text style={s.rewardLine}>{T.duels_battle_reward_xp.replace('{n}', String(reward.xp))}</Text>
-                <Text style={s.rewardLine}>{T.duels_battle_reward_stronger}</Text>
-              </>
-            ) : (
-              <Text style={s.rewardLine}>{T.duels_battle_reward_none}</Text>
-            )}
+            <Text style={s.rewardLine}>
+              {params.duelId ? T.duels_battle_reward_friendly : T.duels_battle_reward_training}
+            </Text>
           </View>
           <Pressable style={s.exitBtn} onPress={() => router.replace('/duels')}>
             <Text style={s.exitBtnText}>{T.duels_battle_back_arena}</Text>

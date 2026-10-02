@@ -18,15 +18,6 @@ export const LIMITS = {
   /** Gold cost of one freeze token for premium users (half price) */
   PREMIUM_FREEZE_GOLD_COST: 50,
 
-  /** Minimum hours between duels for free users (48h = every 2 days) */
-  FREE_DUEL_COOLDOWN_HOURS: 48,
-  /** Minimum hours between duels for premium users */
-  PREMIUM_DUEL_COOLDOWN_HOURS: 24,
-
-  /** Duels a free user can take part in per week (premium: unlimited).
-   *  Mirrored server-side in guard_duel_writes. */
-  FREE_DUELS_PER_WEEK: 3,
-
   /** Co-op challenges a player can take part in at once. Mirrored in public.coop_slots_left. */
   FREE_COOP_ACTIVE: 1,
   PREMIUM_COOP_ACTIVE: 2,
@@ -63,36 +54,6 @@ export function getFreezeCost(): number {
 /** Returns true if the user can purchase/use another freeze token */
 export function canUseFreeze(currentTokens: number): boolean {
   return currentTokens < getMaxFreezeTokens();
-}
-
-// ─── Duel cooldown gates ──────────────────────────────────────────────────────
-
-export function getDuelCooldownHours(): number {
-  return isPremium()
-    ? LIMITS.PREMIUM_DUEL_COOLDOWN_HOURS
-    : LIMITS.FREE_DUEL_COOLDOWN_HOURS;
-}
-
-/**
- * Returns true if the user is allowed to start a new duel.
- * @param lastDuelAt ISO timestamp of last duel, or null if never dueled.
- */
-export function canStartDuel(lastDuelAt: string | null): boolean {
-  if (!lastDuelAt) return true;
-  const cooldownMs = getDuelCooldownHours() * 60 * 60 * 1000;
-  const elapsed = Date.now() - new Date(lastDuelAt).getTime();
-  return elapsed >= cooldownMs;
-}
-
-/**
- * Returns remaining cooldown in minutes, or 0 if ready.
- */
-export function duelCooldownRemainingMinutes(lastDuelAt: string | null): number {
-  if (!lastDuelAt) return 0;
-  const cooldownMs = getDuelCooldownHours() * 60 * 60 * 1000;
-  const elapsed = Date.now() - new Date(lastDuelAt).getTime();
-  const remaining = cooldownMs - elapsed;
-  return remaining > 0 ? Math.ceil(remaining / 60_000) : 0;
 }
 
 // ─── Stats gates ──────────────────────────────────────────────────────────────
