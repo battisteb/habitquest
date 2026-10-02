@@ -2,7 +2,7 @@ import { FALLBACK_PRICES, annualPerMonth, annualSavingsPercent, formatPrice } fr
 
 describe('pricing', () => {
   it('falls back to the dollar prices', () => {
-    expect(FALLBACK_PRICES).toEqual({ monthly: 5.99, annual: 39.99, currency: 'USD' });
+    expect(FALLBACK_PRICES).toEqual({ monthly: 5.99, annual: 39.99, lifetime: 79.99, currency: 'USD' });
   });
 
   it('formats in the store currency and the player language', () => {

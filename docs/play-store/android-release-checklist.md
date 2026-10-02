@@ -13,6 +13,7 @@
 - ⏳ Compte Google Play Console (25 $, une fois) et fiche de l'app créée
 - ⏳ Compte de service Google Cloud avec accès à la Play Console → fichier `google-service-account.json` à la racine (jamais commité)
 - ⏳ RevenueCat : clé API Android de production (`goog_…`) à la place de la clé `test_…` dans `subscription-store.ts` ; produits d'abonnement créés dans la Play Console
+- ⏳ Offre « à vie » (I10) : dans la Play Console, créer un **produit intégré** (achat unique) `habitquest_premium_lifetime` (prix de référence 79,99 $, à confirmer par Battiste). Dans RevenueCat, l'attacher à l'entitlement `premium` et l'ajouter à l'offering par défaut comme package « Lifetime »
 - ⏳ Essai gratuit de 14 jours : dans la Play Console, sur le forfait de base de chaque abonnement, une offre « Essai sans frais » de 14 jours (éligibilité : nouveaux clients). L'app la détecte seule (phase gratuite de l'offre par défaut)
 - ⏳ AdMob : bloc « interstitiel avec récompense » dédié (le code réutilise l'ID de l'interstitiel classique, qui ne servira pas de pubs avec récompense)
 - ⏳ Variables `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` configurées comme variables d'environnement EAS
