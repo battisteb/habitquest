@@ -12,7 +12,7 @@ interface CompanionProps {
 }
 
 /** Rows of `.`/letters → horizontal strips of one color, like the hero renderer. */
-function strips(rows: string[], palette: Record<string, string>): [number, number, number, string][] {
+export function strips(rows: string[], palette: Record<string, string>): [number, number, number, string][] {
   const out: [number, number, number, string][] = [];
   rows.forEach((row, y) => {
     let x = 0;

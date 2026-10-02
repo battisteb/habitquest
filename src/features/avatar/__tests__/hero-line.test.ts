@@ -47,4 +47,8 @@ describe('heroText', () => {
     );
     expect(heroText(T, { kind: 'pending', count: 3 })).toContain('3 quêtes');
   });
+  it('talks about rest when no quest is planned today', () => {
+    expect(heroLine({ totalHabits: 0, restDay: true, pendingStreaks: [], xp: 0, level: 1 })).toEqual({ kind: 'rest_day' });
+    expect(heroLine({ totalHabits: 0, pendingStreaks: [], xp: 0, level: 1 })).toEqual({ kind: 'no_habits' });
+  });
 });

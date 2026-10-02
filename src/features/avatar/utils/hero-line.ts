@@ -3,12 +3,15 @@ import type { Strings } from '../../../lib/i18n';
 
 export type HeroLine =
   | { kind: 'no_habits' }
+  | { kind: 'rest_day' }
   | { kind: 'all_done' }
   | { kind: 'level_up'; count: number; nextLevel: number }
   | { kind: 'pending'; count: number };
 
 interface HeroLineInput {
   totalHabits: number;
+  /** The player has quests, but none is planned today (chosen days). */
+  restDay?: boolean;
   /** Current streak of each habit still to validate today. */
   pendingStreaks: number[];
   xp: number;
@@ -19,8 +22,8 @@ interface HeroLineInput {
  * What the hero says on the Today screen. When validating the remaining habits
  * reaches the next level, it counts how few are needed (biggest rewards first).
  */
-export function heroLine({ totalHabits, pendingStreaks, xp, level }: HeroLineInput): HeroLine {
-  if (totalHabits === 0) return { kind: 'no_habits' };
+export function heroLine({ totalHabits, restDay, pendingStreaks, xp, level }: HeroLineInput): HeroLine {
+  if (totalHabits === 0) return restDay ? { kind: 'rest_day' } : { kind: 'no_habits' };
   if (pendingStreaks.length === 0) return { kind: 'all_done' };
 
   const missing = getXpForLevel(level + 1) - xp;
@@ -37,6 +40,8 @@ export function heroText(T: Strings, line: HeroLine): string {
   switch (line.kind) {
     case 'no_habits':
       return T.hero_no_habits;
+    case 'rest_day':
+      return T.hero_rest_day;
     case 'all_done':
       return T.hero_all_done;
     case 'level_up':

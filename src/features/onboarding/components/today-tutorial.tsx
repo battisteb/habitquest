@@ -16,6 +16,7 @@ import {
 import { tutorialSeen$, markTutorialSeen } from '../tutorial-state';
 import { tourTargets$, tourEvent$, measureTarget, type Rect, type TourTargetKey } from '../tour/tour-targets';
 import { TOUR_STEPS, REMINDER_HOURS, DEFAULT_REMINDER_HOUR, type TourStep } from '../tour/tour-steps';
+import { Pip } from '../../mascot/components/pip';
 
 const HOLE_PADDING = 6;
 const GAP = 14;
@@ -163,7 +164,10 @@ export function TodayTutorial() {
           <Animated.Text style={[styles.arrow, { marginLeft: arrowLeft, transform: [{ translateY: Animated.multiply(bounce, -1) }] }]}>▲</Animated.Text>
         )}
         <PixelFrame borderColor={colors.text} backgroundColor={colors.text} contentStyle={styles.bubble}>
-          <Text style={styles.counter}>{index + 1} / {TOUR_STEPS.length}</Text>
+          <View style={styles.header}>
+            <Pip expression={step.pip.expression} mood={step.pip.mood} size={44} accessibilityLabel="Pip" />
+            <Text style={styles.counter}>{index + 1} / {TOUR_STEPS.length}</Text>
+          </View>
           <Text style={styles.title}>{T[step.title]}</Text>
           <Text style={styles.body}>{T[step.body]}</Text>
 
@@ -217,6 +221,7 @@ function createStyles() {
     bubbleWrap: { position: 'absolute', left: spacing.md, right: spacing.md },
     bubble: { padding: spacing.md, gap: spacing.sm },
     arrow: { color: colors.text, fontSize: 20, lineHeight: 22 },
+    header: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
     counter: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, color: colors.surface, letterSpacing: 1 },
     title: { fontSize: pixelSize(fontSizes.lg), fontFamily: fonts.bold, color: colors.background },
     body: { fontSize: fontSizes.sm, color: colors.background, lineHeight: 19 },

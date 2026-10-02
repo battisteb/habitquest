@@ -15,13 +15,15 @@ import { useT } from '../../../lib/i18n';
 
 interface HeroGreetingProps {
   totalHabits: number;
+  /** Quests exist but none is planned today. */
+  restDay?: boolean;
   pendingStreaks: number[];
   xp: number;
   level: number;
 }
 
 /** The player's hero on the Today screen, commenting on the day in a speech bubble. */
-export function HeroGreeting({ totalHabits, pendingStreaks, xp, level }: HeroGreetingProps) {
+export function HeroGreeting({ totalHabits, restDay, pendingStreaks, xp, level }: HeroGreetingProps) {
   const T = useT();
   const router = useRouter();
   const { themeKey } = useTheme();
@@ -36,7 +38,7 @@ export function HeroGreeting({ totalHabits, pendingStreaks, xp, level }: HeroGre
     loadAvatarConfig(authStore$.user.get()?.id);
   }, []);
 
-  const text = heroText(T, heroLine({ totalHabits, pendingStreaks, xp, level }));
+  const text = heroText(T, heroLine({ totalHabits, restDay, pendingStreaks, xp, level }));
 
   return (
     <View style={styles.row} {...tourTarget}>

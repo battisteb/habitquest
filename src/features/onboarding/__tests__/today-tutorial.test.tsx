@@ -73,8 +73,13 @@ describe('TodayTutorial (guided tour)', () => {
   it('waits for the real actions, then asks about the daily reminder', () => {
     const utils = render(<TodayTutorial />);
 
+    // Pip, the mascot, introduces itself and guides the tour.
+    expect(utils.getByText('tuto_pip_title')).toBeTruthy();
+    expect(utils.getByText('1 / 7')).toBeTruthy();
+    expect(utils.getByTestId('pip')).toBeTruthy();
+    fireEvent.press(utils.getByText('TUTO_NEXT'));
+
     expect(utils.getByText('tuto_hero_title')).toBeTruthy();
-    expect(utils.getByText('1 / 6')).toBeTruthy();
     fireEvent.press(utils.getByText('TUTO_NEXT'));
 
     // Validate a quest: no "next" button, the action moves the tour on.
@@ -109,7 +114,7 @@ describe('TodayTutorial (guided tour)', () => {
 
   it('turns the reminder off without asking the system permission', () => {
     const utils = render(<TodayTutorial />);
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       const next = utils.queryByText('TUTO_NEXT') ?? utils.queryByText('tuto_complete_later');
       if (next) fireEvent.press(next);
       else act(() => {
@@ -125,6 +130,7 @@ describe('TodayTutorial (guided tour)', () => {
   it('skips a step whose element is not on screen', () => {
     act(() => tourTargets$.set({ 'first-check': RECT, missions: RECT, add: RECT }));
     const utils = render(<TodayTutorial />);
+    fireEvent.press(utils.getByText('TUTO_NEXT')); // Pip's introduction
     expect(utils.getByText('tuto_hero_title')).toBeTruthy();
     act(() => jest.advanceTimersByTime(1600));
     expect(utils.getByText('tuto_complete_title')).toBeTruthy();
@@ -133,10 +139,10 @@ describe('TodayTutorial (guided tour)', () => {
   it('can be skipped, and reappears after a reset from settings', () => {
     const utils = render(<TodayTutorial />);
     fireEvent.press(utils.getByText('tuto_skip'));
-    expect(utils.queryByText('tuto_hero_title')).toBeNull();
+    expect(utils.queryByText('tuto_pip_title')).toBeNull();
     expect(tutorialSeen$.get()).toBe(true);
 
     act(() => resetTutorial());
-    expect(utils.getByText('tuto_hero_title')).toBeTruthy();
+    expect(utils.getByText('tuto_pip_title')).toBeTruthy();
   });
 });

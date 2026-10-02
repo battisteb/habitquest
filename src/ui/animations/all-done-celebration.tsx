@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text } from 'react-native';
+import { Pip } from '../../features/mascot/components/pip';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -42,6 +43,7 @@ export function AllDoneCelebration({ visible }: AllDoneCelebrationProps) {
 
   return (
     <Animated.View style={[styles.banner, style]}>
+      <Pip expression="joy" mood="party" size={40} />
       <Text style={styles.text}>{T.all_done_celebration}</Text>
     </Animated.View>
   );
@@ -58,8 +60,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.accent + 'aa',
     borderBottomWidth: 4,
-    padding: spacing.md,
+    padding: spacing.sm,
+    flexDirection: 'row',
+    gap: spacing.sm,
     alignItems: 'center',
+    justifyContent: 'center',
     zIndex: 998,
     pointerEvents: 'none',
   },
