@@ -145,6 +145,50 @@ describe('habitsStore$', () => {
     expect(supabase.rpc).not.toHaveBeenCalledWith('complete_habit', expect.anything());
   });
 
+  describe('uncompleteHabit (validation tapped by mistake)', () => {
+    beforeEach(() => {
+      habitsStore$.todayCompletions.set({ h1: true });
+      habitsStore$.weekCompletions.set({ h1: 2 });
+      habitsStore$.streaks.set({
+        h1: { id: 's1', habit_id: 'h1', current_count: 4, longest_count: 5, last_completed_at: new Date().toISOString() },
+      });
+    });
+
+    it('asks the server to take everything back and mirrors it', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.rpc.mockResolvedValueOnce({
+        data: { success: true, xp_lost: 14, gold_lost: 1, old_level: 2, new_level: 2, current_streak: 3 },
+        error: null,
+      });
+      const { uncompleteHabit } = require('../stores/habits-store');
+      const result = await uncompleteHabit('h1');
+
+      expect(supabase.rpc).toHaveBeenCalledWith('uncomplete_habit', { p_habit_id: 'h1' });
+      expect(result.xp_lost).toBe(14);
+      expect(habitsStore$.todayCompletions.get()['h1']).toBe(false);
+      expect(habitsStore$.weekCompletions.get()['h1']).toBe(1);
+      expect(habitsStore$.streaks.get()['h1'].current_count).toBe(3);
+    });
+
+    it('does nothing for a quest not validated today', async () => {
+      habitsStore$.todayCompletions.set({});
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.rpc.mockClear();
+      const { uncompleteHabit } = require('../stores/habits-store');
+      expect(await uncompleteHabit('h1')).toBeUndefined();
+      expect(supabase.rpc).not.toHaveBeenCalled();
+    });
+
+    it('trusts the server when there is nothing to undo', async () => {
+      const { supabase } = require('../../../lib/supabase/client');
+      supabase.rpc.mockResolvedValueOnce({ data: { success: false, reason: 'not_completed_today' }, error: null });
+      const { uncompleteHabit } = require('../stores/habits-store');
+      expect(await uncompleteHabit('h1')).toBeUndefined();
+      expect(habitsStore$.todayCompletions.get()['h1']).toBe(false);
+      expect(habitsStore$.streaks.get()['h1'].current_count).toBe(4);
+    });
+  });
+
   describe('3 times a week', () => {
     const weekly = {
       id: 'w1', user_id: 'user-123', name: 'Gym', category: 'fitness', frequency: '3x_week',

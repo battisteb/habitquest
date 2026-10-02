@@ -27,6 +27,8 @@ interface HabitCardProps {
   streakCount: number;
   isCompletedToday: boolean;
   onComplete: () => void;
+  /** Undo today's validation (tapped by mistake). */
+  onUncomplete?: () => void;
   onPress: () => void;
   onLongPress?: () => void;
   index?: number;
@@ -86,6 +88,7 @@ export function HabitCard({
   streakCount,
   isCompletedToday,
   onComplete,
+  onUncomplete,
   onPress,
   onLongPress,
   index = 0,
@@ -345,10 +348,12 @@ export function HabitCard({
                 </View>
                 <Animated.View style={checkPopStyle} {...checkTarget}>
                 <Pressable
-                  onPress={handleComplete}
+                  onPress={effectiveDone ? onUncomplete : handleComplete}
                   style={[styles.checkButton, effectiveDone && styles.checkButtonDone]}
-                  disabled={effectiveDone}
+                  // Validated today: tapping again offers to undo it (tapped by mistake).
+                  disabled={effectiveDone && !(isCompletedToday && onUncomplete)}
                   hitSlop={8}
+                  testID="habit-check"
                 >
                   <Text style={[styles.checkText, effectiveDone && styles.checkTextDone]}>
                     {effectiveDone ? '✓' : ''}

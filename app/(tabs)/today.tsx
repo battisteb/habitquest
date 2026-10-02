@@ -19,7 +19,7 @@ import { PixelButton } from '../../src/ui/components/pixel-button';
 import { XpToast } from '../../src/ui/animations/xp-toast';
 import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
 import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
-import { habitsStore$, fetchHabits, completeHabit, isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
+import { habitsStore$, fetchHabits, completeHabit, uncompleteHabit, isHabitCompletedEnough } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../src/features/habits/stores/burnout-store';
@@ -608,6 +608,21 @@ export default function TodayScreen() {
     }
   }, [streaks, activeHabits, todayCompletions, totalCount]);
 
+  // Undo a validation tapped by mistake: confirm first, it takes the rewards back.
+  const handleUncomplete = useCallback((habitId: string, name: string) => {
+    Alert.alert(T.habit_undo_title, T.habit_undo_msg.replace('{name}', name), [
+      { text: T.common_cancel, style: 'cancel' },
+      {
+        text: T.habit_undo_confirm,
+        style: 'destructive',
+        onPress: async () => {
+          const result = await uncompleteHabit(habitId).catch(() => undefined);
+          if (result) setTodayXp((prev) => Math.max(0, prev - result.xp_lost));
+        },
+      },
+    ]);
+  }, [T]);
+
   const handleFreeze = () => {
     if (freezeActive) return;
     Alert.alert(
@@ -882,6 +897,7 @@ export default function TodayScreen() {
                 streakCount={streaks[item.id]?.current_count ?? 0}
                 isCompletedToday={!!todayCompletions[item.id]}
                 onComplete={() => handleComplete(item.id)}
+                onUncomplete={() => handleUncomplete(item.id, item.name)}
                 onPress={() => router.push(`/habit/${item.id}`)}
                 onLongPress={() =>
                   Alert.alert(

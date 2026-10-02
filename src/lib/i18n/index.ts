@@ -248,6 +248,9 @@ const FR = {
   tuto_done: "C'est parti !",
   tuto_skip: 'Passer le tutoriel',
   habit_swipe_done: '✓ FAIT',
+  habit_undo_title: 'Décocher cette quête ?',
+  habit_undo_msg: '« {name} » repasse à faire. Les XP, l’or et la série gagnés avec cette validation sont retirés.',
+  habit_undo_confirm: 'Décocher',
   settings_replay_tutorial: '🎓 Revoir le tutoriel',
   // Onboarding — avatar step
   onb_avatar_title: 'CRÉE TON HÉROS',
@@ -1266,6 +1269,9 @@ const EN = {
   tuto_done: "Let's go!",
   tuto_skip: 'Skip tutorial',
   habit_swipe_done: '✓ DONE',
+  habit_undo_title: 'Uncheck this quest?',
+  habit_undo_msg: '"{name}" goes back to do. The XP, gold and streak earned with it are taken back.',
+  habit_undo_confirm: 'Uncheck',
   settings_replay_tutorial: '🎓 Replay tutorial',
   // Onboarding — avatar step
   onb_avatar_title: 'MEET YOUR HERO',
