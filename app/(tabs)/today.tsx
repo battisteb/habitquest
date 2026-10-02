@@ -27,6 +27,7 @@ import { brokenStreakStore$, dismissBrokenStreak, clearBrokenStreakForHabit } fr
 import { pinnedHabitsStore$, togglePinHabit } from '../../src/features/habits/stores/pinned-habits-store';
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
+import { TrialBanner } from '../../src/features/monetization/components/trial-banner';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
 import { useTourTarget } from '../../src/features/onboarding/tour/tour-targets';
 import {
@@ -650,6 +651,8 @@ export default function TodayScreen() {
           </View>
         ) : null;
       })()}
+
+      <TrialBanner />
 
       {/* Streak recovery banners */}
       {brokenStreaks.map((b) => (

@@ -11,6 +11,7 @@ import { savePendingInvite, takePendingInvite } from '../src/features/social/uti
 import { levelUpStore$, dismissLevelUp } from '../src/features/gamification/stores/level-up-store';
 import { streakMilestoneStore$, dismissStreakMilestone } from '../src/features/gamification/stores/streak-milestone-store';
 import { achievementsStore$ } from '../src/features/gamification/stores/achievements-store';
+import { TrialOfferHost } from '../src/features/monetization/components/trial-offer-host';
 import { LevelUpOverlay } from '../src/ui/animations/level-up-overlay';
 import { StreakMilestoneOverlay } from '../src/ui/animations/streak-milestone-overlay';
 import { AchievementToast } from '../src/ui/animations/achievement-toast';
@@ -139,6 +140,7 @@ function ThemedApp() {
         habitName={milestoneHabitName}
         onComplete={dismissStreakMilestone}
       />
+      {authUserId && <TrialOfferHost />}
       <OfflineBanner />
       <PixelDialogHost />
       {currentToast && (

@@ -35,6 +35,10 @@ interface SubscriptionState {
   offering: PurchasesOffering | null;
   customerInfo: CustomerInfo | null;
   error: string | null;
+  /** Products (ids) the store offers a free trial on to this player. */
+  trialProducts: string[];
+  /** End of the free trial in progress (ISO), null when not in a trial. */
+  trialEndsAt: string | null;
 }
 
 export const subscriptionStore$ = observable<SubscriptionState>({
@@ -43,7 +47,31 @@ export const subscriptionStore$ = observable<SubscriptionState>({
   offering: null,
   customerInfo: null,
   error: null,
+  trialProducts: [],
+  trialEndsAt: null,
 });
+
+/** The trial in progress, from the active entitlement (periodType TRIAL). */
+export function trialEndFromCustomerInfo(customerInfo: CustomerInfo | null): string | null {
+  const ent = customerInfo?.entitlements?.active?.[ENTITLEMENT_PREMIUM];
+  return ent && ent.periodType === 'TRIAL' && ent.expirationDate ? ent.expirationDate : null;
+}
+
+/** Whether a package starts with a free trial (iOS: free intro offer; Android: free phase). */
+export function packageHasFreeTrial(pkg: any): boolean {
+  const product = pkg?.product;
+  if (!product) return false;
+  if (product.introPrice) return product.introPrice.price === 0;
+  return !!product.defaultOption?.freePhase;
+}
+
+function applyCustomerInfo(customerInfo: CustomerInfo): boolean {
+  const isPremium = customerInfo.entitlements.active[ENTITLEMENT_PREMIUM] !== undefined;
+  subscriptionStore$.customerInfo.set(customerInfo);
+  subscriptionStore$.isPremium.set(isPremium);
+  subscriptionStore$.trialEndsAt.set(trialEndFromCustomerInfo(customerInfo));
+  return isPremium;
+}
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 let _initialized = false;
@@ -70,6 +98,8 @@ export async function initPurchases(userId: string): Promise<void> {
     _initialized = true;
 
     await refreshSubscriptionStatus();
+    // Prices and free trial eligibility, for the trial offer after the tutorial.
+    await loadOfferings();
   } catch {
     // Non-critical — app works without subscription
   }
@@ -82,11 +112,7 @@ export async function refreshSubscriptionStatus(): Promise<void> {
   try {
     subscriptionStore$.isLoading.set(true);
     const customerInfo = await Purchases.getCustomerInfo();
-    const isPremium =
-      customerInfo.entitlements.active[ENTITLEMENT_PREMIUM] !== undefined;
-
-    subscriptionStore$.customerInfo.set(customerInfo);
-    subscriptionStore$.isPremium.set(isPremium);
+    applyCustomerInfo(customerInfo);
     subscriptionStore$.error.set(null);
 
     // The server copy of the status comes from the RevenueCat webhook
@@ -106,9 +132,35 @@ export async function loadOfferings(): Promise<void> {
     const offerings = await Purchases.getOfferings();
     if (offerings.current) {
       subscriptionStore$.offering.set(offerings.current);
+      await refreshTrialEligibility();
     }
   } catch {
     // Offerings unavailable (no network, no products configured)
+  }
+}
+
+// ─── Free trial eligibility ──────────────────────────────────────────────────
+/**
+ * Products with a free trial this player can still get. On Android the store
+ * only lists offers the player is eligible for; on iOS it has to be asked.
+ */
+export async function refreshTrialEligibility(): Promise<void> {
+  const Purchases = getPurchases();
+  const offering = subscriptionStore$.offering.get();
+  if (!Purchases || !offering) return;
+  try {
+    const withTrial = offering.availablePackages.filter(packageHasFreeTrial).map((p: any) => p.product.identifier as string);
+    if (Platform.OS === 'ios' && withTrial.length > 0) {
+      const ELIGIBLE = Purchases.INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE;
+      const eligibility = await Purchases.checkTrialOrIntroductoryPriceEligibility(withTrial);
+      subscriptionStore$.trialProducts.set(
+        withTrial.filter((id: string) => eligibility[id]?.status === ELIGIBLE),
+      );
+    } else {
+      subscriptionStore$.trialProducts.set(withTrial);
+    }
+  } catch {
+    subscriptionStore$.trialProducts.set([]);
   }
 }
 
@@ -129,10 +181,8 @@ export async function purchaseSubscription(productIdentifier: string): Promise<b
     if (!pkg) throw new Error(`Product ${productIdentifier} not found`);
 
     const { customerInfo } = await Purchases.purchasePackage(pkg);
-    const isPremium =
-      customerInfo.entitlements.active[ENTITLEMENT_PREMIUM] !== undefined;
-    subscriptionStore$.customerInfo.set(customerInfo);
-    subscriptionStore$.isPremium.set(isPremium);
+    const isPremium = applyCustomerInfo(customerInfo);
+    subscriptionStore$.trialProducts.set([]);
 
     await refreshSubscriptionStatus();
     return isPremium;
@@ -153,10 +203,7 @@ export async function restorePurchases(): Promise<boolean> {
   try {
     subscriptionStore$.isLoading.set(true);
     const customerInfo = await Purchases.restorePurchases();
-    const isPremium =
-      customerInfo.entitlements.active[ENTITLEMENT_PREMIUM] !== undefined;
-    subscriptionStore$.customerInfo.set(customerInfo);
-    subscriptionStore$.isPremium.set(isPremium);
+    const isPremium = applyCustomerInfo(customerInfo);
     await refreshSubscriptionStatus();
     return isPremium;
   } catch {
