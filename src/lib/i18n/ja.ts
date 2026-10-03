@@ -535,6 +535,8 @@ export const JA: Strings = {
   coop_create_error: 'チャレンジを作成できませんでした。',
   social_duels_short: '⚔️ バトル',
   social_coop_short: '🤝 協力',
+  social_done_today: '✓ 今日{n}個のクエスト',
+  social_kudos_received: '👏 今日あなたを応援しました',
   duels_back: '← 戻る',
   duels_title: 'バトル',
   duels_subtitle: 'フレンドにターン制バトルを挑もう',

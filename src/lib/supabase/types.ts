@@ -900,6 +900,11 @@ export type Database = {
       uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json };
       log_mood: { Args: { p_mood: number }; Returns: Json };
       repair_streak: { Args: { p_habit_id: string; p_with_ad?: boolean }; Returns: Json };
+      give_kudos: { Args: { p_friend_id: string }; Returns: Json };
+      friends_today: {
+        Args: Record<string, never>;
+        Returns: { friend_id: string; done_today: number; kudos_sent: boolean; kudos_received: number }[];
+      };
       get_my_profile: {
         Args: Record<string, never>;
         Returns: Database['public']['Tables']['profiles']['Row'][];

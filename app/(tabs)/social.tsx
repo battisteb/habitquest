@@ -18,6 +18,8 @@ import { PixelFrame } from '../../src/ui/components/pixel-frame';
 import {
   friendsStore$,
   fetchFriends,
+  fetchFriendsToday,
+  giveKudos,
   searchUsers,
   sendFriendRequest,
   respondToRequest,
@@ -215,6 +217,7 @@ export default function SocialScreen() {
   friendMeta: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center' },
   friendRank: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold },
   friendXp: { fontSize: fontSizes.xs, color: colors.textMuted },
+  friendToday: { fontSize: fontSizes.xs, color: colors.success },
   friendActions: { flexDirection: 'row', gap: spacing.xs },
   pendingActions: { flexDirection: 'row', gap: spacing.xs },
   actionBtn: { paddingHorizontal: spacing.sm, minWidth: 36 },
@@ -283,6 +286,7 @@ export default function SocialScreen() {
   const [inviteFeedback, setInviteFeedback] = useState<string | null>(null);
 
   const friends = use$(friendsStore$.friends);
+  const friendsToday = use$(friendsStore$.today);
   const pendingReceived = use$(friendsStore$.pendingReceived);
   const searchResults = use$(friendsStore$.searchResults);
   const isLoading = use$(friendsStore$.isLoading);
@@ -292,11 +296,12 @@ export default function SocialScreen() {
 
   useEffect(() => {
     fetchFriends();
+    fetchFriendsToday();
   }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await Promise.all([fetchFriends(), refreshLb()]);
+    await Promise.all([fetchFriends(), fetchFriendsToday(), refreshLb()]);
     setRefreshing(false);
   };
 
@@ -493,6 +498,7 @@ export default function SocialScreen() {
             );
           }
 
+          const day = profile?.id ? friendsToday[profile.id] : undefined;
           return (
             <Pressable
               style={styles.friendCard}
@@ -504,8 +510,25 @@ export default function SocialScreen() {
                   {rank && <Text style={[styles.friendRank, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>}
                   <Text style={styles.friendXp}>{T.social_lv_prefix}{profile?.level ?? 1} · 🔥 {profile?.best_streak ?? 0}</Text>
                 </View>
+                {day && day.done > 0 ? (
+                  <Text style={styles.friendToday}>{T.social_done_today.replace('{n}', String(day.done))}</Text>
+                ) : null}
+                {day && day.received > 0 ? (
+                  <Text style={styles.friendToday}>{T.social_kudos_received}</Text>
+                ) : null}
               </View>
               <View style={styles.friendActions}>
+                {/* Cheer a friend who did a quest today (G4). */}
+                {day && day.done > 0 ? (
+                  <PixelButton
+                    title={day.sent ? '👏✓' : '👏'}
+                    onPress={() => profile?.id && giveKudos(profile.id)}
+                    disabled={day.sent}
+                    testID={`friend-kudos-${profile?.id}`}
+                    variant="secondary"
+                    style={styles.actionBtn}
+                  />
+                ) : null}
                 {/* A duel with this friend (opens at level 5, I6). */}
                 <PixelButton
                   title="⚔️"
