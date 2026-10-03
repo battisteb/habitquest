@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useMemo, useState } from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useT, useLang, localeTag, type Lang } from '../../../lib/i18n';
 import { projectLevelDate } from '../utils/rank-projection';
 import { titleLabel, stageDescription } from '../../../lib/i18n/labels';
@@ -7,6 +7,7 @@ import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/
 import { useTheme } from '../../../ui/theme/theme-context';
 import { PixelFrame } from '../../../ui/components/pixel-frame';
 import { PixelProgress } from '../../../ui/components/pixel-progress';
+import { XP_CONFIG, calculateXpEarned, getXpForLevel } from '../../../lib/constants/game-config';
 import {
   AVATAR_STAGES,
   getAvatarStage,
@@ -22,13 +23,19 @@ interface RankCardProps {
   progress: number;
   /** XP earned over the last days, to show when the next rank comes at this pace. */
   recentXp?: number | null;
+  /**
+   * Best streak still running. When given, the card unfolds to show the
+   * streak bonus and the road through the ranks (D8: former XP journey screen).
+   */
+  bestStreak?: number;
 }
 
 /**
  * Rank and level in one card. It changes with the rank: the frame and title
- * take the rank color, and the badge gains a pip per rank reached.
+ * take the rank color, and the badge gains a pip per rank reached. With a
+ * best streak, a tap unfolds the streak bonus and the road through the ranks.
  */
-export function RankCard({ level, currentXp, nextLevelXp, progress, recentXp }: RankCardProps) {
+export function RankCard({ level, currentXp, nextLevelXp, progress, recentXp, bestStreak }: RankCardProps) {
   const T = useT();
   const { themeKey } = useTheme();
   const stage = getAvatarStage(level);
@@ -37,8 +44,15 @@ export function RankCard({ level, currentXp, nextLevelXp, progress, recentXp }: 
   const lang = useLang();
   const eta = next && recentXp ? projectLevelDate(currentXp, next.minLevel, recentXp) : null;
   const styles = useMemo(() => createStyles(), [themeKey]);
+  const [open, setOpen] = useState(false);
+  const expandable = bestStreak !== undefined;
+  // Bonus of the next validation of that quest (its streak goes up by one).
+  const multiplier = Math.min(
+    1 + ((bestStreak ?? 0) + 1) * XP_CONFIG.STREAK_MULTIPLIER_STEP,
+    XP_CONFIG.STREAK_MULTIPLIER_CAP,
+  );
 
-  return (
+  const card = (
     <PixelFrame borderColor={stage.aura} backgroundColor={colors.surface} contentStyle={[styles.card, { backgroundColor: stage.aura + '14' }]}>
       <View style={styles.row} testID="rank-card">
         {/* Badge: rank emblem in the rank color, one pip per rank reached */}
@@ -84,7 +98,55 @@ export function RankCard({ level, currentXp, nextLevelXp, progress, recentXp }: 
             .replace('{date}', eta.toLocaleDateString(localeTag(lang as Lang), { day: 'numeric', month: 'long' }))}
         </Text>
       )}
+      {expandable && (
+        <Text style={styles.toggle}>{open ? T.rank_details_hide : T.rank_details_show}</Text>
+      )}
+      {expandable && open && (
+        <View style={styles.details} testID="rank-details">
+          {/* Streak bonus: the longer the streak, the more XP per quest. */}
+          <Text style={styles.detailsTitle}>{T.xp_section_streak_bonus}</Text>
+          <Text style={styles.bonusLine}>
+            🔥 {bestStreak} → ×{multiplier.toFixed(1)} → {calculateXpEarned((bestStreak ?? 0) + 1)} XP
+          </Text>
+          <Text style={styles.hint}>
+            {T.xp_multiplier_hint
+              .replace('{max}', String(XP_CONFIG.STREAK_MULTIPLIER_CAP))
+              .replace('{threshold}', String(Math.round((XP_CONFIG.STREAK_MULTIPLIER_CAP - 1) / XP_CONFIG.STREAK_MULTIPLIER_STEP)))}
+          </Text>
+
+          {/* The road through the ranks. */}
+          <Text style={styles.detailsTitle}>{T.xp_section_roadmap}</Text>
+          {AVATAR_STAGES.map((s) => {
+            const reached = level >= s.minLevel;
+            const current = s.title === stage.title;
+            return (
+              <View key={s.title} style={styles.roadRow}>
+                <View style={[styles.roadDot, { backgroundColor: reached ? s.aura : colors.border }]} />
+                <Text style={[styles.roadName, { color: reached ? s.aura : colors.textMuted }]}>
+                  {titleLabel(T, s.title)} {current ? T.xp_roadmap_you : ''}
+                </Text>
+                <Text style={styles.roadReq}>
+                  {T.xp_roadmap_req.replace('{level}', String(s.minLevel)).replace('{xp}', getXpForLevel(s.minLevel).toLocaleString())}
+                </Text>
+                {reached && !current ? <Text style={[styles.roadCheck, { color: s.aura }]}>✓</Text> : null}
+              </View>
+            );
+          })}
+        </View>
+      )}
     </PixelFrame>
+  );
+
+  if (!expandable) return card;
+  return (
+    <Pressable
+      onPress={() => setOpen((v) => !v)}
+      accessibilityRole="button"
+      accessibilityState={{ expanded: open }}
+      testID="rank-card-toggle"
+    >
+      {card}
+    </Pressable>
   );
 }
 
@@ -113,5 +175,15 @@ function createStyles() {
     next: { flex: 1, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, color: colors.textMuted, letterSpacing: 1 },
     eta: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
     xp: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, color: colors.textMuted, letterSpacing: 0.5 },
+    toggle: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, color: colors.primary, letterSpacing: 1, textAlign: 'center' },
+    details: { gap: spacing.xs, borderTopWidth: 2, borderTopColor: colors.border, paddingTop: spacing.sm },
+    detailsTitle: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, color: colors.textSecondary, letterSpacing: 1, marginTop: spacing.xs },
+    bonusLine: { fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold, color: colors.xp },
+    hint: { fontSize: fontSizes.xs, color: colors.textMuted },
+    roadRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+    roadDot: { width: 10, height: 10 },
+    roadName: { flex: 1, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold },
+    roadReq: { fontSize: fontSizes.xs, color: colors.textMuted },
+    roadCheck: { fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold, width: 14, textAlign: 'center' },
   });
 }

@@ -20,7 +20,6 @@ const FILES = [
   'app/(tabs)/stats.tsx',
   'app/(tabs)/training.tsx',
   // App screens
-  'app/xp-journey.tsx',
   'app/notifications.tsx',
   'app/achievements.tsx',
   'app/weekly-recap.tsx',
