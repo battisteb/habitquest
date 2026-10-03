@@ -249,9 +249,7 @@ export default function PublicProfileScreen() {
             <PixelButton
               title={T.profile_pub_challenge}
               onPress={() =>
-                router.push(
-                  `/challenge/create?opponentId=${profile.id}&opponentName=${profile.username}`,
-                )
+                router.push(`/duels/challenge?opponentId=${profile.id}`)
               }
               variant="secondary"
             />

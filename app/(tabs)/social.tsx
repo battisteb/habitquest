@@ -23,13 +23,7 @@ import {
   respondToRequest,
   removeFriend,
 } from '../../src/features/social/stores/friends-store';
-import {
-  challengesStore$,
-  fetchChallenges,
-  respondToChallenge,
-} from '../../src/features/social/stores/challenges-store';
-import { useLeaderboard, useStreakLeaderboard } from '../../src/features/social/hooks/use-leaderboard';
-import type { StreakLeaderEntry } from '../../src/features/social/hooks/use-leaderboard';
+import { useLeaderboard } from '../../src/features/social/hooks/use-leaderboard';
 import { getRankForLevel } from '../../src/lib/constants/game-config';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { AdBanner } from '../../src/features/monetization/components/ad-banner';
@@ -42,10 +36,9 @@ import { UNLOCKS, isUnlocked, type UnlockFeature } from '../../src/lib/constants
 import { showDialog } from '../../src/lib/app-alert';
 import { profileStore$ } from '../../src/features/gamification/stores/profile-store';
 
-type Tab = 'leaderboard' | 'friends' | 'challenges' | 'search' | 'streaks';
-
-const MEDAL = ['🥇', '🥈', '🥉'];
-const MEDAL_COLORS = [colors.accent, '#c0c0c0', '#cd7f32'];
+// D2: two tabs. Friends holds the search and each friend's streak; the
+// leaderboard shows friends first (a global ranking discourages newcomers).
+type Tab = 'friends' | 'leaderboard';
 
 export default function SocialScreen() {
   const T = useT();
@@ -248,7 +241,8 @@ export default function SocialScreen() {
   progressVal: { fontSize: pixelSize(9), color: colors.textMuted, fontFamily: fonts.bold, minWidth: 28 },
   challengeActions: { flexDirection: 'row', gap: spacing.sm },
   wager: { fontSize: pixelSize(fontSizes.xs), color: colors.accent, fontFamily: fonts.bold },
-  duelArenaBtn: { marginHorizontal: spacing.md, marginTop: spacing.sm },
+  playRow: { flexDirection: 'row', gap: spacing.sm, marginHorizontal: spacing.md, marginBottom: spacing.sm },
+  playBtn: { flex: 1 },
 
   // Search
   searchContainer: { flex: 1 },
@@ -283,7 +277,7 @@ export default function SocialScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const myId = use$(authStore$.user)?.id;
-  const [activeTab, setActiveTab] = useState<Tab>('leaderboard');
+  const [activeTab, setActiveTab] = useState<Tab>('friends');
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [inviteFeedback, setInviteFeedback] = useState<string | null>(null);
@@ -292,33 +286,24 @@ export default function SocialScreen() {
   const pendingReceived = use$(friendsStore$.pendingReceived);
   const searchResults = use$(friendsStore$.searchResults);
   const isLoading = use$(friendsStore$.isLoading);
-  const activeChallenges = use$(challengesStore$.active);
-  const pendingChallenges = use$(challengesStore$.pending);
-  const completedChallenges = use$(challengesStore$.completed);
 
   const [lbScope, setLbScope] = useState<'friends' | 'global'>('friends');
   const { entries: leaderboard, isLoading: lbLoading, refresh: refreshLb } = useLeaderboard(lbScope);
-  const { entries: streakLeaderboard, isLoading: streakLbLoading, refresh: refreshStreakLb } = useStreakLeaderboard();
 
   useEffect(() => {
     fetchFriends();
-    fetchChallenges();
   }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await Promise.all([fetchFriends(), fetchChallenges(), refreshLb(), refreshStreakLb()]);
+    await Promise.all([fetchFriends(), refreshLb()]);
     setRefreshing(false);
   };
 
 
   const TABS: { key: Tab; label: string; badge?: number }[] = [
-    { key: 'leaderboard', label: T.social_tab_rank },
     { key: 'friends', label: T.social_tab_friends, badge: pendingReceived.length },
-    // Only challenges waiting for my answer, not the ones I sent.
-    { key: 'challenges', label: T.social_tab_duels, badge: pendingChallenges.filter((c) => c.opponent_id === myId).length },
-    { key: 'streaks', label: T.social_tab_streaks },
-    { key: 'search', label: T.social_tab_search },
+    { key: 'leaderboard', label: T.social_tab_rank },
   ];
 
   // ── Leaderboard ────────────────────────────────────────────────────────────
@@ -450,7 +435,21 @@ export default function SocialScreen() {
   };
 
   // ── Friends ─────────────────────────────────────────────────────────────────
+  const searchBox = (
+    <TextInput
+      style={styles.searchInput}
+      placeholder={T.social_search_placeholder}
+      placeholderTextColor={colors.textMuted}
+      value={searchQuery}
+      onChangeText={(text) => { setSearchQuery(text); searchUsers(text); }}
+      autoCapitalize="none"
+      autoCorrect={false}
+      testID="social-search"
+    />
+  );
+
   const renderFriends = () => {
+    if (searchQuery.trim().length >= 2) return renderSearch();
     const allItems = [
       ...pendingReceived.map((f) => ({ ...f, type: 'pending' as const })),
       ...friends.map((f) => ({ ...f, type: 'friend' as const })),
@@ -465,6 +464,7 @@ export default function SocialScreen() {
         data={allItems}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
+        ListHeaderComponent={allItems.length > 0 ? renderInviteButton() : null}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
         ListEmptyComponent={
           <View style={styles.empty}>
@@ -483,7 +483,7 @@ export default function SocialScreen() {
                 <View style={styles.friendCardLeft}>
                   <Text style={styles.pendingBadge}>{T.social_request_badge}</Text>
                   <Text style={styles.friendName}>{profile?.username ?? '—'}</Text>
-                  {rank && <Text style={[styles.friendRank, { color: rank.color }]}>{rank.name}</Text>}
+                  {rank && <Text style={[styles.friendRank, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>}
                 </View>
                 <View style={styles.pendingActions}>
                   <PixelButton title="✓" onPress={() => respondToRequest(item.id, true)} style={styles.actionBtn} />
@@ -501,14 +501,16 @@ export default function SocialScreen() {
               <View style={styles.friendCardLeft}>
                 <Text style={styles.friendName}>{profile?.username ?? '—'}</Text>
                 <View style={styles.friendMeta}>
-                  {rank && <Text style={[styles.friendRank, { color: rank.color }]}>{rank.name}</Text>}
-                  <Text style={styles.friendXp}>{profile?.xp ?? 0} XP · {T.social_lv_prefix}{profile?.level ?? 1}</Text>
+                  {rank && <Text style={[styles.friendRank, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>}
+                  <Text style={styles.friendXp}>{T.social_lv_prefix}{profile?.level ?? 1} · 🔥 {profile?.best_streak ?? 0}</Text>
                 </View>
               </View>
               <View style={styles.friendActions}>
+                {/* A duel with this friend (opens at level 5, I6). */}
                 <PixelButton
                   title="⚔️"
-                  onPress={() => router.push(`/challenge/create?opponentId=${profile?.id}&opponentName=${profile?.username}`)}
+                  onPress={() => (duelsOpen ? router.push(`/duels/challenge?opponentId=${profile?.id}`) : explainLocked('duels'))}
+                  testID={`friend-duel-${profile?.id}`}
                   variant="secondary"
                   style={styles.actionBtn}
                 />
@@ -541,156 +543,9 @@ export default function SocialScreen() {
   const explainLocked = (feature: UnlockFeature) =>
     showDialog(T.unlock_locked_title, T.unlock_locked_body.replace('{n}', String(UNLOCKS[feature])));
 
-  // ── Challenges ───────────────────────────────────────────────────────────────
-  const renderChallenges = () => {
-    const allChallenges = [
-      ...pendingChallenges.map((c) => ({ ...c, section: 'pending' })),
-      ...activeChallenges.map((c) => ({ ...c, section: 'active' })),
-      ...completedChallenges.slice(0, 5).map((c) => ({ ...c, section: 'completed' })),
-    ];
-
-    return (
-      <>
-      <PixelButton
-        title={duelsOpen ? T.social_duel_arena_btn : `🔒 ${T.social_duel_arena_btn}`}
-        onPress={() => (duelsOpen ? router.push('/duels') : explainLocked('duels'))}
-        style={styles.duelArenaBtn}
-      />
-      <PixelButton
-        title={coopOpen ? T.social_coop_btn : `🔒 ${T.social_coop_btn}`}
-        onPress={() => (coopOpen ? router.push('/coop') : explainLocked('coop'))}
-        variant="secondary"
-        style={styles.duelArenaBtn}
-      />
-      <FlatList
-        data={allChallenges}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
-        ListEmptyComponent={
-          <View style={styles.empty}>
-            <Text style={styles.emptyEmoji}>⚔️</Text>
-            <Text style={styles.emptyText}>{T.social_duels_empty}</Text>
-          </View>
-        }
-        renderItem={({ item }) => {
-          const opponent = (item as any).opponent_profile;
-          const creator = (item as any).creator_profile;
-          const section = (item as any).section as string;
-          const challenge = item as any;
-          const iAmOpponent = challenge.opponent_id === myId;
-
-          const sectionColor = section === 'pending' ? colors.accent
-            : section === 'active' ? colors.success
-            : colors.textMuted;
-
-          return (
-            <View style={[styles.challengeCard, { borderColor: sectionColor + '88' }]}>
-              <View style={styles.challengeHeader}>
-                <Text style={[styles.challengeStatus, { color: sectionColor }]}>
-                  {section === 'pending' ? T.social_challenge_pending
-                    : section === 'active' ? T.social_challenge_active
-                    : T.social_challenge_completed}
-                </Text>
-                <Text style={styles.challengeType}>
-                  {(challenge.type === 'xp_race' ? T.challenge_type_xp_label : T.challenge_type_completion_label).toUpperCase()}
-                </Text>
-              </View>
-              <View style={styles.challengeVs}>
-                <Text style={styles.vsName}>{creator?.username ?? '—'}</Text>
-                <Text style={styles.vsText}>{T.social_duel_vs}</Text>
-                <Text style={styles.vsName}>{opponent?.username ?? '—'}</Text>
-              </View>
-              <View style={styles.challengeProgress}>
-                <Text style={styles.progressVal}>{challenge.creator_progress}/{challenge.target}</Text>
-                <View style={styles.progressTrack}>
-                  <View style={[styles.progressFillA, { width: `${Math.min((challenge.creator_progress / (challenge.target || 1)) * 100, 100)}%` }]} />
-                </View>
-                <View style={styles.progressTrack}>
-                  <View style={[styles.progressFillB, { width: `${Math.min((challenge.opponent_progress / (challenge.target || 1)) * 100, 100)}%` }]} />
-                </View>
-                <Text style={styles.progressVal}>{challenge.opponent_progress}/{challenge.target}</Text>
-              </View>
-              {/* Only the challenged friend can accept; the sender can call it off until then. */}
-              {section === 'pending' && iAmOpponent && (
-                <View style={styles.challengeActions}>
-                  <PixelButton title={T.social_duel_accept} onPress={() => respondToChallenge(challenge.id, true)} style={{ flex: 1 }} />
-                  <PixelButton title={T.social_duel_decline} onPress={() => respondToChallenge(challenge.id, false)} variant="ghost" style={{ flex: 1 }} />
-                </View>
-              )}
-              {section === 'pending' && !iAmOpponent && (
-                <View style={styles.challengeActions}>
-                  <Text style={[styles.wager, { flex: 1 }]}>{T.social_challenge_waiting}</Text>
-                  <PixelButton title={T.social_challenge_cancel} onPress={() => respondToChallenge(challenge.id, false)} variant="ghost" />
-                </View>
-              )}
-              {challenge.gold_wager > 0 && (
-                <Text style={styles.wager}>💰 {challenge.gold_wager}g {T.social_wager_label}</Text>
-              )}
-            </View>
-          );
-        }}
-      />
-      </>
-    );
-  };
-
-  // ── Streak Leaderboard ───────────────────────────────────────────────────────
-  const renderStreakLeaderboard = () => {
-    if (streakLbLoading) {
-      return <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />;
-    }
-    if (streakLeaderboard.length === 0) {
-      return (
-        <View style={styles.empty}>
-          <Text style={styles.emptyEmoji}>🔥</Text>
-          <Text style={styles.emptyText}>{T.social_streaks_empty}</Text>
-        </View>
-      );
-    }
-
-    return (
-      <FlatList
-        data={streakLeaderboard}
-        keyExtractor={(item: StreakLeaderEntry) => item.id}
-        contentContainerStyle={styles.list}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
-        renderItem={({ item, index }: { item: StreakLeaderEntry; index: number }) => {
-          const rank = index + 1;
-          const medal = rank <= 3 ? MEDAL[rank - 1] : null;
-          const medalColor = rank <= 3 ? MEDAL_COLORS[rank - 1] : colors.textMuted;
-
-          return (
-            <View style={[styles.lbRow, item.isCurrentUser && styles.lbRowSelf]}>
-              <Text style={[styles.lbPos, { color: medalColor }]}>
-                {medal ?? `#${rank}`}
-              </Text>
-              <View style={styles.lbInfo}>
-                <Text style={styles.lbName}>
-                  {item.username}{item.isCurrentUser ? ` ${T.social_you_marker}` : ''}
-                </Text>
-                <Text style={styles.lbLevel}>{T.social_lv_prefix}{item.level}</Text>
-              </View>
-              <Text style={styles.streakCount}>🔥 {item.bestStreak} {T.social_streak_days_label}</Text>
-            </View>
-          );
-        }}
-      />
-    );
-  };
-
   // ── Search ───────────────────────────────────────────────────────────────────
   const renderSearch = () => (
     <View style={styles.searchContainer}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder={T.social_search_placeholder}
-        placeholderTextColor={colors.textMuted}
-        value={searchQuery}
-        onChangeText={(text) => { setSearchQuery(text); searchUsers(text); }}
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
       <FlatList
         data={searchResults}
         keyExtractor={(item) => item.id}
@@ -713,7 +568,7 @@ export default function SocialScreen() {
               <View style={styles.friendCardLeft}>
                 <Text style={styles.friendName}>{item.username}</Text>
                 <View style={styles.friendMeta}>
-                  <Text style={[styles.friendRank, { color: rank.color }]}>{rank.name}</Text>
+                  <Text style={[styles.friendRank, { color: rank.color }]}>{titleLabel(T, rank.name)}</Text>
                   <Text style={styles.friendXp}>{item.xp ?? 0} XP · {T.social_lv_prefix}{item.level ?? 1}</Text>
                 </View>
               </View>
@@ -761,6 +616,21 @@ export default function SocialScreen() {
         )}
       </Pressable>
 
+      <View style={styles.playRow}>
+        <PixelButton
+          title={duelsOpen ? T.social_duels_short : `🔒 ${T.social_duels_short}`}
+          onPress={() => (duelsOpen ? router.push('/duels') : explainLocked('duels'))}
+          variant="secondary"
+          style={styles.playBtn}
+        />
+        <PixelButton
+          title={coopOpen ? T.social_coop_short : `🔒 ${T.social_coop_short}`}
+          onPress={() => (coopOpen ? router.push('/coop') : explainLocked('coop'))}
+          variant="secondary"
+          style={styles.playBtn}
+        />
+      </View>
+
       {/* Tab bar */}
       <View style={styles.tabBar}>
         {TABS.map((tab) => (
@@ -769,7 +639,7 @@ export default function SocialScreen() {
             style={[styles.tab, activeTab === tab.key && styles.tabActive]}
             onPress={() => setActiveTab(tab.key)}
           >
-            {/* Emoji above the word: five tabs must fit a phone width. */}
+            {/* Emoji above the word. */}
             <View style={styles.tabLabel}>
               <Text style={styles.tabIcon}>{tab.label.split(' ')[0]}</Text>
               <Text
@@ -788,11 +658,9 @@ export default function SocialScreen() {
         ))}
       </View>
 
-      {activeTab === 'leaderboard' && renderLeaderboard()}
+      {activeTab === 'friends' && searchBox}
       {activeTab === 'friends' && renderFriends()}
-      {activeTab === 'challenges' && renderChallenges()}
-      {activeTab === 'streaks' && renderStreakLeaderboard()}
-      {activeTab === 'search' && renderSearch()}
+      {activeTab === 'leaderboard' && renderLeaderboard()}
       <AdBanner position="bottom" />
     </View>
   );
