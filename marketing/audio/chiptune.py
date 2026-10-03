@@ -6,6 +6,8 @@ audio is ours: no licence, no "generic stock music" feel.
 
     python marketing/audio/chiptune.py previews   -> marketing/audio/out/preview-*.wav
     python marketing/audio/chiptune.py theme NAME  -> marketing/audio/out/theme-NAME.wav (full length)
+    python marketing/audio/chiptune.py reel SPEC.json OUT.wav -> a track written for one reel (build-reels.js)
+    python marketing/audio/chiptune.py sfx         -> marketing/audio/out/whoosh|pixel|pop.wav (transitions)
 
 The previews are ~20 s of each theme plus the level-up candidates, to choose from.
 """
@@ -279,8 +281,321 @@ def levelup(kind):
     return st
 
 
+# ---------------------------------------------------------------- reel tracks (beat-synced)
+#
+# Battiste (2026-10-03): the themes above felt generic. Each reel now gets its own track, written
+# for its timeline by build-reels.js: four-on-the-floor kick, pumping octave bass, 16th arpeggios,
+# a syncopated (3-3-2) hook, a riser and a drop on the reel's key moment, snare fills on every
+# scene change, a key change on the "level up" moment and a final hit on the CTA.
+
+def midi(note):
+    name, octave = note[:-1], int(note[-1])
+    return 12 * (octave + 1) + NOTES[name]
+
+
+def mfreq(m):
+    return 440.0 * 2 ** ((m - 69) / 12)
+
+
+def hp(x):
+    """Crude high-pass (first difference): brighter noise for hats and crashes."""
+    return np.diff(x, prepend=0.0)
+
+
+def lp(x, k):
+    """Crude low-pass (moving average over k samples)."""
+    return np.convolve(x, np.ones(k) / k, mode='same')
+
+
+def add(track, i, seg):
+    if i >= len(track) or i + len(seg) <= 0:
+        return
+    if i < 0:
+        seg, i = seg[-i:], 0
+    track[i:i + len(seg)] += seg[: len(track) - i]
+
+
+def drum(kind, seed=0):
+    if kind == 'k':  # punchy kick: pitch drop + click
+        n = int(0.2 * SR)
+        tt = np.arange(n) / SR
+        f = 48 + 150 * np.exp(-tt * 38)
+        body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt * 13)
+        return body * 1.25 + noise(n, seed) * np.exp(-tt * 500) * 0.35
+    if kind == 's':  # snare: tone body + bright noise
+        n = int(0.16 * SR)
+        tt = np.arange(n) / SR
+        return hp(noise(n, seed)) * np.exp(-tt * 20) * 0.5 + np.sin(2 * np.pi * 185 * tt) * np.exp(-tt * 32) * 0.5
+    if kind == 'h':
+        n = int(0.04 * SR)
+        return hp(noise(n, seed)) * np.exp(-np.arange(n) / SR * 110) * 0.22
+    if kind == 'o':  # open hat
+        n = int(0.16 * SR)
+        return hp(noise(n, seed)) * np.exp(-np.arange(n) / SR * 22) * 0.16
+    if kind == 'c':  # crash
+        n = int(1.6 * SR)
+        tt = np.arange(n) / SR
+        return hp(noise(n, seed)) * np.exp(-tt * 2.6) * 0.38
+    raise ValueError(kind)
+
+
+def tone(m, n, kind):
+    f = mfreq(m)
+    if kind == 'lead':
+        w = pulse(f, n, .25, vib=.005 if n > 0.25 * SR else 0) + pulse(f / 2, n, .5) * .35
+        return w * envelope(n, a=.003, d=.07, s=.65, r=.03)
+    if kind == 'arp':
+        return pulse(f, n, .125) * envelope(n, a=.001, d=.05, s=.25, r=.01)
+    if kind == 'bass':
+        return (triangle(f, n) + pulse(f, n, .5) * .22) * envelope(n, a=.002, d=.06, s=.75, r=.015)
+    if kind == 'pad':
+        return pulse(f, n, .5) * envelope(n, a=.02, d=.3, s=.45, r=.08)
+    if kind == 'stab':
+        tt = np.arange(n) / SR
+        return (pulse(f, n, .25, vib=.006) + pulse(f / 2, n, .5) * .4) * np.exp(-tt * 1.6) * np.clip(tt * 300, 0, 1)
+    raise ValueError(kind)
+
+
+def bars(*rows):
+    out = list(rows)
+    for r in out:
+        assert abs(sum(d for _, d in r) - 4) < 1e-9, r
+    return out
+
+
+REEL_THEMES = {
+    # Bright adventure, C major, I-V-vi-IV.
+    'quest': {
+        'bpm': 140,
+        'prog': [['C', 'E', 'G'], ['G', 'B', 'D'], ['A', 'C', 'E'], ['F', 'A', 'C']],
+        'hook': bars(
+            [('C6', .75), ('G5', .75), ('E5', .5), ('G5', .5), ('C6', .5), ('D6', .5), ('E6', .5)],
+            [('D6', .75), ('B5', .75), ('G5', .5), ('B5', .5), ('D6', .5), ('D6', .5), ('B5', .5)],
+            [('C6', .75), ('A5', .75), ('E5', .5), ('A5', .5), ('C6', .5), ('E6', .5), ('D6', .5)],
+            [('C6', .75), ('A5', .75), ('F5', .5), ('G5', 1.5), ('-', .5)],
+            [('C6', .75), ('G5', .75), ('E5', .5), ('G5', .5), ('C6', .5), ('D6', .5), ('E6', .5)],
+            [('D6', .75), ('B5', .75), ('G5', .5), ('B5', .5), ('D6', .5), ('D6', .5), ('B5', .5)],
+            [('C6', .75), ('A5', .75), ('E5', .5), ('A5', .5), ('C6', .5), ('E6', .5), ('D6', .5)],
+            [('B5', .75), ('D6', .75), ('G6', 1.5), ('-', .5), ('G5', .25), ('B5', .25)],
+        ),
+        'gallop': False,
+    },
+    # Duels and the arena, D minor, i-VI-VII-V, galloping bass.
+    'epic': {
+        'bpm': 150,
+        'prog': [['D', 'F', 'A'], ['Bb', 'D', 'F'], ['C', 'E', 'G'], ['A', 'C#', 'E']],
+        'hook': bars(
+            [('D5', .75), ('F5', .75), ('A5', .5), ('D6', .5), ('C6', .5), ('A5', .5), ('F5', .5)],
+            [('Bb5', .75), ('A5', .75), ('F5', .5), ('D5', .5), ('F5', .5), ('Bb5', .5), ('D6', .5)],
+            [('C6', .75), ('G5', .75), ('E5', .5), ('G5', .5), ('C6', .5), ('E6', .5), ('D6', .5)],
+            [('C#6', 1.5), ('A5', .5), ('E5', .5), ('A5', .5), ('C#6', .5), ('E6', .5)],
+            [('D5', .75), ('F5', .75), ('A5', .5), ('D6', .5), ('C6', .5), ('A5', .5), ('F5', .5)],
+            [('Bb5', .75), ('A5', .75), ('F5', .5), ('D5', .5), ('F5', .5), ('Bb5', .5), ('D6', .5)],
+            [('C6', .75), ('G5', .75), ('E5', .5), ('G5', .5), ('C6', .5), ('E6', .5), ('D6', .5)],
+            [('E6', .75), ('C#6', .75), ('A5', 2), ('-', .5)],
+        ),
+        'gallop': True,
+    },
+    # Focus and routine, A minor, i-VI-III-VII, still with a beat.
+    'chill': {
+        'bpm': 128,
+        'prog': [['A', 'C', 'E'], ['F', 'A', 'C'], ['C', 'E', 'G'], ['G', 'B', 'D']],
+        'hook': bars(
+            [('E5', .75), ('C5', .75), ('A4', .5), ('C5', .5), ('E5', .5), ('G5', .5), ('E5', .5)],
+            [('F5', .75), ('C5', .75), ('A4', .5), ('C5', .5), ('F5', .5), ('A5', .5), ('G5', .5)],
+            [('G5', .75), ('E5', .75), ('C5', .5), ('E5', .5), ('G5', .5), ('C6', .5), ('B5', .5)],
+            [('B5', 1.5), ('G5', .5), ('D5', .5), ('G5', .5), ('B5', .5), ('D6', .5)],
+            [('E5', .75), ('C5', .75), ('A4', .5), ('C5', .5), ('E5', .5), ('G5', .5), ('E5', .5)],
+            [('F5', .75), ('C5', .75), ('A4', .5), ('C5', .5), ('F5', .5), ('A5', .5), ('G5', .5)],
+            [('G5', .75), ('E5', .75), ('C5', .5), ('E5', .5), ('G5', .5), ('C6', .5), ('B5', .5)],
+            [('D6', .75), ('B5', .75), ('G5', 2), ('-', .5)],
+        ),
+        'gallop': False,
+    },
+}
+
+
+def reel_track(spec):
+    """spec (seconds, from build-reels.js): theme, bpm, total, drop, lift (or None), cta, hit, fills.
+    Every time is on the beat grid (t = 0 is a beat)."""
+    th = REEL_THEMES[spec['theme']]
+    bpm = spec.get('bpm') or th['bpm']
+    B = 60 / bpm
+    beat = lambda t: round(t / B * 4) / 4  # noqa: E731
+    total = spec['total']
+    drop, cta, hit = beat(spec['drop']), beat(spec['cta']), beat(spec['hit'])
+    lift = beat(spec['lift']) if spec.get('lift') is not None else None
+    fills = [beat(f) for f in spec.get('fills', [])]
+    n = int((total + 2) * SR)
+    lead, arpt, bass, pad, dr, fx = (np.zeros(n) for _ in range(6))
+    at = lambda b: int(b * B * SR)  # noqa: E731
+    key = lambda b: 2 if lift is not None and b >= lift else 0  # noqa: E731
+    chord_of = lambda b: th['prog'][int((b - drop) // 4) % 4]  # noqa: E731
+    root = lambda c, octave: midi(f'{c[0]}{octave}')  # noqa: E731
+    last_beat = int(hit)
+
+    # Drums, bass and arpeggio, 16th by 16th up to the final hit.
+    for s in range(int(hit * 4)):
+        b = s / 4
+        in_gap = drop - 0.5 <= b < drop  # half a beat of silence before the drop
+        main = b >= drop
+        pos = (b - drop) % 4
+        c = chord_of(b)
+        k = key(b)
+        if in_gap:
+            continue
+        if s % 4 == 0:
+            add(dr, at(b), drum('k', s))
+        if main:
+            if abs(pos - 1) < 1e-9 or abs(pos - 3) < 1e-9:
+                add(dr, at(b), drum('s', s))
+            add(dr, at(b), drum('h', s) * (0.75 if s % 2 == 0 else 0.4))
+            if s % 4 == 2:
+                add(dr, at(b), drum('o', s))
+        elif s % 2 == 0:
+            add(dr, at(b), drum('h', s) * 0.7)
+        # Bass: 8ths jumping octaves (gallop: 8th + two 16ths), pumping with the kick.
+        if s % 2 == 0 or (th['gallop'] and main and s % 4 == 3):
+            if th['gallop'] and main:
+                dur = .5 if s % 4 == 0 else .25
+            else:
+                dur = .5
+            if dur:
+                octave = 3 if (main and s % 4 == 2) else 2
+                m = root(c, octave) + k
+                add(bass, at(b), tone(m, int(dur * B * SR * .9), 'bass'))
+        # Arpeggio: chord tones over two octaves, quieter before the drop and rising in.
+        steps = [0, 1, 2, 3, 4, 3, 2, 1]
+        idx = steps[s % 8]
+        m = root([c[idx % 3]], 5 if idx >= 3 else 4) + k
+        g = 1.0 if main else 0.35 + 0.65 * (b / max(drop, 1))
+        add(arpt, at(b), tone(m, int(.25 * B * SR), 'arp') * g)
+
+    # Pads (whole bars, from the drop) and the hook.
+    b = drop
+    bar = 0
+    while b < hit:
+        c = chord_of(b)
+        length = min(4, hit - b)
+        for x in c:
+            add(pad, at(b), tone(root([x], 4) + key(b), int(length * B * SR), 'pad'))
+        pb = b
+        for note, d in th['hook'][bar % 8]:
+            if pb >= hit:
+                break
+            if note != '-':
+                add(lead, at(pb), tone(midi(note) + key(pb), int(min(d, hit - pb) * B * SR * .95), 'lead'))
+            pb += d
+        b += 4
+        bar += 1
+
+    # Riser into the drop (and the key change): noise swelling + a rising pulse.
+    for target, beats in [(drop, min(4, drop))] + ([(lift, 2)] if lift is not None else []):
+        if beats <= 0:
+            continue
+        i0, m_ = at(target - beats), at(target) - at(target - beats)
+        tt = np.linspace(0, 1, m_)
+        f = 300 * 2 ** (tt * 2.5)
+        sweep = np.where((np.cumsum(f / SR) % 1) < .25, 1.0, -1.0)
+        add(fx, i0, hp(noise(m_, i0)) * tt ** 2 * 0.22 + sweep * tt ** 1.5 * 0.1)
+        # Snare roll, 16ths then 32nds, getting louder.
+        r = target - min(beats, 2)
+        while r < target - 1e-9:
+            frac = (r - (target - min(beats, 2))) / min(beats, 2)
+            add(dr, at(r), drum('s', int(r * 97)) * (0.35 + 0.65 * frac))
+            r += .25 if frac < 0.5 else .125
+    # Snare fill on the beat before every scene change, crash on the big moments.
+    for f_ in fills:
+        if drop < f_ < hit:
+            for j in range(4):
+                add(dr, at(f_ - 1 + j / 4), drum('s', int(f_ * 31) + j) * (0.4 + 0.15 * j))
+    for c_ in [drop, cta] + ([lift] if lift is not None else []):
+        add(dr, at(c_), drum('c', int(c_ * 7)))
+
+    # Final hit on the CTA: kick, crash and the tonic chord ringing out, then a sparkle.
+    tonic = th['prog'][0]
+    k = key(hit)
+    add(dr, at(hit), drum('k', 1) * 1.2 + 0)
+    add(dr, at(hit), drum('c', 2) * 1.3)
+    ring = int(max(total - hit * B, 0.5) * SR) + SR
+    for j, x in enumerate(tonic):
+        add(lead, at(hit), tone(root([x], 5) + k, ring, 'stab') * (0.8 if j == 0 else 0.55))
+    add(bass, at(hit), tone(root(tonic, 2) + k, ring, 'stab') * .6)
+    for j, x in enumerate(tonic + [tonic[0]]):
+        add(arpt, at(hit + .5 + j * .25), tone(root([x], 6 if j < 3 else 7) + k, int(.25 * B * SR), 'arp') * .8)
+
+    # Sidechain pump: the bass, the arpeggio and the pads duck on every kick.
+    tt = np.arange(n) / SR
+    since = (tt % B)
+    pump = 1 - 0.55 * np.exp(-since / 0.07)
+    pump[at(hit):] = 1
+    arpt *= pump
+    pad *= pump
+    bass *= 1 - 0.35 * np.exp(-since / 0.06) * (tt < hit * B)
+
+    left = lead * .32 + echo(arpt, B * .75, .35, .3) * .2 + bass * .5 + pad * .05 + dr * .62 + fx
+    right = echo(lead, B * .5, .3, .3) * .32 + arpt * .2 + bass * .5 + pad * .05 + dr * .62 + fx
+    st = np.stack([left[: int(total * SR)], right[: int(total * SR)]], axis=1)
+    # Gentle saturation only on the loudest peaks (keeps the punch of the kick); build-reels.js
+    # then normalizes the final mix to -14 LUFS.
+    st /= np.percentile(np.abs(st), 99.9) / 0.75
+    st = np.tanh(st)
+    st *= 0.89 / np.max(np.abs(st))
+    fo = int(0.25 * SR)
+    st[-fo:] *= np.linspace(1, 0, fo)[:, None]
+    return st
+
+
+# ---------------------------------------------------------------- transition sounds
+
+def sfx_whoosh():
+    """3D flip: a short noise sweep that pans across."""
+    n = int(0.5 * SR)
+    tt = np.linspace(0, 1, n)
+    nz = noise(n, 11)
+    bright = np.sin(np.pi * tt) ** 2
+    x = (lp(nz, 18) * (1 - bright) * 2.2 + hp(nz) * bright * 0.6) * np.sin(np.pi * np.clip(tt * 1.15, 0, 1)) ** 2
+    pan = np.clip(tt * 1.4 - 0.2, 0, 1)
+    return master(x * (1 - pan * .7), x * (0.3 + pan * .7), fade_in=0.01, fade_out=0.05) * 0.75
+
+
+def sfx_pixel():
+    """Pixel transition: a quick 8-bit blip run, down then up."""
+    n = int(0.45 * SR)
+    x = np.zeros(n)
+    notes = [84, 79, 76, 72, 67, 72, 76, 79, 84, 88]
+    step = n // len(notes)
+    for j, m in enumerate(notes):
+        x[j * step:(j + 1) * step] += pulse(mfreq(m), step, .5) * envelope(step, a=.001, d=.02, s=.4, r=.005)
+    return master(x, x, fade_in=0.005, fade_out=0.03) * 0.5
+
+
+def sfx_pop():
+    """Sticker popping in: tiny rising blip."""
+    n = int(0.09 * SR)
+    tt = np.arange(n) / SR
+    f = 600 * 2 ** (tt / 0.09 * 1.5)
+    x = np.where((np.cumsum(f / SR) % 1) < .5, 1.0, -1.0) * np.exp(-tt * 25)
+    return master(x, x, fade_in=0.002, fade_out=0.01) * 0.45
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'previews'
+    if cmd == 'reel':  # python chiptune.py reel spec.json out.wav  (called by build-reels.js)
+        import json
+        st = reel_track(json.loads(Path(sys.argv[2]).read_text(encoding='utf8')))
+        out = Path(sys.argv[3])
+        with wave.open(str(out), 'wb') as w:
+            w.setnchannels(2)
+            w.setsampwidth(2)
+            w.setframerate(SR)
+            w.writeframes((st * 32767).astype(np.int16).tobytes())
+        sys.exit(0)
+    if cmd == 'sfx':
+        save('whoosh', sfx_whoosh())
+        save('pixel', sfx_pixel())
+        save('pop', sfx_pop())
+        sys.exit(0)
     if cmd == 'previews':
         for name, fn in THEMES.items():
             save(f'preview-theme-{name}', fn(1))

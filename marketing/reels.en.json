@@ -2,26 +2,57 @@
   "r1-ta-vie-est-un-rpg": {
     "music": {
       "file": "marketing/audio/theme-quest.m4a",
-      "start": 0
+      "start": 0,
+      "theme": "quest",
+      "drop": 1,
+      "lift": 4
     },
     "segments": [
       {
         "type": "kinetic",
-        "dur": 2.2,
+        "dur": 2.6,
         "title": "What if your life<br>was an <em>RPG</em>? ⚔️",
         "sfx": "attack",
-        "sfxAt": 0.42
+        "sfxAt": 1.5
       },
       {
         "type": "full",
         "dur": 2.3,
         "src": "today",
         "start": 0.4,
-        "title": "Every habit<br>= a <em>quest</em>"
+        "title": "Every habit<br>= a <em>quest</em>",
+        "fx": [
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.68,
+            "sy": 0.365,
+            "text": "+25 XP",
+            "sfx": "pop"
+          },
+          {
+            "type": "xp",
+            "beat": 2,
+            "sx": 0.68,
+            "sy": 0.46,
+            "text": "+21 XP",
+            "sfx": "pop"
+          },
+          {
+            "type": "counter",
+            "beat": 3,
+            "x": 540,
+            "y": 1700,
+            "from": 535,
+            "to": 560,
+            "icon": "coin",
+            "dur": 0.6
+          }
+        ]
       },
       {
         "type": "clip",
-        "dur": 1.05,
+        "dur": 1.3,
         "src": "milestone",
         "start": 0.5,
         "title": "Tick it.",
@@ -32,23 +63,46 @@
           },
           {
             "t": 0.4,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
             "t": 0.75,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
-            "t": 1.0,
+            "t": 1,
             "z": 1
           }
         ],
         "sfx": "complete",
-        "sfxAt": 0.8
+        "sfxAt": 0.8,
+        "fx": [
+          {
+            "type": "arrow",
+            "at": 0.05,
+            "sx": 0.9,
+            "sy": 0.535,
+            "dir": "left",
+            "life": 0.8
+          },
+          {
+            "type": "burst",
+            "at": 0.8,
+            "sx": 0.87,
+            "sy": 0.535
+          },
+          {
+            "type": "xp",
+            "at": 0.8,
+            "sx": 0.62,
+            "sy": 0.5,
+            "text": "+24 XP"
+          }
+        ]
       },
       {
         "type": "clip",
@@ -72,7 +126,38 @@
             "y": 0.53
           }
         ],
-        "sfx": "streak-milestone"
+        "sfx": "streak-milestone",
+        "fx": [
+          {
+            "type": "burst",
+            "at": 0.1,
+            "sx": 0.5,
+            "sy": 0.5,
+            "n": 40,
+            "power": 1.3
+          },
+          {
+            "type": "counter",
+            "beat": 1,
+            "x": 952,
+            "y": 1010,
+            "from": 0,
+            "to": 14,
+            "icon": "fire",
+            "dur": 0.8,
+            "sfx": "pop"
+          },
+          {
+            "type": "pip",
+            "beat": 2,
+            "x": 130,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "fire",
+            "say": "WOW!",
+            "sfx": "pop"
+          }
+        ]
       },
       {
         "type": "hero",
@@ -81,29 +166,35 @@
         "every": 0.9,
         "sfx": "level-up",
         "looks": [
-          {},
+          {
+            "lv": 1
+          },
           {
             "hat": "hat_adventurer",
             "outfit": "outfit_leather",
-            "label": "APPRENTICE"
+            "label": "APPRENTICE",
+            "lv": 5
           },
           {
             "hat": "hat_knight",
             "outfit": "outfit_crimson",
             "accessory": "acc_shield",
-            "label": "KNIGHT"
+            "label": "KNIGHT",
+            "lv": 12
           },
           {
             "hat": "hat_samurai",
             "outfit": "outfit_shadow",
             "accessory": "acc_flame_sword",
-            "label": "CHAMPION"
+            "label": "CHAMPION",
+            "lv": 25
           },
           {
             "hat": "hat_crown",
             "outfit": "outfit_golden",
             "accessory": "acc_wings",
-            "label": "LEGEND"
+            "label": "LEGEND",
+            "lv": 50
           }
         ]
       },
@@ -113,7 +204,19 @@
         "icon": true,
         "title": "HabitQuest",
         "subtitle": "Coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
+        "cta": "LINK IN BIO ▲",
+        "ctaBeat": 4,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 1,
+            "x": 170,
+            "y": 1760,
+            "expr": "happy",
+            "say": "JOIN ME!",
+            "sfx": "pop"
+          }
+        ]
       }
     ]
   },
@@ -143,18 +246,18 @@
           },
           {
             "t": 0.4,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
             "t": 0.75,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
-            "t": 1.0,
+            "t": 1,
             "z": 1
           }
         ],
@@ -222,15 +325,18 @@
   "r5-defie-tes-potes": {
     "music": {
       "file": "marketing/audio/theme-epic.m4a",
-      "start": 0
+      "start": 0,
+      "theme": "epic",
+      "drop": 1,
+      "lift": 2
     },
     "segments": [
       {
         "type": "kinetic",
-        "dur": 2.2,
+        "dur": 2.4,
         "title": "Challenge<br>your <em>friends</em>… ⚔️",
         "sfx": "attack",
-        "sfxAt": 0.42
+        "sfxAt": 0.72
       },
       {
         "type": "clip",
@@ -240,20 +346,97 @@
         "speed": 1.12,
         "title": "…with your <em>real</em><br>habits 💪",
         "sfx": "attack",
-        "sfxAt": 1.2
+        "sfxAt": 1.2,
+        "fx": [
+          {
+            "type": "arrow",
+            "at": 0.05,
+            "sx": 0.5,
+            "sy": 0.9,
+            "dir": "down",
+            "life": 0.75
+          },
+          {
+            "type": "pip",
+            "beat": 2,
+            "x": 130,
+            "y": 1760,
+            "expr": "proud",
+            "mood": "fire",
+            "say": "GO!",
+            "sfx": "pop"
+          },
+          {
+            "type": "xp",
+            "at": 2.8,
+            "sx": 0.22,
+            "sy": 0.17,
+            "text": "-16 HP",
+            "color": "#e94560"
+          },
+          {
+            "type": "burst",
+            "at": 2.8,
+            "sx": 0.2,
+            "sy": 0.12,
+            "n": 24
+          },
+          {
+            "type": "xp",
+            "at": 3.9,
+            "sx": 0.8,
+            "sy": 0.17,
+            "text": "-8 HP",
+            "color": "#e94560",
+            "life": 0.9
+          }
+        ]
       },
       {
         "type": "still",
-        "dur": 2.3,
+        "dur": 2.4,
         "src": "duels",
         "title": "The most <em>consistent</em><br>wins.",
-        "sfx": "victory"
+        "sfx": "victory",
+        "fx": [
+          {
+            "type": "arrow",
+            "at": 0.1,
+            "sx": 0.5,
+            "sy": 0.37,
+            "dir": "up",
+            "label": "YOUR FRIEND?"
+          },
+          {
+            "type": "xp",
+            "beat": 3,
+            "sx": 0.78,
+            "sy": 0.7,
+            "text": "+30",
+            "icon": "coin",
+            "life": 1.6,
+            "sfx": "pop"
+          }
+        ]
       },
       {
         "type": "kinetic",
-        "dur": 3.1,
+        "dur": 3.2,
         "title": "Tag the friend<br>you'd <em>beat</em> 👇",
-        "cta": "HABITQUEST"
+        "cta": "HABITQUEST",
+        "ctaBeat": 4,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 1,
+            "x": 170,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "party",
+            "say": "TAG EM!",
+            "sfx": "pop"
+          }
+        ]
       }
     ]
   },
@@ -272,7 +455,7 @@
       },
       {
         "type": "full",
-        "dur": 2.0,
+        "dur": 2,
         "src": "quests",
         "start": 0.9,
         "title": "Live your <em>day</em>…"
@@ -343,18 +526,18 @@
           },
           {
             "t": 0.4,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
             "t": 0.75,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
-            "t": 1.0,
+            "t": 1,
             "z": 1
           }
         ],
@@ -418,18 +601,18 @@
           },
           {
             "t": 0.4,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
             "t": 0.75,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
-            "t": 1.0,
+            "t": 1,
             "z": 1
           }
         ],
@@ -589,7 +772,7 @@
         "title": "6 ranks.",
         "every": 1.08,
         "sfx": "level-up",
-        "sfxAt": 3.0,
+        "sfxAt": 3,
         "looks": [
           {
             "label": "NOVICE"
@@ -786,7 +969,7 @@
         "dur": 3.9,
         "src": "challenge",
         "start": 0.5,
-        "speed": 1.0,
+        "speed": 1,
         "title": "XP race or<br><em>completions</em>"
       },
       {
@@ -850,7 +1033,7 @@
         "speed": 1.28,
         "title": "Your attacks come<br>from your <em>habits</em>",
         "sfx": "attack",
-        "sfxAt": 1.0
+        "sfxAt": 1
       },
       {
         "type": "hero",
@@ -916,18 +1099,18 @@
           },
           {
             "t": 0.4,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
             "t": 0.75,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
-            "t": 1.0,
+            "t": 1,
             "z": 1
           }
         ],
@@ -1200,7 +1383,7 @@
       },
       {
         "type": "clip",
-        "dur": 3.0,
+        "dur": 3,
         "src": "templates",
         "start": 0.4,
         "speed": 1.3,
@@ -1219,18 +1402,18 @@
           },
           {
             "t": 0.4,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
             "t": 0.75,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
-            "t": 1.0,
+            "t": 1,
             "z": 1
           }
         ],
@@ -1282,18 +1465,18 @@
           },
           {
             "t": 0.4,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
             "t": 0.75,
-            "z": 2.0,
+            "z": 2,
             "x": 0.6,
             "y": 0.58
           },
           {
-            "t": 1.0,
+            "t": 1,
             "z": 1
           }
         ],
@@ -1454,17 +1637,17 @@
       },
       {
         "type": "clip",
-        "dur": 4.0,
+        "dur": 4,
         "src": "battle",
         "start": 0.6,
         "speed": 1.3,
         "title": "Duel your friends<br>in <em>turn-based</em> battles",
         "sfx": "attack",
-        "sfxAt": 1.0
+        "sfxAt": 1
       },
       {
         "type": "full",
-        "dur": 3.0,
+        "dur": 3,
         "src": "challenge",
         "start": 0.5,
         "title": "1v1 challenges:<br><em>bet gold</em>, best wins"
@@ -1488,7 +1671,7 @@
       },
       {
         "type": "kinetic",
-        "dur": 4.0,
+        "dur": 4,
         "icon": true,
         "title": "HabitQuest",
         "subtitle": "Free · coming soon to iOS & Android",
