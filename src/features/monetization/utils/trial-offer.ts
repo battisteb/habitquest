@@ -9,7 +9,9 @@ import { storage } from '../../../lib/storage/mmkv';
  * offer it, so it is offered without nagging:
  * - once, right after the tutorial (the full Premium screen);
  * - then as a small reminder, never in the first 24 hours, at most once every
- *   3 days, and never again after 3 "Later".
+ *   3 days, and never again after 3 "Later";
+ * - once more when a quest first reaches 21 days in a row (G5): the player
+ *   just proved they stick to it, the best moment to offer more.
  */
 
 export const TRIAL_DAYS = 14;
@@ -19,6 +21,8 @@ export const REMINDER_INTERVAL = 3 * DAY;
 export const MAX_REFUSALS = 3;
 /** The player is told this many days before the trial ends. */
 export const TRIAL_END_NOTICE_DAYS = 2;
+/** The streak that brings the one-time offer (the "Adept" identity, G3). */
+export const STREAK_OFFER_DAYS = 21;
 
 export interface TrialOfferState {
   /** When this device first saw the app (ms). */
@@ -29,6 +33,8 @@ export interface TrialOfferState {
   refusals: number;
   /** Whether the post-tutorial offer was shown. */
   introShown: boolean;
+  /** Whether the 21-day streak offer was shown (G5). */
+  streakOfferShown?: boolean;
 }
 
 export interface TrialContext {
@@ -69,6 +75,16 @@ export function shouldRemindTrial(state: TrialOfferState, ctx: TrialContext, now
     now - state.firstSeenAt >= REMINDER_FIRST_DELAY &&
     now - state.lastShownAt >= REMINDER_INTERVAL
   );
+}
+
+/** A quest just reached 21 days in a row for the first time: offer once (G5). */
+export function shouldOfferTrialAtStreak(state: TrialOfferState, ctx: TrialContext, streak: number): boolean {
+  return ctx.eligible && !ctx.isPremium && !state.streakOfferShown && streak === STREAK_OFFER_DAYS;
+}
+
+export function recordStreakOfferShown(now = Date.now()): void {
+  const state = loadTrialOfferState(now);
+  save({ ...state, lastShownAt: now, streakOfferShown: true });
 }
 
 export function recordTrialOfferShown(intro: boolean, now = Date.now()): void {
