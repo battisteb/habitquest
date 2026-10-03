@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { use$ } from '@legendapp/state/react';
 import { PixelButton } from '../../src/ui/components/pixel-button';
@@ -74,7 +74,9 @@ export default function ChallengeScreen() {
   const router = useRouter();
   const friends = use$(friendsStore$.friends);
   const unlockedCategories = use$(duelStore$.myUnlockedCategories);
-  const [selectedFriendId, setSelectedFriendId] = useState<string | null>(null);
+  // Opened from a friend (Social, profile): that friend is preselected.
+  const { opponentId } = useLocalSearchParams<{ opponentId?: string }>();
+  const [selectedFriendId, setSelectedFriendId] = useState<string | null>(opponentId ?? null);
   const [selectedAttackId, setSelectedAttackId] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const profile = use$(profileStore$.profile);

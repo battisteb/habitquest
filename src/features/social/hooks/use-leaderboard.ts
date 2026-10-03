@@ -2,14 +2,6 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase/client';
 import { authStore$ } from '../../auth/stores/auth-store';
 
-export interface StreakLeaderEntry {
-  id: string;
-  username: string;
-  level: number;
-  bestStreak: number;
-  isCurrentUser: boolean;
-}
-
 interface LeaderboardEntry {
   id: string;
   username: string;
@@ -81,59 +73,3 @@ export function useLeaderboard(scope: 'friends' | 'global' = 'friends') {
   return { entries, isLoading, refresh: loadLeaderboard };
 }
 
-export function useStreakLeaderboard() {
-  const [entries, setEntries] = useState<StreakLeaderEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    loadStreakLeaderboard();
-  }, []);
-
-  async function loadStreakLeaderboard() {
-    const userId = authStore$.user.get()?.id;
-    if (!userId) return;
-
-    setIsLoading(true);
-    try {
-      const { data: asRequester } = await supabase
-        .from('friendships')
-        .select('addressee_id')
-        .eq('requester_id', userId)
-        .eq('status', 'accepted');
-
-      const { data: asAddressee } = await supabase
-        .from('friendships')
-        .select('requester_id')
-        .eq('addressee_id', userId)
-        .eq('status', 'accepted');
-
-      const friendIds = [
-        ...(asRequester ?? []).map((f) => f.addressee_id),
-        ...(asAddressee ?? []).map((f) => f.requester_id),
-        userId,
-      ];
-
-      // Use denormalized best_streak on profiles — no habits RLS bypass needed
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, username, level, best_streak')
-        .in('id', friendIds)
-        .order('best_streak', { ascending: false })
-        .limit(10) as unknown as { data: Array<{ id: string; username: string; level: number; best_streak: number }> | null };
-
-      setEntries(
-        (profiles ?? []).map((p) => ({
-          id: p.id,
-          username: p.username,
-          level: p.level,
-          bestStreak: p.best_streak ?? 0,
-          isCurrentUser: p.id === userId,
-        })),
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  return { entries, isLoading, refresh: loadStreakLeaderboard };
-}

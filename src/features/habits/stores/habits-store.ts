@@ -5,7 +5,6 @@ import { persistPlugin } from '../../../lib/storage/persist';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 import { fetchDailyQuests } from '../../daily-quests/stores/daily-quests-store';
-import { fetchChallenges } from '../../social/stores/challenges-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { triggerStreakMilestone, isMilestone } from '../../gamification/stores/streak-milestone-store';
@@ -343,7 +342,6 @@ export async function completeHabit(
   // Background refreshes (non-blocking)
   checkAndUnlockAchievements().catch(() => {});
   fetchDailyQuests().catch(() => {});
-  fetchChallenges().catch(() => {});
 
   return result;
 }
@@ -387,7 +385,6 @@ export async function uncompleteHabit(habitId: string): Promise<UncompleteHabitR
 
   refreshProfile();
   fetchDailyQuests().catch(() => {});
-  fetchChallenges().catch(() => {});
   return result;
 }
 

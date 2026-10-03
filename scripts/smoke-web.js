@@ -35,7 +35,7 @@ const I18N_KEYS = new Set(
 // Screens of app/; :params are filled with ids seen in API responses.
 const ROUTES = [
   '/today', '/profile', '/shop', '/social', '/stats',
-  '/achievements', '/arena', '/challenge/create', '/coop', '/coop/create', '/coop/:coopId',
+  '/achievements', '/arena', '/coop', '/coop/create', '/coop/:coopId',
   '/duels', '/duels/challenge', '/duels/battle?myName=Hero&opponentName=Rival&myLevel=5&opponentLevel=4',
   '/habit/:habitId', '/habit/edit/:habitId', '/habit/create', '/habit/archive', '/habit/history?habitId=:habitId&habitName=Quest', '/habit/templates',
   '/notifications', '/paywall', '/profile/:friendId', '/profile/edit', '/settings', '/settings/contextual-mode', '/settings/support',
