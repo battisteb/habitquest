@@ -195,7 +195,7 @@ export async function createHabit(
   frequency?: string,
   emoji?: string | null,
   days?: number[] | null,
-  motivation?: { why?: string | null; anchor?: string | null },
+  motivation?: { why?: string | null; anchor?: string | null; mini?: string | null },
 ) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
@@ -213,6 +213,7 @@ export async function createHabit(
       days: days ?? null,
       why: motivation?.why ?? null,
       anchor: motivation?.anchor ?? null,
+      mini: motivation?.mini ?? null,
     });
 
   if (error) throw error;
@@ -220,7 +221,7 @@ export async function createHabit(
   await fetchHabits();
 }
 
-export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null; why?: string | null; anchor?: string | null }) {
+export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null; why?: string | null; anchor?: string | null; mini?: string | null }) {
   const { error } = await supabase.from('habits').update({ ...updates, content: updates.content as Json | null | undefined }).eq('id', id);
   if (error) throw error;
   await fetchHabits();
@@ -279,6 +280,7 @@ interface CompleteHabitResult {
 export async function completeHabit(
   habitId: string,
   note?: string,
+  mini = false,
 ): Promise<CompleteHabitResult | undefined> {
   const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
   const frequency = habit?.frequency ?? 'daily';
@@ -301,6 +303,8 @@ export async function completeHabit(
   const { data, error } = await supabase.rpc('complete_habit', {
     p_habit_id: habitId,
     p_note: note ?? undefined,
+    // The small version of the quest (G1): streak kept, half the XP.
+    p_mini: mini || undefined,
   });
   if (error) throw error;
   const result = data as unknown as CompleteHabitResult;

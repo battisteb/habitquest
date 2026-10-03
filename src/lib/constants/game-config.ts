@@ -9,6 +9,12 @@ export const XP_CONFIG = {
  * reward getting back on track (ADR 019). Mirrored in SQL by
  * process_streak_breaks / complete_habit.
  */
+/**
+ * Mini version of a quest (G1, ADR 027): on a hard day, the small version
+ * keeps the streak for this share of the XP. Mirrors complete_habit (p_mini).
+ */
+export const MINI = { XP_FACTOR: 0.5 } as const;
+
 export const COMEBACK = {
   XP_MULTIPLIER: 2,
   WINDOW_HOURS: 24,

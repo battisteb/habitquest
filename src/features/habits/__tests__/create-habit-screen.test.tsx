@@ -35,7 +35,7 @@ describe('CreateHabitScreen', () => {
     const utils = render(<CreateHabitScreen />);
     fireEvent.press(utils.getByText('Lire 20 min'));
     fireEvent.press(utils.getByText('HABIT_CREATE_SUBMIT'));
-    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Lire 20 min', 'learning', null, 'daily', null, null, { why: null, anchor: null }));
+    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Lire 20 min', 'learning', null, 'daily', null, null, { why: null, anchor: null, mini: null }));
     expect(mockBack).toHaveBeenCalled();
   });
 
@@ -48,7 +48,7 @@ describe('CreateHabitScreen', () => {
     fireEvent.press(utils.getByTestId('day-6'));
     fireEvent.press(utils.getByTestId('day-3'));
     fireEvent.press(utils.getByText('HABIT_CREATE_SUBMIT'));
-    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Gym', 'general', null, 'days', null, [1, 5, 6], { why: null, anchor: null }));
+    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Gym', 'general', null, 'days', null, [1, 5, 6], { why: null, anchor: null, mini: null }));
   });
 
   it('keeps at least one day, and seven days is every day', async () => {
@@ -57,18 +57,20 @@ describe('CreateHabitScreen', () => {
     fireEvent.press(utils.getByTestId('freq-weekly'));
     for (const d of [2, 4, 6, 7]) fireEvent.press(utils.getByTestId(`day-${d}`));
     fireEvent.press(utils.getByText('HABIT_CREATE_SUBMIT'));
-    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Walk', 'general', null, 'daily', null, null, { why: null, anchor: null }));
+    await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Walk', 'general', null, 'daily', null, null, { why: null, anchor: null, mini: null }));
   });
 
-  it('saves when and why the quest matters (G2)', async () => {
+  it('saves when and why the quest matters (G2) and its mini version (G1)', async () => {
     const utils = render(<CreateHabitScreen />);
     fireEvent.changeText(utils.getByPlaceholderText('habit_create_name_placeholder'), 'Read');
     fireEvent.changeText(utils.getByTestId('habit-anchor'), ' my morning coffee ');
     fireEvent.changeText(utils.getByTestId('habit-why'), 'Learn every day');
+    fireEvent.changeText(utils.getByTestId('habit-mini'), 'Read 1 page');
     fireEvent.press(utils.getByText('HABIT_CREATE_SUBMIT'));
     await waitFor(() => expect(createHabit).toHaveBeenCalledWith('Read', 'general', null, 'daily', null, null, {
       why: 'Learn every day',
       anchor: 'my morning coffee',
+      mini: 'Read 1 page',
     }));
   });
 

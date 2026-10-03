@@ -391,6 +391,11 @@ export default function HabitDetailScreen() {
             ⏰ {T.habit_anchor_line.replace('{anchor}', habit.anchor)}
           </Text>
         ) : null}
+        {habit.mini ? (
+          <Text style={styles.anchorLine} testID="habit-mini-line">
+            🌱 {T.habit_mini_line.replace('{mini}', habit.mini)}
+          </Text>
+        ) : null}
         {habit.why ? (
           <Text style={styles.whyLine} testID="habit-why-line">
             🎯 {habit.why}
