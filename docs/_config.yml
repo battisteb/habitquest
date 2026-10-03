@@ -3,6 +3,8 @@ title: HabitQuest
 description: Level up your habits — a pixel art RPG habit tracker.
 theme: jekyll-theme-minimal
 lang: en
+# Languages of the public pages (privacy-policy, privacy-policy.fr, privacy-policy.ja…).
+langs: [en, fr, ja]
 # Internal project docs stay in the repo but are not published on the site.
 exclude:
   - adr/

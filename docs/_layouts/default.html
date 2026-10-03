@@ -1,23 +1,27 @@
 <!doctype html>
-{% assign fr = false %}{% if page.lang == 'fr' %}{% assign fr = true %}{% endif %}
-<html lang="{% if fr %}fr{% else %}en{% endif %}">
+{% assign L = page.lang | default: 'en' %}{% if L == 'en' %}{% assign suf = '' %}{% else %}{% assign suf = '.' | append: L %}{% endif %}
+{% if L == 'fr' %}{% assign t_support = 'Aide' %}{% assign t_privacy = 'Confidentialité' %}{% assign t_terms = "Conditions d'utilisation" %}{% assign t_contact = 'Contact' %}
+{% elsif L == 'ja' %}{% assign t_support = 'サポート' %}{% assign t_privacy = 'プライバシーポリシー' %}{% assign t_terms = '利用規約' %}{% assign t_contact = 'お問い合わせ' %}
+{% else %}{% assign t_support = 'Support' %}{% assign t_privacy = 'Privacy Policy' %}{% assign t_terms = 'Terms of Use' %}{% assign t_contact = 'Contact' %}{% endif %}
+<html lang="{{ L }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ page.title | default: site.title }}</title>
 <meta name="theme-color" content="#0D0D1A">
 <link rel="icon" href="{{ '/assets/icon.png' | relative_url }}">
+{% if page.base %}<link rel="alternate" hreflang="en" href="{{ page.base | relative_url }}"><link rel="alternate" hreflang="fr" href="{{ page.base | append: '.fr' | relative_url }}"><link rel="alternate" hreflang="ja" href="{{ page.base | append: '.ja' | relative_url }}">{% endif %}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10{% if L == 'ja' %}&family=DotGothic16{% endif %}&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
 <script src="{{ '/assets/site.js' | relative_url }}" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="brand pixel" href="{% if fr %}{{ '/fr/' | relative_url }}{% else %}{{ '/' | relative_url }}{% endif %}"><img src="{{ '/assets/icon.png' | relative_url }}" alt="">HabitQuest</a>
+  <a class="brand pixel" href="{% if L == 'en' %}{{ '/' | relative_url }}{% else %}{{ '/' | append: L | append: '/' | relative_url }}{% endif %}"><img src="{{ '/assets/icon.png' | relative_url }}" alt="">HabitQuest</a>
   <nav class="nav">
-    <a href="{% if fr %}{{ '/support.fr' | relative_url }}{% else %}{{ '/support' | relative_url }}{% endif %}">{% if fr %}Aide{% else %}Support{% endif %}</a>
-    {% if page.alt %}<a class="lang" href="{{ page.alt | relative_url }}" hreflang="{% if fr %}en{% else %}fr{% endif %}">{% if fr %}EN{% else %}FR{% endif %}</a>{% endif %}
+    <a href="{{ '/support' | append: suf | relative_url }}">{{ t_support }}</a>
+    {% if page.base %}{% for l in site.langs %}{% if l != L %}{% if l == 'en' %}{% assign href = page.base %}{% else %}{% assign href = page.base | append: '.' | append: l %}{% endif %}<a class="lang" href="{{ href | relative_url }}" hreflang="{{ l }}">{{ l | upcase }}</a>{% endif %}{% endfor %}{% endif %}
   </nav>
 </div></header>
 <main class="page">
@@ -25,10 +29,10 @@
 </main>
 <footer><div class="wrap">
   <nav>
-    <a href="{% if fr %}{{ '/support.fr' | relative_url }}{% else %}{{ '/support' | relative_url }}{% endif %}">{% if fr %}Aide{% else %}Support{% endif %}</a>
-    <a href="{% if fr %}{{ '/privacy-policy.fr' | relative_url }}{% else %}{{ '/privacy-policy' | relative_url }}{% endif %}">{% if fr %}Confidentialité{% else %}Privacy Policy{% endif %}</a>
-    <a href="{% if fr %}{{ '/terms.fr' | relative_url }}{% else %}{{ '/terms' | relative_url }}{% endif %}">{% if fr %}Conditions d'utilisation{% else %}Terms of Use{% endif %}</a>
-    <a href="mailto:habitquest.application@gmail.com">Contact</a>
+    <a href="{{ '/support' | append: suf | relative_url }}">{{ t_support }}</a>
+    <a href="{{ '/privacy-policy' | append: suf | relative_url }}">{{ t_privacy }}</a>
+    <a href="{{ '/terms' | append: suf | relative_url }}">{{ t_terms }}</a>
+    <a href="mailto:habitquest.application@gmail.com">{{ t_contact }}</a>
   </nav>
   <span>© 2026 HabitQuest</span>
 </div></footer>

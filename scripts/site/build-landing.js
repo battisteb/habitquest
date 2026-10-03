@@ -1,6 +1,7 @@
 /**
  * Builds the landing page of the public site (GitHub Pages, docs/):
- * docs/index.html (English) and docs/fr/index.html (French), from one template.
+ * docs/index.html (English), docs/fr/index.html (French) and docs/ja/index.html
+ * (Japanese), from one template.
  *
  *   node scripts/site/build-landing.js
  *
@@ -28,7 +29,7 @@ const T = {
     lang: 'en',
     title: 'HabitQuest — Turn your habits into an RPG',
     description: 'A pixel art habit tracker: complete daily quests, keep your streaks, level up your hero and challenge your friends. On iPhone and Android.',
-    nav: { features: 'Features', faq: 'FAQ', support: 'Support', other: 'FR', otherHref: 'fr/' },
+    nav: { features: 'Features', faq: 'FAQ', support: 'Support' },
     badge: 'HABIT TRACKER RPG',
     h1: 'Turn your habits<br>into <em>quests</em>',
     pipSays: 'Hi, I’m Pip! I change colour with your day.',
@@ -62,7 +63,7 @@ const T = {
     faq: [
       ['Is HabitQuest free?', 'Yes. The whole game is free; Premium is an optional subscription that removes ads and adds extras. You can cancel it at any time in your App Store or Google Play settings.'],
       ['Which devices?', 'iPhone and Android phones, and any web browser. Your progress is saved to your account and follows you everywhere.'],
-      ['Which languages?', 'English and French.'],
+      ['Which languages?', 'English, French and Japanese.'],
       ['What about my data?', 'Your habits are private. We use no analytics SDK and never sell your data. Read the <a href="privacy-policy">Privacy Policy</a>.'],
       ['I need help', 'Write to us from Settings → Support in the app, or see the <a href="support">Support page</a>.'],
     ],
@@ -86,7 +87,7 @@ const T = {
     lang: 'fr',
     title: 'HabitQuest — Transforme tes habitudes en RPG',
     description: 'Un habit tracker en pixel art : valide tes quêtes du jour, garde tes séries, fais évoluer ton héros et défie tes amis. Sur iPhone et Android.',
-    nav: { features: 'Fonctionnalités', faq: 'FAQ', support: 'Aide', other: 'EN', otherHref: '../' },
+    nav: { features: 'Fonctionnalités', faq: 'FAQ', support: 'Aide' },
     badge: 'HABIT TRACKER RPG',
     h1: 'Tes habitudes<br>deviennent des <em>quêtes</em>',
     pipSays: 'Salut, moi c’est Pip ! Je change de couleur selon ta journée.',
@@ -120,7 +121,7 @@ const T = {
     faq: [
       ['HabitQuest est-il gratuit ?', 'Oui. Tout le jeu est gratuit ; Premium est un abonnement facultatif qui retire les publicités et ajoute des bonus. Tu peux le résilier à tout moment dans les réglages de l\'App Store ou de Google Play.'],
       ['Sur quels appareils ?', 'iPhone, téléphones Android et tout navigateur web. Ta progression est enregistrée sur ton compte et te suit partout.'],
-      ['Dans quelles langues ?', 'Français et anglais.'],
+      ['Dans quelles langues ?', 'Français, anglais et japonais.'],
       ['Et mes données ?', 'Tes habitudes sont privées. Aucun outil d\'analyse, aucune revente de données. Lis la <a href="../privacy-policy.fr">politique de confidentialité</a>.'],
       ['J\'ai besoin d\'aide', 'Écris-nous depuis Réglages → Support dans l\'app, ou consulte la <a href="../support.fr">page d\'aide</a>.'],
     ],
@@ -140,7 +141,69 @@ const T = {
     badges: { ios: '../assets/badges/app-store-en.svg', android: '../assets/badges/google-play-fr.png' },
     alts: { ios: 'Télécharger dans l\'App Store', android: 'Disponible sur Google Play' },
   },
+  ja: {
+    lang: 'ja',
+    title: 'HabitQuest — 習慣をRPGに',
+    description: 'ドット絵の習慣トラッカー。毎日のクエストをこなして連続記録をつなぎ、ヒーローを育ててフレンドに挑戦しよう。iPhoneとAndroidに対応。',
+    nav: { features: '特徴', faq: 'よくある質問', support: 'サポート' },
+    badge: '習慣トラッカーRPG',
+    h1: '習慣を<br><em>クエスト</em>に',
+    pipSays: 'やあ、ぼくはピップ！きみの一日に合わせて色が変わるよ。',
+    lead: '毎日のクエストをこなして連続記録をつなぎ、XPとゴールドを集めてドット絵のヒーローを育てよう。そしてフレンドに挑戦！',
+    soon: '近日公開',
+    web: 'または今すぐブラウザで遊ぶ',
+    featuresTitle: '習慣が<em>続く</em>しくみ',
+    featuresSub: 'すべての習慣がクエストに。続けた日の分だけ、ヒーローが強くなる。',
+    features: [
+      ['⚔️', 'デイリークエスト', '毎日、毎週、または週に数回。カテゴリーとすぐ使えるテンプレート付き。チェックするとXPとゴールドがもらえる。'],
+      ['🔥', 'やさしい連続記録', '毎日つないで連続記録を伸ばそう。週1回のフリーズと、試験・休暇・体調不良のための集中モードで、記録は消えずに凍結されるだけ。'],
+      ['🧙', '成長するヒーロー', '見習いから伝説まで6つのランク。32×32のドット絵ヒーローを、ショップの帽子・服・アクセサリー・テーマで着せ替えよう。'],
+      ['🤺', 'バトルとチャレンジ', 'フレンドのヒーローとターン制バトル。ゴールドを賭けた1対1のチャレンジでは、続けた人が勝つ。'],
+      ['🏟️', 'アリーナリーグ', '1日1回、同じリーグのプレイヤーとバトル。シーズンごとに6つのリーグを駆け上がろう。'],
+      ['🤝', '協力チャレンジ', 'フレンドとチームを組んで共通の目標に挑戦し、ボーナスXPをみんなでゲット。'],
+    ],
+    shotsTitle: 'アプリの<em>中身</em>',
+    shots: [['today', 'クエスト'], ['profile', 'ヒーロー'], ['arena', 'アリーナ'], ['stats', '成長の記録']],
+    screens: 'screens/ja',
+    stepsTitle: '遊び<em>かた</em>',
+    steps: [
+      ['ヒーローを作る', '見た目と最初のクエストを1分以内で選ぼう。'],
+      ['クエストをこなす', '習慣をやるたびにXPとゴールド。連続記録もつながる。'],
+      ['レベルアップして遊ぶ', '装備を解放し、ミッションと実績をクリアして、フレンドに勝とう。'],
+    ],
+    premiumTitle: '基本無料。もっと遊ぶなら<em>プレミアム</em>。',
+    freeTitle: '無料',
+    free: ['すべてのクエスト、連続記録、ヒーロー', 'デイリーミッションと23の実績', 'バトル、チャレンジ、協力、アリーナ', 'ショップの基本アイテム'],
+    premiumName: 'プレミアム（任意のサブスクリプション）',
+    premium: ['広告なし', 'フリーズトークンが増える', 'バトルは1日1回まで', '統計の全履歴', 'ショップの全アイテムと限定アイテム', '優先サポート'],
+    faqTitle: 'よくある質問',
+    faq: [
+      ['HabitQuestは無料？', 'はい。ゲームはすべて無料で遊べます。プレミアムは広告をなくして特典を追加する任意のサブスクリプションで、App StoreまたはGoogle Playの設定からいつでも解約できます。'],
+      ['対応端末は？', 'iPhone、Androidスマートフォン、そしてすべてのWebブラウザ。進行状況はアカウントに保存され、どの端末でも続きから遊べます。'],
+      ['対応言語は？', '日本語、英語、フランス語。'],
+      ['データの扱いは？', '習慣の内容は非公開です。分析ツールは使わず、データを販売することもありません。<a href="../privacy-policy.ja">プライバシーポリシー</a>をご覧ください。'],
+      ['困ったときは', 'アプリの「設定 → サポート」から連絡するか、<a href="../support.ja">サポートページ</a>をご覧ください。'],
+    ],
+    ctaTitle: '冒険は<em>今日</em>から',
+    waitlist: {
+      title: 'リリース日にお知らせを受け取る',
+      email: 'メールアドレス',
+      consent: 'HabitQuestがApp StoreとGoogle Playで公開されたときに、メールを1通受け取ることに同意します。スパムは送りません。いつでも配信停止できます。',
+      button: '知らせて',
+      ok: '登録しました！リリース日にメールでお知らせします。',
+      error: 'うまくいきませんでした。メールアドレスを確認して、もう一度お試しください。',
+      privacy: 'プライバシーポリシー',
+    },
+    footer: { support: 'サポート', privacy: 'プライバシーポリシー', terms: '利用規約', contact: 'お問い合わせ', rights: 'HabitQuest. ⚔️ とドット絵でつくりました。' },
+    links: { privacy: '../privacy-policy.ja', terms: '../terms.ja', support: '../support.ja' },
+    assets: '../assets',
+    badges: { ios: '../assets/badges/app-store-en.svg', android: '../assets/badges/google-play-en.png' },
+    alts: { ios: 'App Storeからダウンロード', android: 'Google Playで手に入れよう' },
+  },
 };
+
+// Landing page of each language, relative to the site root.
+const HOME = { en: '', fr: 'fr/', ja: 'ja/' };
 
 const esc = (s) => s.replace(/&(?!amp;|lt;|gt;|quot;)/g, '&amp;');
 
@@ -187,19 +250,19 @@ function page(t) {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0D0D1A">
 <link rel="icon" href="${a}/icon.png">
-<link rel="alternate" hreflang="en" href="/"><link rel="alternate" hreflang="fr" href="/fr/">
+${Object.entries(HOME).map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="/${h}">`).join('')}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10${t.lang === 'ja' ? '&family=DotGothic16' : ''}&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${a}/site.css">
 <script src="${a}/site.js" defer></script>
 <script src="${a}/waitlist.js" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="brand pixel" href="${t.lang === 'fr' ? './' : './'}"><img src="${a}/icon.png" alt="">HabitQuest</a>
+  <a class="brand pixel" href="./"><img src="${a}/icon.png" alt="">HabitQuest</a>
   <nav class="nav">
     <a href="#features">${t.nav.features}</a><a href="#faq">${t.nav.faq}</a><a href="${t.links.support}">${t.nav.support}</a>
-    <a class="lang" href="${t.nav.otherHref}" hreflang="${t.nav.other.toLowerCase()}">${t.nav.other}</a>
+${Object.keys(HOME).filter((l) => l !== t.lang).map((l) => `    <a class="lang" href="${t.lang === 'en' ? '' : '../'}${HOME[l]}" hreflang="${l}">${l.toUpperCase()}</a>`).join('\n')}
   </nav>
 </div></header>
 
@@ -213,7 +276,7 @@ function page(t) {
     <p class="web"><a href="${WEB_APP}">${t.web} →</a></p>
   </div>
   <div class="hero-art">
-    <div class="phone"><img src="${a}/screens/today.png" alt="" width="390" height="844"></div>
+    <div class="phone"><img src="${a}/${t.screens || 'screens'}/today.png" alt="" width="390" height="844"></div>
     <div class="pip" aria-label="Pip">
       <p class="pip-says">${t.pipSays}</p>
       <div class="pip-sprite">${['vert', 'orange', 'or', 'bleu', 'violet', 'rose'].map((m) => `<img src="${a}/pip/pip-${m}.png" alt="" width="96" height="96">`).join('')}</div>
@@ -232,7 +295,7 @@ ${t.features.map(([icon, h, p]) => `    <div class="card"><div class="icon">${ic
 <section><div class="wrap">
   <h2 class="pixel">${t.shotsTitle}</h2>
   <div class="shots">
-${t.shots.map(([img, cap]) => `    <figure><div class="phone"><img src="${a}/screens/${img}.png" alt="${cap}" loading="lazy" width="390" height="844"></div><figcaption>${cap}</figcaption></figure>`).join('\n')}
+${t.shots.map(([img, cap]) => `    <figure><div class="phone"><img src="${a}/${t.screens || 'screens'}/${img}.png" alt="${cap}" loading="lazy" width="390" height="844"></div><figcaption>${cap}</figcaption></figure>`).join('\n')}
   </div>
 </div></section>
 
@@ -279,7 +342,8 @@ ${Object.entries(SOCIAL).map(([n, u]) => `    <a href="${u}">${n}</a>`).join('\n
 }
 
 const docs = path.join(__dirname, '..', '..', 'docs');
-fs.writeFileSync(path.join(docs, 'index.html'), page(T.en));
-fs.mkdirSync(path.join(docs, 'fr'), { recursive: true });
-fs.writeFileSync(path.join(docs, 'fr', 'index.html'), page(T.fr));
-console.log('docs/index.html, docs/fr/index.html');
+for (const [lang, dir] of Object.entries(HOME)) {
+  fs.mkdirSync(path.join(docs, dir), { recursive: true });
+  fs.writeFileSync(path.join(docs, dir, 'index.html'), page(T[lang]));
+  console.log(`docs/${dir}index.html`);
+}

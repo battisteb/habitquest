@@ -1,7 +1,7 @@
 ---
 title: Support — HabitQuest
 lang: en
-alt: /support.fr
+base: /support
 ---
 
 # HabitQuest — Support
