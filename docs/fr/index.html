@@ -17,6 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/site.css">
 <script src="../assets/site.js" defer></script>
+<script src="../assets/waitlist.js" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -97,6 +98,17 @@
 <section><div class="wrap"><div class="cta">
   <h2 class="pixel">Ton aventure commence <em>aujourd'hui</em></h2>
   <div class="stores"><span class="store as soon" data-soon="Bientôt" aria-label="Télécharger dans l'App Store (Bientôt)"><img src="../assets/badges/app-store-en.svg" alt="Télécharger dans l'App Store"></span><span class="store gp soon" data-soon="Bientôt" aria-label="Disponible sur Google Play (Bientôt)"><img src="../assets/badges/google-play-fr.png" alt="Disponible sur Google Play"></span></div>
+  <form class="waitlist" id="waitlist" data-url="https://aksxyaullvozlkzcegth.supabase.co" data-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc3h5YXVsbHZvemxremNlZ3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NDg2MjUsImV4cCI6MjA4MjEyNDYyNX0.9GfZsW1PqDnOcV2zuOaqGrt1zj76PTwss6OfFl0PVOo" data-lang="fr" novalidate>
+    <h3 class="pixel">Sois prévenu le jour de la sortie</h3>
+    <div class="waitlist-row">
+      <label class="sr" for="wl-email">Ton e-mail</label>
+      <input id="wl-email" name="email" type="email" required autocomplete="email" placeholder="Ton e-mail">
+      <button type="submit">Préviens-moi</button>
+    </div>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="waitlist-consent"><input id="wl-consent" name="consent" type="checkbox" required> <span>J'accepte de recevoir un e-mail quand HabitQuest sera disponible sur l'App Store et Google Play. Pas de spam, désinscription à tout moment. <a href="../privacy-policy.fr">Confidentialité</a></span></label>
+    <p class="waitlist-msg" role="status" data-ok="C'est noté ! On t'écrit le jour de la sortie." data-error="Ça n'a pas marché. Vérifie ton e-mail et réessaie."></p>
+  </form>
 </div></div></section>
 </main>
 
