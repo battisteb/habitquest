@@ -793,6 +793,12 @@ export type Database = {
           },
         ];
       };
+      daily_chests: {
+        Row: { user_id: string; day: string; xp: number; gold: number; opened_at: string };
+        Insert: { user_id: string; day: string; xp?: number; gold?: number; opened_at?: string };
+        Update: { user_id?: string; day?: string; xp?: number; gold?: number; opened_at?: string };
+        Relationships: [];
+      };
       user_daily_quests: {
         Row: {
           assigned_date: string;
@@ -904,6 +910,7 @@ export type Database = {
       log_mood: { Args: { p_mood: number }; Returns: Json };
       repair_streak: { Args: { p_habit_id: string; p_with_ad?: boolean }; Returns: Json };
       give_kudos: { Args: { p_friend_id: string }; Returns: Json };
+      open_daily_chest: { Args: Record<string, never>; Returns: Json };
       friends_today: {
         Args: Record<string, never>;
         Returns: { friend_id: string; done_today: number; kudos_sent: boolean; kudos_received: number }[];

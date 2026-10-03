@@ -1,3 +1,7 @@
+import { use$ } from '@legendapp/state/react';
+import { dailyQuestsStore$, chestReady, openChest } from '../stores/daily-quests-store';
+import { PixelButton } from '../../../ui/components/pixel-button';
+import { showDialog } from '../../../lib/app-alert';
 import { useEffect, useCallback, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { PixelProgress } from '../../../ui/components/pixel-progress';
@@ -69,6 +73,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
   },
 }), [themeKey]);
   const { quests, isLoading, fetchDailyQuests, claimQuest } = useDailyQuests();
+  const chestOpenedOn = use$(dailyQuestsStore$.chestOpenedOn);
   const [expanded, setExpanded] = useState(false);
   const tourTarget = useTourTarget('missions');
 
@@ -104,6 +109,18 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
   }
 
   const claimable = quests.filter((q) => q.is_completed && !q.is_claimed).length;
+  const canOpenChest = chestReady(quests, chestOpenedOn);
+  const handleOpenChest = async () => {
+    hapticMedium();
+    const r = await openChest();
+    if (!r?.success) return;
+    const reward = r.jackpot
+      ? T.dq_chest_jackpot.replace('{n}', String(r.gold))
+      : r.gold
+        ? T.dq_chest_gold.replace('{n}', String(r.gold))
+        : T.dq_chest_xp.replace('{n}', String(r.xp));
+    showDialog(T.dq_chest_title, reward);
+  };
 
   return (
     <View style={styles.container}>
@@ -127,6 +144,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
           {claimable > 0 && !expanded && (
             <Text style={styles.claimBadge}>{T.dq_to_claim.replace('{n}', String(claimable))}</Text>
           )}
+          {canOpenChest && !expanded && <Text style={styles.claimBadge}>{T.dq_chest_ready}</Text>}
           <Text style={styles.bannerTitle}>
             {completedCount}/{totalCount} {expanded ? '▲' : '▼'}
           </Text>
@@ -154,6 +172,10 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
             />
           );
         })}
+        {/* Mission chest (G7): once the three missions are claimed. */}
+        {canOpenChest && (
+          <PixelButton title={T.dq_chest_open} onPress={handleOpenChest} testID="open-chest" />
+        )}
         <Text style={styles.refreshHint}>{T.dq_section_reset_hint}</Text>
       </View>
       )}

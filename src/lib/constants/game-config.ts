@@ -10,6 +10,20 @@ export const XP_CONFIG = {
  * process_streak_breaks / complete_habit.
  */
 /**
+ * Mission chest (G7, ADR 028): once the day's missions are claimed, a small
+ * random reward drawn by the server (open_daily_chest). Never sold.
+ */
+export const CHEST = {
+  GOLD_CHANCE: 0.6,
+  GOLD_MIN: 20,
+  GOLD_MAX: 40,
+  XP_CHANCE: 0.35,
+  XP_MIN: 25,
+  XP_MAX: 50,
+  JACKPOT_GOLD: 100,
+} as const;
+
+/**
  * Mini version of a quest (G1, ADR 027): on a hard day, the small version
  * keeps the streak for this share of the XP. Mirrors complete_habit (p_mini).
  */
