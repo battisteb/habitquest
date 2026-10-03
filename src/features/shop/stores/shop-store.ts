@@ -1,3 +1,4 @@
+import { arcSeasonOf } from '../../../lib/constants/game-config';
 import { observable } from '@legendapp/state';
 import { syncObservable } from '@legendapp/state/sync';
 import { supabase } from '../../../lib/supabase/client';
@@ -69,13 +70,15 @@ export async function fetchShop() {
     const ownedIds = (purchases ?? []).map((p) => p.item_id);
     shopStore$.ownedItemIds.set(ownedIds);
 
-    // Items for sale, plus owned items that are not sold (items of the month).
+    // Items for sale, the current arc's item (G6b), plus owned items that are
+    // not sold (items of the month, past seasons, the Crown of Seasons).
     const notSold = ownedIds.filter(Boolean);
-    const query = supabase.from('shop_items').select('*');
-    const { data: items } = await (notSold.length
-      ? query.or(`is_available.eq.true,id.in.(${notSold.join(',')})`)
-      : query.eq('is_available', true)
-    ).order('price_gold', { ascending: true });
+    const forSale = `is_available.eq.true,season.eq.${arcSeasonOf()}`;
+    const { data: items } = await supabase
+      .from('shop_items')
+      .select('*')
+      .or(notSold.length ? `${forSale},id.in.(${notSold.join(',')})` : forSale)
+      .order('price_gold', { ascending: true });
 
     shopStore$.items.set(items ?? []);
 

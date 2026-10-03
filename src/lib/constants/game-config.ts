@@ -286,6 +286,15 @@ export const ARC = {
 export const SEASONS = ['winter', 'spring', 'summer', 'autumn'] as const;
 export type Season = (typeof SEASONS)[number];
 
+/** The arc a day belongs to, by calendar month (as public.arc_of). */
+export function arcSeasonOf(date: Date = new Date()): Season {
+  const m = date.getMonth();
+  return m >= 9 ? 'winter' : m <= 2 ? 'spring' : m <= 5 ? 'summer' : 'autumn';
+}
+
+/** Seasonal cosmetics (G6b): the arc's cape, sold for gold during the arc. */
+export const SEASON_ITEM_PRICE = 300;
+
 export const BOSS = {
   HIT: 10,
   HP_PER_PLANNED: 8,
