@@ -1,5 +1,6 @@
 import { THEMES, type ThemeKey } from './themes';
 import { storage } from '../../lib/storage/mmkv';
+import { STARTED_IN_JAPANESE } from '../../lib/i18n';
 
 export const colors: {
   background: string;
@@ -90,22 +91,27 @@ export const fontSizes = {
 } as const;
 
 /**
- * Pixel font (Jersey 10) used for every bold text: titles, labels, numbers,
- * buttons. Body text stays on the system font for readability. Loaded in
- * app/_layout.tsx; set `fontFamily` instead of `fontWeight` (Android ignores
- * weights on custom fonts). Jersey 10 has a single weight.
+ * Pixel font used for every bold text: titles, labels, numbers, buttons.
+ * Jersey 10, or DotGothic16 when the app is in Japanese (Jersey has no
+ * Japanese characters). Body text stays on the system font for
+ * readability. Loaded in app/_layout.tsx; set `fontFamily` instead of
+ * `fontWeight` (Android ignores weights on custom fonts). Both fonts have a
+ * single weight. Chosen at startup: switching to or from Japanese restarts
+ * the app (setLang).
  */
+const PIXEL_FONT = STARTED_IN_JAPANESE ? 'DotGothic16_400Regular' : 'Jersey10_400Regular';
 export const fonts = {
-  bold: 'Jersey10_400Regular',
-  semibold: 'Jersey10_400Regular',
+  bold: PIXEL_FONT,
+  semibold: PIXEL_FONT,
 } as const;
 
 /**
  * Jersey 10 draws smaller than the system font at the same size: pixel-font
  * texts go through this so they keep the size of the text around them.
+ * DotGothic16 already has the system font's size.
  */
 export function pixelSize(size: number): number {
-  return Math.round(size * 1.3);
+  return STARTED_IN_JAPANESE ? size : Math.round(size * 1.3);
 }
 
 /** Size of one "pixel" of the stepped frames (corners, borders, ledge). */

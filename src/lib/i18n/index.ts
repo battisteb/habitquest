@@ -3,6 +3,7 @@ import { use$ } from '@legendapp/state/react';
 import { getLocales } from 'expo-localization';
 import { storage } from '../storage/mmkv';
 import { JA } from './ja';
+import { restartApp } from '../restart-app';
 
 export type Lang = 'fr' | 'en' | 'ja';
 
@@ -35,8 +36,15 @@ export const lang$ = observable<Lang>(initialLang());
 
 lang$.onChange(({ value }) => storage.set(STORAGE_KEY, value));
 
+/** Whether the app started in Japanese (its pixel font is chosen at startup). */
+export const STARTED_IN_JAPANESE = lang$.peek() === 'ja';
+
 export function setLang(l: Lang): void {
   lang$.set(l);
+  // Japanese uses another pixel font, fixed at startup: restart to apply it.
+  if ((l === 'ja') !== STARTED_IN_JAPANESE) {
+    restartApp();
+  }
 }
 
 // ─── Translations ─────────────────────────────────────────────────────────────
