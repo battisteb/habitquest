@@ -12,11 +12,15 @@ import Animated, {
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../theme/tokens';
 import { useT } from '../../lib/i18n';
 import { Pip } from '../../features/mascot/components/pip';
+import { identitySentence, identityStage, identityTitle } from '../../features/habits/utils/identity';
 
 interface StreakMilestoneOverlayProps {
   visible: boolean;
   streakCount: number;
   habitName: string;
+  category?: string;
+  /** First time at 7, 21 or 66 days: "You're becoming someone who…" (G3). */
+  newIdentity?: boolean;
   onComplete?: () => void;
 }
 
@@ -37,8 +41,10 @@ interface MilestoneConfig {
 const MILESTONE_CONFIGS: Record<number, MilestoneConfig> = {
   7:   { emoji: '🔥', labelKey: 'milestone_1w',   color: '#f39c12' },
   14:  { emoji: '⚡', labelKey: 'milestone_2w',   color: '#e67e22' },
+  21:  { emoji: '🛡️', labelKey: null,             color: '#4ecca3' },
   30:  { emoji: '💎', labelKey: 'milestone_1m',   color: '#5b8def' },
   60:  { emoji: '🏆', labelKey: 'milestone_2m',   color: '#9b59b6' },
+  66:  { emoji: '🧠', labelKey: null,             color: '#e684ae' },
   100: { emoji: '👑', labelKey: 'milestone_100d', color: '#e74c3c' },
   365: { emoji: '🌟', labelKey: 'milestone_1y',   color: '#f1c40f' },
 };
@@ -47,7 +53,7 @@ function getMilestoneConfig(count: number): MilestoneConfig {
   return MILESTONE_CONFIGS[count] ?? { emoji: '🔥', labelKey: null, color: colors.accent };
 }
 
-export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComplete }: StreakMilestoneOverlayProps) {
+export function StreakMilestoneOverlay({ visible, streakCount, habitName, category = 'general', newIdentity = false, onComplete }: StreakMilestoneOverlayProps) {
   const T = useT();
   const overlayOpacity = useSharedValue(0);
   const badgeScale = useSharedValue(0);
@@ -113,6 +119,7 @@ export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComp
   if (!visible) return null;
 
   const config = getMilestoneConfig(streakCount);
+  const stage = newIdentity ? identityStage(streakCount) : null;
 
   return (
     <Animated.View style={[styles.overlay, overlayStyle]}>
@@ -127,7 +134,16 @@ export function StreakMilestoneOverlay({ visible, streakCount, habitName, onComp
         </View>
         <Animated.View style={flameStyle}>
           <Text style={styles.habitName} numberOfLines={1}>{habitName}</Text>
-          <Text style={styles.subtitle}>{T.milestone_consistency}</Text>
+          {stage ? (
+            <>
+              <Text style={styles.subtitle} testID="identity-sentence">{identitySentence(T, category)}</Text>
+              <Text style={[styles.identityTitle, { color: config.color }]}>
+                {T.identity_new_title.replace('{title}', identityTitle(T, stage))}
+              </Text>
+            </>
+          ) : (
+            <Text style={styles.subtitle}>{T.milestone_consistency}</Text>
+          )}
         </Animated.View>
       </Animated.View>
     </Animated.View>
@@ -165,6 +181,7 @@ const styles = StyleSheet.create({
     }),
   },
   heroRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
+  identityTitle: { fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.md), textAlign: 'center', marginTop: spacing.xs, letterSpacing: 1 },
   emoji: {
     fontSize: 56,
   },

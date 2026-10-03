@@ -8,6 +8,7 @@ import { fetchDailyQuests } from '../../daily-quests/stores/daily-quests-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { triggerStreakMilestone, isMilestone } from '../../gamification/stores/streak-milestone-store';
+import { isIdentityMilestone } from '../utils/identity';
 import { recordCompletionHour } from '../../notifications/utils/adaptive-timing';
 import { hapticSuccess, hapticHeavy } from '../../../lib/haptics';
 import { playSfx } from '../../../lib/audio/sound-service';
@@ -293,6 +294,9 @@ export async function completeHabit(
     if (weekCount >= getWeeklyTarget(frequency)) return;
   }
 
+  // Best streak before this validation: an identity title is announced once (G3).
+  const bestBefore = habitsStore$.streaks.get()[habitId]?.longest_count ?? 0;
+
   // XP, gold, streak, challenges and daily quests are all computed server-side.
   const { data, error } = await supabase.rpc('complete_habit', {
     p_habit_id: habitId,
@@ -316,7 +320,10 @@ export async function completeHabit(
   // Check for streak milestone
   const milestone = isMilestone(result.current_streak) && result.current_streak > result.previous_streak;
   if (milestone) {
-    triggerStreakMilestone(result.current_streak, habit?.name ?? '');
+    triggerStreakMilestone(result.current_streak, habit?.name ?? '', {
+      category: habit?.category,
+      newIdentity: isIdentityMilestone(result.current_streak) && result.current_streak > bestBefore,
+    });
     hapticHeavy();
     void playSfx('streak_milestone');
   } else {

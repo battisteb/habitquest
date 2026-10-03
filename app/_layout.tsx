@@ -89,6 +89,8 @@ function ThemedApp() {
   const showStreakMilestone = use$(streakMilestoneStore$.visible);
   const milestoneStreakCount = use$(streakMilestoneStore$.streakCount);
   const milestoneHabitName = use$(streakMilestoneStore$.habitName);
+  const milestoneCategory = use$(streakMilestoneStore$.category);
+  const milestoneNewIdentity = use$(streakMilestoneStore$.newIdentity);
   const newlyUnlocked = use$(achievementsStore$.newlyUnlocked);
   const currentToast = newlyUnlocked[0] ?? null;
   const authUserId = use$(authStore$.user)?.id;
@@ -139,6 +141,8 @@ function ThemedApp() {
         visible={showStreakMilestone}
         streakCount={milestoneStreakCount}
         habitName={milestoneHabitName}
+        category={milestoneCategory}
+        newIdentity={milestoneNewIdentity}
         onComplete={dismissStreakMilestone}
       />
       {authUserId && <TrialOfferHost />}
