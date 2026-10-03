@@ -1,3 +1,5 @@
+import { listTools } from '../../src/features/habits/utils/list-tools';
+import { adventureDay, isRevealed } from '../../src/features/habits/utils/today-reveal';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import {
   View,
@@ -556,11 +558,15 @@ export default function TodayScreen() {
     return Array.from(seen);
   }, [habits]);
 
+  // D6: sorting and filters only help with many quests; below that they are
+  // noise, and a filter left on must not hide quests with no way to clear it.
+  const { show: showListTools, category, sort } = listTools(habits.length, activeCategory, sortMode, ALL_KEY);
+
   // Filter + sort
   const displayedHabits = useMemo(() => {
-    const filtered = (activeCategory === ALL_KEY
+    const filtered = (category === ALL_KEY
       ? habits
-      : habits.filter((h) => h.category === activeCategory)
+      : habits.filter((h) => h.category === category)
     ).filter((h) => isHabitActiveInMode(h.category, activeMode)).filter((h) => isActiveToday(h));
     return [...filtered].sort((a, b) => {
       // Pinned always first regardless of sort mode
@@ -568,10 +574,10 @@ export default function TodayScreen() {
       const bPinned = pinnedIds.includes(b.id);
       if (aPinned !== bPinned) return aPinned ? -1 : 1;
 
-      if (sortMode === 'az') {
+      if (sort === 'az') {
         return a.name.localeCompare(b.name);
       }
-      if (sortMode === 'streak') {
+      if (sort === 'streak') {
         const aStreak = streaks[a.id]?.current_count ?? 0;
         const bStreak = streaks[b.id]?.current_count ?? 0;
         return bStreak - aStreak;
@@ -582,7 +588,7 @@ export default function TodayScreen() {
       if (aDone === bDone) return 0;
       return aDone ? 1 : -1;
     });
-  }, [habits, activeCategory, todayCompletions, weekCompletions, pinnedIds, sortMode, streaks]);
+  }, [habits, category, todayCompletions, weekCompletions, pinnedIds, sort, streaks]);
 
   const activeHabits = habits.filter((h) => isActiveToday(h));
   const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
@@ -695,20 +701,27 @@ export default function TodayScreen() {
     burnout: burnoutSignal.risk !== 'none' && !burnoutDismissed,
   });
 
+  // Progressive Today (D5): the rest arrives over the first week.
+  const day = adventureDay(profile?.created_at);
+
   const ListHeader = (
     <View>
       {hero}
-      {/* Daily missions: a folded one-line banner above the habits. */}
-      <View style={styles.missionsSlot}>
-        <DailyQuestsSection
-          pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
-        />
-      </View>
-      {/* Boss of the week (I9): beaten with the week's quests. */}
-      <View style={styles.bossSlot}>
-        <ArcBanner />
-        <BossCard />
-      </View>
+      {/* Daily missions: a folded one-line banner above the habits (from day 2, D5). */}
+      {isRevealed('missions', day) && (
+        <View style={styles.missionsSlot}>
+          <DailyQuestsSection
+            pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
+          />
+        </View>
+      )}
+      {/* Seasonal arc and boss of the week (I9), from day 3 (D5). */}
+      {isRevealed('boss', day) && (
+        <View style={styles.bossSlot}>
+          <ArcBanner />
+          <BossCard />
+        </View>
+      )}
       {/* Active mode banner */}
       {activeMode && (() => {
         const def = getModeDefinition(activeMode.key);
@@ -725,7 +738,7 @@ export default function TodayScreen() {
 
       {banner === 'trial' && <TrialBanner />}
       {banner === 'comeback' && <ComebackBanner />}
-      <MoodCheckIn />
+      {isRevealed('mood', day) && <MoodCheckIn />}
 
       {/* Streak recovery: one at a time (D4), the others come after it is closed */}
       {banner === 'broken' && brokenStreaks.slice(0, 1).map((b) => (
@@ -820,7 +833,8 @@ export default function TodayScreen() {
             {completedCount}/{totalCount}
           </Text>
         </View>
-        <View style={styles.sortRow}>
+        {showListTools && (
+        <View style={styles.sortRow} testID="habit-sort">
           {(['smart', 'streak', 'az'] as const).map((mode) => {
             const label = mode === 'smart' ? T.habit_sort_smart : mode === 'streak' ? T.habit_sort_streak : T.habit_sort_az;
             const active = sortMode === mode;
@@ -831,6 +845,7 @@ export default function TodayScreen() {
             );
           })}
         </View>
+        )}
       </View>
 
       {/* Progress bar */}
@@ -847,8 +862,9 @@ export default function TodayScreen() {
       </View>
 
       {/* Category filter */}
-      {categories.length > 1 && (
+      {showListTools && categories.length > 1 && (
         <ScrollView
+          testID="habit-filters"
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.filterScroll}
@@ -946,9 +962,11 @@ export default function TodayScreen() {
               style={{ marginTop: spacing.lg, alignSelf: 'stretch' }}
             />
           </View>
-          <DailyQuestsSection
-            pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
-          />
+          {isRevealed('missions', day) && (
+            <DailyQuestsSection
+              pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
+            />
+          )}
         </View>
       ) : (
         <FlatList
