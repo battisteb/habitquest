@@ -18,6 +18,7 @@ HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy e
 | If you choose "Continue with Google": the email address, name and profile picture link Google shares | Create and sign in to your account (we keep the email; the app does not use your Google name or picture) | Supabase (authentication) |
 | Username, avatar colors, level, XP, gold, equipped items | Run the game and show your hero to your friends | Supabase |
 | Habits, completions, streaks, optional completion notes | Core habit-tracking features | Supabase, and cached on your device |
+| Your mood of the day (1 to 5), only if you log it | Show you which habits go with a better mood, in your own stats; never shared or shown to anyone else | Supabase |
 | Friends, duels, challenges, in-app notifications | Social features | Supabase |
 | Time zone (e.g. Europe/Paris) and app language | Count streaks and daily limits on your local day; send notifications and e-mails in your language | Supabase |
 | Push notification token | Send reminders and game notifications | Supabase |

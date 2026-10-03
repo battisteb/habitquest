@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    marginHorizontal: spacing.md,
+    marginHorizontal: 0,
     marginBottom: spacing.sm,
   },
   text: { color: gold, fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.sm), flex: 1 },

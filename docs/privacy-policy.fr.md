@@ -18,6 +18,7 @@ HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cett
 | Si vous choisissez « Continuer avec Google » : l'adresse e-mail, le nom et le lien de photo de profil transmis par Google | Créer votre compte et vous connecter (nous gardons l'e-mail ; l'app n'utilise ni votre nom ni votre photo Google) | Supabase (authentification) |
 | Pseudo, couleurs de l'avatar, niveau, XP, or, objets équipés | Faire fonctionner le jeu et montrer votre héros à vos amis | Supabase |
 | Habitudes, validations, séries, notes facultatives | Suivi des habitudes | Supabase, et en cache sur votre appareil |
+| Votre humeur du jour (1 à 5), seulement si vous la notez | Vous montrer, dans vos propres stats, quelles habitudes vont avec une meilleure humeur ; jamais partagée ni montrée à quelqu'un d'autre | Supabase |
 | Amis, duels, défis, notifications in-app | Fonctions sociales | Supabase |
 | Fuseau horaire (ex. Europe/Paris) et langue de l'app | Compter les séries et limites quotidiennes selon votre jour local ; envoyer notifications et e-mails dans votre langue | Supabase |
 | Jeton de notifications push | Envoyer les rappels et notifications du jeu | Supabase |

@@ -30,6 +30,7 @@ import {
 import { YearPixels, YearLegend } from '../components/year-pixels';
 import { WeekBars, Insight } from '../components/stats-charts';
 import { ShareCard } from '../components/share-card';
+import { MoodInsightsCard } from '../../mood/components/mood-insights-card';
 import { shareViewAsImage } from '../utils/share-image';
 
 const WEEKDAY_KEYS = ['day_long_mon', 'day_long_tue', 'day_long_wed', 'day_long_thu', 'day_long_fri', 'day_long_sat', 'day_long_sun'] as const;
@@ -41,7 +42,7 @@ export default function StatsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const data = useStatsData();
-  const { canViewFullHistory } = usePremium();
+  const { canViewFullHistory, isPremium } = usePremium();
   const profile = use$(profileStore$.profile);
   const colorsLook = use$(avatarConfigStore$);
   const gear = use$(shopStore$.equippedSlots);
@@ -195,6 +196,8 @@ export default function StatsScreen() {
               label={T.stats_best_day}
             />
           </View>
+
+          <MoodInsightsCard habits={data.habits} completions={data.completions} isPremium={isPremium} />
 
           <CategoryBreakdown />
         </>
