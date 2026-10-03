@@ -630,6 +630,12 @@ export type Database = {
         };
         Relationships: [];
       };
+      mood_logs: {
+        Row: { day: string; mood: number; updated_at: string; user_id: string };
+        Insert: { day: string; mood: number; updated_at?: string; user_id: string };
+        Update: { day?: string; mood?: number; updated_at?: string; user_id?: string };
+        Relationships: [];
+      };
       streak_freezes: {
         Row: {
           created_at: string;
@@ -880,6 +886,7 @@ export type Database = {
       claim_duel_reward: { Args: { p_duel_id: string }; Returns: Json };
       complete_habit: { Args: { p_habit_id: string; p_note?: string }; Returns: Json };
       uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json };
+      log_mood: { Args: { p_mood: number }; Returns: Json };
       repair_streak: { Args: { p_habit_id: string; p_with_ad?: boolean }; Returns: Json };
       get_my_profile: {
         Args: Record<string, never>;

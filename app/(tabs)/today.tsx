@@ -29,6 +29,7 @@ import { TakeBreakModal } from '../../src/features/habits/components/take-break-
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import { TrialBanner } from '../../src/features/monetization/components/trial-banner';
 import { ComebackBanner } from '../../src/features/habits/components/comeback-banner';
+import { MoodCheckIn } from '../../src/features/mood/components/mood-check-in';
 import { streakRepairCost } from '../../src/lib/constants/game-config';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
 import { useTourTarget } from '../../src/features/onboarding/tour/tour-targets';
@@ -708,6 +709,7 @@ export default function TodayScreen() {
 
       <TrialBanner />
       <ComebackBanner />
+      <MoodCheckIn />
 
       {/* Streak recovery banners */}
       {brokenStreaks.map((b) => (

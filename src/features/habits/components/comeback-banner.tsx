@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    marginHorizontal: spacing.md,
+    marginHorizontal: 0,
     marginBottom: spacing.sm,
     gap: 2,
   },
