@@ -9,7 +9,7 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { useT, lang$ } from '../src/lib/i18n';
+import { useT, lang$, localeTag, type Lang } from '../src/lib/i18n';
 import { FALLBACK_PRICES, annualPerMonth, annualSavingsPercent, formatPrice } from '../src/features/monetization/utils/pricing';
 import { openLegalPage } from '../src/lib/legal-links';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -32,7 +32,7 @@ import { recordTrialOfferRefused, trialDaysLeft, TRIAL_DAYS } from '../src/featu
 const STORE_NAME = Platform.OS === 'android' ? 'Google Play' : 'App Store';
 
 function formatDate(date: Date, lang: string): string {
-  return date.toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long' });
+  return date.toLocaleDateString(localeTag(lang as Lang), { day: 'numeric', month: 'long' });
 }
 
 

@@ -16,6 +16,8 @@ const MONTH_NAMES_EN = [
 ];
 const DAY_LABELS_FR = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
 const DAY_LABELS_EN = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+const MONTH_NAMES_JA = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+const DAY_LABELS_JA = ['月', '火', '水', '木', '金', '土', '日'];
 
 function countToColor(count: number): string {
   if (count === 0) return colors.border;
@@ -96,8 +98,8 @@ export function MonthlyHeatmap({ habitId }: MonthlyHeatmapProps = {}) {
   const lang = use$(lang$);
   const { counts, isLoading, year, month } = useMonthlyCompletions(undefined, undefined, habitId);
 
-  const monthName = (lang === 'fr' ? MONTH_NAMES_FR : MONTH_NAMES_EN)[month];
-  const dayLabels = lang === 'fr' ? DAY_LABELS_FR : DAY_LABELS_EN;
+  const monthName = (lang === 'fr' ? MONTH_NAMES_FR : lang === 'ja' ? MONTH_NAMES_JA : MONTH_NAMES_EN)[month];
+  const dayLabels = lang === 'fr' ? DAY_LABELS_FR : lang === 'ja' ? DAY_LABELS_JA : DAY_LABELS_EN;
 
   const cells = useMemo(() => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();

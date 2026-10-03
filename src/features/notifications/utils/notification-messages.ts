@@ -71,7 +71,40 @@ const MESSAGES_FR: Record<NotificationContext, string[]> = {
   ],
 };
 
+const MESSAGES_JA: Record<NotificationContext, string[]> = {
+  reminder: [
+    '⚔️ クエストが待ってるよ、ヒーロー！',
+    '🎯 習慣をレベルアップする時間だ！',
+    '🔥 今日も連続記録をつなごう！',
+    '⚡ 連続記録がきみを待ってる！',
+    '🏆 チャンピオンは毎日あらわれる。',
+    '💪 一歩ずつ。きみならできる。',
+  ],
+  streak_at_risk: [
+    '⚠️ 連続記録がピンチ！今日達成して守ろう。',
+    '🔥 炎が消えそう — 守り抜こう！',
+    '❄️ ひと休みしたいなら連続記録フリーズが使えるよ。',
+    '⚡ 連続記録を守るラストチャンス！',
+  ],
+  streak_milestone: [
+    '🏆 節目に到達！絶好調だね！',
+    '🎉 すごい連続記録！この調子で！',
+    '💎 伝説級の継続力を解除！',
+  ],
+  level_up: [
+    '🚀 レベルアップ！どんどん強くなってる！',
+    '⭐ 新しいレベルへ — 新しい力が待ってる！',
+    '🏅 レベルが上がった！鍛錬を続けよう！',
+  ],
+  all_done: [
+    '✅ 全部達成！パーフェクトな1日だ、ヒーロー！',
+    '🏆 クエスト完了！また明日。',
+    '💎 完璧な1日！もう誰にも止められない。',
+  ],
+};
+
 export function getRandomMessage(context: NotificationContext): string {
-  const msgs = lang$.get() === 'fr' ? MESSAGES_FR[context] : MESSAGES_EN[context];
+  const lang = lang$.get();
+  const msgs = (lang === 'fr' ? MESSAGES_FR : lang === 'ja' ? MESSAGES_JA : MESSAGES_EN)[context];
   return msgs[Math.floor(Math.random() * msgs.length)];
 }

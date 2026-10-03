@@ -49,6 +49,7 @@ interface XpJourneyData {
 
 const DAY_LABELS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DAY_LABELS_FR = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+const DAY_LABELS_JA = ['日', '月', '火', '水', '木', '金', '土'];
 
 async function fetchXpJourneyData(): Promise<Omit<XpJourneyData, 'isLoading'>> {
   const userId = authStore$.user.get()?.id;
@@ -383,7 +384,7 @@ export default function XpJourneyScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const lang = use$(lang$);
-  const dayLabels = lang === 'fr' ? DAY_LABELS_FR : DAY_LABELS_EN;
+  const dayLabels = lang === 'fr' ? DAY_LABELS_FR : lang === 'ja' ? DAY_LABELS_JA : DAY_LABELS_EN;
   const { profile, xpForNextLevel, xpProgress } = useProfileStats();
   const [data, setData] = useState<XpJourneyData>({
     dailyXp: [],

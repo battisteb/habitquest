@@ -69,6 +69,8 @@ import { BossCard } from '../../src/features/boss/components/boss-card';
 function todayLabel(): string {
   const d = new Date();
   const lang = lang$.get();
+  // Japanese: 10月3日（土）
+  if (lang === 'ja') return `${d.getMonth() + 1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`;
   const dayNames = lang === 'fr' ? DAY_NAMES_FR : DAY_NAMES_EN;
   const monthNames = lang === 'fr' ? MONTH_NAMES_FR : MONTH_NAMES_EN;
   return `${dayNames[d.getDay()].toUpperCase()} · ${d.getDate()} ${monthNames[d.getMonth()].toUpperCase()}`;

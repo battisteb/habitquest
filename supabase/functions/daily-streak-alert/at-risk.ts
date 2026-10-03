@@ -75,4 +75,5 @@ export function usersAtRisk(
 export const ALERT_TEXT = {
   en: { title: '⚡ Streak at risk!', body: 'Complete your quests before midnight to keep your streak alive!' },
   fr: { title: '⚡ Série en danger !', body: 'Valide tes quêtes avant minuit pour garder ta série !' },
+  ja: { title: '⚡ 連続記録がピンチ！', body: '0時までにクエストを達成して、連続記録を守ろう！' },
 };

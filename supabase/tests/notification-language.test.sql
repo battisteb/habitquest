@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = public, extensions;
 
-select plan(6);
+select plan(8);
 
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-000000066001', 'fr@test.dev', '{"username":"Camille"}'),
@@ -47,6 +47,19 @@ select is((select body from notifications where user_id = '00000000-0000-0000-00
   'Camille joined your co-op challenge!', 'an English player keeps English');
 select is((select count(*)::int from notifications where title ~ '[A-Za-z]' and user_id = '00000000-0000-0000-0000-000000066001'
            and title in ('🤝 Co-op challenge', '👥 Friend request')), 0, 'no English title left for the French player');
+
+-- Japanese (L1): a Japanese player gets the texts in Japanese, names kept.
+reset role;
+update profiles set language = 'ja' where id = '00000000-0000-0000-0000-000000066002';
+select pg_temp.act_as('00000000-0000-0000-0000-000000066001');
+set local role authenticated;
+select create_notification('00000000-0000-0000-0000-000000066002', 'friend_request', '👥 Friend request',
+  'Camille wants to be your friend.', '{}'::jsonb);
+reset role;
+select is((select title from notifications where user_id = '00000000-0000-0000-0000-000000066002' and type = 'friend_request'),
+  '👥 フレンド申請', 'the title is in Japanese');
+select is((select body from notifications where user_id = '00000000-0000-0000-0000-000000066002' and type = 'friend_request'),
+  'Camilleさんからフレンド申請が届きました。', 'and the body, with the name');
 
 select * from finish();
 rollback;

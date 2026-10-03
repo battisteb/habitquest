@@ -11,7 +11,7 @@ import { sendFriendRequest, fetchFriends, friendsStore$ } from '../../src/featur
 import { use$ } from '@legendapp/state/react';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
-import { useT, lang$ } from '../../src/lib/i18n';
+import { useT, lang$, localeTag } from '../../src/lib/i18n';
 import { titleLabel } from '../../src/lib/i18n/labels';
 
 interface PublicProfile {
@@ -185,7 +185,7 @@ export default function PublicProfileScreen() {
 
   const rank = getRankForLevel(profile.level);
   const memberSince = new Date(profile.created_at).toLocaleDateString(
-    lang$.get() === 'fr' ? 'fr-FR' : 'en-US',
+    localeTag(lang$.get()),
     { month: 'long', year: 'numeric' },
   );
 

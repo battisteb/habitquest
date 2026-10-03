@@ -1,12 +1,10 @@
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { use$ } from '@legendapp/state/react';
-import { lang$, setLang, type Lang } from '../../lib/i18n';
+import { lang$, setLang, LANGS } from '../../lib/i18n';
 import { colors, fonts, pixelSize, fontSizes } from '../theme/tokens';
 
-const LANGS: Lang[] = ['en', 'fr'];
-
 /**
- * EN / FR switch shown before the player has an account (sign-in, first
+ * EN / FR / JA switch shown before the player has an account (sign-in, first
  * onboarding slide): the device language is preselected, the player can
  * change it right away. Settings keep the same choice afterwards.
  */

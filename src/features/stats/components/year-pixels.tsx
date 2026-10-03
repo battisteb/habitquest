@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, type LayoutChangeEvent } from 'react-native';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
-import { useT, lang$ } from '../../../lib/i18n';
+import { useT, lang$, localeTag, type Lang } from '../../../lib/i18n';
 import { use$ } from '@legendapp/state/react';
 import { rateLevel, type DayRate } from '../utils/stats-math';
 
@@ -41,7 +41,7 @@ export function YearPixels({ weeks, lockedBefore, cell: fixedCell, showLabels = 
   const cell = fixedCell ?? Math.max(3, Math.floor(((width - labelW) / weeks.length - gap) * 10) / 10);
 
   const months = useMemo(() => {
-    const fmt = new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' });
+    const fmt = new Intl.DateTimeFormat(localeTag(lang as Lang), { month: 'short' });
     const out: { col: number; label: string }[] = [];
     weeks.forEach((col, i) => {
       const first = col[0];

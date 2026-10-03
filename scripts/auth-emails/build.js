@@ -42,6 +42,13 @@ const EMAILS = {
       button: 'CONFIRMER MON COMPTE',
       footer: 'Tu ne t’es pas inscrit sur HabitQuest ? Ignore simplement cet e-mail.',
     },
+    ja: {
+      subject: 'HabitQuestアカウントの確認 ⚔️',
+      title: '冒険のはじまり',
+      body: 'ようこそ、冒険者！メールアドレスを確認して、ヒーローを作り、最初のクエストを始めよう。',
+      button: 'アカウントを確認する',
+      footer: 'HabitQuestに登録した覚えがない場合は、このメールを無視してください。',
+    },
   },
   recovery: {
     en: {
@@ -57,6 +64,13 @@ const EMAILS = {
       body: 'Tu as demandé à réinitialiser ton mot de passe. Touche le bouton pour en choisir un nouveau : ton héros, tes séries et ton or sont en sécurité.',
       button: 'CHOISIR UN MOT DE PASSE',
       footer: 'Ce n’est pas toi ? Ignore cet e-mail : ton mot de passe ne change pas.',
+    },
+    ja: {
+      subject: 'HabitQuestのパスワード再設定 🔑',
+      title: '新しいパスワード',
+      body: 'パスワードの再設定を受け付けました。ボタンをタップして新しいパスワードを決めてください。ヒーロー、連続記録、ゴールドはそのままです。',
+      button: '新しいパスワードを決める',
+      footer: '心当たりがない場合は、このメールを無視してください。パスワードは変わりません。',
     },
   },
   email_change: {
@@ -74,10 +88,18 @@ const EMAILS = {
       button: 'CONFIRMER L’ADRESSE',
       footer: 'Tu n’as pas demandé ce changement ? Ignore cet e-mail : ton adresse ne change pas.',
     },
+    ja: {
+      subject: 'HabitQuestの新しいメールアドレスの確認 ✉️',
+      title: '新しいメールアドレス',
+      body: '{{ .NewEmail }} をHabitQuestの新しいメールアドレスにすることを確認してください（現在：{{ .Email }}）。',
+      button: '新しいアドレスを確認する',
+      footer: 'この変更に心当たりがない場合は、このメールを無視してください。アドレスは変わりません。',
+    },
   },
 };
 
 const FR = '{{ if eq .Data.language "fr" }}';
+const JA = '{{ else if eq .Data.language "ja" }}';
 
 function card(t) {
   // Tables and inline styles: the only layout every mail client renders.
@@ -102,7 +124,7 @@ function card(t) {
 }
 
 function page(email) {
-  const { en, fr } = EMAILS[email];
+  const { en, fr, ja } = EMAILS[email];
   return `<!doctype html>
 <html>
 <head>
@@ -114,7 +136,7 @@ function page(email) {
 <body style="margin:0;padding:0;background:${C.background};">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.background};">
   <tr><td align="center" style="padding:32px 12px;">
-    ${FR}${card(fr)}{{ else }}${card(en)}{{ end }}
+    ${FR}${card(fr)}${JA}${card(ja)}{{ else }}${card(en)}{{ end }}
     <div style="margin-top:20px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:${C.muted};">
       <a href="${SITE}" style="color:${C.muted};">habitquest.expo.app</a>
     </div>
@@ -130,8 +152,8 @@ fs.mkdirSync(outDir, { recursive: true });
 const subjects = {};
 for (const email of Object.keys(EMAILS)) {
   fs.writeFileSync(path.join(outDir, `${email}.html`), page(email));
-  const { en, fr } = EMAILS[email];
-  subjects[email] = `${FR}${fr.subject}{{ else }}${en.subject}{{ end }}`;
+  const { en, fr, ja } = EMAILS[email];
+  subjects[email] = `${FR}${fr.subject}${JA}${ja.subject}{{ else }}${en.subject}{{ end }}`;
 }
 fs.writeFileSync(path.join(outDir, 'subjects.json'), JSON.stringify(subjects, null, 2) + '\n');
 console.log('templates:', Object.keys(EMAILS).join(', '), '→', path.relative(process.cwd(), outDir));

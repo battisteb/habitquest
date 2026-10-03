@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native';
 jest.mock('../../../lib/i18n', () => {
   const { observable } = jest.requireActual('@legendapp/state');
   const T = new Proxy({}, { get: (_t, key) => String(key) });
-  return { useT: () => T, lang$: observable('en') };
+  return { localeTag: () => 'en-US', LANGS: ['en', 'fr', 'ja'], useT: () => T, lang$: observable('en') };
 });
 jest.mock('../../../ui/theme/theme-context', () => ({ useTheme: () => ({ themeKey: 'default' }) }));
 jest.mock('@legendapp/state/sync', () => ({ syncObservable: jest.fn() }));
