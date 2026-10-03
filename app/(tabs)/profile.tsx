@@ -1,3 +1,4 @@
+import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -90,15 +91,7 @@ export default function ProfileScreen() {
     backgroundColor: colors.surface,
     padding: spacing.md,
     gap: spacing.xs,
-  },
-  cardHint: {
-    color: colors.xp,
-    fontSize: pixelSize(9),
-    fontFamily: fonts.bold,
-    letterSpacing: 1,
-    textAlign: 'right',
-    marginTop: 2,
-  },
+  },
   statsRow: {
     flexDirection: 'row',
     gap: spacing.sm,
@@ -125,6 +118,9 @@ export default function ProfileScreen() {
   const { profile, xpForNextLevel, xpProgress, isLoading } = useProfileStats();
   // Pace of the last two weeks, refreshed when the XP changes.
   const recentXp = useRecentXp(profile?.xp);
+  // Best streak still running: the XP bonus follows current streaks.
+  const streaks = use$(habitsStore$.streaks);
+  const bestRunningStreak = Math.max(0, ...Object.values(streaks).map((s) => s?.current_count ?? 0));
   const equippedSlots = use$(shopStore$.equippedSlots);
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -202,11 +198,16 @@ export default function ProfileScreen() {
               <Text style={styles.editHint}>{T.profile_edit_hint}</Text>
             </Pressable>
 
-            {/* Rank and level, one card that evolves with the rank */}
-            <Pressable onPress={() => router.push('/xp-journey')} accessibilityRole="button">
-              <RankCard level={level} currentXp={profile?.xp ?? 0} nextLevelXp={xpForNextLevel} progress={xpProgress} recentXp={recentXp} />
-              <Text style={styles.cardHint}>{T.profile_xp_journey_hint}</Text>
-            </Pressable>
+            {/* Rank and level, one card that evolves with the rank; a tap unfolds
+                the streak bonus and the road through the ranks (D8). */}
+            <RankCard
+              level={level}
+              currentXp={profile?.xp ?? 0}
+              nextLevelXp={xpForNextLevel}
+              progress={xpProgress}
+              recentXp={recentXp}
+              bestStreak={bestRunningStreak}
+            />
 
             {/* Gold and duel stats (level and XP are in the rank card) */}
             <View style={styles.statsRow}>

@@ -1,7 +1,7 @@
 /**
  * Rank and level in one card on the profile, changing with the rank.
  */
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 
 jest.mock('../../../lib/i18n', () => {
   const T = new Proxy({}, { get: (_t, key) => String(key) });
@@ -47,5 +47,22 @@ describe('RankCard', () => {
     const top = RANKS[RANKS.length - 1];
     const { getByText } = render(<RankCard level={top.minLevel + 5} currentXp={0} nextLevelXp={100} progress={0} />);
     expect(getByText('profile_max_rank')).toBeTruthy();
+  });
+
+  it('unfolds the streak bonus and the road through the ranks (D8)', () => {
+    const { getByTestId, queryByTestId, getByText } = render(
+      <RankCard level={5} currentXp={900} nextLevelXp={1200} progress={0.3} bestStreak={9} />,
+    );
+    expect(queryByTestId('rank-details')).toBeNull();
+    fireEvent.press(getByTestId('rank-card-toggle'));
+    expect(getByTestId('rank-details')).toBeTruthy();
+    // Streak 9: the next validation is at streak 10, x2.0, 20 XP.
+    expect(getByText('🔥 9 → ×2.0 → 20 XP')).toBeTruthy();
+    for (const r of RANKS) expect(getByText(new RegExp(`^${r.name}`))).toBeTruthy();
+  });
+
+  it('stays a plain card without a streak', () => {
+    const { queryByTestId } = render(<RankCard level={5} currentXp={900} nextLevelXp={1200} progress={0.3} />);
+    expect(queryByTestId('rank-card-toggle')).toBeNull();
   });
 });
