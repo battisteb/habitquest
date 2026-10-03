@@ -17,7 +17,7 @@ We read every message and usually answer within a few days. **Premium members** 
 
 **I forgot my password.** On the sign-in screen, type your e-mail, then tap "Forgot password?": you will receive a link to choose a new one.
 
-**My streak broke.** A forgotten day is covered automatically by your weekly freeze (or a freeze token). If a streak breaks anyway, there is no penalty: for 24 hours after you come back your XP is doubled, and within 48 hours you can repair the streak (with gold, or once a day with an ad for free players). Focus mode (Settings → Focus mode) pauses some categories during exams, holidays or illness.
+**My streak broke.** A forgotten day is covered automatically by your weekly freeze (or a freeze token). If a streak breaks anyway, there is no penalty: for 24 hours after you come back your XP is doubled, and within 48 hours you can repair the streak (with gold, or once a day with an ad for free players). The Pause screen (Settings → Pause) pauses a day, some quests or everything during exams, holidays or illness: your streaks wait for you.
 
 **I bought Premium but don't have it.** On the Premium screen, tap "Restore purchases". Use the same Apple or Google account as for the purchase.
 
