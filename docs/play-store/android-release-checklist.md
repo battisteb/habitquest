@@ -44,7 +44,7 @@
 
 ## Fiche Play Store
 - Titre (30 car.) : `HabitQuest : Habitudes RPG` / `HabitQuest: Habit Tracker RPG`
-- Description courte (80 car.) : reprendre le texte promotionnel de `docs/app-store/metadata.fr.md` / `metadata.md`
+- Description courte (80 car.) : section « Google Play short description » de `docs/app-store/metadata.md` et de ses traductions (`metadata.fr.md`, `metadata.de.md`, `metadata.pt-BR.md`)
 - Description longue : reprendre la description App Store
 - ⏳ Captures téléphone (au moins 2, 1080×1920 ou plus) et image de présentation 1024×500
 

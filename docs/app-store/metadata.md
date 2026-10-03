@@ -1,55 +1,59 @@
-# HabitQuest — App Store Metadata
+# HabitQuest — Store listing (English)
 
-## App Name
-HabitQuest: Level Up Your Life
+Base listing for App Store Connect and Google Play. Other languages: `metadata.fr.md`, `metadata.de.md`, `metadata.pt-BR.md` (and Japanese, task L2). Keep them in sync when a feature changes. Limits are in characters (App Store keywords: bytes).
 
-## Subtitle (30 chars max)
-Gamified Habit Tracker RPG
+## App name (30)
+HabitQuest: Habit Tracker RPG
 
-## Description (4000 chars max)
-Transform your daily habits into epic quests.
+## Subtitle (30)
+Your habits become quests
 
-HabitQuest is a pixel art habit tracker that turns discipline into an adventure. Build streaks, earn XP, level up your hero, and unlock cosmetic rewards — all while building real-world habits that stick.
+## Promotional text (170)
+Turn your habits into a pixel art adventure: complete daily quests, keep your streaks, defeat the boss of the week and take on your friends.
 
-**KEY FEATURES**
+## Google Play short description (80)
+Pixel art habit tracker RPG: quests, streaks, XP, a hero, duels with friends.
 
-⚔️ **Quest System** — Every habit is a quest. Complete them daily to keep your streak alive and earn XP.
+## Description (4000)
+Turn your daily habits into epic quests.
 
-🔥 **Streak Tracking** — Visual streak counters motivate consistency. Miss a day? Use a Streak Freeze (1 per week) to protect your progress.
+HabitQuest is a pixel art habit tracker that makes discipline an adventure. Complete your quests, keep your streaks, earn XP and gold, and level up a hero who grows with you. Pip, a little slime who changes colour with your day, guides you from the first quest.
 
-📈 **XP & Levels** — Earn experience points with every completion. Level up from Apprentice to Legend as you progress.
+⚔️ QUESTS — Every habit is a quest: every day, on the days you choose, or a few times a week. Complete it, earn XP and gold.
 
-🏆 **Achievements** — Unlock badges for consistency milestones, category mastery, and streak records.
+🔥 STREAKS THAT FORGIVE — A forgotten day is covered automatically by your weekly freeze. A broken streak? A comeback bonus doubles your XP to get you back on track, and a recent streak can be repaired.
 
-🎯 **Focus Modes** — Activate Exam Mode, Competition Mode, or Vacation Mode to auto-adjust your active habits for different life phases.
+📜 DAILY MISSIONS — Three new challenges every day, with rewards to claim.
 
-🌿 **Themes** — Unlock Medieval Kingdom, Cyberpunk City, and Forest Temple visual themes as you level up.
+👹 BOSS OF THE WEEK — Each week a bad habit turns into a monster: the Snooze Golem, the Doomscroll Kraken, the Couch Troll... Every quest you complete hits it. Defeat it before Sunday.
 
-👑 **Avatar Evolution** — Your hero transforms visually as you level up, from Apprentice Mage to Champion and beyond.
+🧙 YOUR HERO — Level up from Apprentice to Legend. Your hero changes look with each rank, and you dress it with hats, outfits and accessories from the shop.
 
-📊 **Smart Insights** — Dynamic goal suggestions, anti-burnout detection, and adaptive notification timing based on your completion patterns.
+🏟️ ARENAS — Every day, the quests you complete become your attack against a player of your league. Climb a league each season.
 
-🔔 **Smart Notifications** — Personalised reminders that learn when you usually complete habits and remind you at the right time.
+🤺 DUELS AND TEAM CHALLENGES — Challenge your friends to turn-based fights, or set a shared goal with up to 3 friends.
 
-**BUILT FOR REAL HABITS**
-HabitQuest works for fitness, learning, mindfulness, productivity, creativity — any category of habits you want to track.
+🎯 FOCUS MODES — Exams, competition, holidays or illness: pause some categories without losing your streaks.
 
-## Keywords (100 chars max)
-habits,streaks,gamification,RPG,pixel art,productivity,tracker,XP,level up,consistency
+📊 STATS — Your year in pixels, completion rates, mood of the day and personal insights.
 
-## Marketing URL
-https://gethabitquest.com
+👑 PREMIUM (optional) — Full stats history, more streak freezes, a pixel dragon companion that grows with your streak, an exclusive item every month, priority support within 48 hours, no ads. Monthly, yearly or lifetime. No pay-to-win: power comes from your habits, never from your wallet.
 
-## Support URL
-https://gethabitquest.com/support
+Built for real habits: sport, sleep, learning, mindfulness, nutrition, productivity, anything you want to keep doing.
 
-## Privacy Policy URL
-https://gethabitquest.com/privacy-policy
+Terms of use: https://gethabitquest.com/terms
+Privacy: https://gethabitquest.com/privacy-policy
 
-## Terms of Use (EULA)
-https://gethabitquest.com/terms — also add this link at the end of the App Description (required for auto-renewable subscriptions, guideline 3.1.2).
+## Keywords (100 bytes, App Store)
+habit,tracker,routine,streak,goals,rpg,pixel,game,quest,motivation,productivity,discipline,level
 
-## Age Rating
+## URLs
+- Marketing: https://gethabitquest.com
+- Support: https://gethabitquest.com/support
+- Privacy policy: https://gethabitquest.com/privacy-policy
+- Terms of use (EULA, required for subscriptions, guideline 3.1.2): https://gethabitquest.com/terms — also at the end of the description.
+
+## Age rating
 4+
 
 ## Categories
@@ -57,4 +61,4 @@ https://gethabitquest.com/terms — also add this link at the end of the App Des
 - Secondary: Productivity
 
 ## Pricing
-Free (with in-app purchases planned)
+Free, with Premium in-app purchases (monthly, yearly, lifetime).
