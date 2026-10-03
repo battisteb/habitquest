@@ -9,6 +9,7 @@ import { ContentPicker } from '../../src/features/habits/components/content-pick
 import { EmojiPicker } from '../../src/features/habits/components/emoji-picker';
 import { createHabit } from '../../src/features/habits/stores/habits-store';
 import { DayPicker } from '../../src/features/habits/components/day-picker';
+import { MotivationFields, cleanMotivation } from '../../src/features/habits/components/motivation-fields';
 import { defaultDays, scheduleToSave } from '../../src/features/habits/utils/schedule';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
 
@@ -26,8 +27,8 @@ import { categoryLabel } from '../../src/lib/i18n/labels';
 const IDEA_IDS = ['read', 'run', 'meditate', 'no_phone_am', 'planning', 'call_family'];
 /**
  * Quest creation, reduced to what matters: a name (or a one-tap idea), a
- * category, how often. Icon and content (timer, checklist, link) are folded
- * under "more options".
+ * category, how often, and optionally when and why (G2). Icon and content
+ * (timer, checklist, link) are folded under "more options".
  */
 export default function CreateHabitScreen() {
   const T = useT();
@@ -83,6 +84,8 @@ export default function CreateHabitScreen() {
     prefilledTemplate && prefilledTemplate.frequency !== 'daily' ? defaultDays(prefilledTemplate.frequency) : null,
   );
   const [emoji, setEmoji] = useState<string | null>(null);
+  const [why, setWhy] = useState('');
+  const [anchor, setAnchor] = useState('');
   const [showMore, setShowMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -97,7 +100,10 @@ export default function CreateHabitScreen() {
     setLoading(true);
     try {
       const schedule = days ? scheduleToSave(days) : { frequency: 'daily', days: null };
-      await createHabit(name.trim(), category, content, schedule.frequency, emoji, schedule.days);
+      await createHabit(name.trim(), category, content, schedule.frequency, emoji, schedule.days, {
+        why: cleanMotivation(why),
+        anchor: cleanMotivation(anchor),
+      });
       router.back();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : T.habit_create_error;
@@ -187,7 +193,10 @@ export default function CreateHabitScreen() {
         {days !== null && <DayPicker value={days} onChange={setDays} />}
       </View>
 
-      {/* 4. Everything else, folded */}
+      {/* 4. When and why, optional (G2) */}
+      <MotivationFields why={why} anchor={anchor} onWhyChange={setWhy} onAnchorChange={setAnchor} />
+
+      {/* 5. Everything else, folded */}
       <Pressable style={styles.moreToggle} onPress={() => setShowMore((v) => !v)} accessibilityRole="button" accessibilityState={{ expanded: showMore }}>
         <Text style={styles.moreText}>{showMore ? T.habit_create_less_options : T.habit_create_more_options}</Text>
       </Pressable>

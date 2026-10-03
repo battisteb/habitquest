@@ -266,6 +266,7 @@ export async function scheduleHabitReminder(
   habitName: string,
   hour: number,
   minute: number,
+  motivation?: { why?: string | null; anchor?: string | null },
 ): Promise<void> {
   if (!isNative()) return;
   const Notifications = await getNotifications();
@@ -277,11 +278,7 @@ export async function scheduleHabitReminder(
     identifier: getHabitReminderKey(habitId),
     content: {
       title: `⚔️ ${habitName}`,
-      body: lang$.get() === 'fr'
-        ? `C'est l'heure de travailler sur ton habitude ! Ne brise pas la série 🔥`
-        : lang$.get() === 'ja'
-          ? `習慣の時間だよ！連続記録を途切れさせないで 🔥`
-          : `Time to work on your habit! Don't break the streak 🔥`,
+      body: habitReminderBody(motivation),
       sound: true,
       data: { route: `/habit/${habitId}` },
     },
@@ -293,6 +290,15 @@ export async function scheduleHabitReminder(
   });
 
   storage.set(getHabitReminderKey(habitId), JSON.stringify({ hour, minute }));
+}
+
+/** Quotes the player's own "after…" and "why" (G2) when they gave them. */
+export function habitReminderBody(motivation?: { why?: string | null; anchor?: string | null }): string {
+  const T = getStrings();
+  const first = motivation?.anchor
+    ? T.habit_reminder_body_anchor.replace('{anchor}', motivation.anchor)
+    : T.habit_reminder_body;
+  return motivation?.why ? `${first} ${T.habit_reminder_why.replace('{why}', motivation.why)}` : first;
 }
 
 export async function cancelHabitReminder(habitId: string): Promise<void> {
