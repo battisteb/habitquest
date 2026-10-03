@@ -1,0 +1,5 @@
+{
+  "_note": "Public values (also in the web app bundle). The waitlist table only accepts inserts (RLS).",
+  "supabaseUrl": "https://aksxyaullvozlkzcegth.supabase.co",
+  "anonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc3h5YXVsbHZvemxremNlZ3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NDg2MjUsImV4cCI6MjA4MjEyNDYyNX0.9GfZsW1PqDnOcV2zuOaqGrt1zj76PTwss6OfFl0PVOo"
+}

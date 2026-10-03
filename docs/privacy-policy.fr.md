@@ -23,6 +23,7 @@ HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cett
 | Fuseau horaire (ex. Europe/Paris) et langue de l'app | Compter les séries et limites quotidiennes selon votre jour local ; envoyer notifications et e-mails dans votre langue | Supabase |
 | Jeton de notifications push | Envoyer les rappels et notifications du jeu | Supabase |
 | Messages envoyés au Support, avec la version de l'app, la plateforme et la langue | Vous répondre et corriger les problèmes | Supabase |
+| Sur gethabitquest.com, seulement si vous rejoignez la liste d'attente : votre adresse e-mail, la langue du site et votre consentement | Vous envoyer un seul e-mail quand les apps seront disponibles | Supabase |
 | Historique d'achats et statut d'abonnement | Débloquer Premium | RevenueCat, Apple / Google |
 | Identifiant publicitaire (IDFA / identifiant Android) — **uniquement si vous autorisez le suivi** | Afficher des publicités aux utilisateurs gratuits | Google AdMob |
 
@@ -48,7 +49,7 @@ Les autres joueurs peuvent vous trouver par votre pseudo et voir votre profil pu
 
 ## 5. Conservation et suppression
 
-Vos données sont conservées tant que votre compte existe. Vous pouvez supprimer votre compte à tout moment depuis **Réglages → Supprimer mon compte** : le compte et toutes les données associées sont définitivement effacés de nos serveurs. Un abonnement actif doit être résilié séparément dans les réglages de l'App Store ou de Google Play.
+Vos données sont conservées tant que votre compte existe. Vous pouvez supprimer votre compte à tout moment depuis **Réglages → Supprimer mon compte** : le compte et toutes les données associées sont définitivement effacés de nos serveurs. Un abonnement actif doit être résilié séparément dans les réglages de l'App Store ou de Google Play. Les adresses de la liste d'attente servent une seule fois, pour l'e-mail de sortie, puis sont supprimées ; vous pouvez demander à retirer la vôtre plus tôt, à tout moment.
 
 ## 6. Vos droits
 

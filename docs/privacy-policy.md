@@ -23,6 +23,7 @@ HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy e
 | Time zone (e.g. Europe/Paris) and app language | Count streaks and daily limits on your local day; send notifications and e-mails in your language | Supabase |
 | Push notification token | Send reminders and game notifications | Supabase |
 | Messages you send to Support, with the app version, platform and language | Answer you and fix problems | Supabase |
+| On gethabitquest.com, only if you join the waitlist: your email address, the site language and your consent | Send you one e-mail when the apps are available | Supabase |
 | Purchase history and subscription status | Unlock Premium | RevenueCat, Apple / Google |
 | Advertising identifier (IDFA / Android advertising ID) — **only if you allow tracking** | Show ads to free users | Google AdMob |
 
@@ -48,7 +49,7 @@ Other players can find you by username and see your public profile: username, av
 
 ## 5. Retention and deletion
 
-We keep your data while your account exists. You can delete your account at any time from **Settings → Delete my account**: your account and all associated data are permanently erased from our servers. An active subscription must be cancelled separately in your App Store or Google Play settings.
+We keep your data while your account exists. Waitlist addresses are used once, for the launch e-mail, then deleted; you can ask us to remove yours earlier at any time. You can delete your account at any time from **Settings → Delete my account**: your account and all associated data are permanently erased from our servers. An active subscription must be cancelled separately in your App Store or Google Play settings.
 
 ## 6. Your rights
 

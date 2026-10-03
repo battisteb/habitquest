@@ -15,6 +15,8 @@ const STORES = {
   android: null, // e.g. 'https://play.google.com/store/apps/details?id=com.battiste.habitquest'
 };
 const WEB_APP = 'https://habitquest.expo.app';
+// Public Supabase values for the waitlist form (insert-only table, L4).
+const SITE_CONFIG = require('./site-config.json');
 const SOCIAL = {
   Instagram: 'https://www.instagram.com/habitquest.app/',
   TikTok: 'https://www.tiktok.com/@habitquest.application',
@@ -65,6 +67,15 @@ const T = {
       ['I need help', 'Write to us from Settings → Support in the app, or see the <a href="support">Support page</a>.'],
     ],
     ctaTitle: 'Your adventure starts <em>today</em>',
+    waitlist: {
+      title: 'Be told on launch day',
+      email: 'Your e-mail',
+      consent: 'I agree to receive one e-mail when HabitQuest is available on the App Store and Google Play. No spam; unsubscribe anytime.',
+      button: 'Notify me',
+      ok: 'You are on the list! We will write to you on launch day.',
+      error: 'That did not work. Check your e-mail and try again.',
+      privacy: 'Privacy policy',
+    },
     footer: { support: 'Support', privacy: 'Privacy Policy', terms: 'Terms of Use', contact: 'Contact', rights: 'HabitQuest. Made with ⚔️ and pixel art.' },
     links: { privacy: 'privacy-policy', terms: 'terms', support: 'support' },
     assets: 'assets',
@@ -114,6 +125,15 @@ const T = {
       ['J\'ai besoin d\'aide', 'Écris-nous depuis Réglages → Support dans l\'app, ou consulte la <a href="../support.fr">page d\'aide</a>.'],
     ],
     ctaTitle: 'Ton aventure commence <em>aujourd\'hui</em>',
+    waitlist: {
+      title: 'Sois prévenu le jour de la sortie',
+      email: 'Ton e-mail',
+      consent: 'J\'accepte de recevoir un e-mail quand HabitQuest sera disponible sur l\'App Store et Google Play. Pas de spam, désinscription à tout moment.',
+      button: 'Préviens-moi',
+      ok: 'C\'est noté ! On t\'écrit le jour de la sortie.',
+      error: 'Ça n\'a pas marché. Vérifie ton e-mail et réessaie.',
+      privacy: 'Confidentialité',
+    },
     footer: { support: 'Aide', privacy: 'Confidentialité', terms: 'Conditions d\'utilisation', contact: 'Contact', rights: 'HabitQuest. Fait avec ⚔️ et du pixel art.' },
     links: { privacy: '../privacy-policy.fr', terms: '../terms.fr', support: '../support.fr' },
     assets: '../assets',
@@ -123,6 +143,22 @@ const T = {
 };
 
 const esc = (s) => s.replace(/&(?!amp;|lt;|gt;|quot;)/g, '&amp;');
+
+/** Launch waitlist (L4), while the apps are not in the stores yet. */
+function waitlistForm(t) {
+  const w = t.waitlist;
+  return `<form class="waitlist" id="waitlist" data-url="${SITE_CONFIG.supabaseUrl}" data-key="${SITE_CONFIG.anonKey}" data-lang="${t.lang}" novalidate>
+    <h3 class="pixel">${w.title}</h3>
+    <div class="waitlist-row">
+      <label class="sr" for="wl-email">${w.email}</label>
+      <input id="wl-email" name="email" type="email" required autocomplete="email" placeholder="${w.email}">
+      <button type="submit">${w.button}</button>
+    </div>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="waitlist-consent"><input id="wl-consent" name="consent" type="checkbox" required> <span>${esc(w.consent)} <a href="${t.links.privacy}">${w.privacy}</a></span></label>
+    <p class="waitlist-msg" role="status" data-ok="${esc(w.ok)}" data-error="${esc(w.error)}"></p>
+  </form>`;
+}
 
 function storeBadges(t) {
   const one = (key, cls) => {
@@ -156,6 +192,7 @@ function page(t) {
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${a}/site.css">
 <script src="${a}/site.js" defer></script>
+<script src="${a}/waitlist.js" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -222,6 +259,7 @@ ${t.faq.map(([q, r]) => `  <details><summary>${q}</summary><p>${r}</p></details>
 <section><div class="wrap"><div class="cta">
   <h2 class="pixel">${t.ctaTitle}</h2>
   ${storeBadges(t)}
+  ${STORES.ios && STORES.android ? '' : waitlistForm(t)}
 </div></div></section>
 </main>
 

@@ -17,6 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
 <script src="assets/site.js" defer></script>
+<script src="assets/waitlist.js" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -97,6 +98,17 @@
 <section><div class="wrap"><div class="cta">
   <h2 class="pixel">Your adventure starts <em>today</em></h2>
   <div class="stores"><span class="store as soon" data-soon="Coming soon" aria-label="Download on the App Store (Coming soon)"><img src="assets/badges/app-store-en.svg" alt="Download on the App Store"></span><span class="store gp soon" data-soon="Coming soon" aria-label="Get it on Google Play (Coming soon)"><img src="assets/badges/google-play-en.png" alt="Get it on Google Play"></span></div>
+  <form class="waitlist" id="waitlist" data-url="https://aksxyaullvozlkzcegth.supabase.co" data-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc3h5YXVsbHZvemxremNlZ3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NDg2MjUsImV4cCI6MjA4MjEyNDYyNX0.9GfZsW1PqDnOcV2zuOaqGrt1zj76PTwss6OfFl0PVOo" data-lang="en" novalidate>
+    <h3 class="pixel">Be told on launch day</h3>
+    <div class="waitlist-row">
+      <label class="sr" for="wl-email">Your e-mail</label>
+      <input id="wl-email" name="email" type="email" required autocomplete="email" placeholder="Your e-mail">
+      <button type="submit">Notify me</button>
+    </div>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="waitlist-consent"><input id="wl-consent" name="consent" type="checkbox" required> <span>I agree to receive one e-mail when HabitQuest is available on the App Store and Google Play. No spam; unsubscribe anytime. <a href="privacy-policy">Privacy policy</a></span></label>
+    <p class="waitlist-msg" role="status" data-ok="You are on the list! We will write to you on launch day." data-error="That did not work. Check your e-mail and try again."></p>
+  </form>
 </div></div></section>
 </main>
 
