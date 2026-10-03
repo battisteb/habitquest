@@ -194,6 +194,7 @@ export async function createHabit(
   frequency?: string,
   emoji?: string | null,
   days?: number[] | null,
+  motivation?: { why?: string | null; anchor?: string | null },
 ) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
@@ -201,14 +202,24 @@ export async function createHabit(
   // The streak row is created by the on_habit_created_streak trigger.
   const { error } = await supabase
     .from('habits')
-    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily', emoji: emoji ?? null, days: days ?? null });
+    .insert({
+      user_id: userId,
+      name,
+      category,
+      content: (content ?? null) as Json | null,
+      frequency: frequency ?? 'daily',
+      emoji: emoji ?? null,
+      days: days ?? null,
+      why: motivation?.why ?? null,
+      anchor: motivation?.anchor ?? null,
+    });
 
   if (error) throw error;
 
   await fetchHabits();
 }
 
-export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null }) {
+export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null; why?: string | null; anchor?: string | null }) {
   const { error } = await supabase.from('habits').update({ ...updates, content: updates.content as Json | null | undefined }).eq('id', id);
   if (error) throw error;
   await fetchHabits();

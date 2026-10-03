@@ -342,6 +342,7 @@ export type Database = {
       };
       habits: {
         Row: {
+          anchor: string | null;
           category: string;
           content: Json | null;
           created_at: string;
@@ -354,8 +355,10 @@ export type Database = {
           name: string;
           paused_at: string | null;
           user_id: string;
+          why: string | null;
         };
         Insert: {
+          anchor?: string | null;
           category?: string;
           content?: Json | null;
           created_at?: string;
@@ -368,8 +371,10 @@ export type Database = {
           name: string;
           paused_at?: string | null;
           user_id: string;
+          why?: string | null;
         };
         Update: {
+          anchor?: string | null;
           category?: string;
           content?: Json | null;
           created_at?: string;
@@ -382,6 +387,7 @@ export type Database = {
           name?: string;
           paused_at?: string | null;
           user_id?: string;
+          why?: string | null;
         };
         Relationships: [
           {
