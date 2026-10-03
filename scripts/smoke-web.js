@@ -19,7 +19,7 @@ const puppeteer = require('puppeteer-core');
 const BASE = (process.argv[2] || 'http://localhost:8090').replace(/\/$/, '');
 const EMAIL = process.env.SMOKE_EMAIL || 'hero@habitquest.test';
 const PASSWORD = process.env.SMOKE_PASSWORD || 'HabitQuest!2026';
-const LANGS = (process.env.SMOKE_LANGS || 'fr,en').split(',');
+const LANGS = (process.env.SMOKE_LANGS || 'fr,en,ja').split(',');
 const OUT = path.resolve(process.env.SMOKE_OUT || 'smoke-report');
 const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const WIDTH = 390;
@@ -86,7 +86,9 @@ async function inspect(page) {
       empty: texts.length === 0,
       // A single word laid out on several lines, like "MODIFIE/R" in a narrow button.
       brokenWords: texts
-        .filter((e) => /^[^\s]{4,}$/.test((e.textContent || '').trim()) && e.firstChild?.nodeType === 3)
+        // Latin words only: Japanese (CJK and full-width characters, U+3000–U+9FFF and
+        // U+FF00–U+FFEF) has no spaces and wraps anywhere.
+        .filter((e) => /^[^\s]{4,}$/.test((e.textContent || '').trim()) && !/[　-鿿＀-￯]/.test(e.textContent || '') && e.firstChild?.nodeType === 3)
         .filter((e) => {
           const range = document.createRange();
           range.selectNodeContents(e.firstChild);
@@ -160,14 +162,14 @@ async function inspect(page) {
     await sleep(1500);
     await page.type('input[type="email"], input[placeholder*="@"]', EMAIL);
     await page.type('input[type="password"]', PASSWORD);
-    await clickText(page, /DONJON|DUNGEON/i);
+    await clickText(page, /DONJON|DUNGEON|ダンジョン/i);
     await sleep(6000);
     // Visit the lists first so the id collectors see some rows.
     await page.goto(BASE + '/today', { waitUntil: 'networkidle2' });
     await sleep(2500);
     await page.goto(BASE + '/social', { waitUntil: 'networkidle2' });
     await sleep(2500);
-    await clickText(page, /^(AMIS|FRIENDS)$/);
+    await clickText(page, /^(AMIS|FRIENDS|フレンド)$/);
     await sleep(2000);
 
     for (const route of ROUTES) {
