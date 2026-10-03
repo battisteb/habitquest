@@ -43,7 +43,11 @@ export function useCompanion(): CompanionState {
 
   const onPress = () => {
     if (!isPremium) {
-      router.push('/paywall');
+      // Pip guides everyone; the dragon is the Premium companion (D11).
+      showDialog(T.companion_locked_title, T.companion_locked_msg, [
+        { text: T.companion_locked_later, style: 'cancel' },
+        { text: T.companion_locked_discover, onPress: () => router.push('/paywall') },
+      ]);
       return;
     }
     const growth = next === null
