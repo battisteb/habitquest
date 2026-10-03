@@ -2,7 +2,7 @@
  * Renders the App Store and Google Play screenshots described in store.json.
  *
  *   npm i --no-save puppeteer-core
- *   node marketing/render-store.js            → English and French
+ *   node marketing/render-store.js            → English, French and Japanese
  *   LANG=en node marketing/render-store.js    → one language
  *
  * App screens: marketing/assets/store-<lang>/<screen>.png, captured from the
@@ -17,7 +17,8 @@ const puppeteer = require('puppeteer-core');
 
 const root = __dirname;
 const spec = JSON.parse(fs.readFileSync(path.join(root, 'store.json'), 'utf8'));
-const langs = process.env.LANG === 'en' || process.env.LANG === 'fr' ? [process.env.LANG] : ['en', 'fr'];
+const ALL = ['en', 'fr', 'ja'];
+const langs = ALL.includes(process.env.LANG) ? [process.env.LANG] : ALL;
 const template = pathToFileURL(path.join(root, 'templates', 'store.html')).href;
 
 (async () => {
