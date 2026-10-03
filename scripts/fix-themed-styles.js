@@ -35,7 +35,6 @@ const FILES = [
   'app/duels/index.tsx',
   'app/duels/challenge.tsx',
   'app/duels/battle.tsx',
-  'app/settings/contextual-mode.tsx',
   'app/training/[id].tsx',
   'app/training/deck/[id].tsx',
   // Shared components

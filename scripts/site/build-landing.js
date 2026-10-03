@@ -40,7 +40,7 @@ const T = {
     featuresSub: 'Every habit becomes a quest. Every day you show up, your hero gets stronger.',
     features: [
       ['⚔️', 'Daily quests', 'Daily, weekly or a few times a week, with categories and ready-made templates. Tick a quest, earn XP and gold.'],
-      ['🔥', 'Streaks that forgive', 'Keep your streak going day after day. A weekly streak freeze and Focus mode for exams, holidays or illness: frozen, not lost.'],
+      ['🔥', 'Streaks that forgive', 'Keep your streak going day after day. A weekly streak freeze and a Pause for exams, holidays or illness: frozen, not lost.'],
       ['🧙', 'A hero that grows', 'Six ranks from Novice to Legend. Dress your 32×32 pixel hero with hats, outfits, accessories and themes from the shop.'],
       ['🤺', 'Duels and challenges', 'Turn-based duels against your friends\' heroes, and 1v1 challenges with gold at stake: the most consistent wins.'],
       ['🏟️', 'Arena leagues', 'One fight a day against a player of your league. Climb six leagues, season after season.'],
@@ -99,7 +99,7 @@ const T = {
     featuresSub: 'Chaque habitude devient une quête. Chaque jour où tu t\'y tiens, ton héros devient plus fort.',
     features: [
       ['⚔️', 'Quêtes du jour', 'Chaque jour, chaque semaine ou quelques fois par semaine, avec catégories et modèles prêts à l\'emploi. Valide, gagne de l\'XP et de l\'or.'],
-      ['🔥', 'Des séries indulgentes', 'Garde ta série jour après jour. Un gel de série par semaine et le mode Focus pour les examens, les vacances ou une maladie : gelées, pas perdues.'],
+      ['🔥', 'Des séries indulgentes', 'Garde ta série jour après jour. Un gel de série par semaine et une Pause pour les examens, les vacances ou une maladie : gelées, pas perdues.'],
       ['🧙', 'Un héros qui évolue', 'Six rangs, de Novice à Légende. Habille ton héros pixel 32×32 avec chapeaux, tenues, accessoires et thèmes de la boutique.'],
       ['🤺', 'Duels et défis', 'Des duels au tour par tour contre les héros de tes amis, et des défis 1 contre 1 avec de l\'or en jeu : le plus régulier gagne.'],
       ['🏟️', 'Ligues d\'arène', 'Un combat par jour contre un joueur de ta ligue. Monte à travers six ligues, saison après saison.'],

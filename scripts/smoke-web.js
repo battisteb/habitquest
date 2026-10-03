@@ -38,7 +38,7 @@ const ROUTES = [
   '/achievements', '/arena', '/coop', '/coop/create', '/coop/:coopId',
   '/duels', '/duels/challenge', '/duels/battle?myName=Hero&opponentName=Rival&myLevel=5&opponentLevel=4',
   '/habit/:habitId', '/habit/edit/:habitId', '/habit/create', '/habit/archive', '/habit/history?habitId=:habitId&habitName=Quest', '/habit/templates',
-  '/notifications', '/paywall', '/profile/:friendId', '/profile/edit', '/settings', '/settings/contextual-mode', '/settings/support',
+  '/notifications', '/paywall', '/profile/:friendId', '/profile/edit', '/settings', '/pause', '/settings/support',
   '/weekly-recap', '/how-it-helps', '/arc', '/invite/not-a-code', '/onboarding', '/',
 ];
 // Screens seen signed out.

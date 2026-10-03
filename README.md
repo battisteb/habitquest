@@ -24,7 +24,7 @@
 ## Features
 
 - Daily, weekly and "N times a week" quests with categories, emojis, templates, pause and archive
-- XP, Gold, levels and 6 ranks (Novice → Legend), streaks, streak freezes and Focus mode (exams, holidays, illness)
+- XP, Gold, levels and 6 ranks (Novice → Legend), streaks, streak freezes and a single Pause (a day, some quests or everything)
 - 32×32 pixel hero with hats, outfits, accessories and themes from the shop
 - Daily missions, 23 achievements, weekly recap, stats and heatmaps
 - Social: friends, invite links, leaderboards, asynchronous duels, 1v1 challenges with gold stakes, co-op challenges, arena leagues
