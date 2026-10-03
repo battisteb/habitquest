@@ -136,10 +136,9 @@ export default function HabitTemplatesScreen() {
   }
 
   function freqLabel(freq: string): string {
-    if (freq === 'daily') return lang === 'fr' ? 'Quotidien' : 'Daily';
-    if (freq === '3x_week') return lang === 'fr' ? '3×/semaine' : '3×/week';
-    if (freq === '5x_week') return lang === 'fr' ? '5×/semaine' : '5×/week';
-    return freq;
+    if (freq === 'daily') return T.habit_create_every_day;
+    const n = /^(\d)x_week$/.exec(freq)?.[1];
+    return n ? T.habit_freq_per_week.replace('{n}', n) : freq;
   }
 
   return (
@@ -149,13 +148,13 @@ export default function HabitTemplatesScreen() {
           <Pressable onPress={() => router.back()}>
             <Text style={styles.backBtn}>{T.common_back}</Text>
           </Pressable>
-          <Text style={styles.title}>{lang === 'fr' ? 'MODÈLES' : 'TEMPLATES'}</Text>
+          <Text style={styles.title}>{T.templates_title}</Text>
         </View>
         <TextInput
           style={styles.searchInput}
           value={search}
           onChangeText={setSearch}
-          placeholder={lang === 'fr' ? 'Rechercher…' : 'Search…'}
+          placeholder={T.templates_search}
           placeholderTextColor={colors.textMuted}
           returnKeyType="search"
           clearButtonMode="while-editing"
@@ -174,7 +173,7 @@ export default function HabitTemplatesScreen() {
           const isActive = selectedCategory === cat;
           const cfg = cat !== 'all' ? CATEGORY_CONFIG[cat as keyof typeof CATEGORY_CONFIG] : null;
           const label = cat === 'all'
-            ? (lang === 'fr' ? 'TOUS' : 'ALL')
+            ? T.templates_all
             : categoryLabel(T, cat).toUpperCase();
           return (
             <Pressable
@@ -213,7 +212,7 @@ export default function HabitTemplatesScreen() {
                 <Text style={styles.itemFreq}>{freqLabel(item.frequency)}</Text>
               </View>
               <Pressable style={styles.addBtn} onPress={() => handleSelect(item.id)}>
-                <Text style={styles.addBtnText}>{lang === 'fr' ? '+ AJOUTER' : '+ ADD'}</Text>
+                <Text style={styles.addBtnText}>{T.templates_add}</Text>
               </Pressable>
             </Pressable>
           );

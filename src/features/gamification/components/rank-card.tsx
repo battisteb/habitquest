@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useT, useLang } from '../../../lib/i18n';
+import { useT, useLang, localeTag, type Lang } from '../../../lib/i18n';
 import { projectLevelDate } from '../utils/rank-projection';
 import { titleLabel, stageDescription } from '../../../lib/i18n/labels';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
@@ -81,7 +81,7 @@ export function RankCard({ level, currentXp, nextLevelXp, progress, recentXp }: 
         <Text style={[styles.eta, { color: next.aura }]} testID="rank-eta">
           {T.profile_rank_eta
             .replace('{title}', titleLabel(T, next.title))
-            .replace('{date}', eta.toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long' }))}
+            .replace('{date}', eta.toLocaleDateString(localeTag(lang as Lang), { day: 'numeric', month: 'long' }))}
         </Text>
       )}
     </PixelFrame>

@@ -7,7 +7,7 @@ import { PixelButton } from '../../../ui/components/pixel-button';
 import { PixelInput } from '../../../ui/components/pixel-input';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
-import { useT, lang$ } from '../../../lib/i18n';
+import { useT, lang$, localeTag, type Lang } from '../../../lib/i18n';
 import {
   sendSupportMessage,
   fetchMySupportMessages,
@@ -145,7 +145,7 @@ export default function SupportScreen() {
                 {m.message}
               </Text>
               <Text style={styles.date}>
-                {new Date(m.createdAt).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', {
+                {new Date(m.createdAt).toLocaleDateString(localeTag(lang as Lang), {
                   day: 'numeric',
                   month: 'short',
                 })}

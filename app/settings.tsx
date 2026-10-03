@@ -22,7 +22,7 @@ import {
 import { signOut, deleteAccount } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { use$ } from '@legendapp/state/react';
-import { useT, setLang, lang$ } from '../src/lib/i18n';
+import { useT, setLang, lang$, LANGS } from '../src/lib/i18n';
 import { openLegalPage } from '../src/lib/legal-links';
 import Constants from 'expo-constants';
 import { resetTutorial } from '../src/features/onboarding/tutorial-state';
@@ -169,14 +169,14 @@ export default function SettingsScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{T.settings_language}</Text>
         <View style={styles.langRow}>
-          {(['fr', 'en'] as const).map((l) => (
+          {LANGS.map((l) => (
             <Pressable
               key={l}
               style={[styles.langBtn, currentLang === l && styles.langBtnActive]}
               onPress={() => setLang(l)}
             >
               <Text style={[styles.langBtnText, currentLang === l && styles.langBtnTextActive]}>
-                {l === 'fr' ? T.lang_fr : T.lang_en}
+                {l === 'fr' ? T.lang_fr : l === 'ja' ? T.lang_ja : T.lang_en}
               </Text>
             </Pressable>
           ))}

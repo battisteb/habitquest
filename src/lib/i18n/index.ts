@@ -2,23 +2,33 @@ import { observable } from '@legendapp/state';
 import { use$ } from '@legendapp/state/react';
 import { getLocales } from 'expo-localization';
 import { storage } from '../storage/mmkv';
+import { JA } from './ja';
 
-export type Lang = 'fr' | 'en';
+export type Lang = 'fr' | 'en' | 'ja';
+
+/** Languages of the app, in the order of the language pickers. */
+export const LANGS: Lang[] = ['en', 'fr', 'ja'];
 
 const STORAGE_KEY = 'app_language';
 
-/** French for French-speaking devices, English everywhere else. */
+/** The device language when the app has it (French, Japanese), English otherwise. */
 export function detectDeviceLang(): Lang {
   try {
-    return getLocales()[0]?.languageCode === 'fr' ? 'fr' : 'en';
+    const code = getLocales()[0]?.languageCode;
+    return code === 'fr' || code === 'ja' ? code : 'en';
   } catch {
     return 'en';
   }
 }
 
+/** BCP 47 tag for dates and numbers in the app language. */
+export function localeTag(lang: Lang): string {
+  return lang === 'fr' ? 'fr-FR' : lang === 'ja' ? 'ja-JP' : 'en-US';
+}
+
 function initialLang(): Lang {
   const saved = storage.getString(STORAGE_KEY);
-  return saved === 'fr' || saved === 'en' ? saved : detectDeviceLang();
+  return saved === 'fr' || saved === 'en' || saved === 'ja' ? saved : detectDeviceLang();
 }
 
 export const lang$ = observable<Lang>(initialLang());
@@ -110,6 +120,7 @@ const FR = {
   // Language section
   lang_fr: '🇫🇷 Français',
   lang_en: '🇬🇧 English',
+  lang_ja: '🇯🇵 日本語',
   theme_active: 'ACTIF',
   settings_theme_locked_title: 'Thème verrouillé',
   settings_theme_locked_msg: 'Ce thème se débloque dans la Boutique, avec l’or gagné en validant tes quêtes.',
@@ -394,6 +405,10 @@ const FR = {
   habit_create_submit: 'Créer la quête',
   habit_create_ideas: 'IDÉES',
   habit_create_all_templates: 'Tous les modèles →',
+  templates_title: 'MODÈLES',
+  templates_search: 'Rechercher…',
+  templates_all: 'TOUS',
+  templates_add: '+ AJOUTER',
   habit_create_every_day: 'Tous les jours',
   habit_create_some_days: 'Certains jours',
   habit_create_times_per_week: '{n} fois par semaine',
@@ -1213,6 +1228,7 @@ const EN = {
   // Language section
   lang_fr: '🇫🇷 Français',
   lang_en: '🇬🇧 English',
+  lang_ja: '🇯🇵 日本語',
   theme_active: 'ACTIVE',
   settings_theme_locked_title: 'Theme locked',
   settings_theme_locked_msg: 'Unlock this theme in the Shop with the gold you earn by completing quests.',
@@ -1497,6 +1513,10 @@ const EN = {
   habit_create_submit: 'Create quest',
   habit_create_ideas: 'IDEAS',
   habit_create_all_templates: 'All templates →',
+  templates_title: 'TEMPLATES',
+  templates_search: 'Search…',
+  templates_all: 'ALL',
+  templates_add: '+ ADD',
   habit_create_every_day: 'Every day',
   habit_create_some_days: 'Some days',
   habit_create_times_per_week: '{n} times a week',
@@ -2239,7 +2259,7 @@ const EN = {
 
 export type Strings = Record<keyof typeof FR, string>;
 
-const STRINGS: Record<Lang, Strings> = { fr: FR, en: EN };
+const STRINGS: Record<Lang, Strings> = { fr: FR, en: EN, ja: JA };
 
 /** Both dictionaries, for tests only. */
 export const STRINGS_FOR_TESTS = STRINGS;

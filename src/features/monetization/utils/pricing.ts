@@ -1,4 +1,4 @@
-import type { Lang } from '../../../lib/i18n';
+import { localeTag, type Lang } from '../../../lib/i18n';
 
 /**
  * Prices shown before the stores answer (or on the web). The real prices
@@ -9,7 +9,7 @@ export const FALLBACK_PRICES = { monthly: 5.99, annual: 39.99, lifetime: 79.99, 
 /** "$5.99" / "5,99 $US" in the player's language, in the store's currency. */
 export function formatPrice(amount: number, currency: string, lang: Lang): string {
   try {
-    return new Intl.NumberFormat(lang === 'fr' ? 'fr-FR' : 'en-US', { style: 'currency', currency }).format(amount);
+    return new Intl.NumberFormat(localeTag(lang as Lang), { style: 'currency', currency }).format(amount);
   } catch {
     return `${amount.toFixed(2)} ${currency}`;
   }

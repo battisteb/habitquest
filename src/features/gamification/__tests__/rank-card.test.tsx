@@ -5,7 +5,7 @@ import { render } from '@testing-library/react-native';
 
 jest.mock('../../../lib/i18n', () => {
   const T = new Proxy({}, { get: (_t, key) => String(key) });
-  return { useT: () => T, useLang: () => 'fr' };
+  return { localeTag: () => 'en-US', LANGS: ['en', 'fr', 'ja'], useT: () => T, useLang: () => 'fr' };
 });
 jest.mock('../../../lib/i18n/labels', () => ({
   titleLabel: (_T: unknown, name: string) => name,

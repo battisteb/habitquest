@@ -20,7 +20,7 @@ jest.mock('react-native-safe-area-context', () => ({
 jest.mock('../../../lib/i18n', () => {
   const T = new Proxy({}, { get: (_target, key) => String(key) });
   const { observable } = jest.requireActual('@legendapp/state');
-  return { useT: () => T, lang$: observable('en'), setLang: jest.fn() };
+  return { localeTag: () => 'en-US', LANGS: ['en', 'fr', 'ja'], useT: () => T, lang$: observable('en'), setLang: jest.fn() };
 });
 
 jest.mock('../../../ui/theme/theme-context', () => ({

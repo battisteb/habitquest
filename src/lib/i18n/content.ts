@@ -1,7 +1,7 @@
 import type { Lang } from './index';
 
 /**
- * French versions of the game content seeded in English in the database
+ * French and Japanese versions of the game content seeded in English in the database
  * (daily quest templates, achievements, shop items). Keys are stable
  * identifiers: quest title, achievement `key`, shop item name.
  * A missing entry falls back to the database text.
@@ -109,24 +109,127 @@ const SHOP_FR: Record<string, Text> = {
   'Royal Theme': { title: 'Thème Royal', description: 'Violet et or, pour la royauté' },
 };
 
-function pick(map: Record<string, Text>, key: string, lang: Lang, fallback: Text): Text {
-  return (lang === 'fr' && map[key]) || fallback;
+const QUESTS_JA: Record<string, Text> = {
+  'Easy Does It': { title: 'ゆっくりいこう', description: '習慣を1つ達成するだけ' },
+  'First Step': { title: '最初の一歩', description: '今日、習慣を1つ達成する' },
+  'Morning Starter': { title: 'いいスタート', description: 'どれか1つ達成して1日を始めよう' },
+  'Quick Win': { title: 'クイックウィン', description: '今日、習慣を1つ以上達成する' },
+  'All In': { title: '全力', description: '同じ日に習慣を4つ達成する' },
+  'Habit Master': { title: '習慣マスター', description: '今日、習慣を5つ達成する' },
+  'Streak Guardian': { title: '連続記録の守り手', description: 'すべての習慣の連続記録を守る' },
+  'XP Grinder': { title: 'XP稼ぎ', description: '今日100 XP以上稼ぐ' },
+  'Double Down': { title: 'ダブル', description: '習慣を2つ達成してやる気を証明しよう' },
+  'Fitness Focus': { title: '運動に集中', description: '運動の習慣を1つ達成する' },
+  'Healthy Mind': { title: '健やかな心', description: '健康の習慣を1つ達成する' },
+  'Knowledge Seeker': { title: '知識の探求者', description: '学習の習慣を1つ達成する' },
+  'Steady Progress': { title: 'コツコツ前進', description: '今日、習慣を2つ達成する' },
+  'Triple Threat': { title: 'トリプル', description: '今日、習慣を3つ達成する' },
+  'XP Hunter': { title: 'XPハンター', description: '今日30 XP以上稼ぐ' },
+  'Inner Peace': { title: '心の平穏', description: 'マインドフルネスの習慣を1つ達成する' },
+  'Getting Things Done': { title: 'やり遂げる', description: '生産性の習慣を1つ達成する' },
+  'Eat Well': { title: 'しっかり食べる', description: '食事の習慣を1つ達成する' },
+  'Well Rested': { title: 'ぐっすり', description: '睡眠の習慣を1つ達成する' },
+  'Creative Spark': { title: 'ひらめき', description: '創作の習慣を1つ達成する' },
+  'Good Company': { title: 'いい仲間', description: '人づきあいの習慣を1つ達成する' },
+};
+
+const ACHIEVEMENTS_JA: Record<string, Text> = {
+  buy_1: { title: 'お客さま', description: '最初のアイテムを買う' },
+  buy_5: { title: 'コレクター', description: 'アイテムを5つ持つ' },
+  challenge_1: { title: 'チャレンジャー', description: '最初のチャレンジを終える' },
+  challenge_win_1: { title: '勝者', description: '最初のチャレンジに勝つ' },
+  complete_1: { title: '最初の一歩', description: '最初の習慣を達成する' },
+  complete_10: { title: '走り出した', description: '累計10回達成する' },
+  complete_100: { title: '習慣マシーン', description: '累計100回達成する' },
+  complete_50: { title: '努力家', description: '累計50回達成する' },
+  complete_500: { title: '止められない', description: '累計500回達成する' },
+  equip_full: { title: 'フル装備', description: '4つのスロットすべてに装備する' },
+  friend_1: { title: '社交的', description: '最初のフレンドを追加する' },
+  friend_5: { title: 'リーダー', description: 'フレンドを5人つくる' },
+  level_10: { title: 'チャンピオンへの道', description: 'レベル10に到達する' },
+  level_5: { title: '成長中の修行者', description: 'レベル5に到達する' },
+  streak_100: { title: 'センチュリオン', description: '100日連続を達成する' },
+  streak_14: { title: '2週間のファイター', description: '14日連続を達成する' },
+  streak_3: { title: 'コツコツ', description: '3日連続を達成する' },
+  streak_30: { title: '1か月のマスター', description: '30日連続を達成する' },
+  streak_7: { title: '1週間の戦士', description: '7日連続を達成する' },
+  xp_100: { title: 'XPビギナー', description: '累計100 XP稼ぐ' },
+  xp_1000: { title: 'XPベテラン', description: '累計1000 XP稼ぐ' },
+  xp_500: { title: 'XPハンター', description: '累計500 XP稼ぐ' },
+  xp_5000: { title: 'XPレジェンド', description: '累計5000 XP稼ぐ' },
+};
+
+const SHOP_JA: Record<string, Text> = {
+  'Wooden Shield': { title: '木の盾', description: '基本の守り' },
+  'Pumpkin Hat': { title: 'かぼちゃ帽子', description: '今月のアイテム — 2026年10月。プレミアム限定。' },
+  'Autumn Scarf': { title: '秋のマフラー', description: '今月のアイテム — 2026年11月。プレミアム限定。' },
+  'Winter Hat': { title: '冬のニット帽', description: '今月のアイテム — 2026年12月。プレミアム限定。' },
+  'Adventurer Scarf': { title: '冒険者のマフラー', description: '冒険中も暖かい' },
+  'Iron Shield': { title: '鉄の盾', description: '頑丈な盾' },
+  'Steel Sword': { title: '鋼の剣', description: '頼れる刃' },
+  'Magic Amulet': { title: '魔法のアミュレット', description: '力に輝く' },
+  'Royal Cape': { title: '王家のマント', description: '風になびく赤いマント' },
+  'Flame Sword': { title: '炎の剣', description: '怒りに燃える' },
+  'Angel Wings': { title: '天使の翼', description: '天上の翼' },
+  'Celestial Wings': { title: '天空の翼', description: '光の翼' },
+  'Mystic Aura': { title: '神秘のオーラ', description: 'ほのかな魔法の光' },
+  Forest: { title: '森', description: 'おだやかな森' },
+  Castle: { title: '城', description: '壮大なお城' },
+  'Ocean Depths': { title: '深海', description: '深い青の水底' },
+  'Sunset Peaks': { title: '夕焼けの峰', description: '夕暮れの山々' },
+  Volcano: { title: '火山', description: '燃えさかる火山' },
+  'Ice Cavern': { title: '氷の洞窟', description: '凍てつく世界' },
+  'Neon City': { title: 'ネオンシティ', description: 'サイバーパンクの街並み' },
+  Starfield: { title: '星の海', description: '星々のただなかで' },
+  'Adventurer Cap': { title: '冒険者の帽子', description: 'はじめての帽子' },
+  'Knight Helmet': { title: '騎士の兜', description: '頑丈な鉄の兜' },
+  'Pirate Tricorn': { title: '海賊の三角帽', description: '恐るべき帽子' },
+  'Wizard Hat': { title: '魔法使いの帽子', description: 'とんがりで謎めいている' },
+  'Viking Helm': { title: 'ヴァイキングの兜', description: '略奪者と戦士のために' },
+  'Samurai Kabuto': { title: '侍の兜', description: '名誉と規律' },
+  'Crown of Champions': { title: 'チャンピオンの王冠', description: 'ふさわしき者だけに' },
+  'Holy Halo': { title: '聖なる光輪', description: '光の輪' },
+  'Dragon Horns': { title: 'ドラゴンの角', description: '伝説のドラゴンの角' },
+  'Peasant Clothes': { title: '村人の服', description: 'つつましい始まり' },
+  'Leather Armor': { title: '革のよろい', description: '軽くてしなやか' },
+  'Forest Ranger': { title: '森のレンジャー', description: '自然とともに' },
+  'Mage Robes': { title: '魔導士のローブ', description: '魔法をかけた布' },
+  'Ice Armor': { title: '氷のよろい', description: '魔法で凍らせた鎧' },
+  'Crimson Battlegear': { title: '真紅の戦闘服', description: '戦いの中で鍛えられた' },
+  'Golden Plate': { title: '黄金のよろい', description: 'まばゆい金の鎧' },
+  'Royal Vestments': { title: '王の衣', description: '王にふさわしい' },
+  'Shadow Cloak': { title: '影のマント', description: '影で織られた' },
+  'Medieval Kingdom': { title: '中世の王国', description: '石と金と、たいまつの灯り。' },
+  'Forest Temple': { title: '森の神殿', description: '古い木と深い緑。' },
+  'Lifestyle': { title: 'ライフスタイル', description: 'すっきり、おだやか。' },
+  'Cyberpunk City': { title: 'サイバーパンク都市', description: 'ネオンと夜の街。' },
+  'Ocean Theme': { title: 'オーシャンテーマ', description: 'おだやかな青' },
+  'Forest Theme': { title: 'フォレストテーマ', description: '自然な緑' },
+  'Sunset Theme': { title: 'サンセットテーマ', description: 'あたたかなオレンジ' },
+  'Neon Theme': { title: 'ネオンテーマ', description: 'サイバーパンクの輝き' },
+  'Royal Theme': { title: 'ロイヤルテーマ', description: '紫と金、王族のために' },
+};
+
+type Maps = Partial<Record<Lang, Record<string, Text>>>;
+
+function pick(maps: Maps, key: string, lang: Lang, fallback: Text): Text {
+  return maps[lang]?.[key] ?? fallback;
 }
 
 export function questText(lang: Lang, template: { title: string; description: string }): Text {
-  return pick(QUESTS_FR, template.title, lang, template);
+  return pick({ fr: QUESTS_FR, ja: QUESTS_JA }, template.title, lang, template);
 }
 
 export function achievementText(
   lang: Lang,
   achievement: { key?: string | null; name: string; description: string },
 ): Text {
-  return pick(ACHIEVEMENTS_FR, achievement.key ?? '', lang, {
+  return pick({ fr: ACHIEVEMENTS_FR, ja: ACHIEVEMENTS_JA }, achievement.key ?? '', lang, {
     title: achievement.name,
     description: achievement.description,
   });
 }
 
 export function shopItemText(lang: Lang, item: { name: string; description?: string | null }): Text {
-  return pick(SHOP_FR, item.name, lang, { title: item.name, description: item.description ?? '' });
+  return pick({ fr: SHOP_FR, ja: SHOP_JA }, item.name, lang, { title: item.name, description: item.description ?? '' });
 }
