@@ -28,7 +28,10 @@ import { pinnedHabitsStore$, togglePinHabit } from '../../src/features/habits/st
 import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import { TrialBanner } from '../../src/features/monetization/components/trial-banner';
-import { ComebackBanner } from '../../src/features/habits/components/comeback-banner';
+import { ComebackBanner, comebackHoursLeft } from '../../src/features/habits/components/comeback-banner';
+import { pickTodayBanner } from '../../src/features/habits/utils/today-banner';
+import { subscriptionStore$ } from '../../src/features/monetization/stores/subscription-store';
+import { trialDaysLeft } from '../../src/features/monetization/utils/trial-offer';
 import { MoodCheckIn } from '../../src/features/mood/components/mood-check-in';
 import { streakRepairCost } from '../../src/lib/constants/game-config';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
@@ -486,6 +489,7 @@ export default function TodayScreen() {
   const burnoutSignal = useBurnoutSignal();
   const burnoutLastDismissed = use$(burnoutStore$.lastDismissedAt);
   const burnoutDismissed = useMemo(() => isDismissalActive(), [burnoutLastDismissed]);
+  const trialEndsAt = use$(subscriptionStore$.trialEndsAt);
   const brokenStreaks = use$(brokenStreakStore$.items);
   const pinnedIds = use$(pinnedHabitsStore$.pinnedIds);
   const [takeBreakOpen, setTakeBreakOpen] = useState(false);
@@ -683,6 +687,14 @@ export default function TodayScreen() {
     );
   };
 
+  // One banner at a time (D4): broken streak > comeback > trial > burnout.
+  const banner = pickTodayBanner({
+    broken: brokenStreaks.length > 0,
+    comeback: comebackHoursLeft(profile?.comeback_until) !== null,
+    trial: trialDaysLeft(trialEndsAt) !== null,
+    burnout: burnoutSignal.risk !== 'none' && !burnoutDismissed,
+  });
+
   const ListHeader = (
     <View>
       {hero}
@@ -711,12 +723,12 @@ export default function TodayScreen() {
         ) : null;
       })()}
 
-      <TrialBanner />
-      <ComebackBanner />
+      {banner === 'trial' && <TrialBanner />}
+      {banner === 'comeback' && <ComebackBanner />}
       <MoodCheckIn />
 
-      {/* Streak recovery banners */}
-      {brokenStreaks.map((b) => (
+      {/* Streak recovery: one at a time (D4), the others come after it is closed */}
+      {banner === 'broken' && brokenStreaks.slice(0, 1).map((b) => (
         <View key={b.habitId} style={styles.streakRecoveryBanner}>
           <Pip expression="sad" size={40} accessibilityLabel="Pip" />
           <View style={styles.streakRecoveryText}>
@@ -748,7 +760,7 @@ export default function TodayScreen() {
       ))}
 
       {/* Burnout banner */}
-      {burnoutSignal.risk !== 'none' && !burnoutDismissed && (
+      {banner === 'burnout' && (
         <View style={styles.burnoutBanner}>
           <View style={styles.burnoutRow}>
             <View style={styles.burnoutText}>
