@@ -31,8 +31,8 @@ describe('Japanese texts', () => {
     const untranslated = (Object.keys(en) as (keyof typeof en)[]).filter(
       (k) => ja[k] === en[k] && /[a-z]{4,}/i.test(en[k].replace(/\{\w+\}/g, '')),
     );
-    // Brand names and units only (HabitQuest, XP, Lv…).
-    expect(untranslated.filter((k) => !/HabitQuest|hero@quest|English|Français/.test(en[k]))).toEqual([]);
+    // Brand names, units and the arc names (the English trend names, ADR 024).
+    expect(untranslated.filter((k) => !/HabitQuest|hero@quest|English|Français/.test(en[k]) && !k.startsWith('arc_name_'))).toEqual([]);
   });
 });
 

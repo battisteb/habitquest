@@ -262,6 +262,24 @@ export function newlyUnlocked(from: number, to: number): UnlockFeature[] {
  * so that about 80 % of the week's planned quests defeat it. Resolved by the
  * server (public.refresh_weekly_boss) — change both together.
  */
+/**
+ * Seasonal arcs (ADR 024): 4 a year, one rune each. A good week = at least
+ * 70 % of the planned validations; 8 good weeks earn the rune. Mirrored in
+ * SQL by public.arc_state_for (supabase/migrations/20261003140000_seasonal_arcs.sql).
+ */
+export const ARC = {
+  GOOD_WEEK_PCT: 70,
+  GOOD_WEEKS_FOR_RUNE: 8,
+  RUNE_XP: 100,
+  RUNE_GOLD: 50,
+  FOUR_SEASONS_PREMIUM_DAYS: 7,
+  FOUR_SEASONS_GOLD_IF_PREMIUM: 500,
+} as const;
+
+/** Arc order in the year, starting with the Winter Arc (October). */
+export const SEASONS = ['winter', 'spring', 'summer', 'autumn'] as const;
+export type Season = (typeof SEASONS)[number];
+
 export const BOSS = {
   HIT: 10,
   HP_PER_PLANNED: 8,
