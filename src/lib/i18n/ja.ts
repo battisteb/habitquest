@@ -25,7 +25,7 @@ export const JA: Strings = {
   settings_streak_risk: '連続記録のピンチ',
   settings_streak_risk_sub: '未達成なら20:00にお知らせ',
   settings_weekly_recap: '週間レポート',
-  settings_weekly_recap_sub: '日曜日に1週間のまとめ',
+  settings_weekly_recap_sub: '日曜18時に1週間のまとめ（その日のリマインダーの代わり）',
   settings_audio: 'サウンド',
   settings_sfx: '効果音',
   settings_sfx_sub: '達成、レベルアップなど',

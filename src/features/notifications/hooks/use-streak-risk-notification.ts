@@ -8,7 +8,8 @@ import {
 } from '../utils/notification-service';
 
 /**
- * Schedules a streak-risk notification at 8 PM if there are
+ * Schedules a streak-risk notification at 8 PM (the evening slot of the
+ * 2-a-day budget, D10) if there are
  * uncompleted habits with active streaks. Called from the today screen.
  */
 export function useStreakRiskNotification(): void {
