@@ -120,6 +120,7 @@ export type Database = {
           completed_at: string;
           habit_id: string;
           id: string;
+          is_mini: boolean;
           note: string | null;
           xp_earned: number;
         };
@@ -127,6 +128,7 @@ export type Database = {
           completed_at?: string;
           habit_id: string;
           id?: string;
+          is_mini?: boolean;
           note?: string | null;
           xp_earned?: number;
         };
@@ -134,6 +136,7 @@ export type Database = {
           completed_at?: string;
           habit_id?: string;
           id?: string;
+          is_mini?: boolean;
           note?: string | null;
           xp_earned?: number;
         };
@@ -352,6 +355,7 @@ export type Database = {
           id: string;
           is_archived: boolean;
           is_paused: boolean;
+          mini: string | null;
           name: string;
           paused_at: string | null;
           user_id: string;
@@ -368,6 +372,7 @@ export type Database = {
           id?: string;
           is_archived?: boolean;
           is_paused?: boolean;
+          mini?: string | null;
           name: string;
           paused_at?: string | null;
           user_id: string;
@@ -384,6 +389,7 @@ export type Database = {
           id?: string;
           is_archived?: boolean;
           is_paused?: boolean;
+          mini?: string | null;
           name?: string;
           paused_at?: string | null;
           user_id?: string;
@@ -890,7 +896,7 @@ export type Database = {
       };
       claim_daily_quest: { Args: { p_quest_id: string; p_user_id: string }; Returns: Json };
       claim_duel_reward: { Args: { p_duel_id: string }; Returns: Json };
-      complete_habit: { Args: { p_habit_id: string; p_note?: string }; Returns: Json };
+      complete_habit: { Args: { p_habit_id: string; p_note?: string; p_mini?: boolean }; Returns: Json };
       uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json };
       log_mood: { Args: { p_mood: number }; Returns: Json };
       repair_streak: { Args: { p_habit_id: string; p_with_ad?: boolean }; Returns: Json };

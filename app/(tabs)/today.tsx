@@ -603,10 +603,10 @@ export default function TodayScreen() {
     />
   );
 
-  const handleComplete = useCallback(async (habitId: string) => {
+  const handleComplete = useCallback(async (habitId: string, mini = false) => {
     // Count before completing: completeHabit already marks the habit done in the store.
     const completedBefore = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
-    const result = await completeHabit(habitId);
+    const result = await completeHabit(habitId, undefined, mini);
     if (!result) return;
     clearBrokenStreakForHabit(habitId);
     // Show what the server actually granted (freezes, bonuses…).
@@ -979,6 +979,15 @@ export default function TodayScreen() {
                 streakCount={streaks[item.id]?.current_count ?? 0}
                 isCompletedToday={!!todayCompletions[item.id]}
                 onComplete={() => handleComplete(item.id)}
+                onCompleteMini={
+                  item.mini
+                    ? () =>
+                        Alert.alert(T.habit_mini_title, T.habit_mini_msg.replace('{mini}', item.mini ?? ''), [
+                          { text: T.common_cancel, style: 'cancel' },
+                          { text: T.habit_mini_confirm, onPress: () => handleComplete(item.id, true) },
+                        ])
+                    : undefined
+                }
                 onUncomplete={() => handleUncomplete(item.id, item.name)}
                 onPress={() => router.push(`/habit/${item.id}`)}
                 onLongPress={() =>

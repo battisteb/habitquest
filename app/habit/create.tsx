@@ -86,6 +86,7 @@ export default function CreateHabitScreen() {
   const [emoji, setEmoji] = useState<string | null>(null);
   const [why, setWhy] = useState('');
   const [anchor, setAnchor] = useState('');
+  const [mini, setMini] = useState('');
   const [showMore, setShowMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -103,6 +104,7 @@ export default function CreateHabitScreen() {
       await createHabit(name.trim(), category, content, schedule.frequency, emoji, schedule.days, {
         why: cleanMotivation(why),
         anchor: cleanMotivation(anchor),
+        mini: cleanMotivation(mini),
       });
       router.back();
     } catch (error: unknown) {
@@ -194,7 +196,7 @@ export default function CreateHabitScreen() {
       </View>
 
       {/* 4. When and why, optional (G2) */}
-      <MotivationFields why={why} anchor={anchor} onWhyChange={setWhy} onAnchorChange={setAnchor} />
+      <MotivationFields why={why} anchor={anchor} onWhyChange={setWhy} onAnchorChange={setAnchor} mini={mini} onMiniChange={setMini} />
 
       {/* 5. Everything else, folded */}
       <Pressable style={styles.moreToggle} onPress={() => setShowMore((v) => !v)} accessibilityRole="button" accessibilityState={{ expanded: showMore }}>

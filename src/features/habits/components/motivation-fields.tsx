@@ -6,6 +6,8 @@ import { spacing } from '../../../ui/theme/tokens';
 /** Same limits as the habits_why_length / habits_anchor_length checks. */
 export const WHY_MAX = 140;
 export const ANCHOR_MAX = 80;
+/** Same limit as habits_mini_length (G1). */
+export const MINI_MAX = 60;
 
 /** Trimmed text, or null when empty (both fields are optional). */
 export function cleanMotivation(text: string): string | null {
@@ -22,11 +24,16 @@ export function MotivationFields({
   anchor,
   onWhyChange,
   onAnchorChange,
+  mini,
+  onMiniChange,
 }: {
   why: string;
   anchor: string;
   onWhyChange: (v: string) => void;
   onAnchorChange: (v: string) => void;
+  /** The small version for hard days (G1); hidden when not given. */
+  mini?: string;
+  onMiniChange?: (v: string) => void;
 }) {
   const T = useT();
   return (
@@ -47,6 +54,16 @@ export function MotivationFields({
         maxLength={WHY_MAX}
         testID="habit-why"
       />
+      {onMiniChange && (
+        <PixelInput
+          label={T.habit_mini_label}
+          placeholder={T.habit_mini_placeholder}
+          value={mini ?? ''}
+          onChangeText={onMiniChange}
+          maxLength={MINI_MAX}
+          testID="habit-mini"
+        />
+      )}
     </View>
   );
 }

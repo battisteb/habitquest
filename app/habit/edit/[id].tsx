@@ -106,6 +106,7 @@ export default function EditHabitScreen() {
   const [emoji, setEmoji] = useState<string | null>((habit as any)?.emoji ?? null);
   const [why, setWhy] = useState(habit?.why ?? '');
   const [anchor, setAnchor] = useState(habit?.anchor ?? '');
+  const [mini, setMini] = useState(habit?.mini ?? '');
   const [loading, setLoading] = useState(false);
 
   if (!habit) {
@@ -128,6 +129,7 @@ export default function EditHabitScreen() {
         emoji,
         why: cleanMotivation(why),
         anchor: cleanMotivation(anchor),
+        mini: cleanMotivation(mini),
         ...schedule,
       });
       router.back();
@@ -214,7 +216,7 @@ export default function EditHabitScreen() {
         {frequency === 'days' && <DayPicker value={days} onChange={setDays} />}
       </View>
 
-      <MotivationFields why={why} anchor={anchor} onWhyChange={setWhy} onAnchorChange={setAnchor} />
+      <MotivationFields why={why} anchor={anchor} onWhyChange={setWhy} onAnchorChange={setAnchor} mini={mini} onMiniChange={setMini} />
 
       <EmojiPicker value={emoji} onChange={setEmoji} label={T.habit_edit_emoji} />
 

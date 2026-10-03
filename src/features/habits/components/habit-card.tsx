@@ -28,6 +28,8 @@ interface HabitCardProps {
   streakCount: number;
   isCompletedToday: boolean;
   onComplete: () => void;
+  /** Validate the small version (G1); the chip shows only when given. */
+  onCompleteMini?: () => void;
   /** Undo today's validation (tapped by mistake). */
   onUncomplete?: () => void;
   onPress: () => void;
@@ -91,6 +93,7 @@ export function HabitCard({
   streakCount,
   isCompletedToday,
   onComplete,
+  onCompleteMini,
   onUncomplete,
   onPress,
   onLongPress,
@@ -191,7 +194,9 @@ export function HabitCard({
     color: colors.xp,
     fontFamily: fonts.bold,
     opacity: 0.8,
-  },
+  },
+  miniChip: { borderWidth: 2, borderColor: colors.border, paddingHorizontal: 6, paddingVertical: 4, marginRight: spacing.sm },
+  miniChipText: { color: colors.textSecondary, fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.xs), letterSpacing: 0.5 },
   checkButton: {
     width: 40,
     height: 40,
@@ -353,6 +358,18 @@ export function HabitCard({
                     )}
                   </View>
                 </View>
+                {!effectiveDone && onCompleteMini && (
+                  <Pressable
+                    onPress={onCompleteMini}
+                    style={styles.miniChip}
+                    hitSlop={6}
+                    accessibilityRole="button"
+                    accessibilityLabel={T.habit_mini_title}
+                    testID="habit-mini"
+                  >
+                    <Text style={styles.miniChipText}>{T.habit_mini_chip}</Text>
+                  </Pressable>
+                )}
                 <Animated.View style={checkPopStyle} {...checkTarget}>
                 <Pressable
                   onPress={effectiveDone ? onUncomplete : handleComplete}
