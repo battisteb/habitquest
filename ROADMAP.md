@@ -30,10 +30,10 @@
 
 ## ✅ Phase 4 — Social & Competitive
 - **Duels** — real-time PvP with HP bars and battle music
-- **Challenges** with real-time progress tracking and Gold rewards
+- **Co-op challenges** with real-time team progress (1v1 Gold-wager challenges retired, ADR 025)
 - **Achievements** system
 - Friends, friend requests, inbox notifications
-- Leaderboards (streaks, XP)
+- Leaderboards (friends first, global on demand) and kudos between friends
 - Duel win/loss counts on public profile
 
 ## ✅ Phase 5 — Polish
@@ -47,12 +47,17 @@
 - [ ] iOS TestFlight build
 - [ ] App Store submission (iOS priority)
 - [ ] Android release build
+- [x] Habit science, explained in the app (“How HabitQuest helps you”): “When? After…” anchors and personal reasons, mini versions that keep the streak, identity titles at 7, 21 and 66 days, no-penalty comeback and streak repair
+- [x] Seasonal arcs (Winter, Spring, Summer, Autumn) with runes, seasonal capes and the Crown of Seasons (ADR 024)
+- [x] Lighter app: one Pause screen (ADR 029), a progressive Today for new players, a two-tab Social screen, at most 2 reminders a day (ADR 026), a mission chest (ADR 028)
 
 ## 🔜 Phase 7 — Post-launch expansion
-- [ ] Multi-language support (start with English + French)
-- [ ] Push notifications (habit reminders, duel invites)
-- [ ] Web companion (shared `src/` logic)
-- [x] Additional PvP modes: arenas (6 leagues, 10-day seasons, daily fights, ADR 012) and co-op challenges (ADR 013). Guilds dropped
+- [x] Multi-language support: English, French and Japanese (app, site, e-mails, store listings)
+- [x] Push notifications (habit reminders, duel invites), within a daily budget
+- [x] Full web version (habitquest.expo.app, shared `src/` logic)
+- [x] Additional PvP modes: arenas (6 leagues, 10-day seasons, daily fights, ADR 012) and co-op challenges (ADR 013)
+- [ ] Guilds (groups of 5 with a weekly goal), as an evolution of co-op
+- [ ] Pip as an AI coach (Premium), once costs and privacy are studied
 
 ---
 
