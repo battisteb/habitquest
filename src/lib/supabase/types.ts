@@ -614,6 +614,7 @@ export type Database = {
           price_gold: number;
           rarity: string;
           required_level: number;
+          season: string | null;
           sprite_key: string;
         };
         Insert: {
@@ -626,6 +627,7 @@ export type Database = {
           price_gold: number;
           rarity?: string;
           required_level?: number;
+          season?: string | null;
           sprite_key?: string;
         };
         Update: {
@@ -638,6 +640,7 @@ export type Database = {
           price_gold?: number;
           rarity?: string;
           required_level?: number;
+          season?: string | null;
           sprite_key?: string;
         };
         Relationships: [];

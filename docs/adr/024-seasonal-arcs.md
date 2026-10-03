@@ -25,7 +25,10 @@ L'engagement envers les applis gamifiées retombe après 2 à 6 mois. Les « dat
   - 500 or à un joueur déjà Premium.
 
   Une seule fois (`profiles.four_seasons_rewarded_at`).
-- Le cosmétique spécial des 4 saisons et un cosmétique saisonnier vendu en or pendant chaque arc viendront avec leurs sprites (G6b).
+- **Cosmétiques saisonniers** (G6b, migration `20261004140000_seasonal_cosmetics`) :
+  - chaque arc vend sa cape pour 300 or, pendant l'arc seulement (`shop_items.season`, contrôlé par `purchase_item` avec `arc_of` dans le fuseau du joueur) : cape de givre, cape fleurie, cape solaire, cape des moissons ;
+  - la couronne des saisons (quatre gemmes, une par saison) est offerte avec la récompense des 4 runes, et n'est jamais vendue.
+  - Une cape achetée reste à vie ; elle revient en vente au même arc l'année suivante.
 - Dans l'app :
   - une ligne compacte au-dessus du boss de la semaine, sur l'écran Quêtes ;
   - un écran Arc : grille des semaines, rune, règles, collection des 4 runes, carte à partager (#winterarc) ;
