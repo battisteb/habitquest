@@ -5,11 +5,14 @@ import { use$ } from '@legendapp/state/react';
 import { tutorialSeen$ } from '../../onboarding/tutorial-state';
 import { subscriptionStore$ } from '../stores/subscription-store';
 import { premium$ } from '../stores/premium';
+import { streakMilestoneStore$ } from '../../gamification/stores/streak-milestone-store';
 import {
   loadTrialOfferState,
+  recordStreakOfferShown,
   recordTrialOfferRefused,
   recordTrialOfferShown,
   shouldOfferTrialAfterTutorial,
+  shouldOfferTrialAtStreak,
   shouldRemindTrial,
   trialEndNoticeAt,
 } from '../utils/trial-offer';
@@ -19,7 +22,8 @@ import { getStrings } from '../../../lib/i18n';
 
 /**
  * Offers the 14-day free trial: the Premium screen once right after the
- * tutorial, then a small reminder now and then (rules in utils/trial-offer).
+ * tutorial, a small reminder now and then, and once at the first 21-day
+ * streak (rules in utils/trial-offer).
  * Also schedules the "trial ends in 2 days" notification. Renders nothing.
  */
 export function TrialOfferHost() {
@@ -29,6 +33,7 @@ export function TrialOfferHost() {
   const isPremium = use$(premium$);
   const trialEndsAt = use$(subscriptionStore$.trialEndsAt);
   const eligible = trialProducts.length > 0;
+  const milestoneVisible = use$(streakMilestoneStore$.visible);
 
   // Right after the tutorial (or as soon as the store answers).
   useEffect(() => {
@@ -61,6 +66,20 @@ export function TrialOfferHost() {
     });
     return () => sub.remove();
   }, [router]);
+
+  // First 21-day streak (G5): once the celebration has closed, offer the trial once.
+  useEffect(() => {
+    if (milestoneVisible) return;
+    const { streakCount, newIdentity } = streakMilestoneStore$.get();
+    if (!newIdentity) return;
+    if (!shouldOfferTrialAtStreak(loadTrialOfferState(), { eligible, isPremium }, streakCount)) return;
+    recordStreakOfferShown();
+    const T = getStrings();
+    showDialog(T.trial_streak_title, T.trial_streak_msg, [
+      { text: T.trial_reminder_later, style: 'cancel' },
+      { text: T.trial_reminder_try, onPress: () => router.push('/paywall?from=streak') },
+    ]);
+  }, [milestoneVisible, eligible, isPremium, router]);
 
   // Warn 2 days before the trial turns into a paid subscription.
   useEffect(() => {

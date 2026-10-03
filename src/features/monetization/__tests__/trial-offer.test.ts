@@ -10,6 +10,9 @@ import {
   recordTrialOfferShown,
   shouldOfferTrialAfterTutorial,
   shouldRemindTrial,
+  shouldOfferTrialAtStreak,
+  recordStreakOfferShown,
+  STREAK_OFFER_DAYS,
   trialDaysLeft,
   trialEndNoticeAt,
   MAX_REFUSALS,
@@ -32,6 +35,28 @@ describe('after the tutorial', () => {
   it('never to a Premium player or when the store has no trial for them (web, already used)', () => {
     expect(shouldOfferTrialAfterTutorial(fresh, { eligible: true, isPremium: true })).toBe(false);
     expect(shouldOfferTrialAfterTutorial(fresh, { eligible: false, isPremium: false })).toBe(false);
+  });
+});
+
+describe('at the first 21-day streak (G5)', () => {
+  it('offers the trial once, at 21 days', () => {
+    expect(STREAK_OFFER_DAYS).toBe(21);
+    expect(shouldOfferTrialAtStreak(fresh, eligible, 21)).toBe(true);
+    expect(shouldOfferTrialAtStreak(fresh, eligible, 7)).toBe(false);
+    expect(shouldOfferTrialAtStreak({ ...fresh, streakOfferShown: true }, eligible, 21)).toBe(false);
+  });
+
+  it('even after 3 "Later", but never to Premium or ineligible players', () => {
+    expect(shouldOfferTrialAtStreak({ ...fresh, refusals: MAX_REFUSALS }, eligible, 21)).toBe(true);
+    expect(shouldOfferTrialAtStreak(fresh, { eligible: true, isPremium: true }, 21)).toBe(false);
+    expect(shouldOfferTrialAtStreak(fresh, { eligible: false, isPremium: false }, 21)).toBe(false);
+  });
+
+  it('remembers it was shown', () => {
+    storage.delete('trial-offer-v1');
+    recordStreakOfferShown(NOW);
+    expect(loadTrialOfferState(NOW).streakOfferShown).toBe(true);
+    storage.delete('trial-offer-v1');
   });
 });
 

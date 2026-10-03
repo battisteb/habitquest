@@ -766,6 +766,8 @@ export const JA: Strings = {
   trial_reminder_msg: '追加のフリーズ、伝説のアイテム、相棒、月替わりアイテム、広告なし：プレミアムを14日間無料で試そう。',
   trial_reminder_try: '試してみる',
   trial_reminder_later: 'あとで',
+  trial_streak_title: '🔥 21日連続！',
+  trial_streak_msg: 'クエストを続けられることを証明したね。お祝いに：プレミアム14日間無料（追加のフリーズ、伝説のアイテム、相棒、広告なし）。',
   trial_banner: '👑 プレミアム体験：残り{n}日',
   trial_banner_last: '👑 プレミアム体験：今日が最終日',
   trial_ending_title: '👑 プレミアム体験がまもなく終了',
