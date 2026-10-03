@@ -1,7 +1,7 @@
 ---
 title: Terms of Use — HabitQuest
 lang: en
-alt: /terms.fr
+base: terms
 ---
 
 # HabitQuest — Terms of Use
