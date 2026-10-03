@@ -18,7 +18,6 @@ import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { notificationsStore$ } from '../../src/features/notifications/stores/notifications-store';
 import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
 import { IdentityCard } from '../../src/features/habits/components/identity-card';
-import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
@@ -237,9 +236,6 @@ export default function ProfileScreen() {
 
             {/* Quests that became who the player is (G3) */}
             <IdentityCard />
-
-            {/* Monthly activity heatmap */}
-            <MonthlyHeatmap />
 
             {/* Single action */}
             <PixelButton
