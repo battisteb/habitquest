@@ -292,3 +292,9 @@ export const BOSS = {
 export function hitsToDefeat(hpMax: number, damage: number): number {
   return Math.max(0, Math.ceil((hpMax - damage) / BOSS.HIT));
 }
+
+/**
+ * Ads (D9): no full-screen ad during a new player's first week, and never
+ * before a duel (a fun moment with a friend must not be interrupted).
+ */
+export const ADS = { interstitialGraceDays: 7 } as const;
