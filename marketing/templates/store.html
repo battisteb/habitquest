@@ -2,8 +2,11 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Inter:wght@600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&display=swap" rel="stylesheet" />
 <style>
+  /* The app's own pixel fonts (npm ci), so the screenshots match it even offline. */
+  @font-face { font-family: 'Jersey 10'; src: url('../../node_modules/@expo-google-fonts/jersey-10/400Regular/Jersey10_400Regular.ttf'); }
+  @font-face { font-family: 'DotGothic16'; src: url('../../node_modules/@expo-google-fonts/dotgothic16/400Regular/DotGothic16_400Regular.ttf'); }
   /* App Store / Google Play screenshot, in the app's pixel art direction (ADR 011). */
   :root {
     --bg: #0D0D1A; --surface: #1A1A2E; --border: #2D2D4E; --primary: #6C63FF;
@@ -29,6 +32,10 @@
   h1 { font-family: 'Jersey 10', monospace; font-weight: 400; line-height: .95; letter-spacing: .02em; }
   h1 em { font-style: normal; color: var(--accent); }
   p.sub { font-family: 'Inter', sans-serif; font-weight: 600; color: var(--muted); line-height: 1.3; }
+  /* Japanese: Jersey 10 has no Japanese glyphs, so DotGothic16, like the app (src/ui/theme/tokens.ts). */
+  body.ja .badge, body.ja h1, body.ja p.sub { font-family: 'DotGothic16', monospace; font-weight: 400; letter-spacing: 0; }
+  body.ja h1 { line-height: 1.1; }
+  body.ja p.sub { text-wrap: balance; }
   .frame {
     position: relative; z-index: 1; background: var(--surface);
     border: var(--px) solid var(--border);
@@ -46,8 +53,11 @@
   </div>
   <div class="frame" id="frame"><img id="shot" alt="" /></div>
 <script>
-  // Filled by render-store.js: window.render({ width, height, badge, title, sub, image })
-  window.render = ({ width, height, badge, title, sub, image }) => {
+  // Filled by render-store.js: window.render({ width, height, lang, badge, title, sub, image })
+  window.render = ({ width, height, lang, badge, title, sub, image }) => {
+    // DotGothic16 glyphs are full-size where Jersey 10's are small: smaller sizes keep two-line titles.
+    const ja = lang === 'ja';
+    document.body.classList.toggle('ja', ja);
     // Every size scales from the 6.7" layout; shorter screens (Android 16:9) by their height.
     const u = Math.min(width / 1290, height / 2796);
     const s = document.documentElement.style;
@@ -59,11 +69,11 @@
     head.style.paddingTop = `${Math.round(150 * u)}px`;
     head.style.gap = `${Math.round(34 * u)}px`;
     const b = document.getElementById('badge');
-    b.textContent = badge; b.style.fontSize = `${Math.round(54 * u)}px`;
+    b.textContent = badge; b.style.fontSize = `${Math.round((ja ? 46 : 54) * u)}px`;
     const t = document.getElementById('title');
-    t.innerHTML = title; t.style.fontSize = `${Math.round(150 * u)}px`; t.style.padding = `0 ${Math.round(60 * u)}px`;
+    t.innerHTML = title; t.style.fontSize = `${Math.round((ja ? 112 : 150) * u)}px`; t.style.padding = `0 ${Math.round(60 * u)}px`;
     const p = document.getElementById('sub');
-    p.textContent = sub; p.style.fontSize = `${Math.round(48 * u)}px`; p.style.padding = `0 ${Math.round(110 * u)}px`;
+    p.textContent = sub; p.style.fontSize = `${Math.round((ja ? 44 : 48) * u)}px`; p.style.padding = `0 ${Math.round(110 * u)}px`;
     // The app screen fills the rest, phone-shaped (390 × 844), cut at the bottom edge.
     const frame = document.getElementById('frame');
     const top = head.getBoundingClientRect().height + Math.round(80 * u);

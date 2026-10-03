@@ -25,7 +25,8 @@ const template = pathToFileURL(path.join(root, 'templates', 'store.html')).href;
   const browser = await puppeteer.launch({
     executablePath: process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
     headless: 'new',
-    args: ['--allow-file-access-from-files'],
+    // --no-sandbox: Chromium refuses to start as root (Linux containers).
+    args: ['--allow-file-access-from-files', ...(process.getuid?.() === 0 ? ['--no-sandbox'] : [])],
   });
   const page = await browser.newPage();
   for (const lang of langs) {
@@ -39,7 +40,7 @@ const template = pathToFileURL(path.join(root, 'templates', 'store.html')).href;
         await page.goto(template, { waitUntil: 'networkidle0' });
         await page.evaluate(
           (s) => window.render(s),
-          { width, height, ...spec[lang][screen], image: pathToFileURL(image).href },
+          { width, height, lang, ...spec[lang][screen], image: pathToFileURL(image).href },
         );
         await page.evaluate(() => document.fonts.ready);
         await page.evaluate(() => Promise.all([...document.images].map((img) => img.decode().catch(() => {}))));
