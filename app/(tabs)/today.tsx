@@ -65,6 +65,7 @@ const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 
 import { categoryLabel } from '../../src/lib/i18n/labels';
 import { Pip } from '../../src/features/mascot/components/pip';
 import { BossCard } from '../../src/features/boss/components/boss-card';
+import { ArcBanner } from '../../src/features/arc/components/arc-banner';
 
 function todayLabel(): string {
   const d = new Date();
@@ -693,6 +694,7 @@ export default function TodayScreen() {
       </View>
       {/* Boss of the week (I9): beaten with the week's quests. */}
       <View style={styles.bossSlot}>
+        <ArcBanner />
         <BossCard />
       </View>
       {/* Active mode banner */}
