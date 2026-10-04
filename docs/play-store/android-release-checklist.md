@@ -24,7 +24,7 @@
 - ⏳ Formulaire « Sécurité des données » : réponses ci-dessous
 - ⏳ Déclaration « Identifiant publicitaire » : oui, utilisé pour la publicité (AdMob)
 - ⏳ Questionnaire de classification du contenu (IARC) : violence cartoon légère (duels pixel art), pas de chat, pas de jeux d'argent
-- ⏳ Public cible : 13 ans et plus (l'app contient des publicités et n'est pas conçue pour les enfants)
+- ⏳ Public cible : 13 ans et plus, 14 ans et plus en Corée du Sud (l'app contient des publicités et n'est pas conçue pour les enfants)
 - ⏳ Nouveau compte développeur personnel : test fermé avec au moins 12 testeurs pendant 14 jours avant l'accès à la production
 
 ## Sécurité des données (Data safety)

@@ -6,11 +6,11 @@ base: terms
 
 # HabitQuest — Conditions d’utilisation
 
-*Dernière mise à jour : 1ᵉʳ octobre 2026*
+*Dernière mise à jour : 4 octobre 2026*
 
 Ces conditions s'appliquent à l'app et au site HabitQuest, édités par **Battiste Boungo** (« nous »). En créant un compte, tu les acceptes. Sur l'App Store, le [contrat de licence standard d'Apple](https://www.apple.com/legal/internet-services/itunes/dev/stdeula/) s'applique aussi.
 
-1. **Compte** : 13 ans minimum. Garde ton mot de passe secret ; tu es responsable de l'usage de ton compte. Ton pseudo ne doit pas usurper une identité, être injurieux ni contenir les données personnelles d'autrui.
+1. **Compte** : 13 ans minimum (14 ans en Corée du Sud, comme l'exige sa loi). Garde ton mot de passe secret ; tu es responsable de l'usage de ton compte. Ton pseudo ne doit pas usurper une identité, être injurieux ni contenir les données personnelles d'autrui.
 2. **Fair-play** : pas de triche (robots, validations automatiques, exploitation de bugs), de harcèlement ni d'abus du Support. Nous pouvons réinitialiser une progression obtenue de façon déloyale, suspendre ou supprimer un compte qui enfreint ces règles.
 3. **Abonnement Premium** : abonnement à renouvellement automatique vendu via l'App Store ou Google Play, au prix affiché avant l'achat, débité sur ton compte Apple ou Google. Il se renouvelle sauf résiliation au moins 24 h avant la fin de la période en cours, dans les réglages de ton compte App Store ou Google Play. Supprimer l'app ne le résilie pas. Les remboursements suivent les règles d'Apple ou de Google.
 4. **Objets virtuels** : l'XP, l'or, les objets et les thèmes font partie du jeu ; ils n'ont aucune valeur monétaire, ne s'échangent pas contre de l'argent et peuvent être rééquilibrés.

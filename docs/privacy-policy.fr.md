@@ -6,7 +6,7 @@ base: privacy-policy
 
 # HabitQuest — Politique de confidentialité
 
-*Dernière mise à jour : 2 octobre 2026*
+*Dernière mise à jour : 4 octobre 2026*
 
 HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cette politique explique quelles données l'app collecte, pourquoi, et quels choix vous avez. Contact : **batto060504@gmail.com**.
 
@@ -57,7 +57,7 @@ Conformément au RGPD, vous pouvez accéder à vos données, les rectifier, les 
 
 ## 7. Enfants
 
-HabitQuest ne s'adresse pas aux enfants de moins de 13 ans et nous ne collectons pas sciemment leurs données.
+HabitQuest ne s'adresse pas aux enfants de moins de 13 ans (moins de 14 ans en Corée du Sud, comme le fixe sa loi sur les données personnelles) et nous ne collectons pas sciemment leurs données.
 
 ## 8. Modifications
 
