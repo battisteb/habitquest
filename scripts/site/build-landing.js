@@ -36,6 +36,7 @@ const T = {
     lead: 'Complete your daily quests, keep your streaks alive, earn XP and gold, and level up a pixel hero. Then take on your friends.',
     soon: 'Coming soon',
     web: 'Or play now in your browser',
+    demo: { button: '▶ Play the demo', note: 'Free, right in your browser. Nothing to install, and your hero follows you to the app.', nav: '▶ Play', title: 'Can’t wait? <em>Play now.</em>' },
     featuresTitle: 'Everything that makes <em>habits stick</em>',
     featuresSub: 'Every habit becomes a quest. Every day you show up, your hero gets stronger.',
     features: [
@@ -95,6 +96,7 @@ const T = {
     lead: 'Valide tes quêtes du jour, garde tes séries, gagne de l\'XP et de l\'or, et fais évoluer ton héros pixel. Puis défie tes amis.',
     soon: 'Bientôt',
     web: 'Ou joue dès maintenant dans ton navigateur',
+    demo: { button: '▶ Jouer à la démo', note: 'Gratuit, directement dans ton navigateur. Rien à installer, et ton héros te suivra dans l’app.', nav: '▶ Jouer', title: 'Pas envie d’attendre ? <em>Joue maintenant.</em>' },
     featuresTitle: 'Tout pour que tes <em>habitudes tiennent</em>',
     featuresSub: 'Chaque habitude devient une quête. Chaque jour où tu t\'y tiens, ton héros devient plus fort.',
     features: [
@@ -154,6 +156,7 @@ const T = {
     lead: 'デイリークエストを達成して連続記録をつなぎ、XPとゴールドを稼いで、ドット絵のヒーローを育てよう。そしてフレンドに挑戦！',
     soon: '近日公開',
     web: 'ブラウザで今すぐ遊ぶ',
+    demo: { button: '▶ デモで遊ぶ', note: '無料・ブラウザでそのまま遊べます。インストール不要、ヒーローはアプリにも引き継がれます。', nav: '▶ 遊ぶ', title: '待ちきれない？<em>今すぐ遊ぼう。</em>' },
     featuresTitle: '<em>習慣が続く</em>しかけがぜんぶ',
     featuresSub: '習慣はすべてクエストに。続けた日の数だけ、ヒーローは強くなる。',
     features: [
@@ -213,6 +216,7 @@ const T = {
     lead: '매일 퀘스트를 달성하고, 연속 기록을 이어가고, XP와 골드를 모아 픽셀 히어로를 키워요. 그리고 친구에게 도전!',
     soon: '곧 출시',
     web: '지금 브라우저에서 플레이',
+    demo: { button: '▶ 데모 플레이', note: '무료, 브라우저에서 바로 즐겨요. 설치할 필요 없고, 영웅은 앱으로 그대로 이어져요.', nav: '▶ 플레이', title: '기다리기 힘들다면? <em>지금 플레이!</em>' },
     featuresTitle: '<em>습관이 이어지는</em> 모든 장치',
     featuresSub: '모든 습관이 퀘스트가 돼요. 꾸준히 한 날만큼 히어로가 강해져요.',
     features: [
@@ -292,6 +296,17 @@ function storeBadges(t) {
   return `<div class="stores">${one('ios', 'as')}${one('android', 'gp')}</div>`;
 }
 
+/**
+ * The web demo: until the apps are in the stores, it is the main way to try HabitQuest
+ * (Battiste, 2026-10-04), so it gets a big button; afterwards, a small link under the badges.
+ */
+const PRELAUNCH = !(STORES.ios && STORES.android);
+function demoButton(t) {
+  return PRELAUNCH
+    ? `<div class="demo"><a class="play pixel" href="${WEB_APP}">${t.demo.button}</a><p>${t.demo.note}</p></div>`
+    : `<p class="web"><a href="${WEB_APP}">${t.web} →</a></p>`;
+}
+
 /** Links to the other languages of the landing page (from the page of `lang`). */
 function otherLangs(lang) {
   const root = lang === 'en' ? '' : '../';
@@ -326,6 +341,7 @@ function page(t) {
 <header class="top"><div class="wrap">
   <a class="brand pixel" href="./"><img src="${a}/icon.png" alt="">HabitQuest</a>
   <nav class="nav">
+    <a class="nav-play pixel" href="${WEB_APP}">${t.demo.nav}</a>
     <a href="#features">${t.nav.features}</a><a href="#faq">${t.nav.faq}</a><a href="${t.links.support}">${t.nav.support}</a>
 ${otherLangs(t.lang).map(([l, href]) => `    <a class="lang" href="${href}" hreflang="${l}">${l.toUpperCase()}</a>`).join('\n')}
   </nav>
@@ -337,8 +353,7 @@ ${otherLangs(t.lang).map(([l, href]) => `    <a class="lang" href="${href}" href
     <span class="badge pixel">${t.badge}</span>
     <h1 class="pixel">${t.h1}</h1>
     <p class="lead">${t.lead}</p>
-    ${storeBadges(t)}
-    <p class="web"><a href="${WEB_APP}">${t.web} →</a></p>
+    ${PRELAUNCH ? demoButton(t) + storeBadges(t) : storeBadges(t) + demoButton(t)}
   </div>
   <div class="hero-art">
     <div class="phone"><img src="${t.screens}/today.png" alt="" width="390" height="844"></div>
@@ -379,7 +394,12 @@ ${t.steps.map(([b, s]) => `    <div class="step"><b>${b}</b><span>${s}</span></d
   </div>
 </div></section>
 
-<section id="faq"><div class="wrap">
+${PRELAUNCH ? `<section><div class="wrap"><div class="cta">
+  <h2 class="pixel">${t.demo.title}</h2>
+  ${demoButton(t)}
+</div></div></section>
+
+` : ''}<section id="faq"><div class="wrap">
   <h2 class="pixel">${t.faqTitle}</h2>
 ${t.faq.map(([q, r]) => `  <details><summary>${q}</summary><p>${r}</p></details>`).join('\n')}
 </div></section>
