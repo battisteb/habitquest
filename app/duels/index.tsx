@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -117,7 +118,7 @@ export default function DuelsIndexScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Pressable onPress={() => router.back()} style={styles.backButton}>
+      <Pressable onPress={() => goBack(router, '/(tabs)/social')} style={styles.backButton}>
         <Text style={styles.backButtonText}>{T.duels_back}</Text>
       </Pressable>
       <View style={styles.header}>

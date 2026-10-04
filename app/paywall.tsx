@@ -1,3 +1,4 @@
+import { goBack } from '../src/lib/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import {
   View,
@@ -233,7 +234,7 @@ export default function PaywallScreen() {
 
   function close() {
     if ((from === 'tutorial' || from === 'reminder') && !premium$.get()) recordTrialOfferRefused();
-    router.back();
+    goBack(router, '/(tabs)/profile');
   }
 
   useEffect(() => {
@@ -280,7 +281,7 @@ export default function PaywallScreen() {
       Alert.alert(
         T.paywall_welcome_title,
         T.paywall_welcome_msg,
-        [{ text: T.paywall_welcome_ok, onPress: () => router.back() }],
+        [{ text: T.paywall_welcome_ok, onPress: () => goBack(router, '/(tabs)/profile') }],
       );
     }
   }

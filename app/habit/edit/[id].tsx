@@ -1,3 +1,4 @@
+import { goBack } from '../../../src/lib/navigation';
 import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, Pressable, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -132,7 +133,7 @@ export default function EditHabitScreen() {
         mini: cleanMotivation(mini),
         ...schedule,
       });
-      router.back();
+      goBack(router);
     } catch (e: unknown) {
       Alert.alert(T.habit_edit_error_title, e instanceof Error ? e.message : T.habit_edit_error_msg);
     } finally {
@@ -146,7 +147,7 @@ export default function EditHabitScreen() {
       contentContainerStyle={styles.content}
     >
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()}>
+        <Pressable onPress={() => goBack(router)}>
           <Text style={styles.backButton}>{T.habit_edit_back}</Text>
         </Pressable>
         <Text style={styles.title}>{T.habit_edit_title}</Text>

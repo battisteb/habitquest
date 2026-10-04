@@ -1,3 +1,4 @@
+import { goBack } from '../../../lib/navigation';
 import { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -131,7 +132,7 @@ export default function PauseScreen() {
       style={[styles.screen, { paddingTop: insets.top }]}
       contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + spacing.xl }]}
     >
-      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" style={styles.back} />
+      <PixelButton title={T.common_back} onPress={() => goBack(router, '/settings')} variant="ghost" style={styles.back} />
       <Text style={styles.title}>{T.pause_title}</Text>
       <Text style={styles.intro}>{T.pause_intro}</Text>
 

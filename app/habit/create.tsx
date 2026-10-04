@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, Pressable, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -106,7 +107,7 @@ export default function CreateHabitScreen() {
         anchor: cleanMotivation(anchor),
         mini: cleanMotivation(mini),
       });
-      router.back();
+      goBack(router);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : T.habit_create_error;
       Alert.alert(T.common_error, message);
@@ -133,7 +134,7 @@ export default function CreateHabitScreen() {
   return (
     <ScrollView style={[styles.container, { paddingTop: insets.top }]} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
       <View style={styles.topRow}>
-        <Pressable onPress={() => router.back()} hitSlop={8}>
+        <Pressable onPress={() => goBack(router)} hitSlop={8}>
           <Text style={styles.backButton}>{T.habit_create_back}</Text>
         </Pressable>
         <Text style={styles.title}>{T.habit_create_title}</Text>

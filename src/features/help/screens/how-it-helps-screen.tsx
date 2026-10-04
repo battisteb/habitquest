@@ -1,3 +1,4 @@
+import { goBack } from '../../../lib/navigation';
 import { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -29,7 +30,7 @@ export default function HowItHelpsScreen() {
       style={[styles.screen, { paddingTop: insets.top }]}
       contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + spacing.xl }]}
     >
-      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" style={styles.back} />
+      <PixelButton title={T.common_back} onPress={() => goBack(router, '/settings')} variant="ghost" style={styles.back} />
       <Text style={styles.title}>{T.how_title}</Text>
       <Text style={styles.intro}>{T.how_intro}</Text>
 

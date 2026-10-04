@@ -1,3 +1,4 @@
+import { goBack } from '../src/lib/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import {
   View,
@@ -224,7 +225,7 @@ export default function WeeklyRecapScreen() {
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title={T.recap_back} onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.recap_back} onPress={() => goBack(router, '/(tabs)/stats')} variant="ghost" />
 
       <View style={styles.header}>
         <Text style={styles.screenLabel}>{weeksBack ? T.recap_label_last : T.recap_label}</Text>

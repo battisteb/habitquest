@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useState, useMemo } from 'react';
 import {
   View,
@@ -145,7 +146,7 @@ export default function HabitTemplatesScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <View style={styles.topRow}>
-          <Pressable onPress={() => router.back()}>
+          <Pressable onPress={() => goBack(router)}>
             <Text style={styles.backBtn}>{T.common_back}</Text>
           </Pressable>
           <Text style={styles.title}>{T.templates_title}</Text>

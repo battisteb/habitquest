@@ -1,3 +1,4 @@
+import { goBack } from '../src/lib/navigation';
 import { useEffect, useCallback, useMemo } from 'react';
 import {
   View,
@@ -121,7 +122,7 @@ export default function NotificationsScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
+        <Pressable onPress={() => goBack(router)} style={styles.backButton}>
           <Text style={styles.backButtonText}>{T.notif_back}</Text>
         </Pressable>
         <Text style={styles.headerTitle}>{T.notif_title}</Text>

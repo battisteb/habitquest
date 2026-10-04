@@ -8,7 +8,7 @@ import { Platform } from 'react-native';
 const mockBack = jest.fn();
 let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => ({
-  useRouter: () => ({ back: mockBack, push: jest.fn() }),
+  useRouter: () => ({ back: mockBack, push: jest.fn(), canGoBack: () => true, replace: jest.fn() }),
   useLocalSearchParams: () => mockParams,
 }));
 jest.mock('react-native-safe-area-context', () => ({

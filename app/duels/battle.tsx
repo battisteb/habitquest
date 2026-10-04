@@ -6,6 +6,7 @@
  *  2. RESOLVE — opponent "thinks", then both attacks animate one by one
  *  3. Loop back to PICK — or END if someone hits 0 HP
  */
+import { goBack } from '../../src/lib/navigation';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View, Text, StyleSheet, Pressable,
@@ -581,7 +582,7 @@ export default function BattleScreen() {
         </Text>
         {replay && (
           // A replay can be left at any time.
-          <Pressable onPress={() => router.back()} style={s.closeBtn} hitSlop={10} accessibilityRole="button" accessibilityLabel={T.arena_replay_back} testID="replay-close">
+          <Pressable onPress={() => goBack(router, '/duels')} style={s.closeBtn} hitSlop={10} accessibilityRole="button" accessibilityLabel={T.arena_replay_back} testID="replay-close">
             <Text style={s.closeText}>✕</Text>
           </Pressable>
         )}
@@ -674,7 +675,7 @@ export default function BattleScreen() {
               {replay ? T.arena_replay_note : params.duelId ? T.duels_battle_reward_friendly : T.duels_battle_reward_training}
             </Text>
           </View>
-          <Pressable style={s.exitBtn} onPress={() => (replay ? router.back() : router.replace('/duels'))} testID="battle-exit">
+          <Pressable style={s.exitBtn} onPress={() => (replay ? goBack(router, '/duels') : router.replace('/duels'))} testID="battle-exit">
             <Text style={s.exitBtnText}>{replay ? T.arena_replay_back : T.duels_battle_back_arena}</Text>
           </Pressable>
         </View>

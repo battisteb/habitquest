@@ -1,3 +1,4 @@
+import { goBack } from '../src/lib/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import {
   View,
@@ -123,7 +124,7 @@ export default function SettingsScreen() {
       contentContainerStyle={styles.container}
     >
       <View style={styles.header}>
-        <PixelButton title={T.settings_back} onPress={() => router.back()} variant="ghost" />
+        <PixelButton title={T.settings_back} onPress={() => goBack(router, '/(tabs)/profile')} variant="ghost" />
         <Text style={styles.title}>{T.settings_title}</Text>
       </View>
 

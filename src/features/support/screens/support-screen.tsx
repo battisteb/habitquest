@@ -1,3 +1,4 @@
+import { goBack } from '../../../lib/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -77,7 +78,7 @@ export default function SupportScreen() {
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.header}>
-        <PixelButton title={T.ctx_back} onPress={() => router.back()} variant="ghost" />
+        <PixelButton title={T.ctx_back} onPress={() => goBack(router, '/settings')} variant="ghost" />
         <Text style={styles.title}>{T.support_title}</Text>
         <View style={{ width: 60 }} />
       </View>

@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import {
   View,
@@ -147,7 +148,7 @@ export default function HabitArchiveScreen() {
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+        <PixelButton title={T.common_back} onPress={() => goBack(router)} variant="ghost" />
         <Text style={styles.title}>{T.habit_archive_title}</Text>
         <View style={{ width: 60 }} />
       </View>

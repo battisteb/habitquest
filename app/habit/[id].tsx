@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, ScrollView, Pressable, Linking, Modal } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -307,7 +308,7 @@ export default function HabitDetailScreen() {
           style: 'destructive',
           onPress: async () => {
             await archiveHabit(habit.id);
-            router.back();
+            goBack(router);
           },
         },
       ],
@@ -376,7 +377,7 @@ export default function HabitDetailScreen() {
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.common_back} onPress={() => goBack(router)} variant="ghost" />
 
       {/* Header */}
       <View style={styles.header}>

@@ -1,3 +1,4 @@
+import { goBack } from '../src/lib/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -188,7 +189,7 @@ export default function AchievementsScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Header */}
       <View style={styles.header}>
-        <PixelButton title={T.ach_back} onPress={() => router.back()} variant="ghost" />
+        <PixelButton title={T.ach_back} onPress={() => goBack(router, '/(tabs)/profile')} variant="ghost" />
         <Text style={styles.title}>{T.ach_title}</Text>
         <Text style={styles.counter}>
           {totalUnlocked}/{achievements.length}

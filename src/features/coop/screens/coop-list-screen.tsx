@@ -1,3 +1,4 @@
+import { goBack } from '../../../lib/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import {
   View,
@@ -174,7 +175,7 @@ export default function CoopListScreen() {
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
       >
-        <Pressable onPress={() => router.back()} accessibilityRole="button">
+        <Pressable onPress={() => goBack(router, '/(tabs)/social')} accessibilityRole="button">
           <Text style={styles.back}>{T.coop_back}</Text>
         </Pressable>
         <Text style={styles.title}>{T.coop_title}</Text>
