@@ -13,7 +13,7 @@ import { supabase } from '../src/lib/supabase/client';
 import { authStore$ } from '../src/features/auth/stores/auth-store';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
-import { useT } from '../src/lib/i18n';
+import { useLang, useT } from '../src/lib/i18n';
 import { localDateKey } from '../src/lib/local-date';
 
 interface DayData {
@@ -68,6 +68,7 @@ function tpl(s: string, vars: Record<string, string | number>): string {
 
 export default function WeeklyRecapScreen() {
   const T = useT();
+  const lang = useLang();
   const { themeKey } = useTheme();
   const styles = useMemo(() => createStyles(), [themeKey]);
   const router = useRouter();
@@ -348,7 +349,7 @@ export default function WeeklyRecapScreen() {
             <Text style={styles.motivationSub}>
               {tpl(T.recap_active_habits, {
                 n: stats.activeHabitsCount,
-                s: stats.activeHabitsCount !== 1 ? 's' : '',
+                s: stats.activeHabitsCount !== 1 && (lang === 'en' || lang === 'fr') ? 's' : '',
               })}{' '}
               {stats.completionRate >= 70
                 ? T.recap_motivation_sub_strong

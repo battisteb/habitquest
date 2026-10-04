@@ -17,6 +17,7 @@ const DAYS = 90;
 const MONTH_ABBR_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTH_ABBR_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
 const MONTH_ABBR_JA = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+const MONTH_ABBR_KO = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
 
 function formatDate(d: Date): string {
   const y = d.getFullYear();
@@ -199,7 +200,7 @@ export default function HabitHistoryScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const lang = use$(lang$);
-  const MONTH_ABBR = lang === 'fr' ? MONTH_ABBR_FR : lang === 'ja' ? MONTH_ABBR_JA : MONTH_ABBR_EN;
+  const MONTH_ABBR = lang === 'fr' ? MONTH_ABBR_FR : lang === 'ja' ? MONTH_ABBR_JA : lang === 'ko' ? MONTH_ABBR_KO : MONTH_ABBR_EN;
   const streaks = use$(habitsStore$.streaks);
   const habits = use$(habitsStore$.habits);
   const habit = habits.find((h) => h.id === habitId);

@@ -103,8 +103,40 @@ const MESSAGES_JA: Record<NotificationContext, string[]> = {
   ],
 };
 
+const MESSAGES_KO: Record<NotificationContext, string[]> = {
+  reminder: [
+    '⚔️ 퀘스트가 기다리고 있어요, 히어로!',
+    '🎯 습관을 레벨 업할 시간이에요!',
+    '🔥 오늘도 연속 기록을 이어가요!',
+    '⚡ 연속 기록이 기다리고 있어요!',
+    '🏆 챔피언은 매일 나타나요.',
+    '💪 한 걸음씩. 할 수 있어요.',
+  ],
+  streak_at_risk: [
+    '⚠️ 연속 기록이 위험해요! 오늘 달성해서 지켜요.',
+    '🔥 불꽃이 꺼지려고 해요 — 지켜 내요!',
+    '❄️ 쉬고 싶다면 연속 기록 프리즈를 쓸 수 있어요.',
+    '⚡ 연속 기록을 지킬 마지막 기회!',
+  ],
+  streak_milestone: [
+    '🏆 새로운 이정표 달성! 최고예요!',
+    '🎉 대단한 연속 기록! 이대로 가요!',
+    '💎 전설급 꾸준함 해금!',
+  ],
+  level_up: [
+    '🚀 레벨 업! 점점 강해지고 있어요!',
+    '⭐ 새로운 레벨 — 새로운 힘이 기다려요!',
+    '🏅 레벨이 올랐어요! 계속 단련해요!',
+  ],
+  all_done: [
+    '✅ 전부 달성! 완벽한 하루예요, 히어로!',
+    '🏆 퀘스트 완료! 내일 또 만나요.',
+    '💎 완벽한 하루! 이제 아무도 못 막아요.',
+  ],
+};
+
 export function getRandomMessage(context: NotificationContext): string {
   const lang = lang$.get();
-  const msgs = (lang === 'fr' ? MESSAGES_FR : lang === 'ja' ? MESSAGES_JA : MESSAGES_EN)[context];
+  const msgs = (lang === 'fr' ? MESSAGES_FR : lang === 'ja' ? MESSAGES_JA : lang === 'ko' ? MESSAGES_KO : MESSAGES_EN)[context];
   return msgs[Math.floor(Math.random() * msgs.length)];
 }

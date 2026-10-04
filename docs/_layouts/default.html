@@ -1,7 +1,8 @@
 <!doctype html>
-{% assign l = page.lang | default: 'en' %}{% if l == 'fr' %}{% assign sfx = '.fr' %}{% elsif l == 'ja' %}{% assign sfx = '.ja' %}{% else %}{% assign sfx = '' %}{% endif %}
+{% assign l = page.lang | default: 'en' %}{% if l == 'fr' %}{% assign sfx = '.fr' %}{% elsif l == 'ja' %}{% assign sfx = '.ja' %}{% elsif l == 'ko' %}{% assign sfx = '.ko' %}{% else %}{% assign sfx = '' %}{% endif %}
 {% if l == 'fr' %}{% assign t_support = 'Aide' %}{% assign t_privacy = 'Confidentialité' %}{% assign t_terms = "Conditions d'utilisation" %}{% assign home = '/fr/' %}
 {% elsif l == 'ja' %}{% assign t_support = 'サポート' %}{% assign t_privacy = 'プライバシーポリシー' %}{% assign t_terms = '利用規約' %}{% assign home = '/ja/' %}
+{% elsif l == 'ko' %}{% assign t_support = '고객 지원' %}{% assign t_privacy = '개인정보 처리방침' %}{% assign t_terms = '이용약관' %}{% assign home = '/ko/' %}
 {% else %}{% assign t_support = 'Support' %}{% assign t_privacy = 'Privacy Policy' %}{% assign t_terms = 'Terms of Use' %}{% assign home = '/' %}{% endif %}
 <html lang="{{ l }}">
 <head>
@@ -10,9 +11,10 @@
 <title>{{ page.title | default: site.title }}</title>
 <meta name="theme-color" content="#0D0D1A">
 <link rel="icon" href="{{ '/assets/icon.png' | relative_url }}">
-{% if page.base %}<link rel="alternate" hreflang="en" href="{{ '/' | append: page.base | relative_url }}"><link rel="alternate" hreflang="fr" href="{{ '/' | append: page.base | append: '.fr' | relative_url }}"><link rel="alternate" hreflang="ja" href="{{ '/' | append: page.base | append: '.ja' | relative_url }}">{% endif %}
+{% if page.base %}<link rel="alternate" hreflang="en" href="{{ '/' | append: page.base | relative_url }}"><link rel="alternate" hreflang="fr" href="{{ '/' | append: page.base | append: '.fr' | relative_url }}"><link rel="alternate" hreflang="ja" href="{{ '/' | append: page.base | append: '.ja' | relative_url }}"><link rel="alternate" hreflang="ko" href="{{ '/' | append: page.base | append: '.ko' | relative_url }}">{% endif %}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10{% if l == 'ja' %}&family=DotGothic16{% endif %}&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+{% if l == 'ko' %}<link href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css" rel="stylesheet">{% endif %}
 <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
 <script src="{{ '/assets/site.js' | relative_url }}" defer></script>
 </head>
@@ -21,7 +23,7 @@
   <a class="brand pixel" href="{{ home | relative_url }}"><img src="{{ '/assets/icon.png' | relative_url }}" alt="">HabitQuest</a>
   <nav class="nav">
     <a href="{{ '/support' | append: sfx | relative_url }}">{{ t_support }}</a>
-    {% if page.base %}{% if l != 'en' %}<a class="lang" href="{{ '/' | append: page.base | relative_url }}" hreflang="en">EN</a>{% endif %}{% if l != 'fr' %}<a class="lang" href="{{ '/' | append: page.base | append: '.fr' | relative_url }}" hreflang="fr">FR</a>{% endif %}{% if l != 'ja' %}<a class="lang" href="{{ '/' | append: page.base | append: '.ja' | relative_url }}" hreflang="ja">JA</a>{% endif %}{% endif %}
+    {% if page.base %}{% if l != 'en' %}<a class="lang" href="{{ '/' | append: page.base | relative_url }}" hreflang="en">EN</a>{% endif %}{% if l != 'fr' %}<a class="lang" href="{{ '/' | append: page.base | append: '.fr' | relative_url }}" hreflang="fr">FR</a>{% endif %}{% if l != 'ja' %}<a class="lang" href="{{ '/' | append: page.base | append: '.ja' | relative_url }}" hreflang="ja">JA</a>{% endif %}{% if l != 'ko' %}<a class="lang" href="{{ '/' | append: page.base | append: '.ko' | relative_url }}" hreflang="ko">KO</a>{% endif %}{% endif %}
   </nav>
 </div></header>
 <main class="page">

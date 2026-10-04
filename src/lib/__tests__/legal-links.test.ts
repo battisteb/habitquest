@@ -14,4 +14,10 @@ describe('legalUrl', () => {
     expect(legalUrl('support', 'fr')).toBe('https://gethabitquest.com/support.fr');
     expect(legalUrl('support', 'en')).toBe('https://gethabitquest.com/support');
   });
+
+  it('opens the Japanese and Korean pages of the site', () => {
+    expect(legalUrl('privacy', 'ja')).toBe('https://gethabitquest.com/privacy-policy.ja');
+    expect(legalUrl('terms', 'ko')).toBe('https://gethabitquest.com/terms.ko');
+    expect(legalUrl('support', 'ko')).toBe('https://gethabitquest.com/support.ko');
+  });
 });

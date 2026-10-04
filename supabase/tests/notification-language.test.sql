@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = public, extensions;
 
-select plan(8);
+select plan(10);
 
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-000000066001', 'fr@test.dev', '{"username":"Camille"}'),
@@ -60,6 +60,20 @@ select is((select title from notifications where user_id = '00000000-0000-0000-0
   '👥 フレンド申請', 'the title is in Japanese');
 select is((select body from notifications where user_id = '00000000-0000-0000-0000-000000066002' and type = 'friend_request'),
   'Camilleさんからフレンド申請が届きました。', 'and the body, with the name');
+
+-- Korean: a Korean player gets the texts in Korean, names kept.
+reset role;
+delete from notifications where user_id = '00000000-0000-0000-0000-000000066002' and type = 'friend_request';
+update profiles set language = 'ko' where id = '00000000-0000-0000-0000-000000066002';
+select pg_temp.act_as('00000000-0000-0000-0000-000000066001');
+set local role authenticated;
+select create_notification('00000000-0000-0000-0000-000000066002', 'friend_request', '👥 Friend request',
+  'Camille wants to be your friend.', '{}'::jsonb);
+reset role;
+select is((select title from notifications where user_id = '00000000-0000-0000-0000-000000066002' and type = 'friend_request'),
+  '👥 친구 신청', 'the title is in Korean');
+select is((select body from notifications where user_id = '00000000-0000-0000-0000-000000066002' and type = 'friend_request'),
+  'Camille님이 친구 신청을 보냈어요.', 'and the body, with the name');
 
 select * from finish();
 rollback;

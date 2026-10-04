@@ -4,7 +4,7 @@ import { lang$, setLang, LANGS } from '../../lib/i18n';
 import { colors, fonts, pixelSize, fontSizes } from '../theme/tokens';
 
 /**
- * EN / FR / JA switch shown before the player has an account (sign-in, first
+ * EN / FR / JA / KO switch shown before the player has an account (sign-in, first
  * onboarding slide): the device language is preselected, the player can
  * change it right away. Settings keep the same choice afterwards.
  */

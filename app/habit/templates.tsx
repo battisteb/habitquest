@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT, lang$ } from '../../src/lib/i18n';
-import { HABIT_TEMPLATES } from '../../src/lib/constants/habit-templates';
+import { HABIT_TEMPLATES, templateName } from '../../src/lib/constants/habit-templates';
 import { CATEGORY_CONFIG } from '../../src/lib/constants/categories';
 import { categoryLabel } from '../../src/lib/i18n/labels';
 import { use$ } from '@legendapp/state/react';
@@ -124,7 +124,7 @@ export default function HabitTemplatesScreen() {
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     return HABIT_TEMPLATES.filter((t) => {
-      const name = lang === 'fr' ? t.name_fr : t.name_en;
+      const name = templateName(t, lang);
       const matchSearch = !q || name.toLowerCase().includes(q);
       const matchCat = selectedCategory === 'all' || t.category === selectedCategory;
       return matchSearch && matchCat;
@@ -196,7 +196,7 @@ export default function HabitTemplatesScreen() {
         keyExtractor={(t) => t.id}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => {
-          const name = lang === 'fr' ? item.name_fr : item.name_en;
+          const name = templateName(item, lang);
           const catCfg = CATEGORY_CONFIG[item.category as keyof typeof CATEGORY_CONFIG];
           return (
             <Pressable

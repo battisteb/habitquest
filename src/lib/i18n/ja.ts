@@ -113,6 +113,7 @@ export const JA: Strings = {
   lang_fr: '🇫🇷 Français',
   lang_en: '🇬🇧 English',
   lang_ja: '🇯🇵 日本語',
+  lang_ko: '🇰🇷 한국어',
   theme_active: '使用中',
   settings_theme_locked_title: 'ロック中のテーマ',
   settings_theme_locked_msg: 'クエストで集めたゴールドで、ショップからこのテーマを解放できます。',
@@ -253,6 +254,7 @@ export const JA: Strings = {
   tuto_done: 'はじめよう！',
   tuto_skip: 'チュートリアルをスキップ',
   habit_swipe_done: '✓ 達成',
+  habit_streak_days: '{n}日',
   habit_undo_title: 'このクエストのチェックを外す？',
   habit_undo_msg: '「{name}」は未達成に戻ります。この達成で得たXP、ゴールド、連続記録は取り消されます。',
   habit_undo_confirm: 'チェックを外す',
@@ -1174,4 +1176,7 @@ export const JA: Strings = {
   duels_log_rally: ' 鼓舞ボーナス！ さらに{n}ダメージ！',
   shop_unlock_level: 'レベル{n}に到達',
   shop_unlock_streak: '{n}日連続',
+  duels_special_shield: 'シールド',
+  duels_special_double: 'ダブル',
+  duels_special_heal: '回復',
 };

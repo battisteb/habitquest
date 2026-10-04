@@ -3,20 +3,21 @@ import { use$ } from '@legendapp/state/react';
 import { getLocales } from 'expo-localization';
 import { storage } from '../storage/mmkv';
 import { JA } from './ja';
+import { KO } from './ko';
 import { restartApp } from '../restart-app';
 
-export type Lang = 'fr' | 'en' | 'ja';
+export type Lang = 'fr' | 'en' | 'ja' | 'ko';
 
 /** Languages of the app, in the order of the language pickers. */
-export const LANGS: Lang[] = ['en', 'fr', 'ja'];
+export const LANGS: Lang[] = ['en', 'fr', 'ja', 'ko'];
 
 const STORAGE_KEY = 'app_language';
 
-/** The device language when the app has it (French, Japanese), English otherwise. */
+/** The device language when the app has it (French, Japanese, Korean), English otherwise. */
 export function detectDeviceLang(): Lang {
   try {
     const code = getLocales()[0]?.languageCode;
-    return code === 'fr' || code === 'ja' ? code : 'en';
+    return code === 'fr' || code === 'ja' || code === 'ko' ? code : 'en';
   } catch {
     return 'en';
   }
@@ -24,25 +25,31 @@ export function detectDeviceLang(): Lang {
 
 /** BCP 47 tag for dates and numbers in the app language. */
 export function localeTag(lang: Lang): string {
-  return lang === 'fr' ? 'fr-FR' : lang === 'ja' ? 'ja-JP' : 'en-US';
+  return lang === 'fr' ? 'fr-FR' : lang === 'ja' ? 'ja-JP' : lang === 'ko' ? 'ko-KR' : 'en-US';
 }
 
 function initialLang(): Lang {
   const saved = storage.getString(STORAGE_KEY);
-  return saved === 'fr' || saved === 'en' || saved === 'ja' ? saved : detectDeviceLang();
+  return saved === 'fr' || saved === 'en' || saved === 'ja' || saved === 'ko' ? saved : detectDeviceLang();
 }
 
 export const lang$ = observable<Lang>(initialLang());
 
 lang$.onChange(({ value }) => storage.set(STORAGE_KEY, value));
 
-/** Whether the app started in Japanese (its pixel font is chosen at startup). */
-export const STARTED_IN_JAPANESE = lang$.peek() === 'ja';
+/** Script of a language's pixel font: Japanese and Korean have their own. */
+export type FontScript = 'latin' | 'ja' | 'ko';
+export function fontScript(l: Lang): FontScript {
+  return l === 'ja' || l === 'ko' ? l : 'latin';
+}
+
+/** Pixel font script the app started with (the font is chosen at startup). */
+export const STARTUP_FONT_SCRIPT = fontScript(lang$.peek());
 
 export function setLang(l: Lang): void {
   lang$.set(l);
-  // Japanese uses another pixel font, fixed at startup: restart to apply it.
-  if ((l === 'ja') !== STARTED_IN_JAPANESE) {
+  // Japanese and Korean use other pixel fonts, fixed at startup: restart to apply them.
+  if (fontScript(l) !== STARTUP_FONT_SCRIPT) {
     restartApp();
   }
 }
@@ -158,6 +165,7 @@ const FR = {
   lang_fr: '🇫🇷 Français',
   lang_en: '🇬🇧 English',
   lang_ja: '🇯🇵 日本語',
+  lang_ko: '🇰🇷 한국어',
   theme_active: 'ACTIF',
   settings_theme_locked_title: 'Thème verrouillé',
   settings_theme_locked_msg: 'Ce thème se débloque dans la Boutique, avec l’or gagné en validant tes quêtes.',
@@ -298,6 +306,7 @@ const FR = {
   tuto_done: "C'est parti !",
   tuto_skip: 'Passer le tutoriel',
   habit_swipe_done: '✓ FAIT',
+  habit_streak_days: '{n} j',
   habit_undo_title: 'Décocher cette quête ?',
   habit_undo_msg: '« {name} » repasse à faire. Les XP, l’or et la série gagnés avec cette validation sont retirés.',
   habit_undo_confirm: 'Décocher',
@@ -1219,6 +1228,9 @@ const FR = {
   duels_log_rally: ' Bonus de ralliement ! +{n} dégâts !',
   shop_unlock_level: 'Niveau {n} requis',
   shop_unlock_streak: 'Série de {n} jours requise',
+  duels_special_shield: 'bouclier',
+  duels_special_double: 'double',
+  duels_special_heal: 'soin',
 } as const;
 
 const EN = {
@@ -1330,6 +1342,7 @@ const EN = {
   lang_fr: '🇫🇷 Français',
   lang_en: '🇬🇧 English',
   lang_ja: '🇯🇵 日本語',
+  lang_ko: '🇰🇷 한국어',
   theme_active: 'ACTIVE',
   settings_theme_locked_title: 'Theme locked',
   settings_theme_locked_msg: 'Unlock this theme in the Shop with the gold you earn by completing quests.',
@@ -1470,6 +1483,7 @@ const EN = {
   tuto_done: "Let's go!",
   tuto_skip: 'Skip tutorial',
   habit_swipe_done: '✓ DONE',
+  habit_streak_days: '{n}d',
   habit_undo_title: 'Uncheck this quest?',
   habit_undo_msg: '"{name}" goes back to do. The XP, gold and streak earned with it are taken back.',
   habit_undo_confirm: 'Uncheck',
@@ -2391,11 +2405,14 @@ const EN = {
   duels_log_rally: ' Rally bonus! +{n} extra damage!',
   shop_unlock_level: 'Reach level {n}',
   shop_unlock_streak: '{n}-day streak',
+  duels_special_shield: 'shield',
+  duels_special_double: 'double',
+  duels_special_heal: 'heal',
 } as const;
 
 export type Strings = Record<keyof typeof FR, string>;
 
-const STRINGS: Record<Lang, Strings> = { fr: FR, en: EN, ja: JA };
+const STRINGS: Record<Lang, Strings> = { fr: FR, en: EN, ja: JA, ko: KO };
 
 /** Both dictionaries, for tests only. */
 export const STRINGS_FOR_TESTS = STRINGS;

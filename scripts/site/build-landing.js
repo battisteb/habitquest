@@ -1,7 +1,7 @@
 /**
  * Builds the landing page of the public site (GitHub Pages, docs/):
- * docs/index.html (English), docs/fr/index.html (French) and docs/ja/index.html
- * (Japanese), from one template.
+ * docs/index.html (English), docs/fr/index.html (French), docs/ja/index.html
+ * (Japanese) and docs/ko/index.html (Korean), from one template.
  *
  *   node scripts/site/build-landing.js
  *
@@ -63,7 +63,7 @@ const T = {
     faq: [
       ['Is HabitQuest free?', 'Yes. The whole game is free; Premium is an optional subscription that removes ads and adds extras. You can cancel it at any time in your App Store or Google Play settings.'],
       ['Which devices?', 'iPhone and Android phones, and any web browser. Your progress is saved to your account and follows you everywhere.'],
-      ['Which languages?', 'English, French and Japanese.'],
+      ['Which languages?', 'English, French, Japanese and Korean.'],
       ['What about my data?', 'Your habits are private. We use no analytics SDK and never sell your data. Read the <a href="privacy-policy">Privacy Policy</a>.'],
       ['I need help', 'Write to us from Settings → Support in the app, or see the <a href="support">Support page</a>.'],
     ],
@@ -122,7 +122,7 @@ const T = {
     faq: [
       ['HabitQuest est-il gratuit ?', 'Oui. Tout le jeu est gratuit ; Premium est un abonnement facultatif qui retire les publicités et ajoute des bonus. Tu peux le résilier à tout moment dans les réglages de l\'App Store ou de Google Play.'],
       ['Sur quels appareils ?', 'iPhone, téléphones Android et tout navigateur web. Ta progression est enregistrée sur ton compte et te suit partout.'],
-      ['Dans quelles langues ?', 'Français, anglais et japonais.'],
+      ['Dans quelles langues ?', 'Français, anglais, japonais et coréen.'],
       ['Et mes données ?', 'Tes habitudes sont privées. Aucun outil d\'analyse, aucune revente de données. Lis la <a href="../privacy-policy.fr">politique de confidentialité</a>.'],
       ['J\'ai besoin d\'aide', 'Écris-nous depuis Réglages → Support dans l\'app, ou consulte la <a href="../support.fr">page d\'aide</a>.'],
     ],
@@ -181,7 +181,7 @@ const T = {
     faq: [
       ['HabitQuestは無料ですか？', 'はい。ゲームはすべて無料で遊べます。プレミアムは広告を消して特典を追加する任意のプランで、App StoreまたはGoogle Playの設定からいつでも解約できます。'],
       ['どの端末で使えますか？', 'iPhone、Androidスマホ、そしてウェブブラウザ。進行状況はアカウントに保存され、どこでも続きから遊べます。'],
-      ['対応言語は？', '日本語、英語、フランス語。'],
+      ['対応言語は？', '日本語、英語、フランス語、韓国語。'],
       ['データは大丈夫？', '習慣は非公開です。分析ツールは使わず、データを販売することもありません。<a href="../privacy-policy.ja">プライバシーポリシー</a>をご覧ください。'],
       ['困ったときは', 'アプリの設定 → サポートからご連絡いただくか、<a href="../support.ja">サポートページ</a>をご覧ください。'],
     ],
@@ -201,6 +201,65 @@ const T = {
     screens: '../assets/screens/ja',
     badges: { ios: '../assets/badges/app-store-en.svg', android: '../assets/badges/google-play-en.png' },
     alts: { ios: 'App Storeからダウンロード', android: 'Google Playで手に入れよう' },
+  },
+  ko: {
+    lang: 'ko',
+    title: 'HabitQuest — 습관을 RPG로',
+    description: '픽셀 아트 습관 트래커: 매일 퀘스트를 달성하고, 연속 기록을 이어가고, 히어로를 키우고, 친구들과 겨뤄요. iPhone과 Android 지원.',
+    nav: { features: '기능', faq: '자주 묻는 질문', support: '고객 지원' },
+    badge: '습관 RPG',
+    h1: '습관을<br><em>퀘스트</em>로',
+    pipSays: '안녕, 나는 핍이야! 하루에 따라 색이 바뀌어.',
+    lead: '매일 퀘스트를 달성하고, 연속 기록을 이어가고, XP와 골드를 모아 픽셀 히어로를 키워요. 그리고 친구에게 도전!',
+    soon: '곧 출시',
+    web: '지금 브라우저에서 플레이',
+    featuresTitle: '<em>습관이 이어지는</em> 모든 장치',
+    featuresSub: '모든 습관이 퀘스트가 돼요. 꾸준히 한 날만큼 히어로가 강해져요.',
+    features: [
+      ['⚔️', '매일 퀘스트', '매일, 고른 요일, 주 몇 회 등 자유롭게. 카테고리와 템플릿 제공. 달성하면 XP와 골드를 받아요.'],
+      ['🔥', '다정한 연속 기록', '깜빡한 날은 주 1회 프리즈가 자동으로 지켜 줘요. 끊겨도 불이익 없음: 돌아온 날은 XP 2배, 48시간 안에는 복구도 가능.'],
+      ['🧙', '성장하는 히어로', '견습생부터 레전드까지 6개 등급. 32×32 픽셀 히어로를 상점의 모자, 의상, 아이템, 테마로 꾸며요.'],
+      ['🤺', '배틀과 챌린지', '친구의 히어로와 턴제 배틀. 협력 챌린지에서는 친구들과 함께 목표를 달성해요.'],
+      ['🏟️', '아레나', '하루 한 번, 같은 리그의 플레이어와 대결. 시즌마다 6개 리그를 올라가요.'],
+      ['👹', '이번 주 보스', '매주 나쁜 습관이 몬스터로. 퀘스트를 달성할 때마다 대미지를 주고 일요일까지 쓰러뜨려요.'],
+    ],
+    shotsTitle: '앱 <em>속</em>을 살짝 볼까요',
+    shots: [['today', '퀘스트'], ['profile', '히어로'], ['arena', '아레나'], ['stats', '성장 기록']],
+    stepsTitle: '플레이 <em>방법</em>',
+    steps: [
+      ['히어로 만들기', '외형과 첫 퀘스트를 1분 안에 골라요.'],
+      ['퀘스트 달성하기', '습관을 할 때마다 XP와 골드. 연속 기록도 이어져요.'],
+      ['레벨 업하고 즐기기', '장비를 열고, 미션과 업적을 깨고, 친구를 이겨요.'],
+    ],
+    premiumTitle: '기본 무료. 더 즐기려면 <em>프리미엄</em>',
+    freeTitle: '무료',
+    free: ['모든 퀘스트, 연속 기록, 히어로', '오늘의 미션과 23개의 업적', '배틀, 협력 챌린지, 아레나', '상점 기본 카탈로그'],
+    premiumName: '프리미엄 (선택)',
+    premium: ['광고 없음', '연속 기록 프리즈 토큰 추가', '연속 기록과 함께 자라는 드래곤 동료와 매달 한정 아이템', '전체 기간 통계', '상점의 모든 아이템과 한정판', '우선 고객 지원 (48시간 이내)'],
+    faqTitle: '자주 묻는 질문',
+    faq: [
+      ['HabitQuest는 무료인가요?', '네. 게임은 모두 무료로 즐길 수 있어요. 프리미엄은 광고를 없애고 혜택을 더하는 선택 플랜이고, App Store 또는 Google Play 설정에서 언제든 해지할 수 있어요.'],
+      ['어떤 기기에서 쓸 수 있나요?', 'iPhone, Android 스마트폰, 그리고 웹 브라우저. 진행 상황은 계정에 저장돼서 어디서든 이어서 할 수 있어요.'],
+      ['지원 언어는?', '한국어, 영어, 프랑스어, 일본어.'],
+      ['내 데이터는 안전한가요?', '습관은 비공개예요. 분석 도구를 쓰지 않고, 데이터를 판매하지도 않아요. <a href="../privacy-policy.ko">개인정보 처리방침</a>을 확인해 주세요.'],
+      ['도움이 필요하면?', '앱의 설정 → 고객 지원으로 연락하거나 <a href="../support.ko">고객 지원 페이지</a>를 확인해 주세요.'],
+    ],
+    ctaTitle: '모험은 <em>오늘</em> 시작돼요',
+    waitlist: {
+      title: '출시 소식 받기',
+      email: '이메일 주소',
+      consent: 'HabitQuest가 App Store와 Google Play에 출시되면 이메일 1통을 받는 데 동의해요. 스팸은 없고, 언제든 취소할 수 있어요.',
+      button: '알려 주세요',
+      ok: '등록했어요! 출시되면 이메일로 알려 드릴게요.',
+      error: '잘 안 됐어요. 이메일 주소를 확인하고 다시 시도해 주세요.',
+      privacy: '개인정보 처리방침',
+    },
+    footer: { support: '고객 지원', privacy: '개인정보 처리방침', terms: '이용약관', contact: '문의', rights: 'HabitQuest. ⚔️ 와 픽셀 아트로 만들었어요.' },
+    links: { privacy: '../privacy-policy.ko', terms: '../terms.ko', support: '../support.ko' },
+    assets: '../assets',
+    screens: '../assets/screens/ko',
+    badges: { ios: '../assets/badges/app-store-en.svg', android: '../assets/badges/google-play-en.png' },
+    alts: { ios: 'App Store에서 다운로드', android: 'Google Play에서 다운로드' },
   },
 };
 
@@ -233,11 +292,11 @@ function storeBadges(t) {
   return `<div class="stores">${one('ios', 'as')}${one('android', 'gp')}</div>`;
 }
 
-/** Links to the two other languages of the landing page (from the page of `lang`). */
+/** Links to the other languages of the landing page (from the page of `lang`). */
 function otherLangs(lang) {
   const root = lang === 'en' ? '' : '../';
-  const home = { en: root || './', fr: `${root}fr/`, ja: `${root}ja/` };
-  return ['en', 'fr', 'ja'].filter((l) => l !== lang).map((l) => [l, home[l]]);
+  const home = { en: root || './', fr: `${root}fr/`, ja: `${root}ja/`, ko: `${root}ko/` };
+  return ['en', 'fr', 'ja', 'ko'].filter((l) => l !== lang).map((l) => [l, home[l]]);
 }
 
 function page(t) {
@@ -256,9 +315,9 @@ function page(t) {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0D0D1A">
 <link rel="icon" href="${a}/icon.png">
-<link rel="alternate" hreflang="en" href="/"><link rel="alternate" hreflang="fr" href="/fr/"><link rel="alternate" hreflang="ja" href="/ja/">
+<link rel="alternate" hreflang="en" href="/"><link rel="alternate" hreflang="fr" href="/fr/"><link rel="alternate" hreflang="ja" href="/ja/"><link rel="alternate" hreflang="ko" href="/ko/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jersey+10${t.lang === 'ja' ? '&family=DotGothic16' : ''}&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10${t.lang === 'ja' ? '&family=DotGothic16' : ''}&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">${t.lang === 'ko' ? '\n<link href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css" rel="stylesheet">' : ''}
 <link rel="stylesheet" href="${a}/site.css">
 <script src="${a}/site.js" defer></script>
 <script src="${a}/waitlist.js" defer></script>
@@ -353,4 +412,6 @@ fs.mkdirSync(path.join(docs, 'fr'), { recursive: true });
 fs.writeFileSync(path.join(docs, 'fr', 'index.html'), page(T.fr));
 fs.mkdirSync(path.join(docs, 'ja'), { recursive: true });
 fs.writeFileSync(path.join(docs, 'ja', 'index.html'), page(T.ja));
-console.log('docs/index.html, docs/fr/index.html, docs/ja/index.html');
+fs.mkdirSync(path.join(docs, 'ko'), { recursive: true });
+fs.writeFileSync(path.join(docs, 'ko', 'index.html'), page(T.ko));
+console.log('docs/index.html, docs/fr/index.html, docs/ja/index.html, docs/ko/index.html');

@@ -156,7 +156,7 @@ serve(async (req: Request) => {
     if (tokensError) {
       throw new Error(`Failed to fetch push tokens: ${tokensError.message}`);
     }
-    const langOf = new Map(profiles.map((p) => [p.id, p.language === 'fr' || p.language === 'ja' ? p.language : 'en'] as const));
+    const langOf = new Map(profiles.map((p) => [p.id, p.language === 'fr' || p.language === 'ja' || p.language === 'ko' ? p.language : 'en'] as const));
     const messages: ExpoPushMessage[] = [];
     for (const row of tokensData ?? []) {
       const pushToken = row.token;

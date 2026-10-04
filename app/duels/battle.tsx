@@ -209,7 +209,7 @@ function AttackBtn({
         <Text style={atk_s.name}>{attackName(T, attack)}</Text>
         <Text style={atk_s.stats}>
           💥 {attack.baseDamage} · 🎯 {Math.round(attack.hitChance * 100)}%
-          {attack.special ? `  ★ ${attack.special}` : ''}
+          {attack.special ? `  ★ ${T[`duels_special_${attack.special}`]}` : ''}
         </Text>
       </View>
       {selected && <Text style={atk_s.check}>✓</Text>}
