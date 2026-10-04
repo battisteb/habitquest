@@ -20,7 +20,7 @@ import { colors, spacing, fontSizes, fonts, pixelSize } from '../../src/ui/theme
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT, lang$ } from '../../src/lib/i18n';
 import { use$ } from '@legendapp/state/react';
-import { HABIT_TEMPLATES, type HabitTemplate } from '../../src/lib/constants/habit-templates';
+import { HABIT_TEMPLATES, templateName as nameIn, type HabitTemplate } from '../../src/lib/constants/habit-templates';
 import { categoryLabel } from '../../src/lib/i18n/labels';
 
 /** One-tap ideas shown under the name (full list: templates screen). */
@@ -70,7 +70,7 @@ export default function CreateHabitScreen() {
   const { templateId } = useLocalSearchParams<{ templateId?: string }>();
 
   const prefilledTemplate = templateId ? HABIT_TEMPLATES.find((t) => t.id === templateId) : null;
-  const templateName = (t: HabitTemplate) => (lang === 'fr' ? t.name_fr : t.name_en);
+  const templateName = (t: HabitTemplate) => nameIn(t, lang);
   const ideas = useMemo(
     () => IDEA_IDS.map((id) => HABIT_TEMPLATES.find((t) => t.id === id)).filter((t): t is HabitTemplate => !!t),
     [],
