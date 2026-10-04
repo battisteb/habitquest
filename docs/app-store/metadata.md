@@ -1,6 +1,6 @@
 # HabitQuest — Store listing (English)
 
-Base listing for App Store Connect and Google Play. Other languages: `metadata.fr.md`, `metadata.de.md`, `metadata.pt-BR.md`, `metadata.ja.md`. Keep them in sync when a feature changes. Limits are in characters (App Store keywords: bytes).
+Base listing for App Store Connect and Google Play. Other languages: `metadata.fr.md`, `metadata.de.md`, `metadata.pt-BR.md`, `metadata.ja.md`, `metadata.ko.md`. Keep them in sync when a feature changes. Limits are in characters (App Store keywords: bytes).
 
 ## App name (30)
 HabitQuest: Habit Tracker RPG

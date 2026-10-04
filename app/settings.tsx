@@ -176,7 +176,7 @@ export default function SettingsScreen() {
               onPress={() => setLang(l)}
             >
               <Text style={[styles.langBtnText, currentLang === l && styles.langBtnTextActive]}>
-                {l === 'fr' ? T.lang_fr : l === 'ja' ? T.lang_ja : T.lang_en}
+                {{ fr: T.lang_fr, en: T.lang_en, ja: T.lang_ja, ko: T.lang_ko }[l]}
               </Text>
             </Pressable>
           ))}

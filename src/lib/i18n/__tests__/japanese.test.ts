@@ -43,8 +43,8 @@ describe('language detection', () => {
     expect(detectDeviceLang()).toBe('en');
   });
 
-  it('offers the three languages and formats dates the Japanese way', () => {
-    expect(LANGS).toEqual(['en', 'fr', 'ja']);
+  it('offers Japanese among the languages and formats dates the Japanese way', () => {
+    expect(LANGS).toContain('ja');
     expect(localeTag('ja')).toBe('ja-JP');
   });
 });

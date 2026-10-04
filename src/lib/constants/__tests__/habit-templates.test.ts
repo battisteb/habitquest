@@ -5,10 +5,11 @@
 import { HABIT_TEMPLATES, templateName } from '../habit-templates';
 
 describe('quest templates', () => {
-  it('have a name in French, English and Japanese', () => {
+  it('have a name in French, English, Japanese and Korean', () => {
     for (const t of HABIT_TEMPLATES) {
-      expect([t.id, !!t.name_fr, !!t.name_en, !!t.name_ja]).toEqual([t.id, true, true, true]);
+      expect([t.id, !!t.name_fr, !!t.name_en, !!t.name_ja, !!t.name_ko]).toEqual([t.id, true, true, true, true]);
       expect(t.name_ja).not.toBe(t.name_en);
+      expect(t.name_ko).not.toBe(t.name_en);
     }
   });
 
@@ -17,5 +18,6 @@ describe('quest templates', () => {
     expect(templateName(read, 'fr')).toBe('Lire 20 min');
     expect(templateName(read, 'en')).toBe('Read 20 min');
     expect(templateName(read, 'ja')).toBe('20分読書');
+    expect(templateName(read, 'ko')).toBe('20분 독서');
   });
 });

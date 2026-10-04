@@ -6,7 +6,7 @@ base: privacy-policy
 
 # HabitQuest — Privacy Policy
 
-*Last updated: October 2, 2026*
+*Last updated: October 4, 2026*
 
 HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy explains what data the app collects, why, and the choices you have. Contact: **batto060504@gmail.com**.
 
@@ -57,7 +57,7 @@ Under the GDPR and similar laws, you can access, correct, export or delete your 
 
 ## 7. Children
 
-HabitQuest is not directed at children under 13 and we do not knowingly collect their data.
+HabitQuest is not directed at children under 13 (under 14 in South Korea, where the Personal Information Protection Act sets that age) and we do not knowingly collect their data.
 
 ## 8. Changes
 

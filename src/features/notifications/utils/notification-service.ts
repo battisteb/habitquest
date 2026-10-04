@@ -182,6 +182,7 @@ export async function scheduleWeeklyRecap(
   const RECAP = {
     fr: { done: (n: number) => `${n} habitudes faites`, streak: (n: number) => `🔥 Série de ${n} jours`, title: '📊 Récap de la semaine', more: ' — Continue !', empty: 'Une nouvelle semaine commence. Fais-en une bonne ! ⚔️' },
     en: { done: (n: number) => `${n} habits done`, streak: (n: number) => `🔥 ${n}-day best streak`, title: '📊 Weekly Recap', more: ' — Keep it up!', empty: 'A new week starts now. Make it count! ⚔️' },
+    ko: { done: (n: number) => `습관 ${n}개 달성`, streak: (n: number) => `🔥 최고 ${n}일 연속`, title: '📊 주간 리포트', more: ' — 이대로 계속!', empty: '새로운 한 주가 시작돼요. 멋진 한 주 보내요! ⚔️' },
     ja: { done: (n: number) => `${n}個の習慣を達成`, streak: (n: number) => `🔥 最高${n}日連続`, title: '📊 週間レポート', more: ' — この調子で！', empty: '新しい1週間のはじまり。いい週にしよう！ ⚔️' },
   }[lang$.get()];
 

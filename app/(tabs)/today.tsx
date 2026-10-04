@@ -63,6 +63,8 @@ function todayLabel(): string {
   const lang = lang$.get();
   // Japanese: 10月3日（土）
   if (lang === 'ja') return `${d.getMonth() + 1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`;
+  // Korean: 10월 4일 (토)
+  if (lang === 'ko') return `${d.getMonth() + 1}월 ${d.getDate()}일 (${'일월화수목금토'[d.getDay()]})`;
   const dayNames = lang === 'fr' ? DAY_NAMES_FR : DAY_NAMES_EN;
   const monthNames = lang === 'fr' ? MONTH_NAMES_FR : MONTH_NAMES_EN;
   return `${dayNames[d.getDay()].toUpperCase()} · ${d.getDate()} ${monthNames[d.getMonth()].toUpperCase()}`;

@@ -6,13 +6,13 @@ base: terms
 
 # HabitQuest — Terms of Use
 
-*Last updated: October 1, 2026*
+*Last updated: October 4, 2026*
 
 These terms apply to the HabitQuest app and website, published by **Battiste Boungo** ("we"). By creating an account you accept them. On the App Store, Apple's [Standard End User License Agreement](https://www.apple.com/legal/internet-services/itunes/dev/stdeula/) also applies.
 
 ## 1. Your account
 
-You must be at least 13 years old. Keep your password secret; you are responsible for what is done with your account. Your username must not impersonate someone, be offensive or contain personal data of others.
+You must be at least 13 years old (14 in South Korea, as required by its law). Keep your password secret; you are responsible for what is done with your account. Your username must not impersonate someone, be offensive or contain personal data of others.
 
 ## 2. Fair play
 

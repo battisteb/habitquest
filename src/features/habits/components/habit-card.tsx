@@ -194,7 +194,8 @@ export function HabitCard({
     color: colors.xp,
     fontFamily: fonts.bold,
     opacity: 0.8,
-  },
+  },
+
   miniChip: { borderWidth: 2, borderColor: colors.border, paddingHorizontal: 6, paddingVertical: 4, marginRight: spacing.sm },
   miniChipText: { color: colors.textSecondary, fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.xs), letterSpacing: 0.5 },
   checkButton: {
@@ -347,7 +348,7 @@ export function HabitCard({
                       </View>
                     ) : (
                       streakCount > 0 && (
-                        <Text style={styles.streak}>{flame} {streakCount}d</Text>
+                        <Text style={styles.streak}>{flame} {T.habit_streak_days.replace('{n}', String(streakCount))}</Text>
                       )
                     )}
                     {frequency === 'days' && (

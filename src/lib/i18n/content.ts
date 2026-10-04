@@ -1,7 +1,7 @@
 import type { Lang } from './index';
 
 /**
- * French and Japanese versions of the game content seeded in English in the database
+ * French, Japanese and Korean versions of the game content seeded in English in the database
  * (daily quest templates, achievements, shop items). Keys are stable
  * identifiers: quest title, achievement `key`, shop item name.
  * A missing entry falls back to the database text.
@@ -220,6 +220,112 @@ const SHOP_JA: Record<string, Text> = {
   'Royal Theme': { title: 'ロイヤルテーマ', description: '紫と金、王族のために' },
 };
 
+const QUESTS_KO: Record<string, Text> = {
+  'Easy Does It': { title: '천천히 가자', description: '습관 1개만 달성하면 끝' },
+  'First Step': { title: '첫걸음', description: '오늘 습관 1개 달성하기' },
+  'Morning Starter': { title: '좋은 출발', description: '아무 습관이나 달성해서 하루를 시작해요' },
+  'Quick Win': { title: '빠른 승리', description: '오늘 습관을 1개 이상 달성하기' },
+  'All In': { title: '올인', description: '같은 날 습관 4개 달성하기' },
+  'Habit Master': { title: '습관 마스터', description: '오늘 습관 5개 달성하기' },
+  'Streak Guardian': { title: '연속 기록 수호자', description: '모든 습관의 연속 기록 지키기' },
+  'XP Grinder': { title: 'XP 파밍', description: '오늘 100 XP 이상 얻기' },
+  'Double Down': { title: '더블', description: '습관 2개를 달성해서 의지를 증명해요' },
+  'Fitness Focus': { title: '운동 집중', description: '운동 습관 1개 달성하기' },
+  'Healthy Mind': { title: '건강한 마음', description: '건강 습관 1개 달성하기' },
+  'Knowledge Seeker': { title: '지식 탐구자', description: '공부 습관 1개 달성하기' },
+  'Steady Progress': { title: '꾸준한 전진', description: '오늘 습관 2개 달성하기' },
+  'Triple Threat': { title: '트리플', description: '오늘 습관 3개 달성하기' },
+  'XP Hunter': { title: 'XP 헌터', description: '오늘 30 XP 이상 얻기' },
+  'Inner Peace': { title: '마음의 평화', description: '마음챙김 습관 1개 달성하기' },
+  'Getting Things Done': { title: '해내기', description: '생산성 습관 1개 달성하기' },
+  'Eat Well': { title: '잘 먹기', description: '식단 습관 1개 달성하기' },
+  'Well Rested': { title: '푹 자기', description: '수면 습관 1개 달성하기' },
+  'Creative Spark': { title: '창작의 불꽃', description: '창작 습관 1개 달성하기' },
+  'Good Company': { title: '좋은 친구들', description: '관계 습관 1개 달성하기' },
+};
+
+const ACHIEVEMENTS_KO: Record<string, Text> = {
+  buy_1: { title: '첫 손님', description: '첫 아이템 구매하기' },
+  buy_5: { title: '수집가', description: '아이템 5개 보유하기' },
+  challenge_1: { title: '도전자', description: '첫 챌린지 끝내기' },
+  challenge_win_1: { title: '승자', description: '첫 챌린지에서 이기기' },
+  complete_1: { title: '첫걸음', description: '첫 습관 달성하기' },
+  complete_10: { title: '시동 걸림', description: '누적 10회 달성하기' },
+  complete_100: { title: '습관 기계', description: '누적 100회 달성하기' },
+  complete_50: { title: '노력가', description: '누적 50회 달성하기' },
+  complete_500: { title: '멈출 수 없어', description: '누적 500회 달성하기' },
+  equip_full: { title: '풀 장비', description: '슬롯 4개 모두 장착하기' },
+  friend_1: { title: '사교적', description: '첫 친구 추가하기' },
+  friend_5: { title: '리더', description: '친구 5명 만들기' },
+  level_10: { title: '챔피언의 길', description: '레벨 10 달성하기' },
+  level_5: { title: '성장하는 수련생', description: '레벨 5 달성하기' },
+  streak_100: { title: '백일의 영웅', description: '100일 연속 달성하기' },
+  streak_14: { title: '2주의 투사', description: '14일 연속 달성하기' },
+  streak_3: { title: '차근차근', description: '3일 연속 달성하기' },
+  streak_30: { title: '한 달의 달인', description: '30일 연속 달성하기' },
+  streak_7: { title: '일주일의 전사', description: '7일 연속 달성하기' },
+  xp_100: { title: 'XP 입문자', description: '누적 100 XP 얻기' },
+  xp_1000: { title: 'XP 베테랑', description: '누적 1000 XP 얻기' },
+  xp_500: { title: 'XP 헌터', description: '누적 500 XP 얻기' },
+  xp_5000: { title: 'XP 레전드', description: '누적 5000 XP 얻기' },
+};
+
+const SHOP_KO: Record<string, Text> = {
+  'Wooden Shield': { title: '나무 방패', description: '기본 방어' },
+  'Pumpkin Hat': { title: '호박 모자', description: '이달의 아이템 — 2026년 10월. 프리미엄 전용.' },
+  'Autumn Scarf': { title: '가을 목도리', description: '이달의 아이템 — 2026년 11월. 프리미엄 전용.' },
+  'Winter Hat': { title: '겨울 털모자', description: '이달의 아이템 — 2026년 12월. 프리미엄 전용.' },
+  'Adventurer Scarf': { title: '모험가의 목도리', description: '모험 중에도 따뜻하게' },
+  'Iron Shield': { title: '철 방패', description: '튼튼한 방패' },
+  'Steel Sword': { title: '강철 검', description: '믿음직한 칼날' },
+  'Magic Amulet': { title: '마법 부적', description: '힘으로 빛나요' },
+  'Royal Cape': { title: '왕실 망토', description: '바람에 휘날리는 붉은 망토' },
+  'Flame Sword': { title: '불꽃 검', description: '분노로 불타요' },
+  'Angel Wings': { title: '천사의 날개', description: '천상의 날개' },
+  'Celestial Wings': { title: '천공의 날개', description: '빛의 날개' },
+  'Mystic Aura': { title: '신비한 오라', description: '은은한 마법의 빛' },
+  Forest: { title: '숲', description: '평화로운 숲' },
+  Castle: { title: '성', description: '웅장한 성' },
+  'Ocean Depths': { title: '깊은 바다', description: '짙푸른 물속' },
+  'Sunset Peaks': { title: '노을 진 봉우리', description: '해 질 녘의 산' },
+  Volcano: { title: '화산', description: '타오르는 화산' },
+  'Ice Cavern': { title: '얼음 동굴', description: '얼어붙은 세계' },
+  'Neon City': { title: '네온 시티', description: '사이버펑크 거리' },
+  Starfield: { title: '별바다', description: '별들 한가운데서' },
+  'Adventurer Cap': { title: '모험가의 모자', description: '첫 모자' },
+  'Knight Helmet': { title: '기사의 투구', description: '튼튼한 철 투구' },
+  'Pirate Tricorn': { title: '해적 삼각모', description: '무시무시한 모자' },
+  'Wizard Hat': { title: '마법사 모자', description: '뾰족하고 신비로워요' },
+  'Viking Helm': { title: '바이킹 투구', description: '약탈자와 전사를 위해' },
+  'Samurai Kabuto': { title: '사무라이 투구', description: '명예와 규율' },
+  'Crown of Champions': { title: '챔피언의 왕관', description: '자격 있는 자에게만' },
+  'Frost Cape': { title: '서리 망토', description: 'Winter Arc 기간 한정 (10월~12월).' },
+  'Blossom Cape': { title: '꽃 망토', description: 'Spring Arc 기간 한정 (1월~3월).' },
+  'Sun Cape': { title: '태양 망토', description: 'Summer Arc 기간 한정 (4월~6월).' },
+  'Harvest Cape': { title: '수확 망토', description: 'Autumn Arc 기간 한정 (7월~9월).' },
+  'Crown of Seasons': { title: '사계절의 왕관', description: '사계절의 룬을 모두 모은 증표.' },
+  'Holy Halo': { title: '성스러운 후광', description: '빛의 고리' },
+  'Dragon Horns': { title: '드래곤 뿔', description: '전설의 드래곤 뿔' },
+  'Peasant Clothes': { title: '마을 사람 옷', description: '소박한 시작' },
+  'Leather Armor': { title: '가죽 갑옷', description: '가볍고 유연해요' },
+  'Forest Ranger': { title: '숲의 레인저', description: '자연과 함께' },
+  'Mage Robes': { title: '마도사의 로브', description: '마법이 깃든 천' },
+  'Ice Armor': { title: '얼음 갑옷', description: '마법으로 얼린 갑옷' },
+  'Crimson Battlegear': { title: '진홍의 전투복', description: '전투 속에서 단련됐어요' },
+  'Golden Plate': { title: '황금 갑옷', description: '눈부신 금빛 갑옷' },
+  'Royal Vestments': { title: '왕의 옷', description: '왕에게 어울리는' },
+  'Shadow Cloak': { title: '그림자 망토', description: '그림자로 짠 망토' },
+  'Medieval Kingdom': { title: '중세 왕국', description: '돌, 황금, 그리고 횃불.' },
+  'Forest Temple': { title: '숲의 신전', description: '오래된 나무와 짙은 초록.' },
+  'Lifestyle': { title: '라이프스타일', description: '깔끔하고 차분하게.' },
+  'Cyberpunk City': { title: '사이버펑크 시티', description: '네온과 밤거리.' },
+  'Ocean Theme': { title: '오션 테마', description: '차분한 파랑' },
+  'Forest Theme': { title: '포레스트 테마', description: '자연의 초록' },
+  'Sunset Theme': { title: '선셋 테마', description: '따뜻한 주황' },
+  'Neon Theme': { title: '네온 테마', description: '사이버펑크의 빛' },
+  'Royal Theme': { title: '로열 테마', description: '왕족을 위한 보라와 금' },
+};
+
 type Maps = Partial<Record<Lang, Record<string, Text>>>;
 
 function pick(maps: Maps, key: string, lang: Lang, fallback: Text): Text {
@@ -227,19 +333,19 @@ function pick(maps: Maps, key: string, lang: Lang, fallback: Text): Text {
 }
 
 export function questText(lang: Lang, template: { title: string; description: string }): Text {
-  return pick({ fr: QUESTS_FR, ja: QUESTS_JA }, template.title, lang, template);
+  return pick({ fr: QUESTS_FR, ja: QUESTS_JA, ko: QUESTS_KO }, template.title, lang, template);
 }
 
 export function achievementText(
   lang: Lang,
   achievement: { key?: string | null; name: string; description: string },
 ): Text {
-  return pick({ fr: ACHIEVEMENTS_FR, ja: ACHIEVEMENTS_JA }, achievement.key ?? '', lang, {
+  return pick({ fr: ACHIEVEMENTS_FR, ja: ACHIEVEMENTS_JA, ko: ACHIEVEMENTS_KO }, achievement.key ?? '', lang, {
     title: achievement.name,
     description: achievement.description,
   });
 }
 
 export function shopItemText(lang: Lang, item: { name: string; description?: string | null }): Text {
-  return pick({ fr: SHOP_FR, ja: SHOP_JA }, item.name, lang, { title: item.name, description: item.description ?? '' });
+  return pick({ fr: SHOP_FR, ja: SHOP_JA, ko: SHOP_KO }, item.name, lang, { title: item.name, description: item.description ?? '' });
 }

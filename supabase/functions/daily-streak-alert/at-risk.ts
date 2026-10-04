@@ -76,4 +76,5 @@ export const ALERT_TEXT = {
   en: { title: '⚡ Streak at risk!', body: 'Complete your quests before midnight to keep your streak alive!' },
   fr: { title: '⚡ Série en danger !', body: 'Valide tes quêtes avant minuit pour garder ta série !' },
   ja: { title: '⚡ 連続記録がピンチ！', body: '0時までにクエストを達成して、連続記録を守ろう！' },
+  ko: { title: '⚡ 연속 기록이 위험해요!', body: '자정 전에 퀘스트를 달성해서 연속 기록을 지켜요!' },
 };

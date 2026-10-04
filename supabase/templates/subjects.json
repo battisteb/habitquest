@@ -1,5 +1,5 @@
 {
-  "confirmation": "{{ if eq .Data.language \"fr\" }}Confirme ton compte HabitQuest ⚔️{{ else if eq .Data.language \"ja\" }}HabitQuestアカウントの確認 ⚔️{{ else }}Confirm your HabitQuest account ⚔️{{ end }}",
-  "recovery": "{{ if eq .Data.language \"fr\" }}Réinitialise ton mot de passe HabitQuest 🔑{{ else if eq .Data.language \"ja\" }}HabitQuestのパスワード再設定 🔑{{ else }}Reset your HabitQuest password 🔑{{ end }}",
-  "email_change": "{{ if eq .Data.language \"fr\" }}Confirme ta nouvelle adresse HabitQuest ✉️{{ else if eq .Data.language \"ja\" }}HabitQuestの新しいメールアドレスの確認 ✉️{{ else }}Confirm your new HabitQuest e-mail ✉️{{ end }}"
+  "confirmation": "{{ if eq .Data.language \"fr\" }}Confirme ton compte HabitQuest ⚔️{{ else if eq .Data.language \"ja\" }}HabitQuestアカウントの確認 ⚔️{{ else if eq .Data.language \"ko\" }}HabitQuest 계정을 확인해 주세요 ⚔️{{ else }}Confirm your HabitQuest account ⚔️{{ end }}",
+  "recovery": "{{ if eq .Data.language \"fr\" }}Réinitialise ton mot de passe HabitQuest 🔑{{ else if eq .Data.language \"ja\" }}HabitQuestのパスワード再設定 🔑{{ else if eq .Data.language \"ko\" }}HabitQuest 비밀번호 재설정 🔑{{ else }}Reset your HabitQuest password 🔑{{ end }}",
+  "email_change": "{{ if eq .Data.language \"fr\" }}Confirme ta nouvelle adresse HabitQuest ✉️{{ else if eq .Data.language \"ja\" }}HabitQuestの新しいメールアドレスの確認 ✉️{{ else if eq .Data.language \"ko\" }}HabitQuest 새 이메일 주소를 확인해 주세요 ✉️{{ else }}Confirm your new HabitQuest e-mail ✉️{{ end }}"
 }

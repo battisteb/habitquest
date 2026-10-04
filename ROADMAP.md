@@ -52,7 +52,7 @@
 - [x] Lighter app: one Pause screen (ADR 029), a progressive Today for new players, a two-tab Social screen, at most 2 reminders a day (ADR 026), a mission chest (ADR 028)
 
 ## 🔜 Phase 7 — Post-launch expansion
-- [x] Multi-language support: English, French and Japanese (app, site, e-mails, store listings)
+- [x] Multi-language support: English, French, Japanese and Korean (app, site, e-mails, store listings)
 - [x] Push notifications (habit reminders, duel invites), within a daily budget
 - [x] Full web version (habitquest.expo.app, shared `src/` logic)
 - [x] Additional PvP modes: arenas (6 leagues, 10-day seasons, daily fights, ADR 012) and co-op challenges (ADR 013)
