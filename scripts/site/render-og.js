@@ -16,19 +16,19 @@ const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; box-sizing: border-box; }
-  body { width: 1200px; height: 630px; overflow: hidden; position: relative; color: #e8e8ff;
-         background: radial-gradient(circle at 30% 40%, #3a4480 0%, #1e2448 55%, #12152e 100%); font-family: 'Silkscreen', monospace; }
-  body::before { content: ''; position: absolute; inset: 0; opacity: .12;
-                 background-image: linear-gradient(#fff 2px, transparent 2px), linear-gradient(90deg, #fff 2px, transparent 2px); background-size: 48px 48px; }
+  body { width: 1200px; height: 630px; overflow: hidden; position: relative; color: #14142a;
+         background: radial-gradient(circle at 30% 40%, #eaf5ff 0%, #cfe8ff 55%, #b3d8fb 100%); font-family: 'Silkscreen', monospace; }
+  body::before { content: ''; position: absolute; inset: 0; opacity: .08;
+                 background-image: linear-gradient(#2b3a6b 2px, transparent 2px), linear-gradient(90deg, #2b3a6b 2px, transparent 2px); background-size: 48px 48px; }
   .text { position: absolute; left: 72px; top: 92px; width: 660px; }
   .brand { display: flex; align-items: center; gap: 22px; }
   .brand img { width: 104px; height: 104px; image-rendering: pixelated; border: 5px solid #14142a; box-shadow: 8px 8px 0 #14142a; }
   .brand span { font-family: 'Press Start 2P'; font-size: 40px; }
-  h1 { font-family: 'Press Start 2P'; font-size: 50px; line-height: 1.45; margin-top: 52px; text-shadow: 5px 5px 0 #14142a; }
-  h1 em { font-style: normal; color: #f5c518; }
-  p { font-size: 24px; color: #a9b8ff; margin-top: 34px; }
+  h1 { font-family: 'Press Start 2P'; font-size: 50px; line-height: 1.45; margin-top: 52px; text-shadow: 4px 4px 0 #ffffff; }
+  h1 em { font-style: normal; color: #2f6fd6; }
+  p { font-size: 24px; color: #3d4775; margin-top: 34px; }
   .phone { position: absolute; right: 86px; top: 52px; width: 300px; height: 650px; border: 8px solid #14142a; background: #14142a;
-           box-shadow: 12px 12px 0 rgba(0,0,0,.45); transform: rotate(4deg); overflow: hidden; }
+           box-shadow: 12px 12px 0 #2f55c9; transform: rotate(4deg); overflow: hidden; }
   .phone img { width: 100%; display: block; }
 </style></head><body>
   <div class="text">

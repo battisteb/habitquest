@@ -11,10 +11,10 @@ import Animated, {
   Extrapolation,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize, isLightTheme } from '../../../ui/theme/tokens';
 import { calculateXpEarned } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
-import { PixelFrame, shade } from '../../../ui/components/pixel-frame';
+import { PixelFrame, mix, shade } from '../../../ui/components/pixel-frame';
 import { useTourTarget } from '../../onboarding/tour/tour-targets';
 import { getWeeklyTarget } from '../stores/habits-store';
 import { useTheme } from '../../../ui/theme/theme-context';
@@ -136,7 +136,7 @@ export function HabitCard({
   },
   containerDone: {
     // Validated: green frame (see PixelFrame below) on a green-tinted face.
-    backgroundColor: shade(colors.success, 0.3),
+    backgroundColor: isLightTheme() ? mix(colors.success, '#ffffff', 0.84) : shade(colors.success, 0.3),
   },
   categoryBar: { width: 4 },
   content: {

@@ -88,8 +88,35 @@ function daylight(cols: number): SceneRect[] {
   return rects;
 }
 
+function cloud(x: number, y: number, w: number): SceneRect[] {
+  return [[x, y, w, 2, '#ffffff'], [x + 1, y - 1, w - 3, 1, '#ffffff'], [x + 1, y + 2, w - 2, 1, '#e3f1ff']];
+}
+
+/** Pip's Sky: blue sky with pixel clouds over a green meadow. */
+function sky(cols: number): SceneRect[] {
+  const rects = base(cols, '#8fcbff', '#b7e0ff', '#7fd492', '#4fb86a');
+  rects.push([0, 0, cols, 6, '#7bbcf5']);
+  rects.push(...cloud(Math.round(cols * 0.08), 6, 7), ...cloud(Math.round(cols * 0.55), 3, 9), ...cloud(Math.round(cols * 0.78), 11, 6));
+  for (let x = 0; x < cols; x += 11) rects.push([x, HORIZON - 3 - hash(x, 3), Math.min(11, cols - x), 3 + hash(x, 3), '#9fdcae']);
+  for (let x = 3; x < cols; x += 7) rects.push([x, HORIZON + 3 + hash(x, 6), 1, 1, hash(x, 2) ? '#ffffff' : '#ffd84a']);
+  return rects;
+}
+
+/** Pastel Dawn: pink and peach sunrise over lavender hills. */
+function dawn(cols: number): SceneRect[] {
+  const rects = base(cols, '#f6d6f2', '#ffd9c7', '#d9c9ff', '#b9a0ff');
+  rects.push([0, 0, cols, 7, '#e8c8f5']);
+  const sun = Math.round(cols * 0.72);
+  rects.push([sun, HORIZON - 7, 6, 4, '#ffb38a'], [sun + 1, HORIZON - 8, 4, 1, '#ffb38a']);
+  rects.push(...cloud(Math.round(cols * 0.12), 7, 7));
+  for (let x = 0; x < cols; x += 10) rects.push([x, HORIZON - 3 - hash(x, 3), Math.min(10, cols - x), 3 + hash(x, 3), '#c7b2f5']);
+  return rects;
+}
+
 const SCENES: Record<ThemeKey, (cols: number) => SceneRect[]> = {
-  default: dungeon,
+  default: sky,
+  dungeon,
+  dawn,
   medieval: castle,
   cyberpunk: city,
   nature: forest,

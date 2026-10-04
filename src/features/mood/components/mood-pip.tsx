@@ -8,7 +8,7 @@ import type { PipExpression, PipMood } from '../../mascot/sprites';
 import { localDateKey } from '../../../lib/local-date';
 import { hapticLight } from '../../../lib/haptics';
 import { useT } from '../../../lib/i18n';
-import { colors, fontSizes, spacing } from '../../../ui/theme/tokens';
+import { colors, fontSizes, isLightTheme, spacing } from '../../../ui/theme/tokens';
 
 /** Pip wears the player's mood of the day (1 = bad … 5 = great). */
 export const MOOD_PIP: Record<number, { expression: PipExpression; mood: PipMood }> = {
@@ -102,7 +102,7 @@ export function MoodPip({ children }: { children: ReactNode }) {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.xs },
   text: { flex: 1, gap: 3 },
-  pipLine: { color: colors.background, fontSize: fontSizes.xs, fontStyle: 'italic', opacity: 0.85 },
+  pipLine: { color: isLightTheme() ? colors.textSecondary : colors.background, fontSize: fontSizes.xs, fontStyle: 'italic', opacity: 0.85 },
   faces: { flexDirection: 'row', gap: 4 },
   face: { flex: 1, alignItems: 'center', paddingVertical: 2, borderWidth: 2, borderColor: 'transparent' },
   faceSelected: { borderColor: colors.primary },

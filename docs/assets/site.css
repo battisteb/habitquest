@@ -1,23 +1,25 @@
 /* HabitQuest public site — pixel art direction of the app (ADR 011). */
 :root {
-  --bg: #0D0D1A; --surface: #1A1A2E; --surface-2: #22223A; --border: #2D2D4E;
-  --primary: #6C63FF; --primary-dark: #4A44B3; --accent: #FFD700;
-  --text: #E8E8FF; --text-2: #9999CC; --muted: #6E6E9A; --px: 4px;
+  /* Pip's Sky, the app's default theme (ADR 030): light sky, white cards, dark pixel outline.
+     --accent fills (buttons, tags), --ink colors highlighted text and links. */
+  --bg: #CFE8FF; --surface: #FFFFFF; --surface-2: #E6F3FF; --border: #2B3A6B;
+  --primary: #4F7BFF; --primary-dark: #2F55C9; --accent: #FFC93C; --ink: #2F6FD6;
+  --text: #14142A; --text-2: #3D4775; --muted: #5E6A9C; --px: 4px;
 }
 * { box-sizing: border-box; margin: 0; }
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 17px; line-height: 1.6;
-  background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(43,58,107,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(43,58,107,.07) 1px, transparent 1px);
   background-size: 32px 32px;
 }
-a { color: var(--accent); }
+a { color: var(--ink); }
 img { max-width: 100%; display: block; image-rendering: auto; }
 .pixel { font-family: 'Jersey 10', 'DotGothic16', 'Galmuri11', monospace; font-weight: 400; letter-spacing: .02em; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
 /* Header */
-.top { position: sticky; top: 0; z-index: 10; background: rgba(13,13,26,.92); backdrop-filter: blur(6px); border-bottom: var(--px) solid var(--border); }
+.top { position: sticky; top: 0; z-index: 10; background: rgba(207,232,255,.92); backdrop-filter: blur(6px); border-bottom: var(--px) solid var(--border); }
 .top .wrap { display: flex; align-items: center; gap: 16px; height: 68px; }
 .brand { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; font-size: 30px; }
 .brand img { width: 40px; height: 40px; border: 3px solid var(--border); image-rendering: pixelated; }
@@ -29,9 +31,9 @@ img { max-width: 100%; display: block; image-rendering: auto; }
 /* Hero */
 .hero { padding: 72px 0 56px; }
 .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
-.badge { display: inline-block; font-size: 22px; color: var(--accent); border: var(--px) solid var(--accent); padding: 0 12px; background: rgba(255,215,0,.08); }
+.badge { display: inline-block; font-size: 22px; color: var(--ink); border: var(--px) solid var(--ink); padding: 0 12px; background: rgba(47,111,214,.08); }
 .hero h1 { font-size: clamp(52px, 6.4vw, 84px); line-height: .92; margin: 22px 0 18px; }
-.hero h1 em, h2 em { font-style: normal; color: var(--accent); }
+.hero h1 em, h2 em { font-style: normal; color: var(--ink); }
 .hero p.lead { font-size: 20px; color: var(--text-2); max-width: 520px; }
 .stores { display: flex; flex-wrap: wrap; gap: 30px 16px; align-items: center; margin-top: 44px; }
 .store { position: relative; display: block; height: 56px; }
@@ -66,7 +68,7 @@ h2 { font-size: clamp(40px, 5vw, 60px); line-height: 1; margin-bottom: 14px; }
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step; }
 .step { border-left: var(--px) solid var(--primary); padding: 6px 0 6px 18px; }
 .step b { display: block; font-family: 'Jersey 10', 'DotGothic16', 'Galmuri11', monospace; font-weight: 400; font-size: 28px; line-height: 1.1; }
-.step b::before { counter-increment: step; content: counter(step) ". "; color: var(--accent); }
+.step b::before { counter-increment: step; content: counter(step) ". "; color: var(--ink); }
 .step span { color: var(--text-2); font-size: 15.5px; }
 .premium { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .premium ul { padding-left: 20px; color: var(--text-2); }
@@ -89,7 +91,7 @@ footer a:hover { color: var(--text); }
 .page h1 { font-family: 'Jersey 10', 'DotGothic16', 'Galmuri11', monospace; font-weight: 400; font-size: 54px; line-height: 1; margin: 8px 0 18px; }
 .page h2 { font-size: 36px; margin: 34px 0 10px; }
 .page h1 + p em, .page > p > em:only-child { color: var(--muted); }
-.page p, .page li { color: #C9C9EE; margin-bottom: 12px; }
+.page p, .page li { color: var(--text-2); margin-bottom: 12px; }
 .page ul, .page ol { padding-left: 22px; }
 .page hr { border: 0; border-top: var(--px) solid var(--border); margin: 44px 0; }
 .page table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 15px; }
@@ -126,17 +128,17 @@ footer a:hover { color: var(--text); }
   transform: translate(-5px, -5px); border-color: var(--primary);
   box-shadow: 0 0 0 var(--px) #000, 16px 16px 0 4px var(--primary-dark), 0 0 36px rgba(108,99,255,.35);
 }
-.shots figure:hover figcaption { color: var(--accent); }
+.shots figure:hover figcaption { color: var(--ink); }
 .step:hover { transform: translateX(6px); border-left-color: var(--accent); background: linear-gradient(90deg, rgba(255,215,0,.08), transparent 70%); }
 .step:hover b::before { color: var(--primary); }
 details:hover, details[open] { border-color: var(--primary); box-shadow: 6px 6px 0 #000, 0 0 22px rgba(108,99,255,.18); }
-summary:hover { color: var(--accent); }
+summary:hover { color: var(--ink); }
 .cta:hover { box-shadow: 0 0 0 2px rgba(108,99,255,.4), 0 0 44px rgba(108,99,255,.25); }
 a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 #000) drop-shadow(0 0 12px rgba(255,215,0,.35)); }
 .lang:hover { border-color: var(--accent); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 #000; }
 .brand:hover img { border-color: var(--accent); transform: rotate(-6deg); }
 .badge:hover { background: rgba(255,215,0,.18); box-shadow: 0 0 18px rgba(255,215,0,.3); }
-.web a:hover, footer a:hover { color: var(--accent); }
+.web a:hover, footer a:hover { color: var(--ink); }
 .hero .phone { animation: float 5s ease-in-out infinite; }
 .hero .phone:hover { animation-play-state: paused; }
 
@@ -156,7 +158,7 @@ a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 
 .hero-art { position: relative; justify-self: center; }
 .hero .hero-art .phone { max-width: 300px; }
 .pip { position: absolute; left: -190px; bottom: 40px; display: grid; justify-items: center; gap: 8px; }
-.pip-says { order: -1; max-width: 170px; background: var(--text); color: var(--bg); font-size: 13px; line-height: 1.35; font-weight: 600; padding: 8px 10px; border: 3px solid #000; box-shadow: 4px 4px 0 #000; }
+.pip-says { order: -1; max-width: 170px; background: var(--surface); color: var(--text); font-size: 13px; line-height: 1.35; font-weight: 600; padding: 8px 10px; border: 3px solid #000; box-shadow: 4px 4px 0 #000; }
 .pip-sprite { position: relative; width: 96px; height: 96px; animation: pip-hop 1.4s ease-in-out infinite; transform-origin: 50% 100%; }
 .pip-sprite img { position: absolute; inset: 0; image-rendering: pixelated; opacity: 0; animation: pip-mood 12s steps(1, end) infinite; }
 .pip-sprite img:nth-child(1) { animation-delay: 0s; } .pip-sprite img:nth-child(2) { animation-delay: 2s; }
@@ -181,7 +183,7 @@ a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 
 .waitlist-consent { display: flex; gap: 10px; align-items: flex-start; color: var(--text-2); font-size: 14px; }
 .waitlist-consent input { margin-top: 4px; accent-color: var(--accent); }
 .waitlist-msg { min-height: 1.4em; margin: 0; font-weight: 600; text-align: center; }
-.waitlist-msg.ok { color: #5BE38C; } .waitlist-msg.error { color: #FF8F8F; }
+.waitlist-msg.ok { color: #2FA35E; } .waitlist-msg.error { color: #E8505B; }
 .hp, .sr { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 /* Web demo: the main call to action until the apps are in the stores. */

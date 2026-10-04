@@ -9,7 +9,7 @@ import { authStore$ } from '../../auth/stores/auth-store';
 import { heroLine, heroText } from '../utils/hero-line';
 import { PixelFrame } from '../../../ui/components/pixel-frame';
 import { useTourTarget } from '../../onboarding/tour/tour-targets';
-import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
+import { colors, spacing, fontSizes, isLightTheme } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 import { MoodPip } from '../../mood/components/mood-pip';
@@ -66,7 +66,7 @@ export function HeroGreeting({ totalHabits, restDay, pendingStreaks, xp, level, 
       <PixelFrame
         style={styles.bubble}
         borderColor={colors.text}
-        backgroundColor={colors.text}
+        backgroundColor={isLightTheme() ? colors.surface : colors.text}
         contentStyle={styles.bubbleFace}
       >
         {showMood ? (
@@ -93,6 +93,6 @@ function createStyles() {
     portrait: { width: 58, height: 58, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
     bubble: { flex: 1, marginBottom: spacing.sm },
     bubbleFace: { paddingHorizontal: spacing.sm, paddingVertical: spacing.xs + 2 },
-    bubbleText: { color: colors.background, fontSize: fontSizes.sm, fontWeight: '500', lineHeight: 17 },
+    bubbleText: { color: isLightTheme() ? colors.text : colors.background, fontSize: fontSizes.sm, fontWeight: '500', lineHeight: 17 },
   });
 }
