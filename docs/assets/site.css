@@ -101,14 +101,15 @@ footer a:hover { color: var(--text); }
   .hero .phone { max-width: 250px; }
   .grid, .steps, .premium { grid-template-columns: 1fr; }
   .shots { grid-template-columns: repeat(2, minmax(0, 160px)); gap: 32px 36px; }
-  .nav a:not(.lang) { display: none; }
+  .nav a:not(.lang):not(.nav-play) { display: none; }
 }
-/* Phones: three language buttons and the brand on one line. */
+/* Phones: Pip, the Play button and three language buttons on one line. */
 @media (max-width: 480px) {
-  .brand { font-size: 24px; gap: 8px; }
+  .brand { font-size: 0; gap: 0; } /* Pip alone: the Play button needs the room */
   .brand img { width: 32px; height: 32px; }
   .nav { gap: 6px; }
   .lang { padding: 2px 6px; }
+  .nav-play { padding: 2px 8px 4px; font-size: 19px !important; }
 }
 
 /* Motion: hover lifts important elements with a hard pixel shadow and a lit
@@ -182,3 +183,16 @@ a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 
 .waitlist-msg { min-height: 1.4em; margin: 0; font-weight: 600; text-align: center; }
 .waitlist-msg.ok { color: #5BE38C; } .waitlist-msg.error { color: #FF8F8F; }
 .hp, .sr { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Web demo: the main call to action until the apps are in the stores. */
+.demo { margin-top: 34px; }
+.demo p { margin-top: 14px; font-size: 15px; color: var(--text-2); max-width: 460px; }
+.cta .demo { margin-top: 24px; }
+.cta .demo p { margin-left: auto; margin-right: auto; }
+.play { display: inline-block; font-size: 38px; line-height: 1; padding: 18px 34px 20px; color: #14142a; background: var(--accent);
+        text-decoration: none; border: var(--px) solid #14142a; box-shadow: 0 0 0 var(--px) var(--accent), 8px 8px 0 4px #000;
+        transition: transform .08s, box-shadow .08s; }
+.play:hover { transform: translate(-2px, -2px); box-shadow: 0 0 0 var(--px) var(--accent), 11px 11px 0 4px #000; }
+.play:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--px) var(--accent), 3px 3px 0 4px #000; }
+.nav-play { white-space: nowrap; color: #14142a !important; background: var(--accent); padding: 3px 14px 5px; font-size: 22px !important; border: 3px solid #14142a; }
+.nav-play:hover { filter: brightness(1.1); }
