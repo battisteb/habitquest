@@ -10,6 +10,8 @@ import { useT } from '../../../lib/i18n';
 import { hitsToDefeat } from '../../../lib/constants/game-config';
 import { BOSS_GRID, BOSS_PALETTES, BOSS_SPRITES, type BossKey } from '../sprites';
 import { fetchWeeklyBoss, type WeeklyBoss } from '../api';
+import { useTileStyles } from '../../../ui/components/goal-tile';
+import { showDialog } from '../../../lib/app-alert';
 
 function BossSprite({ bossKey, size, defeated }: { bossKey: BossKey; size: number; defeated: boolean }) {
   const parts = useMemo(() => strips(BOSS_SPRITES[bossKey], BOSS_PALETTES[bossKey]), [bossKey]);
@@ -30,10 +32,11 @@ function BossSprite({ bossKey, size, defeated }: { bossKey: BossKey; size: numbe
  * The boss of the week (I9) on the Quests screen: one compact line with its
  * HP; a tap shows its story. It shakes when a validated quest hits it.
  */
-export function BossCard() {
+export function BossCard({ variant = 'line' }: { variant?: 'line' | 'tile' }) {
   const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
+  const tileStyles = useTileStyles();
   const [boss, setBoss] = useState<WeeklyBoss | null>(null);
   const [open, setOpen] = useState(false);
   const shake = useRef(new Animated.Value(0)).current;
@@ -67,6 +70,33 @@ export function BossCard() {
   const left = Math.max(0, boss.hp_max - boss.damage);
   const pct = boss.hp_max > 0 ? left / boss.hp_max : 0;
   const hits = hitsToDefeat(boss.hp_max, boss.damage);
+  const rule = boss.defeated
+    ? T.boss_next_week
+    : T.boss_rule.replace('{n}', String(hits))
+        .replace('{xp}', String(boss.reward_xp)).replace('{gold}', String(boss.reward_gold));
+
+  if (variant === 'tile') {
+    const border = boss.defeated ? colors.success : colors.danger;
+    return (
+      <Pressable
+        onPress={() => showDialog(name, `${T[`boss_${boss.boss_key}_story`]}\n\n${rule}`)}
+        style={[tileStyles.tile, { borderColor: border }]}
+        accessibilityRole="button"
+        testID="boss-card"
+      >
+        <View style={tileStyles.top}>
+          <Animated.View style={{ transform: [{ translateX: shake }] }}>
+            <BossSprite bossKey={boss.boss_key} size={20} defeated={boss.defeated} />
+          </Animated.View>
+          <Text style={[tileStyles.label, { color: border }]} numberOfLines={1}>{T.boss_tile}</Text>
+        </View>
+        <Text style={tileStyles.value} testID="boss-hp">{boss.defeated ? '✓' : `${Math.round(pct * 100)}%`}</Text>
+        <View style={styles.hpTrack}>
+          <View style={[styles.hpFill, { width: `${Math.round(pct * 100)}%` }]} />
+        </View>
+      </Pressable>
+    );
+  }
 
   return (
     <Pressable onPress={() => setOpen((o) => !o)} accessibilityRole="button" accessibilityState={{ expanded: open }} testID="boss-card">
@@ -96,12 +126,7 @@ export function BossCard() {
         {open && (
           <View style={styles.more}>
             <Text style={styles.story}>{T[`boss_${boss.boss_key}_story`]}</Text>
-            <Text style={styles.rule}>
-              {boss.defeated
-                ? T.boss_next_week
-                : T.boss_rule.replace('{n}', String(hits))
-                    .replace('{xp}', String(boss.reward_xp)).replace('{gold}', String(boss.reward_gold))}
-            </Text>
+            <Text style={styles.rule}>{rule}</Text>
           </View>
         )}
       </PixelFrame>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTileStyles } from '../../../ui/components/goal-tile';
 import { useRouter } from 'expo-router';
 import { use$ } from '@legendapp/state/react';
 import { habitsStore$ } from '../../habits/stores/habits-store';
@@ -38,10 +39,14 @@ function announce(T: Strings, arc: ArcState) {
   if (arc.rune_new || arc.four_seasons_reward) refreshProfile();
 }
 
-/** The season's arc on the Quests screen: one compact line, a tap opens it. */
-export function ArcBanner() {
+/**
+ * The season's arc on the Quests screen: one compact line (or a tile of the
+ * goals row), a tap opens it.
+ */
+export function ArcBanner({ variant = 'line' }: { variant?: 'line' | 'tile' }) {
   const T = useT();
   const router = useRouter();
+  const tileStyles = useTileStyles();
   const [arc, setArc] = useState<ArcState | null>(null);
   const completions = use$(habitsStore$.todayCompletions);
   const doneToday = Object.values(completions).filter(Boolean).length;
@@ -64,6 +69,21 @@ export function ArcBanner() {
 
   if (!arc) return null;
   const color = RUNE_PALETTES[arc.season].s;
+  const progress = Math.min(1, arc.good_weeks / arc.target);
+  if (variant === 'tile') {
+    return (
+      <Pressable onPress={() => router.push('/arc')} style={[tileStyles.tile, { borderColor: color }]} accessibilityRole="button" testID="arc-banner">
+        <View style={tileStyles.top}>
+          <Rune season={arc.season} size={20} earned={arc.rune_earned} />
+          <Text style={[tileStyles.label, { color }]} numberOfLines={1}>{T[`arc_name_${arc.season}`]}</Text>
+        </View>
+        <Text style={tileStyles.value}>
+          {arc.rune_earned ? '✓' : `${Math.min(arc.good_weeks, arc.target)}/${arc.target}`}
+        </Text>
+        <PixelProgress progress={progress} color={color} height={5} />
+      </Pressable>
+    );
+  }
   return (
     <Pressable onPress={() => router.push('/arc')} style={[styles.banner, { borderColor: color }]} accessibilityRole="button" testID="arc-banner">
       <Rune season={arc.season} size={28} earned={arc.rune_earned} />
@@ -76,7 +96,7 @@ export function ArcBanner() {
               : T.arc_progress.replace('{n}', String(Math.min(arc.good_weeks, arc.target))).replace('{target}', String(arc.target))}
           </Text>
         </View>
-        <PixelProgress progress={Math.min(1, arc.good_weeks / arc.target)} color={color} height={6} segments={arc.target} />
+        <PixelProgress progress={progress} color={color} height={6} segments={arc.target} />
       </View>
       <Text style={[styles.arrow, { color }]}>▶</Text>
     </Pressable>
@@ -101,3 +121,4 @@ const styles = StyleSheet.create({
   count: { color: colors.textSecondary, fontSize: fontSizes.xs },
   arrow: { fontFamily: fonts.bold, fontSize: pixelSize(10) },
 });
+

@@ -20,7 +20,7 @@ import { HabitCard } from '../../src/features/habits/components/habit-card';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { XpToast } from '../../src/ui/animations/xp-toast';
 import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
-import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
+import { DailyQuestsSection, MissionsTile } from '../../src/features/daily-quests/components/daily-quests-section';
 import { habitsStore$, fetchHabits, completeHabit, uncompleteHabit, repairStreak, isHabitCompletedEnough, isActiveToday } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
@@ -387,7 +387,8 @@ export default function TodayScreen() {
   listPad: { paddingHorizontal: spacing.md },
   // The list already has a horizontal padding: cancel the section's own.
   missionsSlot: { marginHorizontal: -spacing.md, marginTop: spacing.sm },
-  bossSlot: { marginTop: spacing.sm },
+  goalsRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm, marginBottom: spacing.sm },
+  toolsRow: { paddingHorizontal: spacing.md, paddingBottom: spacing.xs },
 
   // Empty state
   empty: {
@@ -433,6 +434,9 @@ export default function TodayScreen() {
   const weekCompletions = use$(habitsStore$.weekCompletions);
 
   const [activeCategory, setActiveCategory] = useState(ALL_KEY);
+  // Folded by default: the missions list and the sort/filter chips (lighter Today).
+  const [missionsOpen, setMissionsOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [sortMode, setSortMode] = useState<'smart' | 'streak' | 'az'>(
     () => (storage.getString('habit_sort_mode') as 'smart' | 'streak' | 'az') ?? 'smart',
   );
@@ -611,19 +615,20 @@ export default function TodayScreen() {
   const ListHeader = (
     <View>
       {hero}
-      {/* Daily missions: a folded one-line banner above the habits (from day 2, D5). */}
-      {isRevealed('missions', day) && (
-        <View style={styles.missionsSlot}>
-          <DailyQuestsSection
-            pausedCategories={pausedCategories}
-          />
+      {/* The day's goals in one row of tiles: missions (from day 2), the
+          seasonal arc and the weekly boss (from day 3, D5). */}
+      {(isRevealed('missions', day) || isRevealed('boss', day)) && (
+        <View style={styles.goalsRow}>
+          {isRevealed('missions', day) && (
+            <MissionsTile open={missionsOpen} onPress={() => setMissionsOpen((o) => !o)} />
+          )}
+          {isRevealed('boss', day) && <ArcBanner variant="tile" />}
+          {isRevealed('boss', day) && <BossCard variant="tile" />}
         </View>
       )}
-      {/* Seasonal arc and boss of the week (I9), from day 3 (D5). */}
-      {isRevealed('boss', day) && (
-        <View style={styles.bossSlot}>
-          <ArcBanner />
-          <BossCard />
+      {isRevealed('missions', day) && missionsOpen && (
+        <View style={styles.missionsSlot}>
+          <DailyQuestsSection listOnly pausedCategories={pausedCategories} />
         </View>
       )}
       {/* Paused quests (D3): their streaks are protected; manage them in Pause. */}
@@ -719,7 +724,23 @@ export default function TodayScreen() {
           </Text>
         </View>
         {showListTools && (
-        <View style={styles.sortRow} testID="habit-sort">
+          <Pressable
+            style={[styles.sortChip, (toolsOpen || sort !== 'smart' || category !== ALL_KEY) && styles.sortChipActive]}
+            onPress={() => setToolsOpen((o) => !o)}
+            accessibilityRole="button"
+            accessibilityState={{ expanded: toolsOpen }}
+            testID="habit-tools"
+          >
+            <Text style={[styles.sortChipText, (toolsOpen || sort !== 'smart' || category !== ALL_KEY) && styles.sortChipTextActive]}>
+              {T.today_sort_filter}
+            </Text>
+          </Pressable>
+        )}
+      </View>
+
+      {/* Sorting, folded behind one button until asked for. */}
+      {showListTools && toolsOpen && (
+        <View style={[styles.sortRow, styles.toolsRow]} testID="habit-sort">
           {(['smart', 'streak', 'az'] as const).map((mode) => {
             const label = mode === 'smart' ? T.habit_sort_smart : mode === 'streak' ? T.habit_sort_streak : T.habit_sort_az;
             const active = sortMode === mode;
@@ -730,8 +751,7 @@ export default function TodayScreen() {
             );
           })}
         </View>
-        )}
-      </View>
+      )}
 
       {/* Progress bar */}
       <View style={styles.progressBarWrap}>
@@ -747,7 +767,7 @@ export default function TodayScreen() {
       </View>
 
       {/* Category filter */}
-      {showListTools && categories.length > 1 && (
+      {showListTools && toolsOpen && categories.length > 1 && (
         <ScrollView
           testID="habit-filters"
           horizontal
