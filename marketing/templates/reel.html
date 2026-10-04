@@ -68,6 +68,14 @@
   .tag span { display: inline-block; font-family: 'Press Start 2P'; font-size: 40px; padding: 26px 36px; color: #0d0f1c;
               background: #f5c518; border-bottom: 8px solid #b38d0f; }
 
+  /* Dynamic style (default): parallax pixel background, beat-synced glow, popping words, stickers. */
+  .under { position: absolute; inset: 0; overflow: hidden; }
+  .stars, .fx { position: absolute; left: 0; top: 0; }
+  .edge { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+  .dtitle { position: absolute; left: 60px; right: 60px; top: 230px; height: 330px; display: flex; align-items: center; justify-content: center;
+            text-align: center; font-family: 'Press Start 2P'; font-size: 54px; line-height: 1.45; text-shadow: 0 6px 0 #000; }
+  .dtitle em { font-style: normal; color: #f5c518; }
+  .w { display: inline-block; opacity: 0; }
   /* Japanese account (template URL ?ja): kawaii sakura pastels, DotGothic16, Pip speaks (strategy.ja.md). */
   body.ja { font-family: 'M PLUS Rounded 1c', sans-serif; color: #14142a; }
   body.ja .bg { background: linear-gradient(170deg, #ffe3ee 0%, #fff6e9 75%); }
@@ -83,6 +91,9 @@
   body.ja .card p, body.ja .kin p { color: #3d2f45; }
   body.ja .cta { color: #fff; background: #ff5a8a; border: 6px solid #14142a; border-radius: 0; box-shadow: 8px 8px 0 #d65a97; }
   body.ja .handle { color: #8a6f86; }
+  body.ja .dtitle { font-family: 'DotGothic16'; text-shadow: none; color: #14142a; font-size: 64px; line-height: 1.35; }
+  body.ja .dtitle em { color: #ff5a8a; white-space: nowrap; }
+  body.ja .dtitle h2 { background: #fff; border: 6px solid #14142a; box-shadow: 10px 10px 0 #d65a97; padding: 26px 34px; }
   /* Pip scene: his line in a pixel speech bubble, Pip big below. */
   .bubble { position: absolute; left: 80px; right: 80px; top: 260px; background: #fff; border: 8px solid #14142a;
             box-shadow: 14px 14px 0 #d65a97; padding: 50px 54px; text-align: center; }
@@ -275,8 +286,439 @@
     },
   };
 
+  // ------------------------------------------------------------ dynamic style (default)
+  // Battiste (2026-10-03): more energy, no zoom into the screens, no hard cut, no shake. Everything
+  // follows the music: s.clock is the segment's start in the reel and s.beat the length of a beat,
+  // so the background drifts continuously from scene to scene and the glows pulse on the beat.
+  // Stickers (s.fx): xp, arrow, pip, counter, bar, burst — see marketing/README.md.
+  const PHONE = { x: 267, y: 600, w: 546, h: 1182, r: 44 };
+  const SCREEN_H = 1080 * PHONE.h / PHONE.w; // a full-screen recording, scaled to the frame width
+  const PAL = ['#f5c518', '#e94560', '#5be38c', '#6fb7ff', '#ffffff', '#a58bff'];
+  const clamp01 = (x) => Math.min(Math.max(x, 0), 1);
+  // Pixel font of the canvas texts (DotGothic16 for the Japanese account, ?ja).
+  const PF = () => (document.body.classList.contains('ja') ? 'DotGothic16' : '"Press Start 2P"');
+  const isJa = () => document.body.classList.contains('ja');
+  const SPRITES = {
+    coin: { px: 7, rows: ['..kkkk..', '.kyyyyk.', 'kyywyyok', 'kywyyyok', 'kyyyyyok', 'kyyyyook', '.kyoook.', '..kkkk..'],
+            colors: { k: '#14142A', y: '#F5C518', w: '#FFF6C8', o: '#C8920E' } },
+    fire: { px: 7, rows: ['...r....', '..rr..r.', '..ror.rr', '.roorrrr', '.rooyorr', 'rooyyyor', '.royyyo.', '..rrrr..'],
+            colors: { r: '#E8505B', o: '#FF9A3C', y: '#FFD84A' } },
+    // Points down, tip at the bottom centre.
+    arrow: { px: 10, rows: ['..kkkkk..', '..kyyyk..', '..kyyyk..', '..kyyyk..', 'kkkyyykkk', 'kyyyyyyyk', '.kyyyyyk.', '..kyyyk..', '...kyk...', '....k....'],
+             colors: { k: '#14142A', y: '#F5C518' } },
+  };
+
+  function drawSprite(ctx, sp, x, y, px = sp.px) {
+    sp.rows.forEach((r, j) => [...r].forEach((c, i) => {
+      const col = sp.colors[c];
+      if (col) { ctx.fillStyle = col; ctx.fillRect(x + i * px, y + j * px, px + 0.5, px + 0.5); }
+    }));
+  }
+
+  /** Beat clock: n (beat number), ph (0-1 inside the beat), pulse (1 on the beat, decaying). */
+  function beatAt(s, t) {
+    const B = s.beat || 0.45;
+    const T = (s.clock || 0) + t;
+    const n = Math.floor(T / B + 1e-6);
+    const ph = T / B - n;
+    return { T, B, n, ph, pulse: Math.exp(-ph * 5), down: n % 4 === 0 };
+  }
+
+  function wordSpans(title) {
+    return words(title).map((w) => (w.br ? '<br>' : `<span class="w"${w.space ? ' style="margin-left:.5em"' : ''}>${w.em ? `<em>${w.w}</em>` : w.w}</span>`)).join('');
+  }
+
+  /** Words pop in one by one with an overshoot; returns the centres of the highlighted words and their landing times. */
+  function popWords(spans, t, step, t0 = 0) {
+    const hits = [];
+    spans.forEach((el) => { el.style.transform = 'none'; });
+    spans.forEach((el, i) => {
+      if (el.querySelector('em')) {
+        const r = el.getBoundingClientRect();
+        hits.push({ x: r.left + r.width / 2, y: r.top + r.height / 2, at: t0 + i * step + 0.12, seed: i + 1 });
+      }
+    });
+    spans.forEach((el, i) => {
+      const k = (t - t0 - i * step) / 0.3;
+      el.style.opacity = String(clamp01(k * 3));
+      el.style.transform = `translateY(${(1 - ease(k)) * 40}px) scale(${k <= 0 ? 0.2 : 0.2 + 0.8 * back(k)})`;
+    });
+    return { hits, landed: t0 + (spans.length - 1) * step + 0.3 };
+  }
+
+  /** Pixel confetti: square bits flying out and falling (no round shapes, ADR 011). */
+  function burst(ctx, dt, x, y, seed, n = 22, power = 1) {
+    if (dt < 0 || dt > 1.1) return;
+    for (let k = 0; k < n; k++) {
+      const a = rand(seed * 13 + k) * Math.PI * 2;
+      const v = (300 + rand(seed * 7 + k) * 520) * power;
+      const px = x + Math.cos(a) * v * dt;
+      const py = y + (Math.sin(a) * v - 260) * dt + 900 * dt * dt;
+      const size = (rand(seed + k * 3) > 0.5 ? 16 : 10) * (1 - dt * 0.5);
+      ctx.globalAlpha = 1 - clamp01((dt - 0.6) / 0.5);
+      ctx.fillStyle = PAL[(k + seed) % PAL.length];
+      if (k % 4 === 0) { // little pixel sparkle (a plus)
+        ctx.fillRect(px - size * 1.5, py - size / 2, size * 3, size);
+        ctx.fillRect(px - size / 2, py - size * 1.5, size, size * 3);
+      } else ctx.fillRect(px - size / 2, py - size / 2, size, size);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /** Background with parallax: gradient, drifting grid, two layers of pixel stars; optional hole for the phone screen. */
+  function underHTML(hole) {
+    const { x, y, w, h, r } = PHONE;
+    const path = `M0 0H1080V1920H0Z M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}` +
+      `H${x + r}A${r} ${r} 0 0 1 ${x} ${y + h - r}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z`;
+    return `<div class="under"${hole ? ` style="clip-path:path(evenodd,'${path}')"` : ''}><div class="bg"></div><div class="grid"></div><div class="glow"></div>
+      <canvas class="stars" width="1080" height="1920"></canvas><div class="handle">@habitquest.app</div></div>`;
+  }
+
+  function drawUnder(b) {
+    const grid = root.querySelector('.grid');
+    if (!grid) return;
+    grid.style.transform = `translate(${-(b.T * 18) % 60}px, ${-(b.T * 30) % 60}px)`;
+    root.querySelector('.glow').style.opacity = String(0.55 + 0.45 * b.pulse);
+    const ctx = root.querySelector('.stars').getContext('2d');
+    ctx.clearRect(0, 0, 1080, 1920);
+    for (let k = 0; k < 70; k++) {
+      const layer = k % 3;
+      const speed = [14, 32, 64][layer];
+      const size = [4, 6, 10][layer];
+      const x = rand(k * 7.1 + 1) * 1080;
+      const y = ((rand(k * 3.3 + 2) * 2100 - b.T * speed) % 2100 + 2100) % 2100 - 90;
+      ctx.globalAlpha = (0.2 + 0.5 * (0.5 + 0.5 * Math.sin(b.T * 3 + k))) * [0.5, 0.7, 1][layer];
+      ctx.fillStyle = isJa() ? (k % 5 === 0 ? '#ffd84a' : '#ff8fc8') : k % 5 === 0 ? '#f5c518' : '#c9cbef';
+      ctx.fillRect(x, y, size, size);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /** Glow along the edges of the frame, on every beat (stronger and gold on the first beat of a bar). */
+  function drawEdge(b) {
+    const e = root.querySelector('.edge');
+    const c = isJa() ? (b.down ? '255,90,138' : '255,143,200') : b.down ? '245,197,24' : '123,104,238';
+    e.style.boxShadow = `inset 0 0 0 10px rgba(${c},.9), inset 0 0 160px rgba(${c},.75)`;
+    e.style.opacity = String((b.down ? 0.75 : 0.45) * b.pulse);
+  }
+
+  /** Converts a sticker position: x/y in px, or sx/sy inside the app screen (phone or full-screen recording). */
+  function place(s, f) {
+    if (f.sx === undefined) return { x: f.x, y: f.y };
+    if (s.layout === 'full') return { x: f.sx * 1080, y: f.sy * SCREEN_H - (SCREEN_H - 1920) * (s.y || 0) };
+    return { x: PHONE.x + f.sx * PHONE.w, y: PHONE.y + f.sy * PHONE.h };
+  }
+
+  function plateText(ctx, text, x, y, size, color = '#f5c518', icon = null) {
+    ctx.font = `${size}px ${PF()}`;
+    const iw = icon ? icon.rows[0].length * icon.px + 16 : 0;
+    const w = ctx.measureText(text).width + iw + 44, h = size + 40;
+    ctx.fillStyle = '#14142A'; ctx.fillRect(x - w / 2 - 6, y - h / 2 - 6, w + 12, h + 12);
+    ctx.fillStyle = color; ctx.fillRect(x - w / 2, y - h / 2, w, h);
+    ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - w / 2 + 6, y - h / 2 + 6, w - 12, h - 12);
+    if (icon) drawSprite(ctx, icon, x - w / 2 + 22, y - (icon.rows.length * icon.px) / 2);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#000'; ctx.fillText(text, x - w / 2 + 22 + iw, y + 5);
+    ctx.fillStyle = color; ctx.fillText(text, x - w / 2 + 22 + iw, y + 1);
+    return { w, h };
+  }
+
+  /** Draws the stickers of a segment at time t. */
+  function drawFx(s, ctx, t, b) {
+    for (const [idx, f] of (s.fx || []).entries()) {
+      const at = f.at ?? (f.beat || 0) * b.B;
+      const k = t - at;
+      if (k < 0) continue;
+      const { x, y } = place(s, f);
+      const life = f.life ?? (f.type === 'xp' ? 1.4 : Infinity);
+      if (k > life) continue;
+      const fade = 1 - clamp01((k - life + 0.25) / 0.25);
+      const pop = f.type === 'burst' ? 1 : 0.2 + 0.8 * back(k / 0.28);
+      ctx.save();
+      ctx.globalAlpha = fade;
+      if (f.type === 'burst') {
+        ctx.restore(); burst(ctx, k, x, y, idx + 3, f.n || 30, f.power || 1); continue;
+      }
+      if (f.type === 'xp') {
+        ctx.translate(x, y - 80 * ease(k / life)); ctx.scale(pop, pop);
+        plateText(ctx, f.text, 0, 0, f.size || 38, f.color || '#f5c518', f.icon ? SPRITES[f.icon] : null);
+        ctx.restore(); burst(ctx, k, x, y, idx + 5, 12, 0.6); continue;
+      }
+      if (f.type === 'arrow') {
+        const dir = f.dir || 'down';
+        const rot = { down: 0, left: Math.PI / 2, up: Math.PI, right: -Math.PI / 2 }[dir];
+        const sp = SPRITES.arrow, aw = sp.rows[0].length * sp.px, ah = sp.rows.length * sp.px;
+        const bob = 26 * (1 - b.pulse);
+        ctx.translate(x, y); ctx.rotate(rot); ctx.scale(pop, pop);
+        drawSprite(ctx, sp, -aw / 2, -ah - 12 - bob);
+        ctx.restore();
+        if (f.label) {
+          const v = { down: [0, -1], up: [0, 1], left: [1, 0], right: [-1, 0] }[dir];
+          ctx.save(); ctx.globalAlpha = fade * clamp01((k - 0.1) / 0.15);
+          const d = ah + 70 + (dir === 'left' || dir === 'right' ? 120 : 0);
+          plateText(ctx, f.label, Math.min(Math.max(x + v[0] * d, 200), 880), y + v[1] * d, f.size || 30);
+          ctx.restore();
+        }
+        continue;
+      }
+      if (f.type === 'pip') {
+        const px = f.px || 13, size = 16 * px;
+        const hop = (b.T / b.B) % 2 / 2; // one hop every two beats
+        const up = hop < 0.5 ? Math.sin(Math.PI * hop * 2) * 34 : 0;
+        const squash = hop >= 0.5 && hop < 0.6 ? 0.9 : 1;
+        ctx.translate(x, y); ctx.scale(pop * (f.flip ? -1 : 1) * (2 - squash), pop * squash);
+        f.grid.forEach((row, j) => row.forEach((c, i) => { if (c) { ctx.fillStyle = c; ctx.fillRect(-size / 2 + i * px, -size + j * px - up, px + 0.5, px + 0.5); } }));
+        ctx.restore();
+        if (f.say && k > 0.2) {
+          ctx.save(); ctx.globalAlpha = fade;
+          const sc = 0.2 + 0.8 * back((k - 0.2) / 0.25);
+          ctx.font = `${f.sayPx || 26}px ${PF()}`;
+          const tw = ctx.measureText(f.say).width + 40, th = (f.sayPx || 26) + 36;
+          const bx = Math.min(Math.max(x, tw / 2 + 24), 1056 - tw / 2), by = y - size * 0.75 - 34 - th / 2;
+          ctx.translate(bx, by); ctx.scale(sc, sc);
+          ctx.fillStyle = '#14142A'; ctx.fillRect(-tw / 2 - 6, -th / 2 - 6, tw + 12, th + 12);
+          ctx.fillStyle = '#ffffff'; ctx.fillRect(-tw / 2, -th / 2, tw, th);
+          ctx.fillStyle = '#14142A'; ctx.fillRect(x - bx - 6, th / 2 + 6, 18, 14); ctx.fillStyle = '#ffffff'; ctx.fillRect(x - bx, th / 2, 6, 14);
+          ctx.fillStyle = '#14142A'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(f.say, 0, 3);
+          ctx.restore();
+        }
+        continue;
+      }
+      if (f.type === 'counter') {
+        const dur = f.dur || 0.8;
+        const v = Math.round(f.from + (f.to - f.from) * ease(k / dur));
+        const bump = k > dur ? 1 + 0.18 * Math.exp(-(k - dur) * 7) : 1;
+        ctx.translate(x, y); ctx.scale(pop * bump, pop * bump);
+        plateText(ctx, `${f.prefix || ''}${v}${f.suffix || ''}`, 0, 0, f.size || 40, f.color || '#f5c518', f.icon ? SPRITES[f.icon] : null);
+        ctx.restore(); burst(ctx, k - dur, x, y, idx + 9, 18, 0.7); continue;
+      }
+      if (f.type === 'bar') {
+        const dur = f.dur || 1, w = f.w || 420, h = 34;
+        const v = (f.from ?? 0) + ((f.to ?? 1) - (f.from ?? 0)) * ease(k / dur);
+        ctx.translate(x, y); ctx.scale(pop, pop);
+        ctx.fillStyle = '#14142A'; ctx.fillRect(-w / 2 - 8, -h / 2 - 8, w + 16, h + 16);
+        ctx.fillStyle = '#2e3870'; ctx.fillRect(-w / 2, -h / 2, w, h);
+        const segs = Math.floor(w / 24);
+        ctx.fillStyle = v >= 1 && k < dur + 0.15 ? '#ffffff' : (f.color || '#5be38c');
+        for (let j = 0; j < Math.round(segs * v); j++) ctx.fillRect(-w / 2 + 4 + j * 24, -h / 2 + 4, 20, h - 8);
+        if (f.label) {
+          ctx.font = `28px ${PF()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+          ctx.fillStyle = '#000'; ctx.fillText(f.label, 0, -h / 2 - 16); ctx.fillStyle = '#f0f0ff'; ctx.fillText(f.label, 0, -h / 2 - 20);
+        }
+        ctx.restore(); continue;
+      }
+      ctx.restore();
+    }
+  }
+
+  const fxCanvas = '<canvas class="fx" width="1080" height="1920"></canvas>';
+
+  const dynamic = {
+    // Pip big, hopping on the beat, his faces changing (pips), his line popping in a bubble.
+    pip: (s) => {
+      const keys = s.pips || [s.pip || 'joy-love'];
+      root.innerHTML = `${underHTML(false)}<div class="edge"></div>
+        <div class="bubble"><h1>${wordSpans(s.title)}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
+        ${keys.map((k, i) => `<img class="pip-img" data-i="${i}" src="../brand/pip/pip-${k}.png" />`).join('')}
+        ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px;opacity:0">${s.cta}</span></div>` : ''}
+        ${fxCanvas}`;
+      const spans = [...root.querySelectorAll('.w')];
+      const bubble = root.querySelector('.bubble');
+      const imgs = [...root.querySelectorAll('.pip-img')];
+      const sub = root.querySelector('.bubble p');
+      const cta = root.querySelector('.tag .cta');
+      const ctx = root.querySelector('.fx').getContext('2d');
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        drawUnder(b); drawEdge(b);
+        const k0 = s.entered ? 1 : t / 0.3;
+        bubble.style.transform = `scale(${(0.3 + 0.7 * back(k0)) * (1 + 0.025 * b.pulse)})`;
+        bubble.style.opacity = String(clamp01(k0 * 3));
+        const { hits, landed } = popWords(spans, t, b.B / 2, 0.12);
+        if (sub) { const k = (t - landed) / 0.3; sub.style.opacity = String(clamp01(k * 2)); }
+        ctx.clearRect(0, 0, 1080, 1920);
+        hits.forEach((h) => burst(ctx, t - h.at, h.x, h.y, h.seed, 20, 0.8));
+        // Faces change every `every` s, snapped to the beat; a little burst on each change.
+        const every = Math.max(1, Math.round((s.every || 2 * b.B) / b.B)) * b.B;
+        const i = Math.min(Math.floor(t / every + 1e-6), imgs.length - 1);
+        const since = t - i * every;
+        const up = Math.sin(Math.PI * b.ph) * 46 * (b.n % 2 ? 0.6 : 1);
+        const squash = b.ph < 0.12 ? 0.9 : 1;
+        imgs.forEach((img, k) => {
+          img.style.opacity = k === i ? '1' : '0';
+          img.style.transform = `translateY(${-up}px) scale(${2 - squash}, ${squash})`;
+        });
+        if (i > 0) burst(ctx, since, 540, 1280, i * 7, 26, 0.9);
+        if (cta) {
+          const at = (s.ctaBeat || 4) * b.B;
+          const k = (t - at) / 0.3;
+          cta.style.opacity = k > 0 ? '1' : '0';
+          cta.style.display = 'inline-block';
+          cta.style.transform = `scale(${k > 0 ? (0.2 + 0.8 * back(k)) * (1 + 0.06 * b.pulse) : 0.2})`;
+          if (k > 0) burst(ctx, t - at, 540, 1680, 77, 40, 1.2);
+        }
+        drawFx(s, ctx, t, b);
+      };
+    },
+    phone: (s) => {
+      root.innerHTML = `${underHTML(true)}<div class="edge"></div><div class="frame"></div>
+        <div class="dtitle"><h2 style="font:inherit">${wordSpans(s.title)}</h2></div>${fxCanvas}`;
+      const spans = [...root.querySelectorAll('.w')];
+      const frame = root.querySelector('.frame');
+      const h2 = root.querySelector('.dtitle h2');
+      const ctx = root.querySelector('.fx').getContext('2d');
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        drawUnder(b); drawEdge(b);
+        frame.style.boxShadow = isJa()
+          ? `14px 14px 0 #ff8fc8, 0 0 ${60 + 70 * b.pulse}px rgba(255,143,200,${0.25 + 0.4 * b.pulse})`
+          : `0 0 0 4px #2e3870, 0 0 ${90 + 90 * b.pulse}px rgba(123,104,238,${0.3 + 0.4 * b.pulse})`;
+        h2.style.transform = 'none';
+        const { hits, landed } = popWords(spans, t, b.B / 2);
+        h2.style.transform = `scale(${1 + (t > landed ? 0.035 * b.pulse : 0)})`;
+        ctx.clearRect(0, 0, 1080, 1920);
+        hits.forEach((h) => burst(ctx, t - h.at, h.x, h.y, h.seed, 18, 0.7));
+        drawFx(s, ctx, t, b);
+      };
+    },
+    full: (s) => {
+      root.innerHTML = `<div class="band"></div><div class="caption"><h2 style="font:inherit">${wordSpans(s.title)}</h2></div>
+        <div class="bottom"></div><div class="handle">@habitquest.app</div><div class="edge"></div>${fxCanvas}`;
+      const spans = [...root.querySelectorAll('.w')];
+      const h2 = root.querySelector('.caption h2');
+      const ctx = root.querySelector('.fx').getContext('2d');
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        drawEdge(b);
+        h2.style.transform = 'none';
+        const { hits, landed } = popWords(spans, t, b.B / 2);
+        h2.style.transform = `scale(${1 + (t > landed ? 0.035 * b.pulse : 0)})`;
+        ctx.clearRect(0, 0, 1080, 1920);
+        hits.forEach((h) => burst(ctx, t - h.at, h.x, h.y, h.seed, 18, 0.7));
+        drawFx(s, ctx, t, b);
+      };
+    },
+    kinetic: (s) => {
+      root.innerHTML = `${underHTML(false)}<div class="edge"></div><div class="kin">
+          ${s.icon ? '<img src="../assets/icon.png" />' : ''}
+          <h1>${wordSpans(s.title)}</h1>
+          ${s.subtitle ? `<p>${s.subtitle}</p>` : ''}
+          ${s.cta ? `<div class="cta" style="opacity:0">${s.cta}</div>` : ''}
+        </div>${fxCanvas}`;
+      const spans = [...root.querySelectorAll('.w')];
+      const h1 = root.querySelector('.kin h1');
+      const ctx = root.querySelector('.fx').getContext('2d');
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        drawUnder(b); drawEdge(b);
+        const img = root.querySelector('.kin img');
+        const t0 = img ? b.B : 0; // the icon lands first, the words on the next beat
+        if (img) {
+          // After a flip or pixel transition the icon is already there (no empty frame).
+          img.style.opacity = s.entered ? '1' : String(clamp01(t / 0.1));
+          img.style.transform = `scale(${(s.entered ? 1 : 0.2 + 0.8 * back(t / 0.35)) * (1 + 0.05 * b.pulse)})`;
+        }
+        h1.style.transform = 'none';
+        const { hits, landed } = popWords(spans, t, b.B / 2, t0);
+        h1.style.transform = `scale(${1 + (t > landed ? 0.04 * b.pulse : 0)})`;
+        const p = root.querySelector('.kin p');
+        if (p) { const k = (t - landed) / 0.35; p.style.opacity = String(clamp01(k * 2)); p.style.transform = `translateY(${(1 - ease(k)) * 50}px)`; }
+        ctx.clearRect(0, 0, 1080, 1920);
+        hits.forEach((h) => burst(ctx, t - h.at, h.x, h.y, h.seed, 26, 0.9));
+        const cta = root.querySelector('.kin .cta');
+        if (cta) {
+          // The CTA lands on the music's final hit (build-reels.js: ctaBeat beats into the segment).
+          const at = (s.ctaBeat || 4) * b.B;
+          const k = (t - at) / 0.3;
+          cta.style.opacity = k > 0 ? '1' : '0';
+          cta.style.transform = `scale(${k > 0 ? (0.2 + 0.8 * back(k)) * (1 + 0.07 * b.pulse) : 0.2})`;
+          if (k > 0) {
+            cta.style.transform = 'none';
+            const r = cta.getBoundingClientRect();
+            cta.style.transform = `scale(${(0.2 + 0.8 * back(k)) * (1 + 0.07 * b.pulse)})`;
+            burst(ctx, t - at, r.left + r.width / 2, r.top + r.height / 2, 77, 44, 1.3);
+          }
+        }
+        drawFx(s, ctx, t, b);
+      };
+    },
+    hero: (s) => {
+      root.innerHTML = `${underHTML(false)}<div class="edge"></div>
+        <canvas class="stage" width="1080" height="1920"></canvas>
+        <div class="hero-title"><h2 style="font:inherit">${wordSpans(s.title)}</h2></div><div class="tag"><span></span></div>${fxCanvas}`;
+      const spans = [...root.querySelectorAll('.w')];
+      const h2 = root.querySelector('.hero-title h2');
+      const ctx = root.querySelector('.stage').getContext('2d');
+      const fx = root.querySelector('.fx').getContext('2d');
+      const tag = root.querySelector('.tag span');
+      const every = s.every;
+      const stage = { x: 90, y: 500, w: 900, h: 900 };
+      const rows = 36, cell = stage.h / rows;
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        drawUnder(b); drawEdge(b);
+        ctx.clearRect(0, 0, 1080, 1920);
+        fx.clearRect(0, 0, 1080, 1920);
+        ctx.fillStyle = '#14142A';
+        ctx.fillRect(stage.x - 22, stage.y - 22, stage.w + 44, stage.h + 44);
+        ctx.fillStyle = s.frame || '#e94560';
+        ctx.fillRect(stage.x - 14, stage.y - 14, stage.w + 28, stage.h + 28);
+        ctx.fillStyle = `rgba(255,255,255,${0.35 * b.pulse})`;
+        ctx.fillRect(stage.x - 14, stage.y - 14, stage.w + 28, stage.h + 28);
+        ctx.save();
+        ctx.beginPath(); ctx.rect(stage.x, stage.y, stage.w, stage.h); ctx.clip();
+        for (const [x, y, w, h, c] of s.scene) { ctx.fillStyle = c; ctx.fillRect(stage.x + x * cell, stage.y + y * cell, w * cell + 0.6, h * cell + 0.6); }
+        const i = Math.min(Math.floor(t / every + 1e-6), s.looks.length - 1);
+        const look = s.looks[i];
+        const since = t - i * every;
+        const px = 22, size = 32 * px;
+        // Hops on the beat; on each new outfit a jump with a squash.
+        const jump = i > 0 && since < 0.3 ? Math.sin(Math.PI * since / 0.3) * 60 : 0;
+        const hx = 540 - size / 2, hy = stage.y + stage.h - size - 30 - (b.n % 2) * px - jump;
+        look.grid.forEach((row, y) => row.forEach((c, x) => { if (c) { ctx.fillStyle = c; ctx.fillRect(hx + x * px, hy + y * px, px + 0.6, px + 0.6); } }));
+        // Light beam behind the change (a pixel column fading out).
+        if (i > 0 && since < 0.35) {
+          ctx.fillStyle = `rgba(255,246,200,${0.5 * (1 - since / 0.35)})`;
+          ctx.fillRect(hx + size * 0.2, stage.y, size * 0.6, stage.h);
+        }
+        ctx.restore();
+        if (i > 0) burst(fx, since, 540, hy + size / 2, i * 5, 34, 1.1);
+        tag.textContent = look.label || '';
+        tag.style.display = look.label ? 'inline-block' : 'none';
+        tag.style.transform = `scale(${(0.2 + 0.8 * back(since / 0.28)) * (1 + 0.04 * b.pulse)})`;
+        // Level counter and XP bar: the bar fills during each outfit, the level ticks up at each change.
+        if (look.lv !== undefined) {
+          const prev = i > 0 ? s.looks[i - 1].lv : look.lv;
+          const lv = Math.round(prev + (look.lv - prev) * ease(since / 0.35));
+          const by = stage.y + stage.h + 52;
+          fx.font = `34px ${PF()}`; fx.textAlign = 'left'; fx.textBaseline = 'middle';
+          fx.fillStyle = '#000'; fx.fillText(`LV ${lv}`, 90, by + 4);
+          fx.fillStyle = '#f5c518'; fx.fillText(`LV ${lv}`, 90, by);
+          const bx = 330, bw = 660, bh = 34;
+          fx.fillStyle = '#14142A'; fx.fillRect(bx - 8, by - bh / 2 - 8, bw + 16, bh + 16);
+          fx.fillStyle = '#2e3870'; fx.fillRect(bx, by - bh / 2, bw, bh);
+          const last = i === s.looks.length - 1;
+          const fill = last ? clamp01(since / every) : clamp01(since / every);
+          const n = Math.round(26 * ease(fill));
+          fx.fillStyle = since < 0.12 && i > 0 ? '#ffffff' : '#5be38c';
+          for (let j = 0; j < n; j++) fx.fillRect(bx + 4 + j * 25.2, by - bh / 2 + 4, 21, bh - 8);
+        }
+        h2.style.transform = 'none';
+        const { hits, landed } = popWords(spans, t, b.B / 2);
+        h2.style.transform = `scale(${1 + (t > landed ? 0.035 * b.pulse : 0)})`;
+        hits.forEach((h) => burst(fx, t - h.at, h.x, h.y, h.seed, 18, 0.7));
+        drawFx(s, fx, t, b);
+      };
+    },
+  };
+
   const JA = location.search.includes('ja');
-  window.render = (s) => { document.body.classList.toggle('ja', JA); window.frame = null; layouts[s.layout](s); if (window.frame) window.frame(0); };
+  window.render = (s) => {
+    document.body.classList.toggle('ja', JA);
+    window.frame = null;
+    (s.dynamic && dynamic[s.layout] ? dynamic : layouts)[s.layout](s);
+    if (window.frame) window.frame(0);
+  };
 </script>
 </body>
 </html>

@@ -13,7 +13,10 @@
  *   kinetic — title whose words slam in one by one (hook); optional subtitle, icon, cta
  *   hero    — the hero drawn big in its scene, outfits swapping every `every` s
  *             (looks: [{ hat, outfit, accessory, label }])
- * Smooth by default (Battiste): no hard cut, no zoom into the screens, no shake or flash. Every
+ * Dynamic by default (Battiste, 2026-10-03; see prepare() and marketing/README.md): everything on the
+ *   beat of a track written for the reel, popping words, pixel confetti, beat glows, stickers (`fx`).
+ *   `style: 'smooth'` keeps the calmer style below.
+ * Smooth (Battiste): no hard cut, no zoom into the screens, no shake or flash. Every
  *   segment dissolves into the next (0.5 s); phone screens (clip, still) arrive with a gentle 3D
  *   card flip; titles fade in word by word; the hero's outfits dissolve into each other.
  *   Per segment: `transition: 'flip' | 'fade' | 'slide' | 'cut'`; per reel `punchy: true` brings back
@@ -32,7 +35,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const { execFileSync, spawnSync } = require('child_process');
 const { pathToFileURL } = require('url');
 const puppeteer = require('puppeteer-core');
 const ffmpeg = process.env.FFMPEG || require('ffmpeg-static');
@@ -61,6 +64,7 @@ function loadHeroModules() {
     sprites: 'src/features/avatar/renderer/sprites.ts',
     'compose-hero': 'src/features/avatar/renderer/compose-hero.ts',
     'hero-scene': 'src/features/avatar/utils/hero-scene.ts',
+    'pip-sprites': 'src/features/mascot/sprites.ts',
   };
   for (const [name, file] of Object.entries(files)) {
     const out = ts.transpileModule(fs.readFileSync(path.join(repo, file), 'utf8'), {
@@ -68,7 +72,11 @@ function loadHeroModules() {
     });
     fs.writeFileSync(path.join(dir, `${name}.js`), out.outputText);
   }
-  return { ...require(path.join(dir, 'compose-hero.js')), ...require(path.join(dir, 'hero-scene.js')) };
+  return {
+    ...require(path.join(dir, 'compose-hero.js')),
+    ...require(path.join(dir, 'hero-scene.js')),
+    ...require(path.join(dir, 'pip-sprites.js')),
+  };
 }
 
 /** ffmpeg expression of a keyframed value (smoothstep between keys), time = output frame / FPS. */
@@ -86,7 +94,7 @@ function keyframes(keys, value) {
 }
 
 /** Renders an animated layer (window.frame(t)) frame by frame into a video. */
-async function renderAnimated(page, spec, dur, out, enc) {
+async function renderAnimated(page, spec, dur, out, enc, alpha = false) {
   await page.goto(template, { waitUntil: 'networkidle0' });
   await page.evaluate((s) => window.render(s), spec);
   // The text is inserted after load: request the fonts explicitly, or a capture can fall back to a serif.
@@ -99,14 +107,20 @@ async function renderAnimated(page, spec, dur, out, enc) {
   const n = Math.round(dur * FPS);
   for (let f = 0; f < n; f++) {
     await page.evaluate((t) => window.frame(t), f / FPS);
-    await page.screenshot({ path: path.join(dir, `${String(f).padStart(4, '0')}.jpg`), type: 'jpeg', quality: 92 });
+    await page.screenshot(alpha
+      ? { path: path.join(dir, `${String(f).padStart(4, '0')}.png`), omitBackground: true, optimizeForSpeed: true }
+      : { path: path.join(dir, `${String(f).padStart(4, '0')}.jpg`), type: 'jpeg', quality: 92 });
   }
+  // With alpha, the frames are composited by the caller (over the app screen), which deletes them.
+  if (alpha) return path.join(dir, '%04d.png');
   run(['-framerate', String(FPS), '-i', path.join(dir, '%04d.jpg'), ...enc]);
   fs.rmSync(dir, { recursive: true, force: true });
+  return null;
 }
 
 // Short, so the message of each scene stays on screen (Battiste, 2026-10-02).
-const TRANSITION = 0.45;
+// In the dynamic style it lasts exactly one beat of the music (0.4-0.47 s), see prepare().
+let TRANSITION = 0.45;
 // Largest pixel of the pixel transition, in px of the 1080×1920 frame.
 const PIXEL_MAX = 18;
 
@@ -204,6 +218,52 @@ function transitionInto(reel, i) {
   return XFADE.pixel;
 }
 
+// Tempo of each music theme (marketing/audio/chiptune.py, REEL_THEMES).
+const THEME_BPM = { quest: 140, epic: 150, chill: 128 };
+
+/**
+ * Dynamic style (default; `style: 'smooth'` or `punchy: true` keep the older ones): everything on
+ * the music's beat grid. Each segment lasts a whole number of beats and a transition one beat, so
+ * every scene change lands on a beat; the hero's outfits change every 1-2 beats.
+ */
+function prepare(raw) {
+  const dynamic = !raw.punchy && raw.style !== 'smooth';
+  if (!dynamic) {
+    TRANSITION = 0.45;
+    return { ...raw, dynamic };
+  }
+  const theme = raw.music.theme || path.basename(raw.music.file || 'theme-quest.m4a', '.m4a').replace(/^theme-/, '');
+  const bpm = raw.music.bpm || THEME_BPM[theme] || 140;
+  const beat = 60 / bpm;
+  TRANSITION = beat;
+  const q = (d, min) => Math.max(min, Math.round(d / beat)) * beat;
+  const segments = raw.segments.map((seg) => ({
+    ...seg,
+    dur: q(seg.dur, 2),
+    ...(seg.type === 'hero' ? { every: q(seg.every || 0.9, 1) } : {}),
+  }));
+  return { ...raw, segments, dynamic, theme, bpm, beat };
+}
+
+/** A segment's stickers, with Pip's sprite resolved to colours. */
+function stickers(seg, hero) {
+  return (seg.fx || []).map((f) => {
+    if (f.type !== 'pip') return f;
+    const mood = hero.PIP_MOODS[f.mood || hero.PIP_DEFAULT_MOOD[f.expr || 'joy']];
+    const grid = hero.pipSprite(f.expr || 'joy').map((row) => [...row].map((c) => (c === '.' ? null : mood[c])));
+    return { ...f, grid };
+  });
+}
+
+/** Two-pass loudness normalisation (-14 LUFS, -2 dBTP: room for the AAC encoder): the filter for the second pass. */
+function loudnorm(file) {
+  const target = 'I=-14:TP=-2:LRA=11';
+  const r = spawnSync(ffmpeg, ['-hide_banner', '-nostats', '-i', file, '-af', `loudnorm=${target}:print_format=json`, '-f', 'null', '-'], { encoding: 'utf8' });
+  const m = JSON.parse(r.stderr.slice(r.stderr.lastIndexOf('{')));
+  return `loudnorm=${target}:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}` +
+    `:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true,aresample=44100`;
+}
+
 /** Start time of each segment once transitions overlap them, and the total length. */
 function timeline(reel) {
   const starts = [];
@@ -286,8 +346,10 @@ async function roundedMask(page, file) {
   await renderLayer(page, { layout: 'bg' }, bg);
   const hero = loadHeroModules();
 
-  for (const [name, reel] of Object.entries(reels)) {
+  for (const [name, raw] of Object.entries(reels)) {
     if (process.argv[2] && process.argv[2] !== name) continue;
+    const reel = prepare(raw);
+    const live = reel.dynamic ? { dynamic: true, beat: reel.beat } : {};
     const parts = [];
     const sfx = [];
     const { starts, total } = timeline(reel);
@@ -299,22 +361,32 @@ async function roundedMask(page, file) {
         // Video-only sounds (marketing/audio/sfx) take precedence over the app's.
         const own = path.join(root, 'audio', 'sfx', `${seg.sfx}.m4a`);
         const file = fs.existsSync(own) ? own : path.join(repo, 'assets', 'sounds', `${seg.sfx}.m4a`);
-        sfx.push({ file, at: clock + (seg.sfxAt || 0) });
+        sfx.push({ file, at: clock + (seg.sfxAt || 0), vol: reel.dynamic ? 0.8 : 1.2 });
       }
       if (seg.type === 'kinetic') {
-        await renderAnimated(page, { layout: 'kinetic', ...seg, smooth: !reel.punchy }, seg.dur, out, enc);
+        await renderAnimated(page, { layout: 'kinetic', ...seg, smooth: !reel.punchy, ...live, clock, fx: stickers(seg, hero), entered: i > 0 && INSERTED.has(transitionInto(reel, i)) }, seg.dur, out, enc);
       } else if (seg.type === 'pip') {
         const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
-        await renderAnimated(page, { layout: 'pip', ...seg, entered }, seg.dur, out, enc);
+        await renderAnimated(page, { layout: 'pip', ...seg, entered, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
       } else if (seg.type === 'hero') {
         const looks = seg.looks.map((l) => ({
           label: l.label,
+          lv: l.lv,
           grid: hero.composeHero({ skin: hero.DEFAULTS.skin, hair: hero.DEFAULTS.hair, eye: hero.DEFAULTS.eye, ...l }),
         }));
         const scene = hero.heroScene(seg.theme || 'default', 36);
         // After a flip or pixel transition the hero is already there (no fade from an empty frame).
         const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
-        await renderAnimated(page, { layout: 'hero', ...seg, looks, scene, smooth: !reel.punchy, entered }, seg.dur, out, enc);
+        await renderAnimated(page, { layout: 'hero', ...seg, looks, scene, smooth: !reel.punchy, entered, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
+      } else if (seg.type === 'full' && reel.dynamic) {
+        // Animated caption, glow and stickers (PNG with alpha) over the recording.
+        const frames = await renderAnimated(page, { layout: 'full', ...seg, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc, true);
+        run(['-ss', String(seg.start || 0), '-i', path.join(recDir, `${seg.src}.webm`), '-framerate', String(FPS), '-i', frames, '-t', String(seg.dur),
+          '-filter_complex',
+          `[0:v]setpts=PTS/${seg.speed || 1},fps=${FPS},tpad=stop_mode=clone:stop_duration=3,scale=1080:-2,crop=1080:1920:0:(ih-1920)*${seg.y || 0},format=rgba[s];` +
+          '[s][1:v]overlay=0:0,format=yuv420p',
+          ...enc]);
+        fs.rmSync(path.dirname(frames), { recursive: true, force: true });
       } else if (seg.type === 'full') {
         const overlay = path.join(work, `${name}-${i}-full.png`);
         await renderLayer(page, { layout: 'full', ...seg }, overlay);
@@ -350,7 +422,17 @@ async function roundedMask(page, file) {
           : reel.punchy
             ? `[1:v]scale=${PHONE.w * 2}:-1,zoompan=z='min(1+0.0008*on,1.08)':d=1:x='iw/2-(iw/zoom/2)':y=0:s=${PHONE.w}x${PHONE.h}:fps=${FPS}`
             : `[1:v]scale=${PHONE.w}:-1,crop=${PHONE.w}:${PHONE.h}:0:0,fps=${FPS}`;
-        if (reel.punchy && Array.isArray(seg.zoom)) {
+        if (reel.dynamic) {
+          // The app screen in the phone, under an animated layer (background, frame, title,
+          // stickers) that has a hole where the screen is. The phone itself never moves.
+          const frames = await renderAnimated(page, { layout: 'phone', ...seg, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc, true);
+          run(['-f', 'lavfi', '-i', `color=c=black:s=1080x1920:r=${FPS}`, ...screenInput, '-loop', '1', '-i', mask, '-framerate', String(FPS), '-i', frames,
+            '-t', String(seg.dur), '-filter_complex',
+            `${screen},format=rgba[s];[2:v]format=gray,scale=${PHONE.w}:${PHONE.h}[m];[s][m]alphamerge[sr];` +
+            `[0:v][sr]overlay=${PHONE.x}:${PHONE.y}[b];[b][3:v]overlay=0:0,format=yuv420p`,
+            ...enc]);
+          fs.rmSync(path.dirname(frames), { recursive: true, force: true });
+        } else if (reel.punchy && Array.isArray(seg.zoom)) {
           // The phone zooms (rendered at 2x for a smooth move), the title stays on top.
           const frame = path.join(work, `${name}-${i}-frame.png`);
           const title = path.join(work, `${name}-${i}-title.png`);
@@ -384,6 +466,21 @@ async function roundedMask(page, file) {
       parts.push(out);
     }
 
+    if (reel.dynamic) {
+      // A whoosh on every flip, a blip run on every pixel transition, the stickers' sounds.
+      const own = (n) => path.join(root, 'audio', 'sfx', `${n}.m4a`);
+      for (let i = 1; i < reel.segments.length; i++) {
+        const kind = transitionInto(reel, i);
+        if (kind === 'flip') sfx.push({ file: own('whoosh'), at: starts[i] - TRANSITION, vol: 0.35 });
+        if (kind === 'pixel') sfx.push({ file: own('pixel'), at: starts[i] - TRANSITION, vol: 0.3 });
+      }
+      reel.segments.forEach((seg, i) => (seg.fx || []).forEach((f) => {
+        if (!f.sfx) return;
+        const file = fs.existsSync(own(f.sfx)) ? own(f.sfx) : path.join(repo, 'assets', 'sounds', `${f.sfx}.m4a`);
+        sfx.push({ file, at: starts[i] + (f.at ?? (f.beat || 0) * reel.beat), vol: f.vol ?? 0.5 });
+      }));
+    }
+
     // One video with the transitions, then music and sounds on top.
     const joined = path.join(work, `${name}-joined.mp4`);
     const flips = [];
@@ -400,16 +497,47 @@ async function roundedMask(page, file) {
     const list = path.join(work, `${name}.txt`);
     fs.writeFileSync(list, `file '${joined.replace(/\\/g, '/')}'`);
     const out = path.join(outDir, `${name}.mp4`);
+    let musicFile = path.join(repo, reel.music.file);
+    if (reel.dynamic) {
+      // A track written for this reel: riser and drop on the key moment (music.drop, segment 1 by
+      // default), snare fills on every scene change, key change on music.lift, final hit on the CTA.
+      const lastI = reel.segments.length - 1;
+      const lastSeg = reel.segments[lastI];
+      const spec = {
+        theme: reel.theme, bpm: reel.bpm, total,
+        drop: starts[reel.music.drop ?? 1],
+        lift: reel.music.lift != null ? starts[reel.music.lift] : null,
+        cta: starts[lastI],
+        hit: starts[lastI] + (lastSeg.cta ? (lastSeg.ctaBeat || 4) * reel.beat : 0),
+        fills: starts.slice(1),
+      };
+      const specFile = path.join(work, `${name}-music.json`);
+      fs.writeFileSync(specFile, JSON.stringify(spec));
+      musicFile = path.join(work, `${name}-music.wav`);
+      execFileSync(process.env.PYTHON || 'python', [path.join(root, 'audio', 'chiptune.py'), 'reel', specFile, musicFile], { stdio: 'inherit' });
+    }
     // Music, plus the sound effects of the segments on top.
     const sfxIn = sfx.flatMap((x) => ['-i', x.file]);
-    const sfxMix = sfx.map((x, k) => `[${k + 2}:a]adelay=${Math.round(x.at * 1000)}|${Math.round(x.at * 1000)},volume=1.2[s${k}];`).join('');
+    const sfxMix = sfx.map((x, k) => `[${k + 2}:a]adelay=${Math.round(x.at * 1000)}|${Math.round(x.at * 1000)},volume=${x.vol ?? 1.2}[s${k}];`).join('');
     const mix = sfx.length
       ? `${sfxMix}[m]${sfx.map((_, k) => `[s${k}]`).join('')}amix=inputs=${sfx.length + 1}:duration=first:normalize=0[a]`
       : '[m]anull[a]';
-    run(['-f', 'concat', '-safe', '0', '-i', list,
-      '-ss', String(reel.music.start), '-i', path.join(repo, reel.music.file), ...sfxIn,
-      '-filter_complex', `[1:a]volume=0.7,afade=in:st=0:d=0.3,afade=out:st=${(total - 1.2).toFixed(2)}:d=1.2[m];${mix}`,
-      '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-t', String(total), '-movflags', '+faststart', out]);
+    if (reel.dynamic) {
+      // The track already ends on its final hit: no long fade. Then -14 LUFS, as on TikTok/Reels.
+      const mixWav = path.join(work, `${name}-mix.wav`);
+      run(['-f', 'concat', '-safe', '0', '-i', list, '-i', musicFile, ...sfxIn,
+        '-filter_complex', `[1:a]volume=1.0,afade=out:st=${(total - 0.3).toFixed(2)}:d=0.3[m];${mix}`,
+        '-map', '[a]', '-t', String(total), mixWav]);
+      run(['-f', 'concat', '-safe', '0', '-i', list, '-i', mixWav, '-af', loudnorm(mixWav),
+        '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', String(total), '-movflags', '+faststart', out]);
+      fs.rmSync(mixWav, { force: true });
+      fs.rmSync(musicFile, { force: true });
+    } else {
+      run(['-f', 'concat', '-safe', '0', '-i', list,
+        '-ss', String(reel.music.start), '-i', musicFile, ...sfxIn,
+        '-filter_complex', `[1:a]volume=0.7,afade=in:st=0:d=0.3,afade=out:st=${(total - 1.2).toFixed(2)}:d=1.2[m];${mix}`,
+        '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-t', String(total), '-movflags', '+faststart', out]);
+    }
     console.log(`${name}: ${total.toFixed(1)} s → ${path.relative(repo, out)}`);
 
     // Twin without the music, to add a trending sound in the TikTok/Instagram
