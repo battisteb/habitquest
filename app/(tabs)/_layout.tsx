@@ -6,7 +6,7 @@ import { use$ } from '@legendapp/state/react';
 import { habitsStore$, isHabitCompletedEnough, isActiveToday } from '../../src/features/habits/stores/habits-store';
 import { friendsStore$ } from '../../src/features/social/stores/friends-store';
 import { notificationsStore$, fetchNotifications } from '../../src/features/notifications/stores/notifications-store';
-import { colors, fonts, PIXEL, pixelSize } from '../../src/ui/theme/tokens';
+import { colors, fonts, isLightTheme, PIXEL, pixelSize } from '../../src/ui/theme/tokens';
 import { shade } from '../../src/ui/components/pixel-frame';
 import { useT } from '../../src/lib/i18n';
 import { useTheme } from '../../src/ui/theme/theme-context';
@@ -56,7 +56,7 @@ function tabIcon(emoji: string, label: string) {
         <Text style={{ fontSize: 18, lineHeight: 22, opacity: focused ? 1 : 0.55 }}>{emoji}</Text>
         <Text
           numberOfLines={1}
-          style={{ color: focused ? colors.text : color, fontSize: pixelSize(11), lineHeight: pixelSize(13), fontFamily: fonts.bold, letterSpacing: 0.5 }}
+          style={{ color: focused ? (isLightTheme() ? '#FFFFFF' : colors.text) : color, fontSize: pixelSize(11), lineHeight: pixelSize(13), fontFamily: fonts.bold, letterSpacing: 0.5 }}
         >
           {label}
         </Text>
@@ -95,7 +95,7 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: shade(colors.background, 0.7),
+          backgroundColor: isLightTheme() ? colors.surface : shade(colors.background, 0.7),
           borderTopColor: colors.border,
           borderTopWidth: PIXEL,
           // Room for the emoji icon + label, above the home indicator.

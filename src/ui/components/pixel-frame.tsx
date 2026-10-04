@@ -20,6 +20,18 @@ interface PixelFrameProps {
 }
 
 /** Darkens a #rrggbb color; other formats are returned unchanged. */
+/** `hex` moved towards `other` by t (0 = hex, 1 = other), e.g. a pale tint on light themes. */
+export function mix(hex: string, other: string, t: number): string {
+  const rgb = (h: string) => {
+    const n = parseInt(h.slice(1), 16);
+    return [16, 8, 0].map((s) => (n >> s) & 0xff);
+  };
+  if (!/^#[0-9a-f]{6}$/i.test(hex) || !/^#[0-9a-f]{6}$/i.test(other)) return hex;
+  const a = rgb(hex);
+  const b = rgb(other);
+  return `#${a.map((v, i) => Math.round(v + (b[i] - v) * t).toString(16).padStart(2, '0')).join('')}`;
+}
+
 export function shade(hex: string, factor = 0.55): string {
   const m = /^#([0-9a-f]{6})$/i.exec(hex);
   if (!m) return hex;

@@ -15,7 +15,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0D0D1A"
+      "backgroundColor": "#CFE8FF"
     },
     "ios": {
       "supportsTablet": false,
@@ -81,8 +81,8 @@
       "output": "single",
       "name": "HabitQuest",
       "shortName": "HabitQuest",
-      "themeColor": "#0D0D1A",
-      "backgroundColor": "#0D0D1A",
+      "themeColor": "#CFE8FF",
+      "backgroundColor": "#CFE8FF",
       "lang": "en",
       "description": "Level up your habits with pixel art gamification."
     },

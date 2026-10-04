@@ -40,6 +40,16 @@ export const colors: {
 
 export const THEME_STORAGE_KEY = 'active-theme';
 
+/**
+ * True when the active theme has a light background (Pip's Sky, Pastel Dawn, Lifestyle):
+ * the few places that darken a color for depth lighten it instead.
+ */
+export function isLightTheme(): boolean {
+  const n = parseInt(colors.background.slice(1), 16);
+  const [r, g, b] = [16, 8, 0].map((s) => (n >> s) & 0xff);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.5;
+}
+
 /** Copies a theme palette into the shared `colors` object. */
 export function applyThemeToColors(key: ThemeKey): void {
   const t = THEMES[key];

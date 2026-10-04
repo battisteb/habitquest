@@ -23,7 +23,7 @@ import {
 } from '../src/features/notifications/utils/notification-service';
 import { useWeeklyRecapScheduler } from '../src/features/notifications/hooks/use-weekly-recap-scheduler';
 import { useNotificationObserver } from '../src/features/notifications/hooks/use-notification-observer';
-import { colors } from '../src/ui/theme/tokens';
+import { colors, isLightTheme } from '../src/ui/theme/tokens';
 import { ThemeProvider, useTheme } from '../src/ui/theme/theme-context';
 import { OfflineBanner } from '../src/ui/components/offline-banner';
 import { initPurchases } from '../src/features/monetization/stores/subscription-store';
@@ -122,7 +122,7 @@ function ThemedApp() {
 
   return (
     <ResponsiveFrame>
-      <StatusBar style={themeKey === 'lifestyle' ? 'dark' : 'light'} />
+      <StatusBar style={isLightTheme() ? 'dark' : 'light'} />
       <AuthGuard>
         <Stack
           key={themeKey}
