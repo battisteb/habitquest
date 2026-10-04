@@ -27,6 +27,8 @@
  *
  * English version: LANG=en REC_DIR=<English recordings> node marketing/build-reels.js
  * → reels.en.json, screenshots from assets/screens-en, output exports/reels-en.
+ * Japanese account: LANG=ja → reels.ja.json, assets/screens-ja, exports/reels-ja, kawaii theme
+ *   of the template (?ja) and the `pip` segment (Pip big, his faces in `pips`, his line in a bubble).
  */
 const fs = require('fs');
 const path = require('path');
@@ -37,11 +39,12 @@ const ffmpeg = process.env.FFMPEG || require('ffmpeg-static');
 
 const root = __dirname;
 const repo = path.join(root, '..');
-const lang = process.env.LANG === 'en' ? 'en' : 'fr';
-const reels = JSON.parse(fs.readFileSync(path.join(root, lang === 'en' ? 'reels.en.json' : 'reels.json'), 'utf8'));
-const screens = lang === 'en' ? 'screens-en' : 'screens';
-const outDir = path.join(root, 'exports', lang === 'en' ? 'reels-en' : 'reels');
-const template = pathToFileURL(path.join(root, 'templates', 'reel.html')).href;
+const lang = ['en', 'ja'].includes(process.env.LANG) ? process.env.LANG : 'fr';
+const reels = JSON.parse(fs.readFileSync(path.join(root, lang === 'fr' ? 'reels.json' : `reels.${lang}.json`), 'utf8'));
+const screens = lang === 'fr' ? 'screens' : `screens-${lang}`;
+const outDir = path.join(root, 'exports', lang === 'fr' ? 'reels' : `reels-${lang}`);
+const template = pathToFileURL(path.join(root, 'templates', 'reel.html')).href + (lang === 'ja' ? '?ja' : '');
+const FONTS = ['52px "Press Start 2P"', '800 46px Inter', '600 46px Inter', '52px DotGothic16', '500 46px "M PLUS Rounded 1c"'];
 const recDir = process.env.REC_DIR || path.join(root, 'recordings');
 const work = path.join(outDir, '.work');
 const PHONE = { x: 267, y: 600, w: 546, h: 1182, radius: 44 };
@@ -87,7 +90,7 @@ async function renderAnimated(page, spec, dur, out, enc) {
   await page.goto(template, { waitUntil: 'networkidle0' });
   await page.evaluate((s) => window.render(s), spec);
   // The text is inserted after load: request the fonts explicitly, or a capture can fall back to a serif.
-  await page.evaluate(() => Promise.all(['52px "Press Start 2P"', '800 46px Inter', '600 46px Inter'].map((f) => document.fonts.load(f))));
+  await page.evaluate((fonts) => Promise.all(fonts.map((f) => document.fonts.load(f))), FONTS);
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
   const dir = `${out}.frames`;
@@ -253,7 +256,7 @@ async function renderLayer(page, spec, file) {
   await page.goto(template, { waitUntil: 'networkidle0' });
   await page.evaluate((s) => window.render(s), spec);
   // The text is inserted after load: request the fonts explicitly, or a capture can fall back to a serif.
-  await page.evaluate(() => Promise.all(['52px "Press Start 2P"', '800 46px Inter', '600 46px Inter'].map((f) => document.fonts.load(f))));
+  await page.evaluate((fonts) => Promise.all(fonts.map((f) => document.fonts.load(f))), FONTS);
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
   await page.screenshot({ path: file, omitBackground: true });
@@ -300,6 +303,9 @@ async function roundedMask(page, file) {
       }
       if (seg.type === 'kinetic') {
         await renderAnimated(page, { layout: 'kinetic', ...seg, smooth: !reel.punchy }, seg.dur, out, enc);
+      } else if (seg.type === 'pip') {
+        const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
+        await renderAnimated(page, { layout: 'pip', ...seg, entered }, seg.dur, out, enc);
       } else if (seg.type === 'hero') {
         const looks = seg.looks.map((l) => ({
           label: l.label,
