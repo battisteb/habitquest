@@ -327,7 +327,9 @@
   /** One span per character (typewriter), keeping <em> highlights and <br>. */
   function charSpans(title) {
     let out = '';
-    for (const m of title.matchAll(/<em>(.*?)<\/em>|<br>|([^<])/g)) {
+    // Flag 'u': an emoji is one character, not two halves that each render as '�'.
+    // Flags (🇯🇵) are two regional letters that must stay together.
+    for (const m of title.matchAll(/<em>(.*?)<\/em>|<br>|(\p{RI}\p{RI}|[^<])/gu)) {
       if (m[0] === '<br>') out += '<br>';
       else if (m[1] !== undefined) out += [...m[1]].map((c) => `<span class="w"><em>${c === ' ' ? '&nbsp;' : c}</em></span>`).join('');
       // A lone space in an inline-block has no width: keep it as a non-breaking space.
