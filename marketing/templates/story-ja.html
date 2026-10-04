@@ -31,6 +31,12 @@
   .yt h1 { font-family: 'Press Start 2P'; font-size: 84px; color: #14142a; }
   .yt h1 em { color: #ff5a8a; }
   .yt p { font-size: 46px; font-weight: 800; color: #3d2f45; }
+  /* The YouTube channel is English: the app's night blue, like the icon (not the sakura theme). */
+  body.night { background: radial-gradient(circle at 50% 50%, #3a4480 0%, #1e2448 60%, #12152e 100%); }
+  body.night::before { opacity: .1; background-image: linear-gradient(#fff 3px, transparent 3px), linear-gradient(90deg, #fff 3px, transparent 3px); background-size: 96px 96px; }
+  body.night .yt h1 { color: #e8e8ff; text-shadow: 8px 8px 0 #14142a; }
+  body.night .yt h1 em { color: #f5c518; }
+  body.night .yt p { color: #a9b8ff; }
   .yt .tag { align-self: flex-start; font-family: 'Press Start 2P'; font-size: 26px; padding: 18px 24px; color: #fff; background: #6fb7ff; border: 5px solid #14142a; }
 </style>
 </head>
@@ -52,7 +58,10 @@
     youtube: (s) => `<div class="yt">${pip(s.pip, 0, 0, 300).replace('class="pip"', 'class=""').replace(/style="[^"]*"/, '')}
       <div class="t"><h1>Habit<em>Quest</em></h1><p>${s.title}</p><span class="tag">${s.tag}</span></div></div>`,
   };
-  window.render = (s) => { document.getElementById('root').innerHTML = layouts[s.layout](s); };
+  window.render = (s) => {
+    document.body.classList.toggle('night', s.theme === 'night');
+    document.getElementById('root').innerHTML = layouts[s.layout](s);
+  };
 </script>
 </body>
 </html>

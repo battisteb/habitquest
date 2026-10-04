@@ -32,6 +32,6 @@ Tout suit la musique : chaque scène dure un nombre entier de temps et chaque tr
 
 ## Publier
 
-1. Créer `@habitquest.app` sur Instagram et TikTok (compte pro/créateur), bio de `strategy.md`. Photo de profil : `brand/pip-avatar-sakura.png` (Pip ; compte japonais), sinon `assets/icon.png`.
+1. Créer `@habitquest.app` sur Instagram et TikTok (compte pro/créateur), bio de `strategy.md`. Photo de profil : `brand/pip-avatar-sakura.png` (Pip rose, compte japonais), `brand/pip-avatar-blue.png` (Pip bleu, comptes anglais).
 2. Reels : importer le MP4, ajouter la légende de `reels.md`. Sur TikTok, ajouter un son tendance à faible volume.
 3. Carrousels : importer les PNG dans l'ordre, légende de `posts.md`.

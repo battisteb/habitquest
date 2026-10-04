@@ -1,5 +1,6 @@
 /**
- * Instagram stories of the Japanese account (1080×1920) and the YouTube banner (2560×1440).
+ * Instagram stories of the Japanese account (1080×1920, pink Pip) and the YouTube banner
+ * (2560×1440, English channel: blue Pip and the app's night theme).
  *
  *   npm i --no-save puppeteer-core
  *   node marketing/render-stories.js   → marketing/exports/stories/<name>.png
@@ -21,7 +22,7 @@ const STORIES = {
   'ja-countdown': { size: [1080, 1920], layout: 'sticker', pip: 'joy-party', title: 'もうすぐ<em>リリース</em>！', body: '通知をオンにして待っててね✨', slot: 'ここにカウントダウン' },
   'ja-question': { size: [1080, 1920], layout: 'sticker', pip: 'happy-love', title: 'ピップに<em>質問</em>してね', body: '習慣のこと、アプリのこと、なんでも！', slot: 'ここに質問スタンプ' },
   'ja-winter-goal': { size: [1080, 1920], layout: 'sticker', pip: 'happy-worried', title: 'きみの<em>冬の目標</em>は？', body: 'Winter Arc、いっしょにがんばろう❄️', slot: 'ここに質問スタンプ' },
-  'youtube-banner': { size: [2560, 1440], layout: 'youtube', pip: 'joy-love', title: 'Your habits = RPG quests', tag: 'WINTER ARC ❄️' },
+  'youtube-banner': { size: [2560, 1440], layout: 'youtube', theme: 'night', pip: 'joy-worried', title: 'Your habits = RPG quests', tag: 'WINTER ARC ❄️' },
 };
 
 (async () => {
