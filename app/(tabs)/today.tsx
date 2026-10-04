@@ -33,7 +33,6 @@ import { ComebackBanner, comebackHoursLeft } from '../../src/features/habits/com
 import { pickTodayBanner } from '../../src/features/habits/utils/today-banner';
 import { subscriptionStore$ } from '../../src/features/monetization/stores/subscription-store';
 import { trialDaysLeft } from '../../src/features/monetization/utils/trial-offer';
-import { MoodCheckIn } from '../../src/features/mood/components/mood-check-in';
 import { streakRepairCost } from '../../src/lib/constants/game-config';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
 import { useTourTarget } from '../../src/features/onboarding/tour/tour-targets';
@@ -534,6 +533,7 @@ export default function TodayScreen() {
       pendingStreaks={pendingStreaks}
       xp={profile?.xp ?? 0}
       level={profile?.level ?? 1}
+      showMood={isRevealed('mood', adventureDay(profile?.created_at))}
     />
   );
 
@@ -641,7 +641,6 @@ export default function TodayScreen() {
 
       {banner === 'trial' && <TrialBanner />}
       {banner === 'comeback' && <ComebackBanner />}
-      {isRevealed('mood', day) && <MoodCheckIn />}
 
       {/* Streak recovery: one at a time (D4), the others come after it is closed */}
       {banner === 'broken' && brokenStreaks.slice(0, 1).map((b) => (

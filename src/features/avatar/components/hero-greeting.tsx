@@ -12,6 +12,7 @@ import { useTourTarget } from '../../onboarding/tour/tour-targets';
 import { colors, spacing, fontSizes } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
+import { MoodPip } from '../../mood/components/mood-pip';
 
 interface HeroGreetingProps {
   totalHabits: number;
@@ -20,10 +21,12 @@ interface HeroGreetingProps {
   pendingStreaks: number[];
   xp: number;
   level: number;
+  /** Pip joins the bubble to ask for and show the mood of the day (from day 7). */
+  showMood?: boolean;
 }
 
 /** The player's hero on the Today screen, commenting on the day in a speech bubble. */
-export function HeroGreeting({ totalHabits, restDay, pendingStreaks, xp, level }: HeroGreetingProps) {
+export function HeroGreeting({ totalHabits, restDay, pendingStreaks, xp, level, showMood = false }: HeroGreetingProps) {
   const T = useT();
   const router = useRouter();
   const { themeKey } = useTheme();
@@ -66,7 +69,13 @@ export function HeroGreeting({ totalHabits, restDay, pendingStreaks, xp, level }
         backgroundColor={colors.text}
         contentStyle={styles.bubbleFace}
       >
-        <Text style={styles.bubbleText} testID="hero-line">{text}</Text>
+        {showMood ? (
+          <MoodPip>
+            <Text style={styles.bubbleText} testID="hero-line">{text}</Text>
+          </MoodPip>
+        ) : (
+          <Text style={styles.bubbleText} testID="hero-line">{text}</Text>
+        )}
       </PixelFrame>
     </View>
   );
