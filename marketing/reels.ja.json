@@ -1,0 +1,35 @@
+{
+  "j-r1-hajimemashite": {
+    "music": { "file": "marketing/audio/theme-chill.m4a", "start": 0 },
+    "segments": [
+      { "type": "pip", "dur": 2.6, "title": "はじめまして！<br><em>ピップ</em>だよ🌸", "pips": ["happy-love", "joy-love"], "every": 1.2 },
+      { "type": "still", "dur": 2.6, "src": "today", "title": "習慣が<em>クエスト</em>に" },
+      { "type": "pip", "dur": 2.4, "title": "ぼくが毎日<br><em>応援</em>するよ", "pips": ["happy-calm", "joy-calm"], "every": 1.1 },
+      { "type": "pip", "dur": 2.8, "title": "もうすぐ<em>リリース</em>", "subtitle": "フォローして待っててね", "pips": ["joy-party"], "cta": "HabitQuest", "sfx": "level-up", "sfxAt": 0.3 }
+    ]
+  },
+  "j-r2-kibun": {
+    "music": { "file": "marketing/audio/theme-chill.m4a", "start": 0 },
+    "segments": [
+      { "type": "pip", "dur": 3.8, "title": "きみの今日の<br><em>気分</em>は？", "pips": ["sad-worried", "worried-worried", "happy-calm", "happy-love", "joy-party"], "every": 0.72 },
+      { "type": "still", "dur": 2.6, "src": "today", "title": "ぼくの顔が<br><em>気分</em>で変わるよ" },
+      { "type": "pip", "dur": 2.6, "title": "どんな日も<br><em>いっしょ</em>だよ", "subtitle": "コメントで今日の気分を教えてね", "pips": ["joy-love"] }
+    ]
+  },
+  "j-r3-mini": {
+    "music": { "file": "marketing/audio/theme-chill.m4a", "start": 0 },
+    "segments": [
+      { "type": "pip", "dur": 2.3, "title": "今日は<em>つかれた</em>…", "pips": ["sad-worried"] },
+      { "type": "pip", "dur": 3.0, "title": "<em>ミニ版</em>でOK", "subtitle": "1ページだけでも、連続記録はつづくよ", "pips": ["happy-love"] },
+      { "type": "pip", "dur": 2.6, "title": "ゼロより、<br><em>少しでも</em>", "subtitle": "えらいよ🌸", "pips": ["joy-love"], "sfx": "complete", "sfxAt": 0.4 }
+    ]
+  },
+  "j-r4-winter-arc": {
+    "music": { "file": "marketing/audio/theme-chill.m4a", "start": 0 },
+    "segments": [
+      { "type": "pip", "dur": 2.5, "title": "<em>Winter Arc</em><br>はじまったよ❄️", "pips": ["happy-worried", "joy-worried"], "every": 1.2 },
+      { "type": "still", "dur": 2.8, "src": "arc", "title": "8週がんばると<br><em>ルーン</em>" },
+      { "type": "pip", "dur": 2.6, "title": "冬の目標、<br><em>いっしょに</em>！", "subtitle": "完璧じゃなくていいんだ", "pips": ["joy-party"] }
+    ]
+  }
+}

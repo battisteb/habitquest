@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@600;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@600;800&family=DotGothic16&family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet" />
 <style>
   /* 1080×1920 reel layers, composited by build-reels.js.
      Static layers: 'bg' (background), 'phone' (frame + title over a recording),
@@ -67,6 +67,30 @@
   .tag { position: absolute; left: 0; right: 0; top: 1560px; text-align: center; }
   .tag span { display: inline-block; font-family: 'Press Start 2P'; font-size: 40px; padding: 26px 36px; color: #0d0f1c;
               background: #f5c518; border-bottom: 8px solid #b38d0f; }
+
+  /* Japanese account (template URL ?ja): kawaii sakura pastels, DotGothic16, Pip speaks (strategy.ja.md). */
+  body.ja { font-family: 'M PLUS Rounded 1c', sans-serif; color: #14142a; }
+  body.ja .bg { background: linear-gradient(170deg, #ffe3ee 0%, #fff6e9 75%); }
+  body.ja .bg::after { opacity: .22; background-image: radial-gradient(#ff8fc8 4px, transparent 4px); background-size: 64px 64px; }
+  body.ja .grid { opacity: 0; }
+  body.ja .glow { background: radial-gradient(circle, rgba(255,143,200,.35) 0%, transparent 60%); }
+  body.ja .title, body.ja .card h1, body.ja .cta, body.ja .caption, body.ja .kin h1, body.ja .hero-title, body.ja .tag span {
+    font-family: 'DotGothic16'; text-shadow: none; }
+  body.ja .title, body.ja .kin h1, body.ja .card h1 { line-height: 1.4; text-wrap: balance; line-break: strict; }
+  body.ja .title em, body.ja .card h1 em, body.ja .kin em, body.ja .bubble em { font-style: normal; color: #ff5a8a; white-space: nowrap; }
+  body.ja .frame { border-color: #14142a; box-shadow: 14px 14px 0 #ff8fc8; border-radius: 0; }
+  body.ja .plate { background: #fff; border: 6px solid #14142a; }
+  body.ja .card p, body.ja .kin p { color: #3d2f45; }
+  body.ja .cta { color: #fff; background: #ff5a8a; border: 6px solid #14142a; border-radius: 0; box-shadow: 8px 8px 0 #d65a97; }
+  body.ja .handle { color: #8a6f86; }
+  /* Pip scene: his line in a pixel speech bubble, Pip big below. */
+  .bubble { position: absolute; left: 80px; right: 80px; top: 260px; background: #fff; border: 8px solid #14142a;
+            box-shadow: 14px 14px 0 #d65a97; padding: 50px 54px; text-align: center; }
+  .bubble h1 { font-family: 'DotGothic16'; font-size: 76px; line-height: 1.4; text-wrap: balance; line-break: strict; }
+  .bubble p { font-size: 46px; font-weight: 500; line-height: 1.55; margin-top: 22px; color: #3d2f45; text-wrap: balance; }
+  .bubble::after { content: ''; position: absolute; left: 50%; bottom: -54px; width: 54px; height: 54px; margin-left: -27px;
+                   background: #fff; border-right: 8px solid #14142a; border-bottom: 8px solid #14142a; transform: rotate(45deg); }
+  .pip-img { position: absolute; left: 50%; top: 1000px; width: 560px; height: 560px; margin-left: -280px; image-rendering: pixelated; }
 </style>
 </head>
 <body>
@@ -160,6 +184,33 @@
       };
     },
 
+    // Pip big, his face changing every `every` s (pips: ['joy-love', …], from marketing/brand/pip).
+    pip: (s) => {
+      const keys = s.pips || [s.pip || 'joy-love'];
+      root.innerHTML = `<div class="bg"></div><div class="glow"></div>
+        <div class="bubble"><h1>${s.title}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
+        ${keys.map((k, i) => `<img class="pip-img" data-i="${i}" src="../brand/pip/pip-${k}.png" />`).join('')}
+        ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px">${s.cta}</span></div>` : ''}
+        <div class="handle">@habitquest.app</div>`;
+      const imgs = [...root.querySelectorAll('.pip-img')];
+      const every = s.every || 1;
+      const bubble = root.querySelector('.bubble');
+      window.frame = (t) => {
+        const pop = s.entered ? 1 : ease(Math.min(t / 0.5, 1));
+        bubble.style.opacity = String(pop);
+        bubble.style.transform = `translateY(${(1 - pop) * -30}px)`;
+        const i = Math.min(Math.floor(t / every), imgs.length - 1);
+        const since = t - i * every;
+        // Gentle hop, like in the app.
+        const hop = Math.abs(Math.sin(t * Math.PI * 1.6)) * 26;
+        imgs.forEach((img, k) => {
+          const on = k === i ? ease(Math.min(since / 0.3, 1)) : k === i - 1 ? 1 - ease(Math.min(since / 0.3, 1)) : 0;
+          img.style.opacity = String(on * pop);
+          img.style.transform = `translateY(${-hop}px)`;
+        });
+      };
+    },
+
     hero: (s) => {
       root.innerHTML = `<div class="bg"></div><div class="grid"></div><div class="glow"></div>
         <canvas width="1080" height="1920"></canvas>
@@ -224,7 +275,8 @@
     },
   };
 
-  window.render = (s) => { window.frame = null; layouts[s.layout](s); if (window.frame) window.frame(0); };
+  const JA = location.search.includes('ja');
+  window.render = (s) => { document.body.classList.toggle('ja', JA); window.frame = null; layouts[s.layout](s); if (window.frame) window.frame(0); };
 </script>
 </body>
 </html>
