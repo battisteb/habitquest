@@ -6,7 +6,7 @@ Pour chaque reel : la légende à copier (en japonais), puis sa traduction pour 
 
 ---
 
-## j-r1-hajimemashite (15 s) — à poster en premier : le principe de l'app
+## j-r1-hajimemashite (13 s) — à poster en premier : le principe de l'app
 
 ```
 はじめまして、ピップだよ🌸
@@ -16,7 +16,7 @@ Pour chaque reel : la légende à copier (en japonais), puis sa traduction pour 
 ```
 « Enchanté, c'est Pip 🌸 Les habitudes deviennent des quêtes de RPG : en les validant tu gagnes de l'XP et de l'or, et ton héros monte de niveau ! Dans l'appli HabitQuest, je t'encourage chaque jour. »
 
-## j-r2-kibun (13 s) — l'humeur du jour
+## j-r2-kibun (12 s) — l'humeur du jour
 
 ```
 きみの今日の気分は？😞😕😐🙂😄
@@ -25,7 +25,7 @@ Pour chaque reel : la légende à copier (en japonais), puis sa traduction pour 
 ```
 « Ton humeur du jour ? 😞😕😐🙂😄 Dis-le-moi en commentaire. Mon visage change aussi ! »
 
-## j-r3-yasashii (13 s) — la série indulgente et la version mini
+## j-r3-yasashii (10 s) — la série indulgente et la version mini
 
 ```
 1日休んでも、だいじょうぶ。フリーズが連続記録を守るよ❄️
@@ -34,7 +34,7 @@ Pour chaque reel : la légende à copier (en japonais), puis sa traduction pour 
 ```
 « Sauter un jour, ce n'est pas grave : le gel protège ta série ❄️ Les jours de fatigue, la version mini suffit. Un peu plutôt que rien 🌸 »
 
-## j-r4-winter-arc (13 s) — le Winter Arc
+## j-r4-winter-arc (11 s) — le Winter Arc
 
 ```
 Winter Arc、いっしょにやろう❄️

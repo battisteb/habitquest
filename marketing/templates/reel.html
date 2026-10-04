@@ -324,6 +324,27 @@
     return { T, B, n, ph, pulse: Math.exp(-ph * 5), down: n % 4 === 0 };
   }
 
+  /** One span per character (typewriter), keeping <em> highlights and <br>. */
+  function charSpans(title) {
+    let out = '';
+    for (const m of title.matchAll(/<em>(.*?)<\/em>|<br>|([^<])/g)) {
+      if (m[0] === '<br>') out += '<br>';
+      else if (m[1] !== undefined) out += [...m[1]].map((c) => `<span class="w"><em>${c}</em></span>`).join('');
+      else out += `<span class="w">${m[2]}</span>`;
+    }
+    return out;
+  }
+
+  /** Typewriter: characters appear one after the other, each with a tiny drop. */
+  function typeWords(spans, t, step, t0 = 0) {
+    spans.forEach((el, i) => {
+      const k = (t - t0 - i * step) / 0.12;
+      el.style.opacity = k > 0 ? '1' : '0';
+      el.style.transform = `translateY(${k > 0 ? (1 - ease(k)) * -14 : 0}px)`;
+    });
+    return { hits: [], landed: t0 + spans.length * step + 0.1 };
+  }
+
   function wordSpans(title) {
     return words(title).map((w) => (w.br ? '<br>' : `<span class="w"${w.space ? ' style="margin-left:.5em"' : ''}>${w.em ? `<em>${w.w}</em>` : w.w}</span>`)).join('');
   }
@@ -484,6 +505,55 @@
         }
         continue;
       }
+      if (f.type === 'petals') {
+        // Pixel sakura petals drifting down over the whole frame.
+        ctx.restore();
+        const n = f.n || 26;
+        for (let q = 0; q < n; q++) {
+          const sx = rand(q * 5.3 + idx) * 1180 - 50;
+          const sp = 260 + rand(q * 2.1 + idx) * 260;
+          const y0 = -60 - rand(q * 9.7 + idx) * 700;
+          const py = y0 + sp * k;
+          if (py > 1980) continue;
+          const px = sx + Math.sin(k * 2.4 + q) * 60;
+          const sz = rand(q + idx * 3) > 0.5 ? 14 : 10;
+          ctx.globalAlpha = fade * 0.9;
+          ctx.fillStyle = q % 3 === 0 ? '#ffffff' : q % 3 === 1 ? '#ff8fc8' : '#ffc2df';
+          ctx.fillRect(px, py, sz, sz);
+          ctx.fillRect(px + sz, py + sz / 2, sz / 2, sz / 2);
+        }
+        ctx.globalAlpha = 1;
+        continue;
+      }
+      if (f.type === 'hearts') {
+        // Pixel hearts rising from a point, swaying.
+        ctx.restore();
+        const HEART = ['.kk.kk.', 'kppkppk', 'kppppPk', '.kpppk.', '..kpk..', '...k...'];
+        const col = { k: '#14142A', p: '#FF5A8A', P: '#FFFFFF' };
+        for (let q = 0; q < (f.n || 7); q++) {
+          const kk = k - q * 0.12;
+          if (kk < 0 || kk > 1.4) continue;
+          const hx = x + (rand(q * 3.7 + idx) - 0.5) * 260 + Math.sin(kk * 5 + q) * 30;
+          const hy = y - kk * 520;
+          const px = 7 + rand(q + idx) * 4;
+          ctx.globalAlpha = fade * (1 - clamp01((kk - 1) / 0.4));
+          HEART.forEach((r, j) => [...r].forEach((c, i) => { if (col[c]) { ctx.fillStyle = col[c]; ctx.fillRect(hx + i * px, hy + j * px, px + 0.5, px + 0.5); } }));
+        }
+        ctx.globalAlpha = 1;
+        continue;
+      }
+      if (f.type === 'stamp') {
+        // A big word stamped on, tilted, with a ring of confetti.
+        const sc = k < 0.18 ? 2.2 - 1.2 * ease(k / 0.18) : 1 + 0.05 * b.pulse;
+        ctx.translate(x, y); ctx.rotate((f.rot ?? -8) * Math.PI / 180); ctx.scale(sc, sc);
+        const size = f.size || 72;
+        ctx.font = `${size}px ${PF()}`;
+        const tw = ctx.measureText(f.text).width + 70, th = size + 50;
+        ctx.fillStyle = '#14142A'; ctx.fillRect(-tw / 2 - 8, -th / 2 - 8, tw + 16, th + 16);
+        ctx.fillStyle = f.color || '#ff5a8a'; ctx.fillRect(-tw / 2, -th / 2, tw, th);
+        ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(f.text, 0, 4);
+        ctx.restore(); burst(ctx, k - 0.15, x, y, idx + 21, 30, 1.1); continue;
+      }
       if (f.type === 'counter') {
         const dur = f.dur || 0.8;
         const v = Math.round(f.from + (f.to - f.from) * ease(k / dur));
@@ -544,11 +614,22 @@
         const since = t - i * every;
         const up = Math.sin(Math.PI * b.ph) * 46 * (b.n % 2 ? 0.6 : 1);
         const squash = b.ph < 0.12 ? 0.9 : 1;
+        // Entrance (enter): pop, drop (falls with a bounce), slide (from the side), spin.
+        const e = s.entered ? 1 : clamp01(t / 0.45);
+        const side = s.side === 'left' ? -230 : s.side === 'right' ? 230 : 0;
+        let ex = side, ey = 0, rot = 0, sc = 1;
+        if (!s.entered) {
+          if (s.enter === 'drop') ey = -(1 - back(e)) * 900;
+          else if (s.enter === 'slide') ex = side + (1 - ease(e)) * (s.side === 'right' ? 900 : -900);
+          else if (s.enter === 'spin') { rot = (1 - ease(e)) * 540; sc = 0.2 + 0.8 * back(e); }
+          else sc = 0.2 + 0.8 * back(e);
+        }
         imgs.forEach((img, k) => {
-          img.style.opacity = k === i ? '1' : '0';
-          img.style.transform = `translateY(${-up}px) scale(${2 - squash}, ${squash})`;
+          img.style.opacity = k === i ? String(clamp01(e * 3)) : '0';
+          img.style.transform = `translate(${ex}px, ${ey - up}px) rotate(${rot}deg) scale(${(2 - squash) * sc}, ${squash * sc})`;
         });
-        if (i > 0) burst(ctx, since, 540, 1280, i * 7, 26, 0.9);
+        if (s.enter === 'drop' && !s.entered) burst(ctx, t - 0.42, 540 + side, 1560, 61, 24, 0.8);
+        if (i > 0) burst(ctx, since, 540 + side, 1280, i * 7, 26, 0.9);
         if (cta) {
           const at = (s.ctaBeat || 4) * b.B;
           const k = (t - at) / 0.3;
@@ -601,7 +682,7 @@
     kinetic: (s) => {
       root.innerHTML = `${underHTML(false)}<div class="edge"></div><div class="kin">
           ${s.icon ? '<img src="../assets/icon.png" />' : ''}
-          <h1>${wordSpans(s.title)}</h1>
+          <h1>${s.anim === 'type' ? charSpans(s.title) : wordSpans(s.title)}</h1>
           ${s.subtitle ? `<p>${s.subtitle}</p>` : ''}
           ${s.cta ? `<div class="cta" style="opacity:0">${s.cta}</div>` : ''}
         </div>${fxCanvas}`;
@@ -619,8 +700,16 @@
           img.style.transform = `scale(${(s.entered ? 1 : 0.2 + 0.8 * back(t / 0.35)) * (1 + 0.05 * b.pulse)})`;
         }
         h1.style.transform = 'none';
-        const { hits, landed } = popWords(spans, t, b.B / 2, t0);
-        h1.style.transform = `scale(${1 + (t > landed ? 0.04 * b.pulse : 0)})`;
+        let res;
+        if (s.anim === 'type') res = typeWords(spans, t, Math.min(0.07, (b.B * 2) / Math.max(spans.length, 1)), t0);
+        else if (s.anim === 'stamp') {
+          spans.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; });
+          const r = h1.getBoundingClientRect();
+          res = { hits: [{ x: r.left + r.width / 2, y: r.top + r.height / 2, at: 0.16, seed: 4 }], landed: 0.2 };
+        } else res = popWords(spans, t, b.B / 2, t0);
+        const { hits, landed } = res;
+        const stampScale = s.anim === 'stamp' ? (t < 0.18 ? 2.4 - 1.4 * ease(t / 0.18) : 1) : 1;
+        h1.style.transform = `rotate(${s.anim === 'stamp' ? -4 : 0}deg) scale(${stampScale * (1 + (t > landed ? 0.04 * b.pulse : 0))})`;
         const p = root.querySelector('.kin p');
         if (p) { const k = (t - landed) / 0.35; p.style.opacity = String(clamp01(k * 2)); p.style.transform = `translateY(${(1 - ease(k)) * 50}px)`; }
         ctx.clearRect(0, 0, 1080, 1920);
