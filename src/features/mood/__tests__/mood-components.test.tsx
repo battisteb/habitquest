@@ -21,30 +21,40 @@ jest.mock('../../../lib/i18n', () => {
   return { useT: () => T };
 });
 
-import { MoodCheckIn } from '../components/mood-check-in';
+import { Text } from 'react-native';
+import { MoodPip, MOOD_PIP } from '../components/mood-pip';
 import { MoodInsightsCard } from '../components/mood-insights-card';
 import { moodStore$ } from '../stores/mood-store';
 
-describe('MoodCheckIn', () => {
+describe('MoodPip', () => {
   beforeEach(() => {
     moodStore$.set({ today: null, day: null });
     mockRpc.mockClear();
   });
 
-  it('logs the mood of the day in one tap', async () => {
-    const { getByTestId, getByText } = render(<MoodCheckIn />);
-    expect(getByText('mood_question')).toBeTruthy();
+  it('asks the mood next to the hero line and logs it in one tap', async () => {
+    const { getByTestId, getByText, queryByText } = render(<MoodPip><Text>hero line</Text></MoodPip>);
+    expect(getByText('hero line')).toBeTruthy();
+    expect(getByText('mood_pip_question')).toBeTruthy();
     fireEvent.press(getByTestId('mood-4'));
     expect(mockRpc).toHaveBeenCalledWith('log_mood', { p_mood: 4 });
-    await waitFor(() => expect(getByText('mood_thanks')).toBeTruthy());
-    expect(getByTestId('mood-4').props.accessibilityState).toEqual({ selected: true });
+    await waitFor(() => expect(getByTestId('mood-pip-reply')).toBeTruthy());
+    expect(queryByText('mood_pip_question')).toBeNull();
   });
 
-  it('leaves the screen once answered for the day (lighter Today)', () => {
+  it('wears the mood of the day, and a tap on Pip changes it', () => {
     const { localDateKey } = jest.requireActual('../../../lib/local-date');
-    moodStore$.set({ today: 3, day: localDateKey() });
-    const { queryByTestId } = render(<MoodCheckIn />);
-    expect(queryByTestId('mood-check-in')).toBeNull();
+    moodStore$.set({ today: 1, day: localDateKey() });
+    const { getByTestId, queryByTestId } = render(<MoodPip><Text>hero line</Text></MoodPip>);
+    expect(queryByTestId('mood-1')).toBeNull();
+    fireEvent.press(getByTestId('mood-pip-face'));
+    expect(getByTestId('mood-1').props.accessibilityState).toEqual({ selected: true });
+  });
+
+  it('maps every mood to a Pip face', () => {
+    for (let m = 1; m <= 5; m++) expect(MOOD_PIP[m]).toBeTruthy();
+    expect(MOOD_PIP[1].expression).toBe('sad');
+    expect(MOOD_PIP[5].expression).toBe('joy');
   });
 });
 
