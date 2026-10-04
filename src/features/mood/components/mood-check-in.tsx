@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { moodStore$, logMood, fetchMoods } from '../stores/mood-store';
@@ -16,6 +16,13 @@ export function MoodCheckIn() {
   const T = useT();
   const state = use$(moodStore$);
   const today = state.day === localDateKey() ? state.today : null;
+  // Just answered: thank the player, then free the space.
+  const [thanking, setThanking] = useState(false);
+  useEffect(() => {
+    if (!thanking) return;
+    const timer = setTimeout(() => setThanking(false), 2500);
+    return () => clearTimeout(timer);
+  }, [thanking]);
 
   useEffect(() => {
     void fetchMoods(1);
@@ -23,10 +30,13 @@ export function MoodCheckIn() {
 
   const pick = (mood: number) => {
     hapticLight();
+    setThanking(true);
     logMood(mood).catch(() => {
       // Offline: the choice is rolled back, the player can tap again.
     });
   };
+
+  if (today !== null && !thanking) return null;
 
   return (
     <View style={styles.card} testID="mood-check-in">

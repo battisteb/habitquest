@@ -39,6 +39,13 @@ describe('MoodCheckIn', () => {
     await waitFor(() => expect(getByText('mood_thanks')).toBeTruthy());
     expect(getByTestId('mood-4').props.accessibilityState).toEqual({ selected: true });
   });
+
+  it('leaves the screen once answered for the day (lighter Today)', () => {
+    const { localDateKey } = jest.requireActual('../../../lib/local-date');
+    moodStore$.set({ today: 3, day: localDateKey() });
+    const { queryByTestId } = render(<MoodCheckIn />);
+    expect(queryByTestId('mood-check-in')).toBeNull();
+  });
 });
 
 describe('MoodInsightsCard', () => {
