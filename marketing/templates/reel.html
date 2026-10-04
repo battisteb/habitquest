@@ -95,8 +95,12 @@
   body.ja .dtitle em { color: #ff5a8a; white-space: nowrap; }
   body.ja .dtitle h2 { background: #fff; border: 6px solid #14142a; box-shadow: 10px 10px 0 #d65a97; padding: 26px 34px; }
   /* Pip scene: his line in a pixel speech bubble, Pip big below. */
-  .bubble { position: absolute; left: 80px; right: 80px; top: 260px; background: #fff; border: 8px solid #14142a;
-            box-shadow: 14px 14px 0 #d65a97; padding: 50px 54px; text-align: center; }
+  /* Dark text on the white bubble (the reels' text is white by default). English: Pip's blue;
+     Japanese: the sakura pink (body.ja). */
+  .bubble { position: absolute; left: 80px; right: 80px; top: 260px; background: #fff; border: 8px solid #14142a; color: #14142a;
+            box-shadow: 14px 14px 0 #3a72c9; padding: 50px 54px; text-align: center; }
+  .bubble em { font-style: normal; color: #2f6fd6; white-space: nowrap; }
+  body.ja .bubble { box-shadow: 14px 14px 0 #d65a97; }
   .bubble h1 { font-family: 'DotGothic16'; font-size: 76px; line-height: 1.4; text-wrap: balance; line-break: strict; }
   .bubble p { font-size: 46px; font-weight: 500; line-height: 1.55; margin-top: 22px; color: #3d2f45; text-wrap: balance; }
   .bubble::after { content: ''; position: absolute; left: 50%; bottom: -54px; width: 54px; height: 54px; margin-left: -27px;
