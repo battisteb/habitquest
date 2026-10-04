@@ -8,6 +8,7 @@
 | `posts.json` / `reels.json` | Contenu des visuels et vidéos générés |
 | `templates/` | Gabarits HTML (slide 1080×1350, reel 1080×1920) |
 | `assets/` | Icône et captures de l'app (FR, format téléphone) |
+| `brand/` | Pip : photo de profil et images pour les posts et les reels |
 
 ## Régénérer les visuels
 
@@ -31,6 +32,6 @@ Tout suit la musique : chaque scène dure un nombre entier de temps et chaque tr
 
 ## Publier
 
-1. Créer `@habitquest.app` sur Instagram et TikTok (compte pro/créateur), photo de profil `assets/icon.png`, bio de `strategy.md`.
+1. Créer `@habitquest.app` sur Instagram et TikTok (compte pro/créateur), bio de `strategy.md`. Photo de profil : `brand/pip-avatar-sakura.png` (Pip ; compte japonais), sinon `assets/icon.png`.
 2. Reels : importer le MP4, ajouter la légende de `reels.md`. Sur TikTok, ajouter un son tendance à faible volume.
 3. Carrousels : importer les PNG dans l'ordre, légende de `posts.md`.

@@ -299,7 +299,8 @@ export default function SettingsScreen() {
         <View style={styles.group}>
           {[
             { label: T.settings_edit_profile, onPress: () => router.push('/profile/edit') },
-            { label: T.settings_focus_mode, onPress: () => router.push('/settings/contextual-mode') },
+            { label: T.settings_pause, onPress: () => router.push('/pause') },
+            { label: T.settings_how_it_helps, onPress: () => router.push('/how-it-helps') },
             { label: T.settings_support, onPress: () => router.push('/settings/support') },
             { label: T.settings_archived, onPress: () => router.push('/habit/archive') },
             {

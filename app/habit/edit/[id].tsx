@@ -15,6 +15,7 @@ import { useTheme } from '../../../src/ui/theme/theme-context';
 import { useT } from '../../../src/lib/i18n';
 import { categoryLabel } from '../../../src/lib/i18n/labels';
 import { DayPicker } from '../../../src/features/habits/components/day-picker';
+import { MotivationFields, cleanMotivation } from '../../../src/features/habits/components/motivation-fields';
 import { defaultDays, scheduleToSave } from '../../../src/features/habits/utils/schedule';
 
 export default function EditHabitScreen() {
@@ -103,6 +104,9 @@ export default function EditHabitScreen() {
       : []),
   ];
   const [emoji, setEmoji] = useState<string | null>((habit as any)?.emoji ?? null);
+  const [why, setWhy] = useState(habit?.why ?? '');
+  const [anchor, setAnchor] = useState(habit?.anchor ?? '');
+  const [mini, setMini] = useState(habit?.mini ?? '');
   const [loading, setLoading] = useState(false);
 
   if (!habit) {
@@ -118,7 +122,16 @@ export default function EditHabitScreen() {
     setLoading(true);
     try {
       const schedule = frequency === 'days' ? scheduleToSave(days) : { frequency, days: null };
-      await updateHabit(habit.id, { name: name.trim(), category, content, emoji, ...schedule });
+      await updateHabit(habit.id, {
+        name: name.trim(),
+        category,
+        content,
+        emoji,
+        why: cleanMotivation(why),
+        anchor: cleanMotivation(anchor),
+        mini: cleanMotivation(mini),
+        ...schedule,
+      });
       router.back();
     } catch (e: unknown) {
       Alert.alert(T.habit_edit_error_title, e instanceof Error ? e.message : T.habit_edit_error_msg);
@@ -202,6 +215,8 @@ export default function EditHabitScreen() {
         </View>
         {frequency === 'days' && <DayPicker value={days} onChange={setDays} />}
       </View>
+
+      <MotivationFields why={why} anchor={anchor} onWhyChange={setWhy} onAnchorChange={setAnchor} mini={mini} onMiniChange={setMini} />
 
       <EmojiPicker value={emoji} onChange={setEmoji} label={T.habit_edit_emoji} />
 

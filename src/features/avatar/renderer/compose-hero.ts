@@ -58,8 +58,11 @@ function outfitPalette([p, q, x]: [string, string, string]): Palette {
   };
 }
 
+// Season gems (1-4: winter, spring, summer, autumn), as on the arc runes.
+const SEASON_GEMS: Palette = { 1: '#5ec8ff', 2: '#6ee07a', 3: '#ffcc33', 4: '#e8743b' };
+
 function itemPalette([a, x]: [string, string]): Palette {
-  return { o: OUTLINE, a, A: tint(a, 0.7), g: tint(a, 1.4), x, X: tint(x, 0.72), y: tint(x, 1.35) };
+  return { o: OUTLINE, a, A: tint(a, 0.7), g: tint(a, 1.4), x, X: tint(x, 0.72), y: tint(x, 1.35), ...SEASON_GEMS };
 }
 
 export interface HeroLook {

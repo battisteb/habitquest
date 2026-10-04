@@ -1,3 +1,5 @@
+import { listTools } from '../../src/features/habits/utils/list-tools';
+import { adventureDay, isRevealed } from '../../src/features/habits/utils/today-reveal';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import {
   View,
@@ -18,33 +20,23 @@ import { HabitCard } from '../../src/features/habits/components/habit-card';
 import { PixelButton } from '../../src/ui/components/pixel-button';
 import { XpToast } from '../../src/ui/animations/xp-toast';
 import { AllDoneCelebration } from '../../src/ui/animations/all-done-celebration';
-import { DailyQuestsSection } from '../../src/features/daily-quests/components/daily-quests-section';
+import { DailyQuestsSection, MissionsTile } from '../../src/features/daily-quests/components/daily-quests-section';
 import { habitsStore$, fetchHabits, completeHabit, uncompleteHabit, repairStreak, isHabitCompletedEnough, isActiveToday } from '../../src/features/habits/stores/habits-store';
 import { useStreakRiskNotification } from '../../src/features/notifications/hooks/use-streak-risk-notification';
 import { useBurnoutSignal } from '../../src/features/habits/hooks/use-burnout-signal';
 import { burnoutStore$, dismissBurnoutBanner, isDismissalActive } from '../../src/features/habits/stores/burnout-store';
 import { brokenStreakStore$, dismissBrokenStreak, clearBrokenStreakForHabit } from '../../src/features/habits/stores/broken-streak-store';
 import { pinnedHabitsStore$, togglePinHabit } from '../../src/features/habits/stores/pinned-habits-store';
-import { TakeBreakModal } from '../../src/features/habits/components/take-break-modal';
 import { TodayTutorial } from '../../src/features/onboarding/components/today-tutorial';
 import { TrialBanner } from '../../src/features/monetization/components/trial-banner';
-import { ComebackBanner } from '../../src/features/habits/components/comeback-banner';
-import { MoodCheckIn } from '../../src/features/mood/components/mood-check-in';
+import { ComebackBanner, comebackHoursLeft } from '../../src/features/habits/components/comeback-banner';
+import { pickTodayBanner } from '../../src/features/habits/utils/today-banner';
+import { subscriptionStore$ } from '../../src/features/monetization/stores/subscription-store';
+import { trialDaysLeft } from '../../src/features/monetization/utils/trial-offer';
 import { streakRepairCost } from '../../src/lib/constants/game-config';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
 import { useTourTarget } from '../../src/features/onboarding/tour/tour-targets';
-import {
-  getFreezesRemaining,
-  isFreezeActiveToday,
-  activateFreeze,
-} from '../../src/features/habits/utils/streak-freeze';
-import {
-  getActiveMode,
-  isHabitActiveInMode,
-  getModeDefinition,
-  getRemainingDays,
-  deactivateMode,
-} from '../../src/features/habits/utils/contextual-mode';
+import { fullyPausedCategories } from '../../src/features/habits/utils/pause';
 import { profileStore$, fetchProfile, refreshProfile } from '../../src/features/gamification/stores/profile-store';
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { supabase } from '../../src/lib/supabase/client';
@@ -53,7 +45,6 @@ import {
   preloadRewardedInterstitial,
   shouldShowAds,
 } from '../../src/features/monetization/utils/ad-service';
-import { getMaxFreezeTokens } from '../../src/features/monetization/utils/feature-gates';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
@@ -65,6 +56,7 @@ const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 
 import { categoryLabel } from '../../src/lib/i18n/labels';
 import { Pip } from '../../src/features/mascot/components/pip';
 import { BossCard } from '../../src/features/boss/components/boss-card';
+import { ArcBanner } from '../../src/features/arc/components/arc-banner';
 
 function todayLabel(): string {
   const d = new Date();
@@ -137,34 +129,6 @@ export default function TodayScreen() {
     fontFamily: fonts.bold,
     color: colors.xp,
   },
-  freezeButton: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 0,
-    borderWidth: 2,
-    borderColor: '#4FC3F7',
-  },
-  freezeButtonActive: { backgroundColor: '#4FC3F7' },
-  freezeText: {
-    color: '#4FC3F7',
-    fontSize: pixelSize(fontSizes.xs),
-    fontFamily: fonts.bold,
-    letterSpacing: 0.5,
-  },
-  freezeTextActive: { color: colors.background },
-  watchAdButton: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 0,
-    borderWidth: 1,
-    borderColor: colors.textMuted,
-  },
-  watchAdText: {
-    color: colors.textMuted,
-    fontSize: pixelSize(fontSizes.xs),
-    fontFamily: fonts.bold,
-    letterSpacing: 0.5,
-  },
   addButton: {
     width: 36,
     height: 36,
@@ -187,7 +151,7 @@ export default function TodayScreen() {
   list: { flex: 1 },
   listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xxl },
 
-  // Mode banner
+  // Paused quests banner (D3)
   modeBanner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -422,7 +386,8 @@ export default function TodayScreen() {
   listPad: { paddingHorizontal: spacing.md },
   // The list already has a horizontal padding: cancel the section's own.
   missionsSlot: { marginHorizontal: -spacing.md, marginTop: spacing.sm },
-  bossSlot: { marginTop: spacing.sm },
+  goalsRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm, marginBottom: spacing.sm },
+  toolsRow: { paddingHorizontal: spacing.md, paddingBottom: spacing.xs },
 
   // Empty state
   empty: {
@@ -467,10 +432,10 @@ export default function TodayScreen() {
   const todayCompletions = use$(habitsStore$.todayCompletions);
   const weekCompletions = use$(habitsStore$.weekCompletions);
 
-  const [activeMode, setActiveMode] = useState(() => getActiveMode());
-  const [freezeActive, setFreezeActive] = useState(isFreezeActiveToday());
-  const [freezesLeft, setFreezesLeft] = useState(getFreezesRemaining());
   const [activeCategory, setActiveCategory] = useState(ALL_KEY);
+  // Folded by default: the missions list and the sort/filter chips (lighter Today).
+  const [missionsOpen, setMissionsOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [sortMode, setSortMode] = useState<'smart' | 'streak' | 'az'>(
     () => (storage.getString('habit_sort_mode') as 'smart' | 'streak' | 'az') ?? 'smart',
   );
@@ -485,9 +450,9 @@ export default function TodayScreen() {
   const burnoutSignal = useBurnoutSignal();
   const burnoutLastDismissed = use$(burnoutStore$.lastDismissedAt);
   const burnoutDismissed = useMemo(() => isDismissalActive(), [burnoutLastDismissed]);
+  const trialEndsAt = use$(subscriptionStore$.trialEndsAt);
   const brokenStreaks = use$(brokenStreakStore$.items);
   const pinnedIds = use$(pinnedHabitsStore$.pinnedIds);
-  const [takeBreakOpen, setTakeBreakOpen] = useState(false);
   const profile = use$(profileStore$.profile);
   const authUser = use$(authStore$.user);
 
@@ -510,39 +475,6 @@ export default function TodayScreen() {
     }
   }, []);
 
-  // Show "watch ad for freeze" button when:
-  //   - ads are enabled (free tier, AdMob configured)
-  //   - user has no freeze tokens left
-  //   - freeze is not already active today
-  //   - user has not yet hit the free-tier cap (1 token)
-  const maxFreezeTokens = getMaxFreezeTokens();
-  const showWatchAdButton =
-    shouldShowAds() &&
-    freezesLeft === 0 &&
-    !freezeActive &&
-    (profile?.freeze_tokens ?? 0) < maxFreezeTokens;
-
-  const handleWatchAd = useCallback(() => {
-    const userId = authUser?.id;
-    if (!userId) return;
-
-    showRewardedInterstitial(
-      async () => {
-        // onRewarded: increment on server then sync locally
-        const { error } = await supabase
-          .rpc('add_freeze_token' as never, { p_user_id: userId } as never);
-        if (error) {
-          Alert.alert(T.today_freeze_error_title, T.today_freeze_error_msg);
-        } else {
-          setFreezesLeft((prev) => prev + 1);
-          refreshProfile();
-        }
-      },
-      () => {
-        // onComplete: ad closed — nothing extra needed
-      },
-    );
-  }, [authUser?.id]);
 
   // Derive category list from habits
   const categories = useMemo(() => {
@@ -551,22 +483,26 @@ export default function TodayScreen() {
     return Array.from(seen);
   }, [habits]);
 
+  // D6: sorting and filters only help with many quests; below that they are
+  // noise, and a filter left on must not hide quests with no way to clear it.
+  const { show: showListTools, category, sort } = listTools(habits.length, activeCategory, sortMode, ALL_KEY);
+
   // Filter + sort
   const displayedHabits = useMemo(() => {
-    const filtered = (activeCategory === ALL_KEY
+    const filtered = (category === ALL_KEY
       ? habits
-      : habits.filter((h) => h.category === activeCategory)
-    ).filter((h) => isHabitActiveInMode(h.category, activeMode)).filter((h) => isActiveToday(h));
+      : habits.filter((h) => h.category === category)
+    ).filter((h) => isActiveToday(h));
     return [...filtered].sort((a, b) => {
       // Pinned always first regardless of sort mode
       const aPinned = pinnedIds.includes(a.id);
       const bPinned = pinnedIds.includes(b.id);
       if (aPinned !== bPinned) return aPinned ? -1 : 1;
 
-      if (sortMode === 'az') {
+      if (sort === 'az') {
         return a.name.localeCompare(b.name);
       }
-      if (sortMode === 'streak') {
+      if (sort === 'streak') {
         const aStreak = streaks[a.id]?.current_count ?? 0;
         const bStreak = streaks[b.id]?.current_count ?? 0;
         return bStreak - aStreak;
@@ -577,9 +513,11 @@ export default function TodayScreen() {
       if (aDone === bDone) return 0;
       return aDone ? 1 : -1;
     });
-  }, [habits, activeCategory, todayCompletions, weekCompletions, pinnedIds, sortMode, streaks]);
+  }, [habits, category, todayCompletions, weekCompletions, pinnedIds, sort, streaks]);
 
   const activeHabits = habits.filter((h) => isActiveToday(h));
+  const pausedCount = habits.filter((h) => h.is_paused && !h.is_archived).length;
+  const pausedCategories = useMemo(() => fullyPausedCategories(habits), [habits]);
   const completedCount = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
   const totalCount = activeHabits.length;
   const allDone = totalCount > 0 && completedCount === totalCount;
@@ -595,13 +533,14 @@ export default function TodayScreen() {
       pendingStreaks={pendingStreaks}
       xp={profile?.xp ?? 0}
       level={profile?.level ?? 1}
+      showMood={isRevealed('mood', adventureDay(profile?.created_at))}
     />
   );
 
-  const handleComplete = useCallback(async (habitId: string) => {
+  const handleComplete = useCallback(async (habitId: string, mini = false) => {
     // Count before completing: completeHabit already marks the habit done in the store.
     const completedBefore = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
-    const result = await completeHabit(habitId);
+    const result = await completeHabit(habitId, undefined, mini);
     if (!result) return;
     clearBrokenStreakForHabit(habitId);
     // Show what the server actually granted (freezes, bonuses…).
@@ -661,60 +600,50 @@ export default function TodayScreen() {
     ]);
   }, [T]);
 
-  const handleFreeze = () => {
-    if (freezeActive) return;
-    Alert.alert(
-      T.today_freeze_alert_title,
-      T.today_freeze_alert_msg,
-      [
-        { text: T.today_freeze_alert_cancel, style: 'cancel' },
-        {
-          text: T.today_freeze_alert_confirm,
-          onPress: async () => {
-            const ok = await activateFreeze();
-            if (ok) {
-              setFreezeActive(true);
-              setFreezesLeft(getFreezesRemaining());
-            }
-          },
-        },
-      ],
-    );
-  };
+
+  // One banner at a time (D4): broken streak > comeback > trial > burnout.
+  const banner = pickTodayBanner({
+    broken: brokenStreaks.length > 0,
+    comeback: comebackHoursLeft(profile?.comeback_until) !== null,
+    trial: trialDaysLeft(trialEndsAt) !== null,
+    burnout: burnoutSignal.risk !== 'none' && !burnoutDismissed,
+  });
+
+  // Progressive Today (D5): the rest arrives over the first week.
+  const day = adventureDay(profile?.created_at);
 
   const ListHeader = (
     <View>
       {hero}
-      {/* Daily missions: a folded one-line banner above the habits. */}
-      <View style={styles.missionsSlot}>
-        <DailyQuestsSection
-          pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
-        />
-      </View>
-      {/* Boss of the week (I9): beaten with the week's quests. */}
-      <View style={styles.bossSlot}>
-        <BossCard />
-      </View>
-      {/* Active mode banner */}
-      {activeMode && (() => {
-        const def = getModeDefinition(activeMode.key);
-        const days = getRemainingDays(activeMode);
-        return def ? (
-          <View style={styles.modeBanner}>
-            <Text style={styles.modeBannerText}>{def.emoji} {def.name.toUpperCase()} — {T.today_mode_days.replace('{n}', String(days))}</Text>
-            <Pressable onPress={() => { deactivateMode(); setActiveMode(null); }}>
-              <Text style={styles.modeDeactivate}>✕</Text>
-            </Pressable>
-          </View>
-        ) : null;
-      })()}
+      {/* The day's goals in one row of tiles: missions (from day 2), the
+          seasonal arc and the weekly boss (from day 3, D5). */}
+      {(isRevealed('missions', day) || isRevealed('boss', day)) && (
+        <View style={styles.goalsRow}>
+          {isRevealed('missions', day) && (
+            <MissionsTile open={missionsOpen} onPress={() => setMissionsOpen((o) => !o)} />
+          )}
+          {isRevealed('boss', day) && <ArcBanner variant="tile" />}
+          {isRevealed('boss', day) && <BossCard variant="tile" />}
+        </View>
+      )}
+      {isRevealed('missions', day) && missionsOpen && (
+        <View style={styles.missionsSlot}>
+          <DailyQuestsSection listOnly pausedCategories={pausedCategories} />
+        </View>
+      )}
+      {/* Paused quests (D3): their streaks are protected; manage them in Pause. */}
+      {pausedCount > 0 && (
+        <Pressable style={styles.modeBanner} onPress={() => router.push('/pause')} accessibilityRole="button" testID="paused-banner">
+          <Text style={styles.modeBannerText}>{T.today_paused_banner.replace('{n}', String(pausedCount))}</Text>
+          <Text style={styles.modeDeactivate}>{T.today_paused_manage}</Text>
+        </Pressable>
+      )}
 
-      <TrialBanner />
-      <ComebackBanner />
-      <MoodCheckIn />
+      {banner === 'trial' && <TrialBanner />}
+      {banner === 'comeback' && <ComebackBanner />}
 
-      {/* Streak recovery banners */}
-      {brokenStreaks.map((b) => (
+      {/* Streak recovery: one at a time (D4), the others come after it is closed */}
+      {banner === 'broken' && brokenStreaks.slice(0, 1).map((b) => (
         <View key={b.habitId} style={styles.streakRecoveryBanner}>
           <Pip expression="sad" size={40} accessibilityLabel="Pip" />
           <View style={styles.streakRecoveryText}>
@@ -746,7 +675,7 @@ export default function TodayScreen() {
       ))}
 
       {/* Burnout banner */}
-      {burnoutSignal.risk !== 'none' && !burnoutDismissed && (
+      {banner === 'burnout' && (
         <View style={styles.burnoutBanner}>
           <View style={styles.burnoutRow}>
             <View style={styles.burnoutText}>
@@ -766,26 +695,13 @@ export default function TodayScreen() {
             </Pressable>
           </View>
           {(burnoutSignal.risk === 'high' || burnoutSignal.risk === 'moderate') && (
-            <Pressable style={styles.burnoutAction} onPress={() => setTakeBreakOpen(true)}>
+            <Pressable style={styles.burnoutAction} onPress={() => router.push('/pause?suggest=1')}>
               <Text style={styles.burnoutActionText}>{T.today_burnout_action}</Text>
             </Pressable>
           )}
         </View>
       )}
 
-      <TakeBreakModal
-        visible={takeBreakOpen}
-        onClose={() => setTakeBreakOpen(false)}
-        onBreakTaken={(count) =>
-          Alert.alert(
-            T.today_break_taken_title,
-            T.today_break_taken_msg
-              .replace('{n}', String(count))
-              .replace('{s}', count > 1 ? 's' : '')
-              .replace('{ss}', count > 1 ? 's' : ''),
-          )
-        }
-      />
 
       {/* All done banner */}
       {allDone && (
@@ -806,7 +722,24 @@ export default function TodayScreen() {
             {completedCount}/{totalCount}
           </Text>
         </View>
-        <View style={styles.sortRow}>
+        {showListTools && (
+          <Pressable
+            style={[styles.sortChip, (toolsOpen || sort !== 'smart' || category !== ALL_KEY) && styles.sortChipActive]}
+            onPress={() => setToolsOpen((o) => !o)}
+            accessibilityRole="button"
+            accessibilityState={{ expanded: toolsOpen }}
+            testID="habit-tools"
+          >
+            <Text style={[styles.sortChipText, (toolsOpen || sort !== 'smart' || category !== ALL_KEY) && styles.sortChipTextActive]}>
+              {T.today_sort_filter}
+            </Text>
+          </Pressable>
+        )}
+      </View>
+
+      {/* Sorting, folded behind one button until asked for. */}
+      {showListTools && toolsOpen && (
+        <View style={[styles.sortRow, styles.toolsRow]} testID="habit-sort">
           {(['smart', 'streak', 'az'] as const).map((mode) => {
             const label = mode === 'smart' ? T.habit_sort_smart : mode === 'streak' ? T.habit_sort_streak : T.habit_sort_az;
             const active = sortMode === mode;
@@ -817,7 +750,7 @@ export default function TodayScreen() {
             );
           })}
         </View>
-      </View>
+      )}
 
       {/* Progress bar */}
       <View style={styles.progressBarWrap}>
@@ -833,8 +766,9 @@ export default function TodayScreen() {
       </View>
 
       {/* Category filter */}
-      {categories.length > 1 && (
+      {showListTools && toolsOpen && categories.length > 1 && (
         <ScrollView
+          testID="habit-filters"
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.filterScroll}
@@ -889,22 +823,6 @@ export default function TodayScreen() {
               <Text style={styles.headerStatLevel}>Lv.{profile.level}</Text>
             </View>
           )}
-          {(freezesLeft > 0 || freezeActive) && (
-            <Pressable
-              style={[styles.freezeButton, freezeActive && styles.freezeButtonActive]}
-              onPress={handleFreeze}
-              disabled={freezeActive}
-            >
-              <Text style={[styles.freezeText, freezeActive && styles.freezeTextActive]}>
-                {freezeActive ? T.today_freeze_active : T.today_freeze_available.replace('{n}', String(freezesLeft))}
-              </Text>
-            </Pressable>
-          )}
-          {showWatchAdButton && (
-            <Pressable style={styles.watchAdButton} onPress={handleWatchAd}>
-              <Text style={styles.watchAdText}>{T.today_watch_ad}</Text>
-            </Pressable>
-          )}
           <View {...addTarget}>
             <Pressable style={styles.addButton} onPress={() => router.push('/habit/create')}>
               <Text style={styles.addButtonText}>+</Text>
@@ -932,9 +850,11 @@ export default function TodayScreen() {
               style={{ marginTop: spacing.lg, alignSelf: 'stretch' }}
             />
           </View>
-          <DailyQuestsSection
-            pausedCategories={activeMode ? (getModeDefinition(activeMode.key)?.pauseCategories ?? []) : []}
-          />
+          {isRevealed('missions', day) && (
+            <DailyQuestsSection
+              pausedCategories={pausedCategories}
+            />
+          )}
         </View>
       ) : (
         <FlatList
@@ -965,6 +885,15 @@ export default function TodayScreen() {
                 streakCount={streaks[item.id]?.current_count ?? 0}
                 isCompletedToday={!!todayCompletions[item.id]}
                 onComplete={() => handleComplete(item.id)}
+                onCompleteMini={
+                  item.mini
+                    ? () =>
+                        Alert.alert(T.habit_mini_title, T.habit_mini_msg.replace('{mini}', item.mini ?? ''), [
+                          { text: T.common_cancel, style: 'cancel' },
+                          { text: T.habit_mini_confirm, onPress: () => handleComplete(item.id, true) },
+                        ])
+                    : undefined
+                }
                 onUncomplete={() => handleUncomplete(item.id, item.name)}
                 onPress={() => router.push(`/habit/${item.id}`)}
                 onLongPress={() =>

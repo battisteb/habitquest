@@ -7,6 +7,7 @@ import { resetOnSignOut } from '../../../lib/storage/user-data';
 import { playSfx } from '../../../lib/audio/sound-service';
 import { localDateKey } from '../../../lib/local-date';
 import { refreshProfile } from '../../gamification/stores/profile-store';
+import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 
 export type QuestType = 'complete_habits' | 'complete_category' | 'earn_xp' | 'maintain_streak';
 export type QuestDifficulty = 'easy' | 'normal' | 'hard';
@@ -43,12 +44,45 @@ export interface DailyQuestWithTemplate extends UserDailyQuest {
 interface DailyQuestsState {
   quests: DailyQuestWithTemplate[];
   isLoading: boolean;
+  /** Day (YYYY-MM-DD) whose mission chest was opened (G7), null if none. */
+  chestOpenedOn: string | null;
 }
 
 const initialState = (): DailyQuestsState => ({
   quests: [],
   isLoading: false,
+  chestOpenedOn: null,
 });
+
+/** The three missions are claimed and today's chest is still closed (G7). */
+export function chestReady(quests: UserDailyQuest[], chestOpenedOn: string | null): boolean {
+  return quests.length > 0 && quests.every((q) => q.is_claimed) && chestOpenedOn !== quests[0].assigned_date;
+}
+
+export interface ChestResult {
+  success: boolean;
+  reason?: 'not_ready' | 'already_opened';
+  xp?: number;
+  gold?: number;
+  jackpot?: boolean;
+  old_level?: number;
+  new_level?: number;
+}
+
+/** Opens today's mission chest: the server draws and pays the reward (G7). */
+export async function openChest(): Promise<ChestResult | null> {
+  const { data, error } = await supabase.rpc('open_daily_chest');
+  if (error || !data) return null;
+  const result = data as unknown as ChestResult;
+  const day = dailyQuestsStore$.quests.get()[0]?.assigned_date ?? localDateKey();
+  if (result.success || result.reason === 'already_opened') dailyQuestsStore$.chestOpenedOn.set(day);
+  if (result.success) {
+    void playSfx(result.jackpot ? 'missions_all' : 'reward_coins', 0.9);
+    if ((result.new_level ?? 0) > (result.old_level ?? 0)) triggerLevelUp(result.new_level as number);
+    refreshProfile();
+  }
+  return result;
+}
 
 export const dailyQuestsStore$ = observable<DailyQuestsState>(initialState());
 
@@ -119,6 +153,19 @@ export async function fetchDailyQuests() {
 
     dailyQuestsStore$.quests.set(quests);
     playMissionSounds(before, quests);
+
+    // Today's chest, already opened? (G7) Non-blocking: the missions come first.
+    try {
+      const { data: chest } = await supabase
+        .from('daily_chests')
+        .select('day')
+        .eq('user_id', userId)
+        .eq('day', today)
+        .maybeSingle();
+      dailyQuestsStore$.chestOpenedOn.set(chest ? today : null);
+    } catch {
+      // Unknown: the server still refuses a second chest.
+    }
   } finally {
     dailyQuestsStore$.isLoading.set(false);
   }

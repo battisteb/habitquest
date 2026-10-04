@@ -6,8 +6,12 @@ import { getOptimalNotificationHour } from './adaptive-timing';
 import { supabase } from '../../../lib/supabase/client';
 import { lang$, getStrings } from '../../../lib/i18n';
 import { onUserDataCleared } from '../../../lib/storage/user-data';
+import { NOTIFICATION_BUDGET, SUNDAY, dailyReminderWeekdays } from './notification-budget';
 
+// One weekly trigger per weekday (daily-reminder-1 … -7), so Sunday can be
+// left to the weekly recap (D10: 2 reminders a day at most).
 const DAILY_REMINDER_ID = 'daily-reminder';
+const dailyReminderId = (weekday: number) => `${DAILY_REMINDER_ID}-${weekday}`;
 const STREAK_RISK_ID = 'streak-risk';
 const WEEKLY_RECAP_ID = 'weekly-recap';
 const TRIAL_ENDING_ID = 'trial-ending';
@@ -86,7 +90,11 @@ export async function configureNotifications(): Promise<void> {
   }
 }
 
-export async function scheduleDailyReminder(hour: number, minute: number): Promise<void> {
+export async function scheduleDailyReminder(
+  hour: number,
+  minute: number,
+  weeklyRecapEnabled = getNotificationPrefs().weeklyRecapEnabled,
+): Promise<void> {
   if (!isNative()) return;
   const Notifications = await getNotifications();
 
@@ -97,26 +105,31 @@ export async function scheduleDailyReminder(hour: number, minute: number): Promi
   const adaptiveHour = getOptimalNotificationHour();
   const scheduledHour = adaptiveHour !== 9 ? adaptiveHour : hour;
 
-  await Notifications.scheduleNotificationAsync({
-    identifier: DAILY_REMINDER_ID,
-    content: {
-      title: '⚔️ HabitQuest',
-      body: getRandomMessage('reminder'),
-      sound: true,
-      data: { route: '/(tabs)/today' },
-    },
-    trigger: {
-      type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour: scheduledHour,
-      minute,
-    },
-  });
+  for (const weekday of dailyReminderWeekdays(weeklyRecapEnabled)) {
+    await Notifications.scheduleNotificationAsync({
+      identifier: dailyReminderId(weekday),
+      content: {
+        title: '⚔️ HabitQuest',
+        body: getRandomMessage('reminder'),
+        sound: true,
+        data: { route: '/(tabs)/today' },
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+        weekday,
+        hour: scheduledHour,
+        minute,
+      },
+    });
+  }
 }
 
 export async function cancelDailyReminder(): Promise<void> {
   if (!isNative()) return;
   const Notifications = await getNotifications();
-  await Notifications.cancelScheduledNotificationAsync(DAILY_REMINDER_ID);
+  // The bare id is the former single daily trigger (before D10).
+  const ids = [DAILY_REMINDER_ID, ...[1, 2, 3, 4, 5, 6, 7].map(dailyReminderId)];
+  await Promise.all(ids.map((id) => Notifications.cancelScheduledNotificationAsync(id)));
 }
 
 export async function scheduleStreakRiskReminder(
@@ -132,7 +145,7 @@ export async function scheduleStreakRiskReminder(
 
   const now = new Date();
   const trigger = new Date();
-  trigger.setHours(20, 0, 0, 0);
+  trigger.setHours(NOTIFICATION_BUDGET.streakRiskHour, 0, 0, 0);
 
   if (trigger <= now) return;
 
@@ -187,8 +200,8 @@ export async function scheduleWeeklyRecap(
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
-      weekday: 1, // Sunday
-      hour: 20,
+      weekday: SUNDAY,
+      hour: NOTIFICATION_BUDGET.recapHour, // before the 8 PM streak alert
       minute: 0,
     },
   });
@@ -253,6 +266,7 @@ export async function scheduleHabitReminder(
   habitName: string,
   hour: number,
   minute: number,
+  motivation?: { why?: string | null; anchor?: string | null },
 ): Promise<void> {
   if (!isNative()) return;
   const Notifications = await getNotifications();
@@ -264,11 +278,7 @@ export async function scheduleHabitReminder(
     identifier: getHabitReminderKey(habitId),
     content: {
       title: `⚔️ ${habitName}`,
-      body: lang$.get() === 'fr'
-        ? `C'est l'heure de travailler sur ton habitude ! Ne brise pas la série 🔥`
-        : lang$.get() === 'ja'
-          ? `習慣の時間だよ！連続記録を途切れさせないで 🔥`
-          : `Time to work on your habit! Don't break the streak 🔥`,
+      body: habitReminderBody(motivation),
       sound: true,
       data: { route: `/habit/${habitId}` },
     },
@@ -280,6 +290,15 @@ export async function scheduleHabitReminder(
   });
 
   storage.set(getHabitReminderKey(habitId), JSON.stringify({ hour, minute }));
+}
+
+/** Quotes the player's own "after…" and "why" (G2) when they gave them. */
+export function habitReminderBody(motivation?: { why?: string | null; anchor?: string | null }): string {
+  const T = getStrings();
+  const first = motivation?.anchor
+    ? T.habit_reminder_body_anchor.replace('{anchor}', motivation.anchor)
+    : T.habit_reminder_body;
+  return motivation?.why ? `${first} ${T.habit_reminder_why.replace('{why}', motivation.why)}` : first;
 }
 
 export async function cancelHabitReminder(habitId: string): Promise<void> {
@@ -313,7 +332,7 @@ export async function applyNotificationPrefs(prefs?: NotificationPrefs): Promise
   if (p.dailyReminderEnabled) {
     const granted = await requestPermissions();
     if (granted) {
-      await scheduleDailyReminder(p.dailyReminderHour, p.dailyReminderMinute);
+      await scheduleDailyReminder(p.dailyReminderHour, p.dailyReminderMinute, p.weeklyRecapEnabled);
     }
   } else {
     await cancelDailyReminder();

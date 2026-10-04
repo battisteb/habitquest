@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Stack, usePathname, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts, Jersey10_400Regular } from '@expo-google-fonts/jersey-10';
+import { DotGothic16_400Regular } from '@expo-google-fonts/dotgothic16';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { use$ } from '@legendapp/state/react';
 import { useAuth } from '../src/features/auth/hooks/use-auth';
@@ -32,7 +33,7 @@ import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
 import { syncTimezone } from '../src/features/auth/utils/sync-timezone';
 import { syncLanguage } from '../src/features/auth/utils/sync-language';
 import { achievementText } from '../src/lib/i18n/content';
-import { lang$ } from '../src/lib/i18n';
+import { lang$, STARTED_IN_JAPANESE } from '../src/lib/i18n';
 import { installAppAlert } from '../src/lib/app-alert';
 import { PixelDialogHost } from '../src/ui/components/pixel-dialog';
 
@@ -88,6 +89,8 @@ function ThemedApp() {
   const showStreakMilestone = use$(streakMilestoneStore$.visible);
   const milestoneStreakCount = use$(streakMilestoneStore$.streakCount);
   const milestoneHabitName = use$(streakMilestoneStore$.habitName);
+  const milestoneCategory = use$(streakMilestoneStore$.category);
+  const milestoneNewIdentity = use$(streakMilestoneStore$.newIdentity);
   const newlyUnlocked = use$(achievementsStore$.newlyUnlocked);
   const currentToast = newlyUnlocked[0] ?? null;
   const authUserId = use$(authStore$.user)?.id;
@@ -138,6 +141,8 @@ function ThemedApp() {
         visible={showStreakMilestone}
         streakCount={milestoneStreakCount}
         habitName={milestoneHabitName}
+        category={milestoneCategory}
+        newIdentity={milestoneNewIdentity}
         onComplete={dismissStreakMilestone}
       />
       {authUserId && <TrialOfferHost />}
@@ -160,8 +165,11 @@ function ThemedApp() {
   );
 }
 
+// The Japanese pixel font (2 MB) is only loaded for players who use Japanese.
+const PIXEL_FONTS = STARTED_IN_JAPANESE ? { Jersey10_400Regular, DotGothic16_400Regular } : { Jersey10_400Regular };
+
 export default function RootLayout() {
-  const [fontsLoaded, fontError] = useFonts({ Jersey10_400Regular });
+  const [fontsLoaded, fontError] = useFonts(PIXEL_FONTS);
   // Wait for the pixel font (bundled, so this takes a few ms); on failure the
   // app still starts with the system font.
   if (!fontsLoaded && !fontError) return null;

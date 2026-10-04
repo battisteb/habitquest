@@ -36,8 +36,17 @@ interface Friendship {
   profile: Profile;
 }
 
+/** A friend's day (G4): quests done today, and today's kudos both ways. */
+export interface FriendDay {
+  done: number;
+  sent: boolean;
+  received: number;
+}
+
 interface FriendsState {
   friends: Friendship[];
+  /** By friend id, refreshed with the friends list. */
+  today: Record<string, FriendDay>;
   pendingReceived: Friendship[];
   pendingSent: Friendship[];
   searchResults: Profile[];
@@ -46,6 +55,7 @@ interface FriendsState {
 
 const initialState = (): FriendsState => ({
   friends: [],
+  today: {},
   pendingReceived: [],
   pendingSent: [],
   searchResults: [],
@@ -62,6 +72,28 @@ syncObservable(friendsStore$, {
     plugin: persistPlugin,
   },
 });
+
+/** Loads my friends' day: quests done today and kudos (G4). */
+export async function fetchFriendsToday(): Promise<void> {
+  const { data, error } = await supabase.rpc('friends_today');
+  if (error || !data) return;
+  const today: Record<string, FriendDay> = {};
+  for (const row of data) {
+    today[row.friend_id] = { done: row.done_today, sent: row.kudos_sent, received: row.kudos_received };
+  }
+  friendsStore$.today.set(today);
+}
+
+/** Cheers a friend for today's quests (G4): once a day, after they did one. */
+export async function giveKudos(friendId: string): Promise<boolean> {
+  const { data, error } = await supabase.rpc('give_kudos', { p_friend_id: friendId });
+  const ok = !error && (data as { success?: boolean } | null)?.success === true;
+  if (ok || (data as { reason?: string } | null)?.reason === 'already_sent') {
+    const day = friendsStore$.today[friendId].get() ?? { done: 1, sent: false, received: 0 };
+    friendsStore$.today[friendId].set({ ...day, sent: true });
+  }
+  return ok;
+}
 
 export async function fetchFriends() {
   const userId = authStore$.user.get()?.id;

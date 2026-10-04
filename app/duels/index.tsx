@@ -8,7 +8,6 @@ import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme
 import { duelStore$, fetchUnlockedCategories, fetchDuels } from '../../src/features/duels/stores/duel-store';
 import { getUnlockedAttacks, nextLevelAttack } from '../../src/features/duels/utils/attacks';
 import { profileStore$ } from '../../src/features/gamification/stores/profile-store';
-import { showInterstitial } from '../../src/features/monetization/utils/ad-service';
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 import { attackName } from '../../src/lib/i18n/labels';
@@ -107,12 +106,13 @@ export default function DuelsIndexScreen() {
     fetchDuels();
   }, []);
 
+  // No full-screen ad before a duel (D9): it would spoil a moment with a friend.
   function handleChallengeFriend() {
-    showInterstitial(() => router.push('/duels/challenge'));
+    router.push('/duels/challenge');
   }
 
   function handleQuickBattle() {
-    showInterstitial(() => router.push('/duels/battle'));
+    router.push('/duels/battle');
   }
 
   return (

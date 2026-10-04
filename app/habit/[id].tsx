@@ -38,6 +38,8 @@ export default function HabitDetailScreen() {
     gap: spacing.md,
     paddingBottom: spacing.xxl,
   },
+  anchorLine: { color: colors.textSecondary, fontSize: fontSizes.sm, marginTop: spacing.xs },
+  whyLine: { color: colors.text, fontSize: fontSizes.sm, marginTop: 2, fontStyle: 'italic' },
   header: {
     gap: spacing.xs,
   },
@@ -384,6 +386,21 @@ export default function HabitDetailScreen() {
         <Text style={styles.title}>
           {(habit as any).emoji ? `${(habit as any).emoji} ` : ''}{habit.name}
         </Text>
+        {habit.anchor ? (
+          <Text style={styles.anchorLine} testID="habit-anchor-line">
+            ⏰ {T.habit_anchor_line.replace('{anchor}', habit.anchor)}
+          </Text>
+        ) : null}
+        {habit.mini ? (
+          <Text style={styles.anchorLine} testID="habit-mini-line">
+            🌱 {T.habit_mini_line.replace('{mini}', habit.mini)}
+          </Text>
+        ) : null}
+        {habit.why ? (
+          <Text style={styles.whyLine} testID="habit-why-line">
+            🎯 {habit.why}
+          </Text>
+        ) : null}
       </View>
 
       {/* Stats */}
@@ -584,7 +601,7 @@ export default function HabitDetailScreen() {
               <PixelButton
                 title={T.habit_detail_reminder_set}
                 onPress={async () => {
-                  await scheduleHabitReminder(habit.id, habit.name, pickerHour, 0);
+                  await scheduleHabitReminder(habit.id, habit.name, pickerHour, 0, { why: habit.why, anchor: habit.anchor });
                   setReminder({ hour: pickerHour, minute: 0 });
                   setShowReminderPicker(false);
                 }}

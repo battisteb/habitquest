@@ -1,3 +1,8 @@
+import { useTileStyles } from '../../../ui/components/goal-tile';
+import { use$ } from '@legendapp/state/react';
+import { dailyQuestsStore$, chestReady, openChest } from '../stores/daily-quests-store';
+import { PixelButton } from '../../../ui/components/pixel-button';
+import { showDialog } from '../../../lib/app-alert';
 import { useEffect, useCallback, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { PixelProgress } from '../../../ui/components/pixel-progress';
@@ -12,9 +17,51 @@ import { PixelFrame } from '../../../ui/components/pixel-frame';
 
 interface DailyQuestsSectionProps {
   pausedCategories?: string[];
+  /** Just the missions, unfolded (under the goals row); no banner. */
+  listOnly?: boolean;
 }
 
-export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSectionProps) {
+/**
+ * The missions tile of the goals row on Today: progress at a glance, a badge
+ * when a reward or the chest waits; a tap unfolds the missions below.
+ */
+export function MissionsTile({ open, onPress }: { open: boolean; onPress: () => void }) {
+  const T = useT();
+  const quests = use$(dailyQuestsStore$.quests);
+  const chestOpenedOn = use$(dailyQuestsStore$.chestOpenedOn);
+  const tileTarget = useTourTarget('missions');
+  const tileStyles = useTileStyles();
+  const { fetchDailyQuests } = useDailyQuests();
+  useEffect(() => {
+    fetchDailyQuests();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const done = quests.filter((q) => q.is_claimed).length;
+  const waiting = quests.some((q) => q.is_completed && !q.is_claimed) || chestReady(quests, chestOpenedOn);
+  if (quests.length === 0) return null;
+  return (
+    <View style={{ flex: 1, minWidth: 0 }} {...tileTarget}>
+      <Pressable
+        onPress={() => {
+          onPress();
+          emitTourEvent('missions_toggled');
+        }}
+        style={[tileStyles.tile, { borderColor: colors.accent }, open && { backgroundColor: colors.accent + '22' }]}
+        accessibilityRole="button"
+        accessibilityState={{ expanded: open }}
+        testID="missions-banner"
+      >
+        <View style={tileStyles.top}>
+          <Text style={{ fontSize: 14 }}>{waiting ? '🎁' : '📜'}</Text>
+          <Text style={[tileStyles.label, { color: colors.accent }]} numberOfLines={1}>{T.dq_tile}</Text>
+        </View>
+        <Text style={tileStyles.value}>{done}/{quests.length} {open ? '▲' : '▼'}</Text>
+        <PixelProgress progress={done / quests.length} segments={quests.length} height={5} color={colors.accent} />
+      </Pressable>
+    </View>
+  );
+}
+
+export function DailyQuestsSection({ pausedCategories = [], listOnly = false }: DailyQuestsSectionProps) {
   const T = useT();
   const { themeKey } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
@@ -69,8 +116,9 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
   },
 }), [themeKey]);
   const { quests, isLoading, fetchDailyQuests, claimQuest } = useDailyQuests();
+  const chestOpenedOn = use$(dailyQuestsStore$.chestOpenedOn);
   const [expanded, setExpanded] = useState(false);
-  const tourTarget = useTourTarget('missions');
+  const tourTarget = useTourTarget('missions', !listOnly);
 
   useEffect(() => {
     fetchDailyQuests();
@@ -104,6 +152,41 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
   }
 
   const claimable = quests.filter((q) => q.is_completed && !q.is_claimed).length;
+  const canOpenChest = chestReady(quests, chestOpenedOn);
+  const handleOpenChest = async () => {
+    hapticMedium();
+    const r = await openChest();
+    if (!r?.success) return;
+    const reward = r.jackpot
+      ? T.dq_chest_jackpot.replace('{n}', String(r.gold))
+      : r.gold
+        ? T.dq_chest_gold.replace('{n}', String(r.gold))
+        : T.dq_chest_xp.replace('{n}', String(r.xp));
+    showDialog(T.dq_chest_title, reward);
+  };
+
+  const list = (
+    <View style={styles.questList}>
+      {quests.map((quest) => {
+        const isPaused =
+          quest.template.quest_type === 'complete_category' &&
+          quest.template.target_category != null &&
+          pausedCategories.includes(quest.template.target_category);
+        return <DailyQuestCard key={quest.id} quest={quest} onClaim={handleClaim} isPaused={isPaused} />;
+      })}
+      {/* Mission chest (G7): once the three missions are claimed. */}
+      {canOpenChest && <PixelButton title={T.dq_chest_open} onPress={handleOpenChest} testID="open-chest" />}
+      <Text style={styles.refreshHint}>{T.dq_section_reset_hint}</Text>
+    </View>
+  );
+
+  if (listOnly) {
+    return (
+      <View style={styles.container} testID="missions-list">
+        <PixelFrame borderColor={colors.accent} backgroundColor={colors.surface}>{list}</PixelFrame>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -127,6 +210,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
           {claimable > 0 && !expanded && (
             <Text style={styles.claimBadge}>{T.dq_to_claim.replace('{n}', String(claimable))}</Text>
           )}
+          {canOpenChest && !expanded && <Text style={styles.claimBadge}>{T.dq_chest_ready}</Text>}
           <Text style={styles.bannerTitle}>
             {completedCount}/{totalCount} {expanded ? '▲' : '▼'}
           </Text>
@@ -138,25 +222,7 @@ export function DailyQuestsSection({ pausedCategories = [] }: DailyQuestsSection
           <PixelProgress progress={totalCount ? completedCount / totalCount : 0} segments={Math.max(totalCount, 1)} height={6} color={colors.accent} />
         </View>
       )}
-      {expanded && (
-      <View style={styles.questList}>
-        {quests.map((quest) => {
-          const isPaused =
-            quest.template.quest_type === 'complete_category' &&
-            quest.template.target_category != null &&
-            pausedCategories.includes(quest.template.target_category);
-          return (
-            <DailyQuestCard
-              key={quest.id}
-              quest={quest}
-              onClaim={handleClaim}
-              isPaused={isPaused}
-            />
-          );
-        })}
-        <Text style={styles.refreshHint}>{T.dq_section_reset_hint}</Text>
-      </View>
-      )}
+      {expanded && list}
       </PixelFrame>
     </View>
   );

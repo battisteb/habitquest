@@ -1,3 +1,4 @@
+import { habitsStore$ } from '../../src/features/habits/stores/habits-store';
 import { useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -17,7 +18,7 @@ import { avatarConfigStore$, loadAvatarConfig } from '../../src/features/avatar/
 import { authStore$ } from '../../src/features/auth/stores/auth-store';
 import { notificationsStore$ } from '../../src/features/notifications/stores/notifications-store';
 import { duelStore$, fetchDuels } from '../../src/features/duels/stores/duel-store';
-import { MonthlyHeatmap } from '../../src/features/habits/components/monthly-heatmap';
+import { IdentityCard } from '../../src/features/habits/components/identity-card';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../src/ui/theme/tokens';
 import { useTheme } from '../../src/ui/theme/theme-context';
 
@@ -90,15 +91,7 @@ export default function ProfileScreen() {
     backgroundColor: colors.surface,
     padding: spacing.md,
     gap: spacing.xs,
-  },
-  cardHint: {
-    color: colors.xp,
-    fontSize: pixelSize(9),
-    fontFamily: fonts.bold,
-    letterSpacing: 1,
-    textAlign: 'right',
-    marginTop: 2,
-  },
+  },
   statsRow: {
     flexDirection: 'row',
     gap: spacing.sm,
@@ -125,6 +118,9 @@ export default function ProfileScreen() {
   const { profile, xpForNextLevel, xpProgress, isLoading } = useProfileStats();
   // Pace of the last two weeks, refreshed when the XP changes.
   const recentXp = useRecentXp(profile?.xp);
+  // Best streak still running: the XP bonus follows current streaks.
+  const streaks = use$(habitsStore$.streaks);
+  const bestRunningStreak = Math.max(0, ...Object.values(streaks).map((s) => s?.current_count ?? 0));
   const equippedSlots = use$(shopStore$.equippedSlots);
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -202,11 +198,16 @@ export default function ProfileScreen() {
               <Text style={styles.editHint}>{T.profile_edit_hint}</Text>
             </Pressable>
 
-            {/* Rank and level, one card that evolves with the rank */}
-            <Pressable onPress={() => router.push('/xp-journey')} accessibilityRole="button">
-              <RankCard level={level} currentXp={profile?.xp ?? 0} nextLevelXp={xpForNextLevel} progress={xpProgress} recentXp={recentXp} />
-              <Text style={styles.cardHint}>{T.profile_xp_journey_hint}</Text>
-            </Pressable>
+            {/* Rank and level, one card that evolves with the rank; a tap unfolds
+                the streak bonus and the road through the ranks (D8). */}
+            <RankCard
+              level={level}
+              currentXp={profile?.xp ?? 0}
+              nextLevelXp={xpForNextLevel}
+              progress={xpProgress}
+              recentXp={recentXp}
+              bestStreak={bestRunningStreak}
+            />
 
             {/* Gold and duel stats (level and XP are in the rank card) */}
             <View style={styles.statsRow}>
@@ -234,8 +235,8 @@ export default function ProfileScreen() {
               </PixelFrame>
             </View>
 
-            {/* Monthly activity heatmap */}
-            <MonthlyHeatmap />
+            {/* Quests that became who the player is (G3) */}
+            <IdentityCard />
 
             {/* Single action */}
             <PixelButton

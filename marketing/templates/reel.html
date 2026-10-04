@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@600;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@600;800&family=DotGothic16&family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet" />
 <style>
   /* 1080×1920 reel layers, composited by build-reels.js.
      Static layers: 'bg' (background), 'phone' (frame + title over a recording),
@@ -76,6 +76,32 @@
             text-align: center; font-family: 'Press Start 2P'; font-size: 54px; line-height: 1.45; text-shadow: 0 6px 0 #000; }
   .dtitle em { font-style: normal; color: #f5c518; }
   .w { display: inline-block; opacity: 0; }
+  /* Japanese account (template URL ?ja): kawaii sakura pastels, DotGothic16, Pip speaks (strategy.ja.md). */
+  body.ja { font-family: 'M PLUS Rounded 1c', sans-serif; color: #14142a; }
+  body.ja .bg { background: linear-gradient(170deg, #ffe3ee 0%, #fff6e9 75%); }
+  body.ja .bg::after { opacity: .22; background-image: radial-gradient(#ff8fc8 4px, transparent 4px); background-size: 64px 64px; }
+  body.ja .grid { opacity: 0; }
+  body.ja .glow { background: radial-gradient(circle, rgba(255,143,200,.35) 0%, transparent 60%); }
+  body.ja .title, body.ja .card h1, body.ja .cta, body.ja .caption, body.ja .kin h1, body.ja .hero-title, body.ja .tag span {
+    font-family: 'DotGothic16'; text-shadow: none; }
+  body.ja .title, body.ja .kin h1, body.ja .card h1 { line-height: 1.4; text-wrap: balance; line-break: strict; }
+  body.ja .title em, body.ja .card h1 em, body.ja .kin em, body.ja .bubble em { font-style: normal; color: #ff5a8a; white-space: nowrap; }
+  body.ja .frame { border-color: #14142a; box-shadow: 14px 14px 0 #ff8fc8; border-radius: 0; }
+  body.ja .plate { background: #fff; border: 6px solid #14142a; }
+  body.ja .card p, body.ja .kin p { color: #3d2f45; }
+  body.ja .cta { color: #fff; background: #ff5a8a; border: 6px solid #14142a; border-radius: 0; box-shadow: 8px 8px 0 #d65a97; }
+  body.ja .handle { color: #8a6f86; }
+  body.ja .dtitle { font-family: 'DotGothic16'; text-shadow: none; color: #14142a; font-size: 64px; line-height: 1.35; }
+  body.ja .dtitle em { color: #ff5a8a; white-space: nowrap; }
+  body.ja .dtitle h2 { background: #fff; border: 6px solid #14142a; box-shadow: 10px 10px 0 #d65a97; padding: 26px 34px; }
+  /* Pip scene: his line in a pixel speech bubble, Pip big below. */
+  .bubble { position: absolute; left: 80px; right: 80px; top: 260px; background: #fff; border: 8px solid #14142a;
+            box-shadow: 14px 14px 0 #d65a97; padding: 50px 54px; text-align: center; }
+  .bubble h1 { font-family: 'DotGothic16'; font-size: 76px; line-height: 1.4; text-wrap: balance; line-break: strict; }
+  .bubble p { font-size: 46px; font-weight: 500; line-height: 1.55; margin-top: 22px; color: #3d2f45; text-wrap: balance; }
+  .bubble::after { content: ''; position: absolute; left: 50%; bottom: -54px; width: 54px; height: 54px; margin-left: -27px;
+                   background: #fff; border-right: 8px solid #14142a; border-bottom: 8px solid #14142a; transform: rotate(45deg); }
+  .pip-img { position: absolute; left: 50%; top: 1000px; width: 560px; height: 560px; margin-left: -280px; image-rendering: pixelated; }
 </style>
 </head>
 <body>
@@ -169,6 +195,33 @@
       };
     },
 
+    // Pip big, his face changing every `every` s (pips: ['joy-love', …], from marketing/brand/pip).
+    pip: (s) => {
+      const keys = s.pips || [s.pip || 'joy-love'];
+      root.innerHTML = `<div class="bg"></div><div class="glow"></div>
+        <div class="bubble"><h1>${s.title}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
+        ${keys.map((k, i) => `<img class="pip-img" data-i="${i}" src="../brand/pip/pip-${k}.png" />`).join('')}
+        ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px">${s.cta}</span></div>` : ''}
+        <div class="handle">@habitquest.app</div>`;
+      const imgs = [...root.querySelectorAll('.pip-img')];
+      const every = s.every || 1;
+      const bubble = root.querySelector('.bubble');
+      window.frame = (t) => {
+        const pop = s.entered ? 1 : ease(Math.min(t / 0.5, 1));
+        bubble.style.opacity = String(pop);
+        bubble.style.transform = `translateY(${(1 - pop) * -30}px)`;
+        const i = Math.min(Math.floor(t / every), imgs.length - 1);
+        const since = t - i * every;
+        // Gentle hop, like in the app.
+        const hop = Math.abs(Math.sin(t * Math.PI * 1.6)) * 26;
+        imgs.forEach((img, k) => {
+          const on = k === i ? ease(Math.min(since / 0.3, 1)) : k === i - 1 ? 1 - ease(Math.min(since / 0.3, 1)) : 0;
+          img.style.opacity = String(on * pop);
+          img.style.transform = `translateY(${-hop}px)`;
+        });
+      };
+    },
+
     hero: (s) => {
       root.innerHTML = `<div class="bg"></div><div class="grid"></div><div class="glow"></div>
         <canvas width="1080" height="1920"></canvas>
@@ -242,6 +295,9 @@
   const SCREEN_H = 1080 * PHONE.h / PHONE.w; // a full-screen recording, scaled to the frame width
   const PAL = ['#f5c518', '#e94560', '#5be38c', '#6fb7ff', '#ffffff', '#a58bff'];
   const clamp01 = (x) => Math.min(Math.max(x, 0), 1);
+  // Pixel font of the canvas texts (DotGothic16 for the Japanese account, ?ja).
+  const PF = () => (document.body.classList.contains('ja') ? 'DotGothic16' : '"Press Start 2P"');
+  const isJa = () => document.body.classList.contains('ja');
   const SPRITES = {
     coin: { px: 7, rows: ['..kkkk..', '.kyyyyk.', 'kyywyyok', 'kywyyyok', 'kyyyyyok', 'kyyyyook', '.kyoook.', '..kkkk..'],
             colors: { k: '#14142A', y: '#F5C518', w: '#FFF6C8', o: '#C8920E' } },
@@ -332,7 +388,7 @@
       const x = rand(k * 7.1 + 1) * 1080;
       const y = ((rand(k * 3.3 + 2) * 2100 - b.T * speed) % 2100 + 2100) % 2100 - 90;
       ctx.globalAlpha = (0.2 + 0.5 * (0.5 + 0.5 * Math.sin(b.T * 3 + k))) * [0.5, 0.7, 1][layer];
-      ctx.fillStyle = k % 5 === 0 ? '#f5c518' : '#c9cbef';
+      ctx.fillStyle = isJa() ? (k % 5 === 0 ? '#ffd84a' : '#ff8fc8') : k % 5 === 0 ? '#f5c518' : '#c9cbef';
       ctx.fillRect(x, y, size, size);
     }
     ctx.globalAlpha = 1;
@@ -341,7 +397,7 @@
   /** Glow along the edges of the frame, on every beat (stronger and gold on the first beat of a bar). */
   function drawEdge(b) {
     const e = root.querySelector('.edge');
-    const c = b.down ? '245,197,24' : '123,104,238';
+    const c = isJa() ? (b.down ? '255,90,138' : '255,143,200') : b.down ? '245,197,24' : '123,104,238';
     e.style.boxShadow = `inset 0 0 0 10px rgba(${c},.9), inset 0 0 160px rgba(${c},.75)`;
     e.style.opacity = String((b.down ? 0.75 : 0.45) * b.pulse);
   }
@@ -354,7 +410,7 @@
   }
 
   function plateText(ctx, text, x, y, size, color = '#f5c518', icon = null) {
-    ctx.font = `${size}px "Press Start 2P"`;
+    ctx.font = `${size}px ${PF()}`;
     const iw = icon ? icon.rows[0].length * icon.px + 16 : 0;
     const w = ctx.measureText(text).width + iw + 44, h = size + 40;
     ctx.fillStyle = '#14142A'; ctx.fillRect(x - w / 2 - 6, y - h / 2 - 6, w + 12, h + 12);
@@ -416,7 +472,7 @@
         if (f.say && k > 0.2) {
           ctx.save(); ctx.globalAlpha = fade;
           const sc = 0.2 + 0.8 * back((k - 0.2) / 0.25);
-          ctx.font = `${f.sayPx || 26}px "Press Start 2P"`;
+          ctx.font = `${f.sayPx || 26}px ${PF()}`;
           const tw = ctx.measureText(f.say).width + 40, th = (f.sayPx || 26) + 36;
           const bx = Math.min(Math.max(x, tw / 2 + 24), 1056 - tw / 2), by = y - size * 0.75 - 34 - th / 2;
           ctx.translate(bx, by); ctx.scale(sc, sc);
@@ -446,7 +502,7 @@
         ctx.fillStyle = v >= 1 && k < dur + 0.15 ? '#ffffff' : (f.color || '#5be38c');
         for (let j = 0; j < Math.round(segs * v); j++) ctx.fillRect(-w / 2 + 4 + j * 24, -h / 2 + 4, 20, h - 8);
         if (f.label) {
-          ctx.font = '28px "Press Start 2P"'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+          ctx.font = `28px ${PF()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
           ctx.fillStyle = '#000'; ctx.fillText(f.label, 0, -h / 2 - 16); ctx.fillStyle = '#f0f0ff'; ctx.fillText(f.label, 0, -h / 2 - 20);
         }
         ctx.restore(); continue;
@@ -458,6 +514,52 @@
   const fxCanvas = '<canvas class="fx" width="1080" height="1920"></canvas>';
 
   const dynamic = {
+    // Pip big, hopping on the beat, his faces changing (pips), his line popping in a bubble.
+    pip: (s) => {
+      const keys = s.pips || [s.pip || 'joy-love'];
+      root.innerHTML = `${underHTML(false)}<div class="edge"></div>
+        <div class="bubble"><h1>${wordSpans(s.title)}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
+        ${keys.map((k, i) => `<img class="pip-img" data-i="${i}" src="../brand/pip/pip-${k}.png" />`).join('')}
+        ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px;opacity:0">${s.cta}</span></div>` : ''}
+        ${fxCanvas}`;
+      const spans = [...root.querySelectorAll('.w')];
+      const bubble = root.querySelector('.bubble');
+      const imgs = [...root.querySelectorAll('.pip-img')];
+      const sub = root.querySelector('.bubble p');
+      const cta = root.querySelector('.tag .cta');
+      const ctx = root.querySelector('.fx').getContext('2d');
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        drawUnder(b); drawEdge(b);
+        const k0 = s.entered ? 1 : t / 0.3;
+        bubble.style.transform = `scale(${(0.3 + 0.7 * back(k0)) * (1 + 0.025 * b.pulse)})`;
+        bubble.style.opacity = String(clamp01(k0 * 3));
+        const { hits, landed } = popWords(spans, t, b.B / 2, 0.12);
+        if (sub) { const k = (t - landed) / 0.3; sub.style.opacity = String(clamp01(k * 2)); }
+        ctx.clearRect(0, 0, 1080, 1920);
+        hits.forEach((h) => burst(ctx, t - h.at, h.x, h.y, h.seed, 20, 0.8));
+        // Faces change every `every` s, snapped to the beat; a little burst on each change.
+        const every = Math.max(1, Math.round((s.every || 2 * b.B) / b.B)) * b.B;
+        const i = Math.min(Math.floor(t / every + 1e-6), imgs.length - 1);
+        const since = t - i * every;
+        const up = Math.sin(Math.PI * b.ph) * 46 * (b.n % 2 ? 0.6 : 1);
+        const squash = b.ph < 0.12 ? 0.9 : 1;
+        imgs.forEach((img, k) => {
+          img.style.opacity = k === i ? '1' : '0';
+          img.style.transform = `translateY(${-up}px) scale(${2 - squash}, ${squash})`;
+        });
+        if (i > 0) burst(ctx, since, 540, 1280, i * 7, 26, 0.9);
+        if (cta) {
+          const at = (s.ctaBeat || 4) * b.B;
+          const k = (t - at) / 0.3;
+          cta.style.opacity = k > 0 ? '1' : '0';
+          cta.style.display = 'inline-block';
+          cta.style.transform = `scale(${k > 0 ? (0.2 + 0.8 * back(k)) * (1 + 0.06 * b.pulse) : 0.2})`;
+          if (k > 0) burst(ctx, t - at, 540, 1680, 77, 40, 1.2);
+        }
+        drawFx(s, ctx, t, b);
+      };
+    },
     phone: (s) => {
       root.innerHTML = `${underHTML(true)}<div class="edge"></div><div class="frame"></div>
         <div class="dtitle"><h2 style="font:inherit">${wordSpans(s.title)}</h2></div>${fxCanvas}`;
@@ -468,7 +570,9 @@
       window.frame = (t) => {
         const b = beatAt(s, t);
         drawUnder(b); drawEdge(b);
-        frame.style.boxShadow = `0 0 0 4px #2e3870, 0 0 ${90 + 90 * b.pulse}px rgba(123,104,238,${0.3 + 0.4 * b.pulse})`;
+        frame.style.boxShadow = isJa()
+          ? `14px 14px 0 #ff8fc8, 0 0 ${60 + 70 * b.pulse}px rgba(255,143,200,${0.25 + 0.4 * b.pulse})`
+          : `0 0 0 4px #2e3870, 0 0 ${90 + 90 * b.pulse}px rgba(123,104,238,${0.3 + 0.4 * b.pulse})`;
         h2.style.transform = 'none';
         const { hits, landed } = popWords(spans, t, b.B / 2);
         h2.style.transform = `scale(${1 + (t > landed ? 0.035 * b.pulse : 0)})`;
@@ -587,7 +691,7 @@
           const prev = i > 0 ? s.looks[i - 1].lv : look.lv;
           const lv = Math.round(prev + (look.lv - prev) * ease(since / 0.35));
           const by = stage.y + stage.h + 52;
-          fx.font = '34px "Press Start 2P"'; fx.textAlign = 'left'; fx.textBaseline = 'middle';
+          fx.font = `34px ${PF()}`; fx.textAlign = 'left'; fx.textBaseline = 'middle';
           fx.fillStyle = '#000'; fx.fillText(`LV ${lv}`, 90, by + 4);
           fx.fillStyle = '#f5c518'; fx.fillText(`LV ${lv}`, 90, by);
           const bx = 330, bw = 660, bh = 34;
@@ -608,7 +712,9 @@
     },
   };
 
+  const JA = location.search.includes('ja');
   window.render = (s) => {
+    document.body.classList.toggle('ja', JA);
     window.frame = null;
     (s.dynamic && dynamic[s.layout] ? dynamic : layouts)[s.layout](s);
     if (window.frame) window.frame(0);

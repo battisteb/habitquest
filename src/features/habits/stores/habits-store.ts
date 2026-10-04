@@ -5,10 +5,10 @@ import { persistPlugin } from '../../../lib/storage/persist';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { checkAndUnlockAchievements } from '../../gamification/stores/achievements-store';
 import { fetchDailyQuests } from '../../daily-quests/stores/daily-quests-store';
-import { fetchChallenges } from '../../social/stores/challenges-store';
 import { checkAndApplyPunishments } from '../utils/streak-punishment';
 import { triggerLevelUp } from '../../gamification/stores/level-up-store';
 import { triggerStreakMilestone, isMilestone } from '../../gamification/stores/streak-milestone-store';
+import { isIdentityMilestone } from '../utils/identity';
 import { recordCompletionHour } from '../../notifications/utils/adaptive-timing';
 import { hapticSuccess, hapticHeavy } from '../../../lib/haptics';
 import { playSfx } from '../../../lib/audio/sound-service';
@@ -195,6 +195,7 @@ export async function createHabit(
   frequency?: string,
   emoji?: string | null,
   days?: number[] | null,
+  motivation?: { why?: string | null; anchor?: string | null; mini?: string | null },
 ) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
@@ -202,14 +203,25 @@ export async function createHabit(
   // The streak row is created by the on_habit_created_streak trigger.
   const { error } = await supabase
     .from('habits')
-    .insert({ user_id: userId, name, category, content: (content ?? null) as Json | null, frequency: frequency ?? 'daily', emoji: emoji ?? null, days: days ?? null });
+    .insert({
+      user_id: userId,
+      name,
+      category,
+      content: (content ?? null) as Json | null,
+      frequency: frequency ?? 'daily',
+      emoji: emoji ?? null,
+      days: days ?? null,
+      why: motivation?.why ?? null,
+      anchor: motivation?.anchor ?? null,
+      mini: motivation?.mini ?? null,
+    });
 
   if (error) throw error;
 
   await fetchHabits();
 }
 
-export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null }) {
+export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null; why?: string | null; anchor?: string | null; mini?: string | null }) {
   const { error } = await supabase.from('habits').update({ ...updates, content: updates.content as Json | null | undefined }).eq('id', id);
   if (error) throw error;
   await fetchHabits();
@@ -268,6 +280,7 @@ interface CompleteHabitResult {
 export async function completeHabit(
   habitId: string,
   note?: string,
+  mini = false,
 ): Promise<CompleteHabitResult | undefined> {
   const habit = habitsStore$.habits.get().find((h) => h.id === habitId);
   const frequency = habit?.frequency ?? 'daily';
@@ -283,10 +296,15 @@ export async function completeHabit(
     if (weekCount >= getWeeklyTarget(frequency)) return;
   }
 
+  // Best streak before this validation: an identity title is announced once (G3).
+  const bestBefore = habitsStore$.streaks.get()[habitId]?.longest_count ?? 0;
+
   // XP, gold, streak, challenges and daily quests are all computed server-side.
   const { data, error } = await supabase.rpc('complete_habit', {
     p_habit_id: habitId,
     p_note: note ?? undefined,
+    // The small version of the quest (G1): streak kept, half the XP.
+    p_mini: mini || undefined,
   });
   if (error) throw error;
   const result = data as unknown as CompleteHabitResult;
@@ -306,7 +324,10 @@ export async function completeHabit(
   // Check for streak milestone
   const milestone = isMilestone(result.current_streak) && result.current_streak > result.previous_streak;
   if (milestone) {
-    triggerStreakMilestone(result.current_streak, habit?.name ?? '');
+    triggerStreakMilestone(result.current_streak, habit?.name ?? '', {
+      category: habit?.category,
+      newIdentity: isIdentityMilestone(result.current_streak) && result.current_streak > bestBefore,
+    });
     hapticHeavy();
     void playSfx('streak_milestone');
   } else {
@@ -343,7 +364,6 @@ export async function completeHabit(
   // Background refreshes (non-blocking)
   checkAndUnlockAchievements().catch(() => {});
   fetchDailyQuests().catch(() => {});
-  fetchChallenges().catch(() => {});
 
   return result;
 }
@@ -387,7 +407,6 @@ export async function uncompleteHabit(habitId: string): Promise<UncompleteHabitR
 
   refreshProfile();
   fetchDailyQuests().catch(() => {});
-  fetchChallenges().catch(() => {});
   return result;
 }
 

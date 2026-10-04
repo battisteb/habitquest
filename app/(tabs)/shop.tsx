@@ -36,6 +36,8 @@ import { rarityLabel, unlockLabel as formatUnlock } from '../../src/lib/i18n/lab
 import { shopItemText } from '../../src/lib/i18n/content';
 import { themeKeyOfItem } from '../../src/features/shop/utils/owned-themes';
 import { MonthlyItemBanner } from '../../src/features/shop/components/monthly-item-banner';
+import { SeasonItemBanner } from '../../src/features/shop/components/season-item-banner';
+import { arcSeasonOf } from '../../src/lib/constants/game-config';
 import { showDialog } from '../../src/lib/app-alert';
 
 type ShopTabKey = 'shop_tab_hats' | 'shop_tab_outfits' | 'shop_tab_items' | 'shop_tab_backgrounds' | 'shop_tab_themes';
@@ -343,6 +345,8 @@ export default function ShopScreen() {
   const currentHat = equippedSlots.hat?.item?.sprite_key;
   const currentOutfit = equippedSlots.outfit?.item?.sprite_key;
   const currentAccessory = equippedSlots.accessory?.item?.sprite_key;
+  // The current arc's item (G6b): sold for gold until the arc ends.
+  const seasonItem = items.find((i) => i.season === arcSeasonOf()) ?? null;
   const currentBg = equippedSlots.background?.item?.sprite_key;
 
   // Declared before handleItemPress to avoid any closure ordering issues
@@ -496,6 +500,22 @@ export default function ShopScreen() {
           <Text style={styles.loadoutHint}>{T.shop_tap_unequip}</Text>
         </View>
       </View>
+
+      {seasonItem && (
+        <View style={styles.monthly}>
+          <SeasonItemBanner
+            item={seasonItem}
+            owned={ownedItemIds.includes(seasonItem.id)}
+            equipped={Object.values(equippedSlots).some((e) => e?.itemId === seasonItem.id)}
+            look={{ hat: currentHat, outfit: currentOutfit, accessory: currentAccessory }}
+            onBuy={() => handleItemPress(seasonItem)}
+            onEquip={() => {
+              const slot = CATEGORY_TO_SLOT[seasonItem.category];
+              if (slot) void equipItem(seasonItem.id, slot);
+            }}
+          />
+        </View>
+      )}
 
       {monthly.item && (
         <View style={styles.monthly}>

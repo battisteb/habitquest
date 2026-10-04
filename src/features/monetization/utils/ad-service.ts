@@ -1,6 +1,8 @@
 import { Platform } from 'react-native';
 import { canPersonalizeAds } from './tracking-consent';
 import { premium$ } from '../stores/premium';
+import { profileStore$ } from '../../gamification/stores/profile-store';
+import { ADS } from '../../../lib/constants/game-config';
 
 // AdMob is native-only — not available on web
 const isNative = Platform.OS !== 'web';
@@ -46,7 +48,7 @@ export const ADMOB_IDS = {
 // Re-export BannerAdSize for use in ad-banner.tsx (native only)
 export { isNative as isAdNative };
 
-// ─── Interstitial (before duel, after All Done) ───────────────────────────────
+// ─── Interstitial (never before a duel, not in the first week: D9) ───────────────────────────────
 let _interstitial: any = null;
 let _interstitialLoaded = false;
 
@@ -77,7 +79,7 @@ export function showInterstitial(onComplete?: () => void): void {
     onComplete?.();
     return;
   }
-  if (premium$.get()) {
+  if (premium$.get() || inInterstitialGracePeriod(profileStore$.profile.get()?.created_at)) {
     onComplete?.();
     return;
   }
@@ -129,6 +131,18 @@ export function showRewardedInterstitial(
   } catch {
     onComplete?.();
   }
+}
+
+/**
+ * True during the account's first days (ADS.interstitialGraceDays), or when the
+ * account date is unknown: a new player first discovers the game without
+ * full-screen ads.
+ */
+export function inInterstitialGracePeriod(createdAt: string | null | undefined, now: Date = new Date()): boolean {
+  if (!createdAt) return true;
+  const created = new Date(createdAt).getTime();
+  if (Number.isNaN(created)) return true;
+  return now.getTime() - created < ADS.interstitialGraceDays * 24 * 60 * 60 * 1000;
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────

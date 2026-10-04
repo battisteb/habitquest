@@ -1,0 +1,113 @@
+{
+  "j-r1-hajimemashite": {
+    "music": { "file": "marketing/audio/theme-quest.m4a", "start": 0, "theme": "quest", "drop": 1, "lift": 4 },
+    "segments": [
+      { "type": "pip", "dur": 1.8, "title": "はじめまして！<br><em>ピップ</em>だよ", "pips": ["happy-love", "joy-love"], "every": 0.86 },
+      { "type": "kinetic", "dur": 1.8, "title": "きみの習慣が<br><em>RPG</em>のクエストに⚔️", "sfx": "attack", "sfxAt": 0.9 },
+      {
+        "type": "still", "dur": 2.2, "src": "today", "title": "毎日の習慣 = <em>クエスト</em>", "sfx": "complete", "sfxAt": 0.45,
+        "fx": [
+          { "type": "arrow", "at": 0.05, "sx": 0.9, "sy": 0.41, "dir": "left", "life": 0.6 },
+          { "type": "burst", "beat": 1, "sx": 0.87, "sy": 0.41 },
+          { "type": "xp", "beat": 1, "sx": 0.62, "sy": 0.4, "text": "+25 XP", "sfx": "pop" },
+          { "type": "xp", "beat": 3, "sx": 0.62, "sy": 0.49, "text": "+21 XP", "sfx": "pop" }
+        ]
+      },
+      {
+        "type": "still", "dur": 1.8, "src": "today", "title": "<em>ゴールド</em>もゲット",
+        "fx": [
+          { "type": "counter", "beat": 1, "x": 540, "y": 1690, "from": 545, "to": 570, "icon": "coin", "dur": 0.6, "sfx": "pop" }
+        ]
+      },
+      {
+        "type": "still", "dur": 2.2, "src": "profile", "title": "ヒーローが<em>レベルアップ</em>", "sfx": "level-up", "sfxAt": 0.9,
+        "fx": [
+          { "type": "bar", "beat": 0, "x": 540, "y": 1700, "from": 0.3, "to": 1, "dur": 0.9, "label": "LV 6 → 7" },
+          { "type": "burst", "beat": 2, "sx": 0.5, "sy": 0.2, "n": 36, "power": 1.2 },
+          { "type": "pip", "beat": 3, "x": 150, "y": 1560, "expr": "joy", "mood": "love", "say": "すごい！", "sfx": "pop" }
+        ]
+      },
+      {
+        "type": "still", "dur": 1.8, "src": "today", "title": "ミッション・ボス・<em>アーク</em>",
+        "fx": [
+          { "type": "arrow", "beat": 0, "sx": 0.17, "sy": 0.24, "dir": "down", "life": 1.6 },
+          { "type": "arrow", "beat": 2, "sx": 0.8, "sy": 0.24, "dir": "down", "life": 1.2 }
+        ]
+      },
+      { "type": "pip", "dur": 2.6, "title": "毎日ちょっとずつ<br><em>いっしょに</em>！", "subtitle": "もうすぐリリース", "pips": ["joy-party"], "cta": "フォローしてね🌸", "ctaBeat": 3 }
+    ]
+  },
+  "j-r2-kibun": {
+    "music": { "file": "marketing/audio/theme-quest.m4a", "start": 0, "theme": "quest", "drop": 1 },
+    "segments": [
+      { "type": "pip", "dur": 2.6, "title": "きみの今日の<br><em>気分</em>は？", "pips": ["sad-worried", "worried-worried", "happy-calm", "happy-love", "joy-party"], "every": 0.43 },
+      {
+        "type": "still", "dur": 2.2, "src": "today", "title": "タップで<em>気分</em>を記録",
+        "fx": [
+          { "type": "arrow", "beat": 0, "sx": 0.74, "sy": 0.16, "dir": "down", "life": 0.8 },
+          { "type": "burst", "beat": 2, "sx": 0.74, "sy": 0.17, "sfx": "pop" },
+          { "type": "pip", "beat": 3, "x": 900, "y": 1560, "expr": "joy", "mood": "party", "say": "最高！", "flip": true }
+        ]
+      },
+      { "type": "pip", "dur": 1.8, "title": "ぼくの顔も<br><em>変わる</em>よ！", "pips": ["worried-worried", "joy-party"], "every": 0.86 },
+      { "type": "kinetic", "dur": 1.8, "title": "気分 × 習慣で<br><em>元気のひみつ</em>が見える" },
+      {
+        "type": "still", "dur": 1.8, "src": "today", "title": "クエストを<em>クリア</em>", "sfx": "complete", "sfxAt": 0.45,
+        "fx": [
+          { "type": "burst", "beat": 1, "sx": 0.87, "sy": 0.5 },
+          { "type": "xp", "beat": 1, "sx": 0.62, "sy": 0.49, "text": "+21 XP", "sfx": "pop" }
+        ]
+      },
+      { "type": "pip", "dur": 2.6, "title": "どんな日も<br><em>いっしょ</em>だよ", "subtitle": "コメントで気分を教えてね", "pips": ["joy-love"], "cta": "フォローしてね🌸", "ctaBeat": 3 }
+    ]
+  },
+  "j-r3-yasashii": {
+    "music": { "file": "marketing/audio/theme-quest.m4a", "start": 0, "theme": "quest", "drop": 2 },
+    "segments": [
+      { "type": "pip", "dur": 1.8, "title": "1日<em>休んじゃった</em>…", "pips": ["sad-worried"] },
+      { "type": "kinetic", "dur": 1.8, "title": "だいじょうぶ！<br>連続記録は<em>守られる</em>" },
+      { "type": "pip", "dur": 1.8, "title": "<em>フリーズ</em>が<br>カバー❄️", "pips": ["happy-worried", "joy-worried"], "every": 0.86 },
+      {
+        "type": "still", "dur": 2.2, "src": "create", "title": "つかれた日は<em>ミニ版</em>",
+        "fx": [
+          { "type": "arrow", "beat": 0, "sx": 0.92, "sy": 0.64, "dir": "left", "life": 1.6 },
+          { "type": "xp", "beat": 2, "sx": 0.5, "sy": 0.72, "text": "1ページでOK", "sfx": "pop" }
+        ]
+      },
+      {
+        "type": "still", "dur": 1.8, "src": "today", "title": "<em>連続記録</em>はそのまま",
+        "fx": [
+          { "type": "counter", "beat": 1, "sx": 0.45, "sy": 0.43, "from": 14, "to": 15, "icon": "fire", "dur": 0.5, "sfx": "pop" }
+        ]
+      },
+      { "type": "pip", "dur": 2.6, "title": "ゼロより、<br><em>少しでも</em>", "subtitle": "えらいよ🌸", "pips": ["joy-love"], "cta": "フォローしてね🌸", "ctaBeat": 3 }
+    ]
+  },
+  "j-r4-winter-arc": {
+    "music": { "file": "marketing/audio/theme-quest.m4a", "start": 0, "theme": "quest", "drop": 1, "lift": 3 },
+    "segments": [
+      { "type": "pip", "dur": 1.8, "title": "<em>Winter Arc</em><br>はじまったよ❄️", "pips": ["happy-worried", "joy-worried"], "every": 0.86 },
+      {
+        "type": "still", "dur": 2.2, "src": "arc", "title": "<em>8週</em>がんばると",
+        "fx": [
+          { "type": "bar", "beat": 1, "x": 540, "y": 1700, "from": 0.125, "to": 1, "dur": 1.0, "label": "1/8 → 8/8" }
+        ]
+      },
+      {
+        "type": "still", "dur": 1.8, "src": "arc", "title": "冬の<em>ルーン</em>💎", "sfx": "level-up", "sfxAt": 0.86,
+        "fx": [
+          { "type": "arrow", "beat": 0, "sx": 0.5, "sy": 0.17, "dir": "down", "life": 0.8 },
+          { "type": "burst", "beat": 2, "sx": 0.5, "sy": 0.25, "n": 40, "power": 1.3 }
+        ]
+      },
+      { "type": "kinetic", "dur": 1.8, "title": "良い週は<br>予定の<em>70%</em>でOK" },
+      {
+        "type": "still", "dur": 1.8, "src": "social", "title": "友だちと<em>いっしょに</em>",
+        "fx": [
+          { "type": "xp", "beat": 1, "sx": 0.6, "sy": 0.52, "text": "👏 +1", "sfx": "pop" }
+        ]
+      },
+      { "type": "pip", "dur": 2.6, "title": "冬の目標、<br><em>いっしょに</em>！", "subtitle": "完璧じゃなくていいんだ", "pips": ["joy-party"], "cta": "フォローしてね🌸", "ctaBeat": 3 }
+    ]
+  }
+}

@@ -26,6 +26,9 @@ const habit = (id: string) => ({
   content: null,
   emoji: null,
   days: null,
+  why: null,
+  anchor: null,
+  mini: null,
   created_at: new Date().toISOString(),
 });
 

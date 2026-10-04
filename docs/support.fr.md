@@ -1,7 +1,7 @@
 ---
 title: Aide — HabitQuest
 lang: fr
-alt: /support
+base: support
 ---
 
 # HabitQuest — Aide
@@ -17,7 +17,7 @@ Nous lisons tous les messages et répondons en général sous quelques jours. Le
 
 **J'ai oublié mon mot de passe.** Sur l'écran de connexion, saisis ton e-mail puis touche « Mot de passe oublié ? » : tu recevras un lien pour en choisir un nouveau.
 
-**Ma série s'est cassée.** Une série se casse quand une quête n'est pas validée le jour prévu (selon ton jour local). Les joueurs gratuits ont un gel de série par semaine ; le mode Focus (Réglages → Mode Focus) met certaines catégories en pause pendant les examens, les vacances ou une maladie : tes séries sont gelées, pas perdues.
+**Ma série s'est cassée.** Un jour oublié est couvert automatiquement par ton gel de la semaine (ou un jeton de gel). Si une série casse quand même, aucune pénalité : pendant 24 h après ton retour tes XP sont doublés, et dans les 48 h tu peux réparer la série (avec de l'or, ou une fois par jour avec une pub pour les joueurs gratuits). L'écran Pause (Réglages → Pause) met en pause une journée, certaines quêtes ou tout pendant les examens, les vacances ou une maladie : les séries attendent ton retour.
 
 **J'ai acheté Premium mais je ne l'ai pas.** Sur l'écran Premium, touche « Restaurer les achats », avec le même compte Apple ou Google que pour l'achat.
 

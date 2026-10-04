@@ -120,6 +120,7 @@ export type Database = {
           completed_at: string;
           habit_id: string;
           id: string;
+          is_mini: boolean;
           note: string | null;
           xp_earned: number;
         };
@@ -127,6 +128,7 @@ export type Database = {
           completed_at?: string;
           habit_id: string;
           id?: string;
+          is_mini?: boolean;
           note?: string | null;
           xp_earned?: number;
         };
@@ -134,6 +136,7 @@ export type Database = {
           completed_at?: string;
           habit_id?: string;
           id?: string;
+          is_mini?: boolean;
           note?: string | null;
           xp_earned?: number;
         };
@@ -342,6 +345,7 @@ export type Database = {
       };
       habits: {
         Row: {
+          anchor: string | null;
           category: string;
           content: Json | null;
           created_at: string;
@@ -351,11 +355,14 @@ export type Database = {
           id: string;
           is_archived: boolean;
           is_paused: boolean;
+          mini: string | null;
           name: string;
           paused_at: string | null;
           user_id: string;
+          why: string | null;
         };
         Insert: {
+          anchor?: string | null;
           category?: string;
           content?: Json | null;
           created_at?: string;
@@ -365,11 +372,14 @@ export type Database = {
           id?: string;
           is_archived?: boolean;
           is_paused?: boolean;
+          mini?: string | null;
           name: string;
           paused_at?: string | null;
           user_id: string;
+          why?: string | null;
         };
         Update: {
+          anchor?: string | null;
           category?: string;
           content?: Json | null;
           created_at?: string;
@@ -379,9 +389,11 @@ export type Database = {
           id?: string;
           is_archived?: boolean;
           is_paused?: boolean;
+          mini?: string | null;
           name?: string;
           paused_at?: string | null;
           user_id?: string;
+          why?: string | null;
         };
         Relationships: [
           {
@@ -602,6 +614,7 @@ export type Database = {
           price_gold: number;
           rarity: string;
           required_level: number;
+          season: string | null;
           sprite_key: string;
         };
         Insert: {
@@ -614,6 +627,7 @@ export type Database = {
           price_gold: number;
           rarity?: string;
           required_level?: number;
+          season?: string | null;
           sprite_key?: string;
         };
         Update: {
@@ -626,6 +640,7 @@ export type Database = {
           price_gold?: number;
           rarity?: string;
           required_level?: number;
+          season?: string | null;
           sprite_key?: string;
         };
         Relationships: [];
@@ -778,6 +793,12 @@ export type Database = {
           },
         ];
       };
+      daily_chests: {
+        Row: { user_id: string; day: string; xp: number; gold: number; opened_at: string };
+        Insert: { user_id: string; day: string; xp?: number; gold?: number; opened_at?: string };
+        Update: { user_id?: string; day?: string; xp?: number; gold?: number; opened_at?: string };
+        Relationships: [];
+      };
       user_daily_quests: {
         Row: {
           assigned_date: string;
@@ -884,10 +905,16 @@ export type Database = {
       };
       claim_daily_quest: { Args: { p_quest_id: string; p_user_id: string }; Returns: Json };
       claim_duel_reward: { Args: { p_duel_id: string }; Returns: Json };
-      complete_habit: { Args: { p_habit_id: string; p_note?: string }; Returns: Json };
+      complete_habit: { Args: { p_habit_id: string; p_note?: string; p_mini?: boolean }; Returns: Json };
       uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json };
       log_mood: { Args: { p_mood: number }; Returns: Json };
       repair_streak: { Args: { p_habit_id: string; p_with_ad?: boolean }; Returns: Json };
+      give_kudos: { Args: { p_friend_id: string }; Returns: Json };
+      open_daily_chest: { Args: Record<string, never>; Returns: Json };
+      friends_today: {
+        Args: Record<string, never>;
+        Returns: { friend_id: string; done_today: number; kudos_sent: boolean; kudos_received: number }[];
+      };
       get_my_profile: {
         Args: Record<string, never>;
         Returns: Database['public']['Tables']['profiles']['Row'][];

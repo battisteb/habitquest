@@ -20,7 +20,6 @@ const FILES = [
   'app/(tabs)/stats.tsx',
   'app/(tabs)/training.tsx',
   // App screens
-  'app/xp-journey.tsx',
   'app/notifications.tsx',
   'app/achievements.tsx',
   'app/weekly-recap.tsx',
@@ -36,8 +35,6 @@ const FILES = [
   'app/duels/index.tsx',
   'app/duels/challenge.tsx',
   'app/duels/battle.tsx',
-  'app/settings/contextual-mode.tsx',
-  'app/challenge/create.tsx',
   'app/training/[id].tsx',
   'app/training/deck/[id].tsx',
   // Shared components
