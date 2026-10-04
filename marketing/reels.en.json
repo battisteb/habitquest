@@ -1586,9 +1586,9 @@
       {
         "type": "full",
         "dur": 3,
-        "src": "challenge",
-        "start": 0.5,
-        "title": "1v1 challenges:<br><em>bet gold</em>, best wins"
+        "src": "battle",
+        "start": 1,
+        "title": "Duel your friends:<br><em>turn-based</em> fights"
       },
       {
         "type": "full",
