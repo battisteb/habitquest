@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useState, useMemo } from 'react';
 import {
   View,
@@ -235,7 +236,7 @@ export default function EditProfileScreen() {
       return;
     }
 
-    router.back();
+    goBack(router, '/(tabs)/profile');
   };
 
   return (
@@ -248,7 +249,7 @@ export default function EditProfileScreen() {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
-        <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+        <PixelButton title={T.common_back} onPress={() => goBack(router, '/(tabs)/profile')} variant="ghost" />
 
         <View style={styles.header}>
           <Text style={styles.screenLabel}>{T.profile_edit_label}</Text>

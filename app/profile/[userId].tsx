@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -178,7 +179,7 @@ export default function PublicProfileScreen() {
     return (
       <View style={[styles.centered, { paddingTop: insets.top }]}>
         <Text style={styles.notFound}>{T.profile_pub_not_found}</Text>
-        <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+        <PixelButton title={T.common_back} onPress={() => goBack(router, '/(tabs)/social')} variant="ghost" />
       </View>
     );
   }
@@ -194,7 +195,7 @@ export default function PublicProfileScreen() {
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.common_back} onPress={() => goBack(router, '/(tabs)/social')} variant="ghost" />
 
       {/* Hero */}
       <View style={styles.hero}>

@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -310,7 +311,7 @@ export default function HabitHistoryScreen() {
       style={[styles.scroll, { paddingTop: insets.top }]}
       contentContainerStyle={styles.container}
     >
-      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.common_back} onPress={() => goBack(router)} variant="ghost" />
 
       <View style={styles.header}>
         <Text style={styles.screenLabel}>{T.habit_history_label}</Text>

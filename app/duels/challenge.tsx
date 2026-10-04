@@ -1,3 +1,4 @@
+import { goBack } from '../../src/lib/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -132,7 +133,7 @@ export default function ChallengeScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <PixelButton title={T.common_back} onPress={() => router.back()} variant="ghost" />
+      <PixelButton title={T.common_back} onPress={() => goBack(router, '/duels')} variant="ghost" />
       <Text style={styles.title}>{T.duels_challenge_title}</Text>
 
       <Text style={styles.stepLabel}>{T.duels_challenge_step1}</Text>

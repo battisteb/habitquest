@@ -1,3 +1,4 @@
+import { goBack } from '../../../lib/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -64,7 +65,7 @@ export default function ArcScreen() {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.sm }]}>
-      <Pressable onPress={() => router.back()} accessibilityRole="button" hitSlop={8}>
+      <Pressable onPress={() => goBack(router)} accessibilityRole="button" hitSlop={8}>
         <Text style={styles.back}>{T.common_back}</Text>
       </Pressable>
 

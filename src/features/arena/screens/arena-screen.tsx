@@ -1,3 +1,4 @@
+import { goBack } from '../../../lib/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
@@ -107,7 +108,7 @@ export default function ArenaScreen() {
   }), [themeKey]);
 
   const backLink = (
-    <Pressable onPress={() => router.back()} accessibilityRole="button">
+    <Pressable onPress={() => goBack(router, '/(tabs)/social')} accessibilityRole="button">
       <Text style={styles.back}>{T.arena_back}</Text>
     </Pressable>
   );

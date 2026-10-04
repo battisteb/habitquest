@@ -1,3 +1,4 @@
+import { goBack } from '../../../lib/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -69,7 +70,7 @@ export default function CoopCreateScreen() {
     try {
       await createCoopChallenge(selected, goal, target, days);
       // Opened from a link there is no list behind this screen.
-      if (router.canGoBack()) router.back();
+      if (router.canGoBack()) goBack(router, '/coop');
       else router.replace('/coop');
     } catch (e) {
       if (e instanceof CoopLimitError) {
@@ -121,7 +122,7 @@ export default function CoopCreateScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Pressable onPress={() => router.back()} accessibilityRole="button">
+        <Pressable onPress={() => goBack(router, '/coop')} accessibilityRole="button">
           <Text style={styles.back}>{T.coop_back}</Text>
         </Pressable>
         <Text style={styles.title}>{T.coop_create_title}</Text>
