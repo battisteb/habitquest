@@ -59,7 +59,7 @@ Fichiers : JP = `exports/reels-ja` et `exports/posts-ja` ; EN = `exports/reels-e
 
 | Jour | Instagram (JP) | TikTok (EN), 2 par jour | YouTube Shorts (EN) |
 |---|---|---|---|
-| **J1** | Reel `j-r1` (présentation de Pip) + carrousel `j1` **épinglé** · Story : « はじめまして！ » + sondage | `tour-habitquest` (« Habits are boring… ») · Build in public #1 « I'm launching my pixel habit app » | `tour-habitquest` |
+| **J1** | Reel `j-r1` (présentation de Pip) + carrousel `j1` **épinglé** · Story : « はじめまして！ » + sondage | `tour-habitquest` (« Habits are boring… ») · Build in public #1 « I'm building a pixel habit app » | `tour-habitquest` |
 | **J2** | Carrousel `j2` (les humeurs) · Story : sondage d'humeur | `r1` (« What if your life was an RPG? ») · Winter Arc #1 « My Winter Arc, but it's a pixel RPG » | `r1` |
 | **J3** | Reel `j-r2` (humeur) · Story : réponses du sondage | `r21` (journée parfaite) · Build in public #2 | Winter Arc #1 |
 | **J4** | Carrousel `j3` (la série qui ne casse pas) | `r9` (« What happens when you last 14 days ») · `r10` (POV level 6) | `r9` |
@@ -72,7 +72,7 @@ Fichiers : JP = `exports/reels-ja` et `exports/posts-ja` ; EN = `exports/reels-e
 | **J11** | Remix : la meilleure vidéo JP avec une autre accroche | La meilleure vidéo EN, **nouvelle accroche** · `r15` (stats) | Meilleure vidéo EN |
 | **J12** | Carrousel `j8` (3 habitudes de niveau 1, **à enregistrer**) | `r14` (succès) · Pip version mini (EN) | `r14` |
 | **J13** | Story : questions à Pip, réponses en vidéo | Réponse en vidéo au meilleur commentaire · `r11` (amis contre moi) | Réponse en vidéo |
-| **J14** | Reel de la meilleure performance, version courte | Build in public #5 « 2 weeks in: here's what happened » · `r5` (défie tes amis, version duels) | Build in public #5 |
+| **J14** | Reel de la meilleure performance, version courte | Build in public #5 « Building in public: where HabitQuest is » (pas de date de sortie, Battiste 2026-10-04) · `r5` (défie tes amis, version duels) | Build in public #5 |
 | **J15** | Carrousel `j9` (bientôt la sortie) · Story : compte à rebours vers la sortie | Récap « 15 days of building in public » · Winter Arc : la meilleure version · **Point J15** | Récap |
 
 Si une vidéo dépasse nettement les autres (deux à trois fois plus de vues), **on la décline** les jours suivants : même idée, autre accroche ou autre fin.

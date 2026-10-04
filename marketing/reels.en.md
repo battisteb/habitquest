@@ -44,9 +44,9 @@ Extra hashtags for all three: `#winterarc #winterarc2026 #glowup #discipline`
 
 | Reel | Caption |
 |---|---|
-| w1 — My Winter Arc, but it's an RPG | My Winter Arc this year is a pixel RPG. ❄️⚔️ Every habit is a quest, 8 good weeks earn the Winter rune. Who's in? 👇 |
+| w1 — My Winter Arc, but it's an RPG | My Winter Arc this year is a pixel RPG. ❄️⚔️ Every habit is a quest, 8 good weeks earn the Winter rune. Who's in? 👇 Play the demo: link in bio. |
 | w2 — Winter Arc rule | Winter Arc rule: you don't need to be perfect. 70% of your week is a good week, and a freeze covers an off day. Consistency beats perfection. ❄️ |
-| w3 — Day 1 of my Winter Arc | Day 1 of my Winter Arc. ❄️ Quest 1: read 10 pages. Follow along, see you on day 14. |
+| w3 — Day 1 of my Winter Arc | Day 1 of my Winter Arc. ❄️ Quest 1: read 10 pages. Follow along! Try it yourself: the demo is on our site, link in bio. |
 
 ## Pip, the guide (English)
 
@@ -61,8 +61,8 @@ Extra hashtags: `#buildinpublic #indiedev #solodev #appdev`
 
 | Reel | Caption |
 |---|---|
-| b1 — I'm launching my pixel habit app | I'm building a habit tracker where your habits are RPG quests. 👾 Follow the build. |
-| b2 — Why I built it | Streaks felt like punishment, so I made a habit app that forgives: freezes, repairs, and double XP when you come back. |
+| b1 — I'm building a pixel habit app | I'm building a habit tracker where your habits are RPG quests. 👾 Follow the build, and play the demo on our site (link in bio). |
+| b2 — Why I made it a game | Checklists are boring. Staying motivated is way more fun when you're playing: XP, levels, a hero to dress up. 🎮 So I turned my habits into a game. |
 | b3 — I redrew my hero 4 times | I redrew my hero 4 times. Version 4: puffy and cute. Which one do you prefer? 🎨 |
-| b4 — Viral in Japan | My app's Instagram took off in Japan, so I translated the whole app to Japanese. 🇯🇵 |
-| b5 — 2 weeks of building in public | 2 weeks of building in public. Here's where HabitQuest is, and the launch is close. |
+| b4 — 4 languages | HabitQuest now speaks 4 languages: English, French, Japanese and Korean. 🌍 Which one should be next? Comment below 👇 You can try the demo on our site (link in bio). |
+| b5 — Building in public | Building HabitQuest in public: quests ✔ level ups ✔ duels ✔ Winter Arc ✔. Launch: soon 👀 Play the demo while you wait (link in bio). |
