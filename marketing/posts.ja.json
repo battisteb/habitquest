@@ -1,0 +1,55 @@
+{
+  "j1-hajimemashite": [
+    { "pip": "joy-love", "title": "はじめまして！<em>ピップ</em>だよ🌸", "body": "<span class=\"nw\">習慣をRPGのクエストにする</span>アプリ<br><b>HabitQuest</b> の案内役なんだ。" },
+    { "image": "today", "pip": "happy-calm", "title": "習慣が<em>クエスト</em>に", "body": "クリアするとXPとゴールド。ヒーローが<b>レベルアップ</b>するよ！" },
+    { "pip": "joy-party", "title": "<span class=\"nw\">毎日ちょっとずつ、</span><br><em>いっしょに</em>", "body": "フォローして、リリースを待っててね✨", "cta": "もうすぐリリース" }
+  ],
+  "j2-kibun": [
+    {
+      "title": "きみの今日の<em>気分</em>は？",
+      "body": "ぼくの顔が、きみの気分に合わせて変わるよ。",
+      "pips": [
+        { "pip": "sad-worried", "label": "つらい" },
+        { "pip": "worried-worried", "label": "ちょっと" },
+        { "pip": "happy-calm", "label": "ふつう" },
+        { "pip": "happy-love", "label": "いい感じ" },
+        { "pip": "joy-party", "label": "最高！" }
+      ]
+    },
+    { "image": "today", "pip": "happy-love", "title": "気分を記録すると…", "body": "どの習慣がきみを<b>元気にしているか</b>、だんだん見えてくるんだ。" }
+  ],
+  "j3-renzoku": [
+    { "pip": "worried-worried", "title": "1日休んじゃった…", "body": "だいじょうぶ！連続記録は<b>すぐには途切れない</b>よ。" },
+    { "pip": "happy-calm", "title": "<em>フリーズ</em>が守ってくれる❄️", "body": "週に1回、忘れた日を<b>自動でカバー</b>。48時間以内なら修復もできるよ。" },
+    { "pip": "joy-party", "title": "戻ってきた日は<em>XP2倍</em>", "body": "途切れてもペナルティなし。「おかえり」がいちばん大事🌸" }
+  ],
+  "j4-mini": [
+    { "pip": "sad-worried", "title": "今日は<em>つかれた</em>…", "body": "そんな日もあるよね。" },
+    { "pip": "happy-love", "title": "<em>ミニ版</em>でOK", "body": "「20ページ読む」が<span class=\"nw\">「1ページだけ」に。</span><br><b>連続記録はそのまま</b>、XPは半分。" },
+    { "pip": "joy-love", "title": "ゼロより、<em>少しでも</em>", "body": "ちょっとでも続けたきみは、えらい！" }
+  ],
+  "j5-winter-arc": [
+    { "pip": "happy-worried", "title": "<em>Winter Arc</em> はじまったよ❄️", "body": "10月から12月までの、冬のチャレンジ。" },
+    { "image": "arc", "pip": "happy-worried", "title": "<span class=\"nw\">8週がんばると</span><br><em>ルーン</em>", "body": "良い週は予定の<b>70%</b>でOK。<br><span class=\"nw\">完璧じゃなくて</span>いいんだ。" },
+    { "pip": "joy-party", "title": "冬だけの<em>マント</em>も", "body": "四季のルーンを全部集めると、<b>四季の王冠</b>が手に入るよ👑" }
+  ],
+  "j6-ouen": [
+    { "image": "social", "pip": "happy-love", "title": "友だちを<em>応援</em>しよう👏", "body": "今日クエストをがんばった友だちに、1日1回<b>👏</b>を送れるよ。" },
+    { "pip": "joy-love", "title": "応援されると<em>うれしい</em>", "body": "いっしょなら、続けるのがもっと楽しくなるね。" }
+  ],
+  "j7-ato": [
+    { "pip": "happy-calm", "title": "いつやる？<em>「〜のあと」</em>", "body": "コーヒーのあとに1ページ。<br><span class=\"nw\">歯みがきのあとに</span>1分ストレッチ。" },
+    { "image": "create", "pip": "happy-calm", "title": "決めるだけで<em>続きやすく</em>", "body": "「〜のあと」と決めると、実行できる確率が<b>約2倍</b>になるんだって。" },
+    { "pip": "joy-love", "title": "「なぜ？」も<em>書いておこう</em>", "body": "つらい日に、ぼくがきみの理由を思い出させてあげる🌸" }
+  ],
+  "j8-level1": [
+    { "pip": "joy-party", "title": "<em>レベル1</em>の習慣 3つ", "body": "三日坊主を卒業しよう！" },
+    { "pip": "happy-calm", "title": "🛏️ ベッドを整える", "body": "1分でできる、今日の最初のクエスト。" },
+    { "pip": "happy-love", "title": "📚 1ページ読む", "body": "1ページだけ。続きは自然についてくるよ。" },
+    { "pip": "joy-love", "title": "💧 コップ1杯の水", "body": "朝いちばんに。からだが目をさますよ✨" }
+  ],
+  "j9-release": [
+    { "pip": "joy-party", "title": "もうすぐ<em>リリース</em>！", "body": "iPhone と Android で、ぼくといっしょに冒険しよう。" },
+    { "pip": "joy-love", "title": "<em>フォロー</em>して待っててね", "body": "リリースの日に、ここでお知らせするよ🌸", "cta": "プロフィールのリンクへ ▲" }
+  ]
+}

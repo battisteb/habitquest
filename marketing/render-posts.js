@@ -8,6 +8,7 @@
  *
  * English version: LANG=en node marketing/render-posts.js
  * → posts.en.json, screenshots from assets/screens-en, output exports/posts-en.
+ * Japanese account: LANG=ja → posts.ja.json, templates/slide-ja.html (Pip), exports/posts-ja.
  */
 const fs = require('fs');
 const path = require('path');
@@ -15,11 +16,12 @@ const { pathToFileURL } = require('url');
 const puppeteer = require('puppeteer-core');
 
 const root = __dirname;
-const lang = process.env.LANG === 'en' ? 'en' : 'fr';
-const posts = JSON.parse(fs.readFileSync(path.join(root, lang === 'en' ? 'posts.en.json' : 'posts.json'), 'utf8'));
-const screens = lang === 'en' ? 'screens-en' : 'screens';
-const exportsDir = lang === 'en' ? 'posts-en' : 'posts';
-const template = pathToFileURL(path.join(root, 'templates', 'slide.html')).href;
+const lang = ['en', 'ja'].includes(process.env.LANG) ? process.env.LANG : 'fr';
+const posts = JSON.parse(fs.readFileSync(path.join(root, lang === 'fr' ? 'posts.json' : `posts.${lang}.json`), 'utf8'));
+const screens = lang === 'fr' ? 'screens' : `screens-${lang}`;
+const exportsDir = lang === 'fr' ? 'posts' : `posts-${lang}`;
+// The Japanese account has its own kawaii template where Pip speaks (strategy.ja.md).
+const template = pathToFileURL(path.join(root, 'templates', lang === 'ja' ? 'slide-ja.html' : 'slide.html')).href;
 const only = process.argv[2];
 
 (async () => {
