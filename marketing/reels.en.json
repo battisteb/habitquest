@@ -814,7 +814,7 @@
         "src": "journey",
         "start": 0.6,
         "speed": 1.12,
-        "title": "Your XP journey,<br>day after <em>day</em>"
+        "title": "Your <em>rank</em>, step by step"
       },
       {
         "type": "kinetic",
@@ -947,68 +947,6 @@
         "subtitle": "HabitQuest · coming soon to iOS & Android",
         "cta": "LINK IN BIO ▲",
         "step": 0.12
-      }
-    ]
-  },
-  "r18-defi-1v1": {
-    "music": {
-      "file": "marketing/audio/theme-epic.m4a",
-      "start": 0
-    },
-    "segments": [
-      {
-        "type": "kinetic",
-        "dur": 2.2,
-        "title": "Challenge your friend.<br><em>Bet gold.</em> 💰",
-        "sfx": "coin",
-        "sfxAt": 0.84,
-        "step": 0.13
-      },
-      {
-        "type": "full",
-        "dur": 3.9,
-        "src": "challenge",
-        "start": 0.5,
-        "speed": 1,
-        "title": "XP race or<br><em>completions</em>"
-      },
-      {
-        "type": "kinetic",
-        "dur": 3.1,
-        "title": "Most consistent<br>takes the <em>pot</em>.",
-        "cta": "LINK IN BIO ▲",
-        "sfx": "victory",
-        "sfxAt": 0.7
-      }
-    ]
-  },
-  "r19-mode-examens": {
-    "music": {
-      "file": "marketing/audio/theme-chill.m4a",
-      "start": 0
-    },
-    "segments": [
-      {
-        "type": "kinetic",
-        "dur": 2.2,
-        "title": "<em>Exam</em> week? 📚",
-        "sfx": "attack",
-        "sfxAt": 0.28
-      },
-      {
-        "type": "full",
-        "dur": 3.9,
-        "src": "focus",
-        "start": 0.6,
-        "speed": 1.04,
-        "title": "Exam mode:<br>keep what <em>matters</em>"
-      },
-      {
-        "type": "kinetic",
-        "dur": 3.4,
-        "title": "Streaks <em>frozen</em>,<br>not lost. ❄️",
-        "subtitle": "HabitQuest · coming soon to iOS & Android",
-        "cta": "LINK IN BIO ▲"
       }
     ]
   },
@@ -1679,6 +1617,603 @@
         "flash": true,
         "sfx": "victory",
         "sfxAt": 0.3
+      }
+    ]
+  },
+  "r19-pause": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "Need a <em>break</em>? 😮‍💨",
+        "anim": "stamp"
+      },
+      {
+        "type": "full",
+        "dur": 2.6,
+        "src": "focus",
+        "title": "One <em>Pause</em> screen"
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "pause",
+        "title": "A day, some quests<br>or <em>everything</em>",
+        "transition": "slide"
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.6,
+        "title": "Your streaks <em>wait</em> for you ❄️",
+        "subtitle": "HabitQuest — coming soon",
+        "cta": "LINK IN BIO ▲",
+        "ctaBeat": 3,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 1,
+            "x": 170,
+            "y": 1760,
+            "expr": "happy",
+            "mood": "worried",
+            "say": "REST!",
+            "sfx": "pop"
+          }
+        ]
+      }
+    ]
+  },
+  "w1-winter-arc-rpg": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0,
+      "theme": "epic",
+      "drop": 1,
+      "lift": 3
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "My <em>Winter Arc</em><br>…but it's an RPG ❄️⚔️",
+        "anim": "type",
+        "sfx": "attack",
+        "sfxAt": 1.6,
+        "fx": [
+          {
+            "type": "petals",
+            "at": 0.2,
+            "n": 18
+          }
+        ]
+      },
+      {
+        "type": "full",
+        "dur": 2.2,
+        "src": "today",
+        "start": 0.4,
+        "title": "Every habit = a <em>quest</em>",
+        "fx": [
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.68,
+            "sy": 0.5,
+            "text": "+25 XP",
+            "sfx": "pop"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "arc",
+        "title": "8 good weeks = a <em>rune</em> 💎",
+        "transition": "circle",
+        "fx": [
+          {
+            "type": "bar",
+            "beat": 1,
+            "x": 540,
+            "y": 1700,
+            "from": 0.125,
+            "to": 1,
+            "dur": 1.0,
+            "label": "1/8 → 8/8"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "dur": 2.2,
+        "src": "levelup",
+        "start": 0.6,
+        "title": "Level up all <em>winter</em>",
+        "sfx": "level-up",
+        "sfxAt": 1.0,
+        "transition": "zoom"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.0,
+        "icon": false,
+        "title": "Start your <em>Winter Arc</em>",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 4,
+        "fx": [
+          {
+            "type": "stamp",
+            "beat": 2,
+            "x": 540,
+            "y": 1400,
+            "text": "DAY 1",
+            "rot": -8,
+            "size": 70,
+            "color": "#6fb7ff",
+            "sfx": "pop"
+          }
+        ]
+      }
+    ]
+  },
+  "w2-winter-arc-rule": {
+    "music": {
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0,
+      "theme": "quest",
+      "drop": 1
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Winter Arc rule:<br>you don't need to be <em>perfect</em>",
+        "anim": "stamp"
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "arc",
+        "title": "70% of your week<br>= a <em>good week</em>",
+        "transition": "slide"
+      },
+      {
+        "type": "clip",
+        "dur": 2.2,
+        "src": "milestone",
+        "start": 0.5,
+        "title": "Keep the <em>streak</em> 🔥",
+        "sfx": "streak-milestone",
+        "transition": "flip"
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "pause",
+        "title": "Off day? <em>Freeze</em> it ❄️",
+        "transition": "up",
+        "fx": [
+          {
+            "type": "stamp",
+            "beat": 2,
+            "x": 760,
+            "y": 1650,
+            "text": "SAFE!",
+            "rot": 8,
+            "size": 60,
+            "sfx": "pop"
+          }
+        ]
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.0,
+        "icon": false,
+        "title": "Consistency<br>beats <em>perfection</em>",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "w3-winter-arc-day1": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1,
+      "lift": 3
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.0,
+        "title": "Day 1 of my<br><em>Winter Arc</em> ❄️",
+        "anim": "type",
+        "fx": [
+          {
+            "type": "petals",
+            "at": 0.1,
+            "n": 20
+          }
+        ]
+      },
+      {
+        "type": "full",
+        "dur": 2.6,
+        "src": "create",
+        "title": "Quest 1: <em>read 10 pages</em>",
+        "transition": "circle"
+      },
+      {
+        "type": "clip",
+        "dur": 2.4,
+        "src": "levelup",
+        "start": 0.6,
+        "title": "Day 14: <em>level up</em>",
+        "sfx": "level-up",
+        "sfxAt": 1.0
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "arc",
+        "title": "8 weeks → the <em>Winter rune</em>",
+        "transition": "slide"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.0,
+        "icon": false,
+        "title": "Join my <em>Winter Arc</em>",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 4,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 1,
+            "x": 170,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "worried",
+            "say": "LET'S GO!",
+            "sfx": "pop"
+          }
+        ]
+      }
+    ]
+  },
+  "p1-pip-mood": {
+    "music": {
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0,
+      "theme": "quest",
+      "drop": 1
+    },
+    "segments": [
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "How do you <em>feel</em> today?",
+        "enter": "drop",
+        "pips": [
+          "sad-worried",
+          "worried-worried",
+          "happy-calm",
+          "happy-love",
+          "joy-party"
+        ],
+        "every": 0.43
+      },
+      {
+        "type": "full",
+        "dur": 2.2,
+        "src": "today",
+        "title": "Tap your <em>mood</em>",
+        "transition": "circle"
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "title": "My face <em>changes</em> too!",
+        "pips": [
+          "worried-worried",
+          "joy-party"
+        ],
+        "every": 0.86,
+        "enter": "slide",
+        "side": "left"
+      },
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "Mood × habits =<br>what <em>really</em> helps you",
+        "anim": "stamp",
+        "transition": "zoom"
+      },
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "I'm <em>Pip</em>, your guide",
+        "subtitle": "HabitQuest — coming soon",
+        "pips": [
+          "joy-love"
+        ],
+        "enter": "spin",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 3,
+        "fx": [
+          {
+            "type": "hearts",
+            "beat": 2,
+            "x": 540,
+            "y": 1450,
+            "n": 8
+          }
+        ]
+      }
+    ]
+  },
+  "p2-pip-mini": {
+    "music": {
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0,
+      "theme": "quest",
+      "drop": 2
+    },
+    "segments": [
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "title": "Too <em>tired</em> today…",
+        "pips": [
+          "sad-worried"
+        ],
+        "enter": "drop"
+      },
+      {
+        "type": "pip",
+        "dur": 2.2,
+        "title": "Do the <em>mini</em> version",
+        "subtitle": "1 page instead of 20",
+        "pips": [
+          "happy-love"
+        ],
+        "enter": "slide",
+        "side": "right"
+      },
+      {
+        "type": "full",
+        "dur": 2.2,
+        "src": "create",
+        "title": "Your streak <em>stays alive</em> 🔥",
+        "transition": "flip"
+      },
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "A little beats <em>nothing</em>",
+        "pips": [
+          "joy-love"
+        ],
+        "enter": "spin",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 3,
+        "fx": [
+          {
+            "type": "stamp",
+            "beat": 2,
+            "x": 540,
+            "y": 1530,
+            "text": "PROUD!",
+            "rot": 8,
+            "size": 64,
+            "sfx": "pop"
+          }
+        ]
+      }
+    ]
+  },
+  "b1-building-in-public": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "I'm launching my<br><em>pixel habit app</em> 👾",
+        "anim": "type"
+      },
+      {
+        "type": "still",
+        "dur": 2.6,
+        "src": "today",
+        "title": "Your habits = <em>RPG quests</em>",
+        "transition": "circle"
+      },
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "Follow the <em>build</em>",
+        "anim": "stamp",
+        "transition": "zoom"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.0,
+        "icon": true,
+        "title": "HabitQuest",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "b2-why-i-built-it": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Why I built a habit app<br>that's a <em>game</em>",
+        "anim": "type"
+      },
+      {
+        "type": "clip",
+        "dur": 2.6,
+        "src": "milestone",
+        "start": 0.5,
+        "title": "Streaks felt like <em>punishment</em>…",
+        "transition": "circle"
+      },
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "So I made them <em>forgiving</em>",
+        "anim": "stamp",
+        "transition": "zoom"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.0,
+        "icon": true,
+        "title": "HabitQuest",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "b3-the-hero": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "I redrew my hero<br><em>4 times</em> 🎨",
+        "anim": "type"
+      },
+      {
+        "type": "still",
+        "dur": 2.6,
+        "src": "profile",
+        "title": "Version 4: <em>puffy</em> & cute",
+        "transition": "circle"
+      },
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "Which one do you <em>prefer</em>?",
+        "anim": "stamp",
+        "transition": "zoom"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.0,
+        "icon": true,
+        "title": "HabitQuest",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "b4-japanese": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "My app went <em>viral</em><br>in Japan?! 🇯🇵",
+        "anim": "type"
+      },
+      {
+        "type": "still",
+        "dur": 2.6,
+        "src": "today",
+        "title": "So I translated it to <em>Japanese</em>",
+        "transition": "circle"
+      },
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "Next: <em>launch</em>",
+        "anim": "stamp",
+        "transition": "zoom"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.0,
+        "icon": true,
+        "title": "HabitQuest",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "b5-two-weeks": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "2 weeks of<br><em>building in public</em>",
+        "anim": "type"
+      },
+      {
+        "type": "clip",
+        "dur": 2.6,
+        "src": "levelup",
+        "start": 0.5,
+        "title": "Here's where <em>HabitQuest</em> is",
+        "transition": "circle"
+      },
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "Launch is <em>close</em>",
+        "anim": "stamp",
+        "transition": "zoom"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.0,
+        "icon": true,
+        "title": "HabitQuest",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "WAITLIST IN BIO ▲",
+        "ctaBeat": 4
       }
     ]
   }

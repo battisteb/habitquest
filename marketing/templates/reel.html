@@ -329,8 +329,9 @@
     let out = '';
     for (const m of title.matchAll(/<em>(.*?)<\/em>|<br>|([^<])/g)) {
       if (m[0] === '<br>') out += '<br>';
-      else if (m[1] !== undefined) out += [...m[1]].map((c) => `<span class="w"><em>${c}</em></span>`).join('');
-      else out += `<span class="w">${m[2]}</span>`;
+      else if (m[1] !== undefined) out += [...m[1]].map((c) => `<span class="w"><em>${c === ' ' ? '&nbsp;' : c}</em></span>`).join('');
+      // A lone space in an inline-block has no width: keep it as a non-breaking space.
+      else out += `<span class="w">${m[2] === ' ' ? '&nbsp;' : m[2]}</span>`;
     }
     return out;
   }
