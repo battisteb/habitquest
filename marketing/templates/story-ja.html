@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=M+PLUS+Rounded+1c:wght@500;800&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<style>
+  /* Instagram stories (1080×1920) for the Japanese account, and the YouTube banner (2560×1440).
+     Filled by render-stories.js: window.render({ layout, ... }). Empty areas are left for the
+     interactive stickers added in the Instagram app (poll, countdown, question box). */
+  * { margin: 0; box-sizing: border-box; }
+  html, body { overflow: hidden; width: 100vw; height: 100vh; }
+  body { font-family: 'M PLUS Rounded 1c', sans-serif; color: #14142a; position: relative;
+         background: linear-gradient(170deg, #ffe3ee 0%, #fff6e9 75%); }
+  body::before { content: ''; position: absolute; inset: 0; opacity: .2;
+                 background-image: radial-gradient(#ff8fc8 5px, transparent 5px); background-size: 72px 72px; }
+  .bubble { position: absolute; left: 90px; right: 90px; background: #fff; border: 8px solid #14142a;
+            box-shadow: 14px 14px 0 #d65a97; padding: 50px 56px; text-align: center; }
+  .bubble h1 { font-family: 'DotGothic16'; font-size: 84px; line-height: 1.35; text-wrap: balance; }
+  .bubble p { font-size: 44px; font-weight: 500; line-height: 1.55; margin-top: 20px; color: #3d2f45; text-wrap: balance; }
+  em { font-style: normal; color: #ff5a8a; white-space: nowrap; }
+  .pip { position: absolute; image-rendering: pixelated; }
+  .slot { position: absolute; left: 140px; right: 140px; border: 6px dashed #d65a97; border-radius: 0;
+          display: flex; align-items: center; justify-content: center; font-family: 'DotGothic16'; font-size: 40px; color: #d65a97; opacity: .55; }
+  .handle { position: absolute; left: 0; right: 0; bottom: 90px; text-align: center; font-size: 40px; font-weight: 800; color: #8a6f86; }
+  .faces { position: absolute; left: 90px; right: 90px; display: flex; justify-content: space-between; }
+  .faces img { width: 160px; height: 160px; image-rendering: pixelated; }
+  /* YouTube banner: everything inside the 1546×423 safe area, in the centre. */
+  .yt { position: absolute; left: 507px; top: 508px; width: 1546px; height: 423px; display: flex; align-items: center; gap: 60px; justify-content: center; }
+  .yt img { width: 300px; height: 300px; image-rendering: pixelated; }
+  .yt .t { display: flex; flex-direction: column; gap: 22px; }
+  .yt h1 { font-family: 'Press Start 2P'; font-size: 84px; color: #14142a; }
+  .yt h1 em { color: #ff5a8a; }
+  .yt p { font-size: 46px; font-weight: 800; color: #3d2f45; }
+  .yt .tag { align-self: flex-start; font-family: 'Press Start 2P'; font-size: 26px; padding: 18px 24px; color: #fff; background: #6fb7ff; border: 5px solid #14142a; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  const pip = (key, x, y, size) => `<img class="pip" src="../brand/pip/pip-${key}.png" style="left:${x}px;top:${y}px;width:${size}px;height:${size}px" />`;
+  const layouts = {
+    // Mood poll: Pip's five faces, room for the poll sticker below.
+    mood: (s) => `<div class="bubble" style="top:220px"><h1>${s.title}</h1><p>${s.body}</p></div>
+      <div class="faces" style="top:760px">${['sad-worried', 'worried-worried', 'happy-calm', 'happy-love', 'joy-party'].map((k) => `<img src="../brand/pip/pip-${k}.png" />`).join('')}</div>
+      <div class="slot" style="top:1080px;height:300px">${s.slot}</div>
+      <div class="handle">@habitquest.app</div>`,
+    // Countdown or question box: Pip big, a framed area for the sticker.
+    sticker: (s) => `<div class="bubble" style="top:200px"><h1>${s.title}</h1>${s.body ? `<p>${s.body}</p>` : ''}</div>
+      ${pip(s.pip, 300, 760, 480)}
+      <div class="slot" style="top:1330px;height:330px">${s.slot}</div>
+      <div class="handle">@habitquest.app</div>`,
+    youtube: (s) => `<div class="yt">${pip(s.pip, 0, 0, 300).replace('class="pip"', 'class=""').replace(/style="[^"]*"/, '')}
+      <div class="t"><h1>Habit<em>Quest</em></h1><p>${s.title}</p><span class="tag">${s.tag}</span></div></div>`,
+  };
+  window.render = (s) => { document.getElementById('root').innerHTML = layouts[s.layout](s); };
+</script>
+</body>
+</html>

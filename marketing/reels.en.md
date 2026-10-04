@@ -30,11 +30,39 @@ Base hashtags: `#habitquest #habittracker #gamification #pixelart #productivity`
 | r15 — Stats | Your discipline in a chart. 📊 The calendar never lies. | `#progress #habits` |
 | r16 — Create a quest | Create a quest in 10 seconds: a name, a category, a frequency. That's it. ⏱️ What's your first one? | `#newhabits #goals` |
 | r17 — Templates | No habit ideas? Dozens of templates, ready in one tap. 🤔 | `#habitideas #selfcare` |
-| r18 — 1v1 challenge | Challenge a friend and bet gold. The most consistent takes the pot. 💰 | `#challenge #friends` |
-| r19 — Exam mode | Exam week? Keep what matters, the rest waits. Your streaks are frozen, not lost. 📚 | `#studytok #exams #studymotivation` |
+| r19 — Pause | Need a break? One Pause screen: a day, some quests or everything. Your streaks wait for you. ❄️ | `#studytok #selfcare #restday` |
 | r20 — Battle | A turn-based battle where your attacks come from your habits. ⚔️ Who do you challenge first? | `#rpg #pixelart` |
 | r21 — Perfect day | 5 quests out of 5. Streak intact. ✅ Tomorrow, we go again. | `#perfectday #discipline` |
 | r22 — 7 days to go | HabitQuest is coming to iOS & Android in 7 days. Follow so you don't miss it. ⏳ | `#comingsoon #indiedev` |
 | r23 — 3 days to go | 3 days left. Which habit will you turn into a quest? Tell us below 👇 | `#comingsoon #newhabits` |
 | r24 — Tomorrow | Tomorrow. ⚔️ Turn on notifications so you don't miss the launch. 🔔 | `#launch #indiedev` |
 | r25 — It's out | HabitQuest is out on iOS & Android! 🎉 Free, link in bio. | `#newapp #launch` |
+
+## Winter Arc (the main angle, October to December)
+
+Extra hashtags for all three: `#winterarc #winterarc2026 #glowup #discipline`
+
+| Reel | Caption |
+|---|---|
+| w1 — My Winter Arc, but it's an RPG | My Winter Arc this year is a pixel RPG. ❄️⚔️ Every habit is a quest, 8 good weeks earn the Winter rune. Who's in? 👇 |
+| w2 — Winter Arc rule | Winter Arc rule: you don't need to be perfect. 70% of your week is a good week, and a freeze covers an off day. Consistency beats perfection. ❄️ |
+| w3 — Day 1 of my Winter Arc | Day 1 of my Winter Arc. ❄️ Quest 1: read 10 pages. Follow along, see you on day 14. |
+
+## Pip, the guide (English)
+
+| Reel | Caption | Extra hashtags |
+|---|---|---|
+| p1 — Pip's moods | How do you feel today? Tell Pip in the comments. 😞😕😐🙂😄 | `#mentalhealth #selfcare #cute` |
+| p2 — The mini version | Too tired today? Do the mini version: 1 page instead of 20. Your streak stays alive. A little beats nothing. 🔥 | `#selfcare #consistency` |
+
+## Build in public (no face, the app on screen)
+
+Extra hashtags: `#buildinpublic #indiedev #solodev #appdev`
+
+| Reel | Caption |
+|---|---|
+| b1 — I'm launching my pixel habit app | I'm building a habit tracker where your habits are RPG quests. 👾 Follow the build. |
+| b2 — Why I built it | Streaks felt like punishment, so I made a habit app that forgives: freezes, repairs, and double XP when you come back. |
+| b3 — I redrew my hero 4 times | I redrew my hero 4 times. Version 4: puffy and cute. Which one do you prefer? 🎨 |
+| b4 — Viral in Japan | My app's Instagram took off in Japan, so I translated the whole app to Japanese. 🇯🇵 |
+| b5 — 2 weeks of building in public | 2 weeks of building in public. Here's where HabitQuest is, and the launch is close. |
