@@ -76,6 +76,24 @@
             text-align: center; font-family: 'Press Start 2P'; font-size: 54px; line-height: 1.45; text-shadow: 0 6px 0 #000; }
   .dtitle em { font-style: normal; color: #f5c518; }
   .w { display: inline-block; opacity: 0; }
+  /* English accounts (template URL ?sky): Pip's Sky, the app's default theme (ADR 030). Light sky,
+     dark ink with a white pixel shadow, Pip-blue words, yellow call to action. */
+  body.sky { color: #14142a; }
+  body.sky .bg { background: radial-gradient(circle at 25% 12%, #f3f9ff 0%, transparent 55%), linear-gradient(175deg, #dbeeff 0%, #cfe8ff 55%, #b6daf9 100%); }
+  body.sky .bg::after { opacity: .07; background-image: linear-gradient(#2b3a6b 1px, transparent 1px), linear-gradient(90deg, #2b3a6b 1px, transparent 1px); }
+  body.sky .grid { opacity: .06; background-image: linear-gradient(#2b3a6b 2px, transparent 2px), linear-gradient(90deg, #2b3a6b 2px, transparent 2px); }
+  body.sky .glow { background: radial-gradient(circle, rgba(255,255,255,.7) 0%, transparent 60%); }
+  body.sky .title, body.sky .card h1, body.sky .caption, body.sky .kin h1, body.sky .hero-title, body.sky .dtitle { text-shadow: 0 6px 0 #ffffff; }
+  body.sky .title em, body.sky .card h1 em, body.sky .caption em, body.sky .kin em, body.sky .hero-title em, body.sky .dtitle em { color: #2f6fd6; }
+  body.sky .plate { background: #fff; border: 6px solid #14142a; }
+  body.sky .card p, body.sky .kin p { color: #3d4775; }
+  body.sky .cta { color: #14142a; background: #ffc93c; border: 6px solid #14142a; border-radius: 0; box-shadow: 8px 8px 0 #2f55c9; }
+  body.sky .handle { color: #3d4775; }
+  body.sky .band { background: linear-gradient(#cfe8ff 0%, rgba(207,232,255,.92) 55%, rgba(207,232,255,0) 100%); }
+  body.sky .bottom { background: linear-gradient(rgba(207,232,255,0), rgba(207,232,255,.9)); }
+  body.sky .frame { border-color: #14142a; border-radius: 0; box-shadow: 14px 14px 0 #2f55c9; }
+  body.sky .card img, body.sky .kin img { border-radius: 0; }
+
   /* Japanese account (template URL ?ja): kawaii sakura pastels, DotGothic16, Pip speaks (strategy.ja.md). */
   body.ja { font-family: 'M PLUS Rounded 1c', sans-serif; color: #14142a; }
   body.ja .bg { background: linear-gradient(170deg, #ffe3ee 0%, #fff6e9 75%); }
@@ -302,6 +320,7 @@
   // Pixel font of the canvas texts (DotGothic16 for the Japanese account, ?ja).
   const PF = () => (document.body.classList.contains('ja') ? 'DotGothic16' : '"Press Start 2P"');
   const isJa = () => document.body.classList.contains('ja');
+  const isSky = () => document.body.classList.contains('sky');
   const SPRITES = {
     coin: { px: 7, rows: ['..kkkk..', '.kyyyyk.', 'kyywyyok', 'kywyyyok', 'kyyyyyok', 'kyyyyook', '.kyoook.', '..kkkk..'],
             colors: { k: '#14142A', y: '#F5C518', w: '#FFF6C8', o: '#C8920E' } },
@@ -416,7 +435,7 @@
       const x = rand(k * 7.1 + 1) * 1080;
       const y = ((rand(k * 3.3 + 2) * 2100 - b.T * speed) % 2100 + 2100) % 2100 - 90;
       ctx.globalAlpha = (0.2 + 0.5 * (0.5 + 0.5 * Math.sin(b.T * 3 + k))) * [0.5, 0.7, 1][layer];
-      ctx.fillStyle = isJa() ? (k % 5 === 0 ? '#ffd84a' : '#ff8fc8') : k % 5 === 0 ? '#f5c518' : '#c9cbef';
+      ctx.fillStyle = isJa() ? (k % 5 === 0 ? '#ffd84a' : '#ff8fc8') : isSky() ? (k % 5 === 0 ? '#ffc93c' : '#ffffff') : k % 5 === 0 ? '#f5c518' : '#c9cbef';
       ctx.fillRect(x, y, size, size);
     }
     ctx.globalAlpha = 1;
@@ -425,7 +444,7 @@
   /** Glow along the edges of the frame, on every beat (stronger and gold on the first beat of a bar). */
   function drawEdge(b) {
     const e = root.querySelector('.edge');
-    const c = isJa() ? (b.down ? '255,90,138' : '255,143,200') : b.down ? '245,197,24' : '123,104,238';
+    const c = isJa() ? (b.down ? '255,90,138' : '255,143,200') : isSky() ? (b.down ? '255,201,60' : '79,123,255') : b.down ? '245,197,24' : '123,104,238';
     e.style.boxShadow = `inset 0 0 0 10px rgba(${c},.9), inset 0 0 160px rgba(${c},.75)`;
     e.style.opacity = String((b.down ? 0.75 : 0.45) * b.pulse);
   }
@@ -660,6 +679,8 @@
         drawUnder(b); drawEdge(b);
         frame.style.boxShadow = isJa()
           ? `14px 14px 0 #ff8fc8, 0 0 ${60 + 70 * b.pulse}px rgba(255,143,200,${0.25 + 0.4 * b.pulse})`
+          : isSky()
+          ? `14px 14px 0 #2f55c9, 0 0 ${60 + 70 * b.pulse}px rgba(79,123,255,${0.2 + 0.35 * b.pulse})`
           : `0 0 0 4px #2e3870, 0 0 ${90 + 90 * b.pulse}px rgba(123,104,238,${0.3 + 0.4 * b.pulse})`;
         h2.style.transform = 'none';
         const { hits, landed } = popWords(spans, t, b.B / 2);
@@ -809,8 +830,10 @@
   };
 
   const JA = location.search.includes('ja');
+  const SKY = location.search.includes('sky');
   window.render = (s) => {
     document.body.classList.toggle('ja', JA);
+    document.body.classList.toggle('sky', SKY);
     window.frame = null;
     (s.dynamic && dynamic[s.layout] ? dynamic : layouts)[s.layout](s);
     if (window.frame) window.frame(0);

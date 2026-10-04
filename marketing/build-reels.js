@@ -46,7 +46,8 @@ const lang = ['en', 'ja'].includes(process.env.LANG) ? process.env.LANG : 'fr';
 const reels = JSON.parse(fs.readFileSync(path.join(root, lang === 'fr' ? 'reels.json' : `reels.${lang}.json`), 'utf8'));
 const screens = lang === 'fr' ? 'screens' : `screens-${lang}`;
 const outDir = path.join(root, 'exports', lang === 'fr' ? 'reels' : `reels-${lang}`);
-const template = pathToFileURL(path.join(root, 'templates', 'reel.html')).href + (lang === 'ja' ? '?ja' : '');
+// English reels use Pip's Sky like the app (ADR 030); the Japanese account its sakura theme.
+const template = pathToFileURL(path.join(root, 'templates', 'reel.html')).href + (lang === 'ja' ? '?ja' : lang === 'en' ? '?sky' : '');
 const FONTS = ['52px "Press Start 2P"', '800 46px Inter', '600 46px Inter', '52px DotGothic16', '500 46px "M PLUS Rounded 1c"'];
 const recDir = process.env.REC_DIR || path.join(root, 'recordings');
 const work = path.join(outDir, '.work');
