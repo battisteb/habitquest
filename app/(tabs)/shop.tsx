@@ -112,6 +112,8 @@ export default function ShopScreen() {
 
   // Loadout panel
   monthly: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
+  bannerRow: { flexDirection: 'row', alignItems: 'stretch', gap: spacing.sm, paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
+  bannerCol: { flex: 1 },
   loadoutPanel: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
@@ -451,6 +453,39 @@ export default function ShopScreen() {
 
   const ownedCount = filteredItems.filter((i) => ownedItemIds.includes(i.id)).length;
 
+  // The arc item and the monthly item share one row (compact cards) when both are
+  // featured, to keep the top of the shop short; alone, each keeps its full banner.
+  const renderSeason = (compact: boolean) =>
+    seasonItem ? (
+      <SeasonItemBanner
+        item={seasonItem}
+        owned={ownedItemIds.includes(seasonItem.id)}
+        equipped={Object.values(equippedSlots).some((e) => e?.itemId === seasonItem.id)}
+        look={{ hat: currentHat, outfit: currentOutfit, accessory: currentAccessory }}
+        onBuy={() => handleItemPress(seasonItem)}
+        onEquip={() => {
+          const slot = CATEGORY_TO_SLOT[seasonItem.category];
+          if (slot) void equipItem(seasonItem.id, slot);
+        }}
+        compact={compact}
+      />
+    ) : null;
+  const renderMonthly = (compact: boolean) =>
+    monthly.item ? (
+      <MonthlyItemBanner
+        item={monthly.item}
+        owned={monthly.owned}
+        equipped={!!monthly.item && Object.values(equippedSlots).some((e) => e?.itemId === monthly.item?.id)}
+        look={{ hat: currentHat, outfit: currentOutfit, accessory: currentAccessory }}
+        onEquip={() => {
+          const slot = monthly.item && CATEGORY_TO_SLOT[monthly.item.category];
+          if (slot && monthly.item) void equipItem(monthly.item.id, slot);
+        }}
+        onUnlock={() => router.push('/paywall')}
+        compact={compact}
+      />
+    ) : null;
+
   return (
     <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       {/* Header */}
@@ -501,36 +536,16 @@ export default function ShopScreen() {
         </View>
       </View>
 
-      {seasonItem && (
-        <View style={styles.monthly}>
-          <SeasonItemBanner
-            item={seasonItem}
-            owned={ownedItemIds.includes(seasonItem.id)}
-            equipped={Object.values(equippedSlots).some((e) => e?.itemId === seasonItem.id)}
-            look={{ hat: currentHat, outfit: currentOutfit, accessory: currentAccessory }}
-            onBuy={() => handleItemPress(seasonItem)}
-            onEquip={() => {
-              const slot = CATEGORY_TO_SLOT[seasonItem.category];
-              if (slot) void equipItem(seasonItem.id, slot);
-            }}
-          />
+      {seasonItem && monthly.item ? (
+        <View style={styles.bannerRow}>
+          <View style={styles.bannerCol}>{renderSeason(true)}</View>
+          <View style={styles.bannerCol}>{renderMonthly(true)}</View>
         </View>
-      )}
-
-      {monthly.item && (
-        <View style={styles.monthly}>
-          <MonthlyItemBanner
-            item={monthly.item}
-            owned={monthly.owned}
-            equipped={!!monthly.item && Object.values(equippedSlots).some((e) => e?.itemId === monthly.item?.id)}
-            look={{ hat: currentHat, outfit: currentOutfit, accessory: currentAccessory }}
-            onEquip={() => {
-              const slot = monthly.item && CATEGORY_TO_SLOT[monthly.item.category];
-              if (slot && monthly.item) void equipItem(monthly.item.id, slot);
-            }}
-            onUnlock={() => router.push('/paywall')}
-          />
-        </View>
+      ) : (
+        <>
+          {seasonItem && <View style={styles.monthly}>{renderSeason(false)}</View>}
+          {monthly.item && <View style={styles.monthly}>{renderMonthly(false)}</View>}
+        </>
       )}
 
       {/* Category tabs */}
