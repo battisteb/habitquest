@@ -569,5 +569,637 @@
         ]
       }
     ]
+  },
+  "j-b1-building-in-public": {
+    "music": {
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0,
+      "theme": "quest",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "pip",
+        "dur": 2,
+        "title": "ピクセルの<br><em>習慣アプリ</em>作ってるよ👾",
+        "pips": [
+          "happy-love",
+          "joy-party"
+        ],
+        "every": 0.95,
+        "enter": "drop",
+        "fx": [
+          {
+            "type": "petals",
+            "at": 0.2,
+            "n": 22
+          }
+        ]
+      },
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "習慣が<br><em>RPGのクエスト</em>に⚔️",
+        "sfx": "attack",
+        "sfxAt": 0.9,
+        "anim": "type",
+        "transition": "circle"
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "today",
+        "title": "毎日の習慣 = <em>クエスト</em>",
+        "sfx": "complete",
+        "sfxAt": 0.45,
+        "fx": [
+          {
+            "type": "arrow",
+            "at": 0.05,
+            "sx": 0.9,
+            "sy": 0.41,
+            "dir": "left",
+            "life": 0.6
+          },
+          {
+            "type": "burst",
+            "beat": 1,
+            "sx": 0.87,
+            "sy": 0.41
+          },
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.62,
+            "sy": 0.4,
+            "text": "+25 XP",
+            "sfx": "pop"
+          },
+          {
+            "type": "xp",
+            "beat": 3,
+            "sx": 0.62,
+            "sy": 0.49,
+            "text": "+21 XP",
+            "sfx": "pop"
+          }
+        ],
+        "transition": "flip"
+      },
+      {
+        "type": "still",
+        "dur": 2,
+        "src": "today",
+        "title": "<em>連続記録</em>をキープ🔥",
+        "fx": [
+          {
+            "type": "counter",
+            "beat": 1,
+            "x": 540,
+            "y": 1690,
+            "from": 11,
+            "to": 14,
+            "prefix": "🔥 ",
+            "dur": 0.6,
+            "sfx": "pop"
+          }
+        ],
+        "transition": "slide"
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "profile",
+        "title": "ヒーローが<em>育つ</em>",
+        "sfx": "level-up",
+        "sfxAt": 0.9,
+        "fx": [
+          {
+            "type": "bar",
+            "beat": 0,
+            "x": 540,
+            "y": 1700,
+            "from": 0.3,
+            "to": 1,
+            "dur": 0.9,
+            "label": "LV 6 → 7"
+          },
+          {
+            "type": "burst",
+            "beat": 2,
+            "sx": 0.5,
+            "sy": 0.2,
+            "n": 36,
+            "power": 1.2
+          },
+          {
+            "type": "pip",
+            "beat": 3,
+            "x": 150,
+            "y": 1560,
+            "expr": "joy",
+            "mood": "love",
+            "say": "すごい！",
+            "sfx": "pop"
+          }
+        ],
+        "transition": "up"
+      },
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "<em>開発</em>を<br>見守ってね！",
+        "subtitle": "もうすぐリリース",
+        "pips": [
+          "joy-party"
+        ],
+        "cta": "フォローしてね🌸",
+        "ctaBeat": 3,
+        "enter": "spin",
+        "transition": "pixel",
+        "fx": [
+          {
+            "type": "hearts",
+            "beat": 3,
+            "x": 540,
+            "y": 1500,
+            "n": 8
+          }
+        ]
+      }
+    ]
+  },
+  "j-b2-why-i-built-it": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "習慣を<em>ゲーム</em>に<br>した理由🎮",
+        "sfx": "pop",
+        "sfxAt": 1.1,
+        "anim": "type"
+      },
+      {
+        "type": "still",
+        "dur": 2,
+        "src": "today",
+        "title": "チェックリストは<em>退屈</em>…",
+        "fx": [
+          {
+            "type": "arrow",
+            "at": 0.1,
+            "sx": 0.85,
+            "sy": 0.52,
+            "dir": "left",
+            "life": 0.8
+          }
+        ],
+        "transition": "flip"
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "today",
+        "title": "遊ぶほうが<em>楽しい</em>",
+        "sfx": "complete",
+        "sfxAt": 0.5,
+        "fx": [
+          {
+            "type": "burst",
+            "beat": 1,
+            "sx": 0.87,
+            "sy": 0.41
+          },
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.6,
+            "sy": 0.4,
+            "text": "+25 XP",
+            "sfx": "pop"
+          },
+          {
+            "type": "xp",
+            "beat": 2,
+            "sx": 0.6,
+            "sy": 0.49,
+            "text": "+21 XP",
+            "sfx": "pop"
+          }
+        ],
+        "transition": "slide"
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "profile",
+        "title": "XPをためて<br><em>レベルアップ</em>",
+        "sfx": "level-up",
+        "sfxAt": 0.8,
+        "fx": [
+          {
+            "type": "bar",
+            "beat": 0,
+            "x": 540,
+            "y": 1700,
+            "from": 0.2,
+            "to": 1,
+            "dur": 0.9,
+            "label": "LV 6 → 7"
+          },
+          {
+            "type": "burst",
+            "beat": 2,
+            "sx": 0.5,
+            "sy": 0.22,
+            "n": 32,
+            "power": 1.1
+          }
+        ],
+        "transition": "up"
+      },
+      {
+        "type": "still",
+        "dur": 2,
+        "src": "profile",
+        "title": "ヒーローを<em>着せ替え</em>",
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 2,
+            "x": 150,
+            "y": 1560,
+            "expr": "happy",
+            "mood": "love",
+            "say": "かわいい！",
+            "sfx": "pop"
+          }
+        ],
+        "transition": "zoom"
+      },
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "遊び感覚の<br><em>モチベ</em>",
+        "subtitle": "もうすぐリリース",
+        "pips": [
+          "joy-party"
+        ],
+        "cta": "フォローしてね🌸",
+        "ctaBeat": 3,
+        "enter": "spin",
+        "transition": "pixel",
+        "fx": [
+          {
+            "type": "hearts",
+            "beat": 3,
+            "x": 540,
+            "y": 1500,
+            "n": 8
+          }
+        ]
+      }
+    ]
+  },
+  "j-b3-the-hero": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "ヒーローを<br><em>4回</em>描き直した🎨",
+        "sfx": "pop",
+        "sfxAt": 1.1,
+        "anim": "type"
+      },
+      {
+        "type": "pip",
+        "dur": 2,
+        "title": "バージョン4：<br><em>ぷにっと</em>かわいい",
+        "pips": [
+          "happy-love",
+          "joy-love"
+        ],
+        "every": 0.9,
+        "enter": "drop",
+        "fx": [
+          {
+            "type": "petals",
+            "at": 0.2,
+            "n": 18
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "profile",
+        "title": "アプリで<br><em>こんな感じ</em>",
+        "sfx": "complete",
+        "sfxAt": 0.5,
+        "fx": [
+          {
+            "type": "arrow",
+            "at": 0.1,
+            "sx": 0.5,
+            "sy": 0.28,
+            "dir": "down",
+            "life": 1
+          },
+          {
+            "type": "pip",
+            "beat": 2,
+            "x": 150,
+            "y": 1560,
+            "expr": "happy",
+            "mood": "love",
+            "say": "かわいい！",
+            "sfx": "pop"
+          }
+        ],
+        "transition": "flip"
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "profile",
+        "title": "きみと<em>いっしょ</em>に育つ",
+        "sfx": "level-up",
+        "sfxAt": 0.8,
+        "fx": [
+          {
+            "type": "bar",
+            "beat": 0,
+            "x": 540,
+            "y": 1700,
+            "from": 0.3,
+            "to": 1,
+            "dur": 0.9,
+            "label": "LV 6 → 7"
+          },
+          {
+            "type": "burst",
+            "beat": 2,
+            "sx": 0.5,
+            "sy": 0.2,
+            "n": 34,
+            "power": 1.2
+          }
+        ],
+        "transition": "up"
+      },
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "どの<em>衣装</em>が<br>好き？👇",
+        "subtitle": "もうすぐリリース",
+        "pips": [
+          "joy-party",
+          "happy-love"
+        ],
+        "every": 1,
+        "cta": "コメントで教えてね🌸",
+        "ctaBeat": 3,
+        "enter": "spin",
+        "transition": "pixel",
+        "fx": [
+          {
+            "type": "hearts",
+            "beat": 3,
+            "x": 540,
+            "y": 1500,
+            "n": 8
+          }
+        ]
+      }
+    ]
+  },
+  "j-b4-languages": {
+    "music": {
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0,
+      "theme": "quest",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "HabitQuestは<br><em>4言語</em>対応🌍",
+        "sfx": "pop",
+        "sfxAt": 1.1,
+        "anim": "type"
+      },
+      {
+        "type": "still",
+        "dur": 2.4,
+        "src": "today",
+        "title": "もちろん<em>日本語</em>✨",
+        "sfx": "complete",
+        "sfxAt": 0.5,
+        "fx": [
+          {
+            "type": "burst",
+            "beat": 1,
+            "sx": 0.5,
+            "sy": 0.12,
+            "n": 28
+          }
+        ],
+        "transition": "flip"
+      },
+      {
+        "type": "kinetic",
+        "dur": 2.4,
+        "title": "英語・フランス語<br><em>韓国語</em>も対応✨",
+        "sfx": "attack",
+        "sfxAt": 1,
+        "transition": "circle"
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "title": "次は<em>どの言語</em>？<br>教えてね👇",
+        "pips": [
+          "happy-love",
+          "joy-party"
+        ],
+        "every": 1,
+        "enter": "drop",
+        "fx": [
+          {
+            "type": "hearts",
+            "beat": 2,
+            "x": 540,
+            "y": 1500,
+            "n": 6
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "みんなの国で<br><em>いっしょに</em>！",
+        "subtitle": "もうすぐリリース",
+        "pips": [
+          "joy-party"
+        ],
+        "cta": "フォローしてね🌸",
+        "ctaBeat": 3,
+        "enter": "spin",
+        "transition": "pixel",
+        "fx": [
+          {
+            "type": "hearts",
+            "beat": 3,
+            "x": 540,
+            "y": 1500,
+            "n": 8
+          }
+        ]
+      }
+    ]
+  },
+  "j-b5-progress": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0,
+      "theme": "epic",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.4,
+        "title": "HabitQuestを<br><em>公開</em>で開発中👾",
+        "sfx": "attack",
+        "sfxAt": 1.3,
+        "anim": "type"
+      },
+      {
+        "type": "still",
+        "dur": 2,
+        "src": "today",
+        "title": "クエスト<em>✔</em>",
+        "fx": [
+          {
+            "type": "burst",
+            "beat": 1,
+            "sx": 0.87,
+            "sy": 0.41
+          },
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.6,
+            "sy": 0.4,
+            "text": "+25 XP",
+            "sfx": "pop"
+          }
+        ],
+        "transition": "flip"
+      },
+      {
+        "type": "still",
+        "dur": 2,
+        "src": "profile",
+        "title": "レベルアップ<em>✔</em>",
+        "sfx": "level-up",
+        "sfxAt": 0.7,
+        "fx": [
+          {
+            "type": "burst",
+            "beat": 1,
+            "sx": 0.5,
+            "sy": 0.2,
+            "n": 32,
+            "power": 1.2
+          },
+          {
+            "type": "counter",
+            "beat": 2,
+            "x": 540,
+            "y": 1520,
+            "from": 6,
+            "to": 7,
+            "prefix": "LV ",
+            "dur": 0.4,
+            "sfx": "pop"
+          }
+        ],
+        "transition": "slide"
+      },
+      {
+        "type": "still",
+        "dur": 2,
+        "src": "social",
+        "title": "対戦<em>✔</em>",
+        "transition": "zoom",
+        "sfx": "attack",
+        "sfxAt": 0.5,
+        "fx": [
+          {
+            "type": "burst",
+            "beat": 1,
+            "sx": 0.3,
+            "sy": 0.22,
+            "n": 24
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "dur": 2,
+        "src": "arc",
+        "title": "ウィンターアーク<em>✔</em>",
+        "transition": "up"
+      },
+      {
+        "type": "kinetic",
+        "dur": 1.8,
+        "title": "リリースは<br><em>もうすぐ</em>👀",
+        "sfx": "pop",
+        "sfxAt": 1.3,
+        "anim": "stamp"
+      },
+      {
+        "type": "pip",
+        "dur": 2.8,
+        "title": "待っててね！",
+        "subtitle": "もうすぐリリース",
+        "pips": [
+          "joy-party"
+        ],
+        "cta": "フォローしてね🌸",
+        "ctaBeat": 3,
+        "enter": "spin",
+        "transition": "pixel",
+        "fx": [
+          {
+            "type": "hearts",
+            "beat": 3,
+            "x": 540,
+            "y": 1500,
+            "n": 8
+          }
+        ]
+      }
+    ]
   }
 }
