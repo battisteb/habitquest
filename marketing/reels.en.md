@@ -66,3 +66,14 @@ Extra hashtags: `#buildinpublic #indiedev #solodev #appdev`
 | b3 — I redrew my hero 4 times | I redrew my hero 4 times. Version 4: puffy and cute. Which one do you prefer? 🎨 |
 | b4 — 4 languages | HabitQuest now speaks 4 languages: English, French, Japanese and Korean. 🌍 Which one should be next? Comment below 👇 You can try the demo on our site (link in bio). |
 | b5 — Building in public | Building HabitQuest in public: quests ✔ level ups ✔ duels ✔ Winter Arc ✔. Launch: soon 👀 Play the demo while you wait (link in bio). |
+
+## Study / revision angle (for the student audience)
+
+Extra hashtags for all four: `#studytok #studygram #revision #examseason #studymotivation #pixelart`
+
+| Reel | Caption |
+|---|---|
+| se1 — Revision as an RPG | Your revision, but make it an RPG. 📚 Every study session is a quest — read, tick, earn XP, and watch your little hero level up. Study like a hero. Demo in bio. |
+| se2 — Study with me | Study with me, but it's a game. 📚 Focus mode for exam season, XP and gold for every revision session, a Winter Arc built around finals. Play the demo while you revise. |
+| se3 — Exam season glow-up | Exam season glow-up. 📚 Turn revision into quests, watch your hero evolve, and see your days in pixels. Level up your revision. Demo in bio. |
+| se4 — POV: studying is fun | POV: studying is finally fun. 📖 Tick your reading, keep the streak, earn XP + gold, level up. Study like a hero. Demo in bio. |

@@ -3117,5 +3117,368 @@
         "icon": true
       }
     ]
+  },
+  "se1-revision-rpg": {
+    "music": {
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0,
+      "theme": "quest",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "Your<br>revision,<br>but it's an <em>RPG</em> 📚",
+        "sfx": "attack",
+        "sfxAt": 1.1,
+        "anim": "type"
+      },
+      {
+        "type": "full",
+        "dur": 2.4,
+        "src": "today",
+        "start": 0.4,
+        "title": "Every study habit<br>= a <em>quest</em>",
+        "fx": [
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.6,
+            "sy": 0.49,
+            "text": "+25 XP",
+            "sfx": "pop"
+          },
+          {
+            "type": "xp",
+            "beat": 2,
+            "sx": 0.6,
+            "sy": 0.4,
+            "text": "+21 XP",
+            "sfx": "pop"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "dur": 2.6,
+        "src": "levelup",
+        "start": 0.6,
+        "title": "Finish the pages.<br><em>Level up.</em>",
+        "sfx": "level-up",
+        "sfxAt": 0.9,
+        "fx": [
+          {
+            "type": "burst",
+            "at": 0.7,
+            "sx": 0.5,
+            "sy": 0.45,
+            "n": 34,
+            "power": 1.2
+          },
+          {
+            "type": "pip",
+            "beat": 3,
+            "x": 950,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "worried",
+            "say": "NICE!",
+            "sfx": "pop"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "stats",
+        "title": "Your <em>streak</em><br>keeps you going 🔥",
+        "transition": "slide"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.4,
+        "title": "Study like a <em>hero</em>",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "DEMO · LINK IN BIO ▲",
+        "ctaBeat": 4,
+        "icon": true,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 1,
+            "x": 170,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "worried",
+            "say": "LET'S STUDY!",
+            "sfx": "pop"
+          }
+        ]
+      }
+    ]
+  },
+  "se2-study-with-me": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0,
+      "theme": "chill",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.3,
+        "title": "Study<br>with me 📚<br>(but it's a <em>game</em>)",
+        "sfx": "pop",
+        "sfxAt": 1.1,
+        "anim": "type"
+      },
+      {
+        "type": "clip",
+        "dur": 2.6,
+        "src": "focus",
+        "start": 0.5,
+        "title": "Focus mode<br>for <em>exam season</em>",
+        "sfx": "complete",
+        "sfxAt": 0.6
+      },
+      {
+        "type": "full",
+        "dur": 2.4,
+        "src": "today",
+        "start": 0.4,
+        "title": "Tick your revision,<br>earn <em>XP + gold</em>",
+        "fx": [
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.6,
+            "sy": 0.49,
+            "text": "+25 XP",
+            "sfx": "pop"
+          },
+          {
+            "type": "counter",
+            "beat": 3,
+            "x": 540,
+            "y": 1700,
+            "from": 561,
+            "to": 586,
+            "icon": "coin",
+            "dur": 0.6
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "arc",
+        "title": "My Winter Arc:<br><em>finals</em> 📖",
+        "transition": "slide"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.2,
+        "title": "HabitQuest",
+        "subtitle": "Play the demo while you revise",
+        "cta": "DEMO · LINK IN BIO ▲",
+        "ctaBeat": 4,
+        "icon": true,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 1,
+            "x": 170,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "worried",
+            "say": "YOU GOT THIS!",
+            "sfx": "pop"
+          }
+        ]
+      }
+    ]
+  },
+  "se3-exam-glowup": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0,
+      "theme": "epic",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.3,
+        "title": "Exam season<br><em>glow-up</em> 📚",
+        "sfx": "attack",
+        "sfxAt": 1.2,
+        "anim": "type"
+      },
+      {
+        "type": "full",
+        "dur": 2.4,
+        "src": "today",
+        "start": 0.4,
+        "title": "Revise.<br>Earn <em>XP</em>.",
+        "fx": [
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.6,
+            "sy": 0.49,
+            "text": "+25 XP",
+            "sfx": "pop"
+          },
+          {
+            "type": "xp",
+            "beat": 2,
+            "sx": 0.6,
+            "sy": 0.4,
+            "text": "+21 XP",
+            "sfx": "pop"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "dur": 2.6,
+        "src": "journey",
+        "start": 0.6,
+        "title": "Watch your hero<br><em>evolve</em>",
+        "sfx": "level-up",
+        "sfxAt": 0.8,
+        "fx": [
+          {
+            "type": "burst",
+            "at": 0.8,
+            "sx": 0.5,
+            "sy": 0.4,
+            "n": 30,
+            "power": 1.1
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "dur": 2.2,
+        "src": "stats",
+        "title": "90 days,<br><em>in pixels</em> 🔥",
+        "transition": "slide"
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.2,
+        "title": "Level up<br>your <em>revision</em>",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "DEMO · LINK IN BIO ▲",
+        "ctaBeat": 4,
+        "icon": true,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 1,
+            "x": 170,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "worried",
+            "say": "ACE IT!",
+            "sfx": "pop"
+          }
+        ]
+      }
+    ]
+  },
+  "se4-pov-study": {
+    "music": {
+      "file": "marketing/audio/theme-quest.m4a",
+      "start": 0,
+      "theme": "quest",
+      "drop": 1,
+      "lift": 5
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 2.3,
+        "title": "POV:<br>studying is<br>finally <em>fun</em> 📖",
+        "sfx": "pop",
+        "sfxAt": 1.2,
+        "anim": "type"
+      },
+      {
+        "type": "clip",
+        "dur": 2.8,
+        "src": "milestone",
+        "start": 0.5,
+        "title": "Tick your reading.<br>Keep the <em>streak</em> 🔥",
+        "sfx": "complete",
+        "sfxAt": 0.7,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 3,
+            "x": 950,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "worried",
+            "say": "WOW!",
+            "sfx": "pop"
+          }
+        ]
+      },
+      {
+        "type": "full",
+        "dur": 2.4,
+        "src": "today",
+        "start": 0.4,
+        "title": "+XP, +gold,<br><em>level up</em>",
+        "fx": [
+          {
+            "type": "xp",
+            "beat": 1,
+            "sx": 0.6,
+            "sy": 0.49,
+            "text": "+25 XP",
+            "sfx": "pop"
+          },
+          {
+            "type": "counter",
+            "beat": 3,
+            "x": 540,
+            "y": 1700,
+            "from": 561,
+            "to": 586,
+            "icon": "coin",
+            "dur": 0.6
+          }
+        ]
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.2,
+        "title": "Study like a <em>hero</em>",
+        "subtitle": "Coming soon to iOS & Android",
+        "cta": "DEMO · LINK IN BIO ▲",
+        "ctaBeat": 4,
+        "icon": true,
+        "fx": [
+          {
+            "type": "pip",
+            "beat": 1,
+            "x": 170,
+            "y": 1760,
+            "expr": "joy",
+            "mood": "worried",
+            "say": "LET'S GO!",
+            "sfx": "pop"
+          }
+        ]
+      }
+    ]
   }
 }

@@ -96,3 +96,35 @@ HabitQuestを公開で開発中👾
 #個人開発 #習慣化アプリ #ドット絵 #WinterArc #HabitQuest
 ```
 « Je développe HabitQuest en public 👾 Quêtes, montées de niveau, duels, Winter Arc… tout est là. Sortie bientôt 👀 »
+
+---
+
+## 勉強・テスト angle (étudiants — beaucoup d'abonnés « 勉強垢 »)
+
+## j-se1-benkyou-rpg — le principe, version étude
+
+```
+勉強をRPGにしたよ📚
+勉強したらXPとゴールド、ヒーローがレベルアップ！
+テスト勉強もいっしょにがんばろう。
+#勉強 #勉強垢 #習慣化 #ドット絵 #HabitQuest
+```
+« J'ai transformé les révisions en RPG 📚 Étudier rapporte de l'XP et de l'or, et ton héros monte de niveau ! Révisons ensemble pour les exams. »
+
+## j-se2-test-kikan — la période d'examens
+
+```
+テスト期間、いっしょにがんばろう📖
+毎日の勉強がクエストに。ウィンターアークで8週間、完璧じゃなくて大丈夫。
+#テスト勉強 #勉強垢 #習慣化 #ドット絵 #HabitQuest
+```
+« Période d'examens, on s'y met ensemble 📖 Chaque session de révision devient une quête. 8 semaines avec le Winter Arc, pas besoin d'être parfait. »
+
+## j-se3-benkyou-shuukan — faire du révision une habitude
+
+```
+勉強を習慣に📚
+読書クエストでXP、テスト前の8週間、ごほうびはレベルアップ！
+#勉強 #勉強習慣 #勉強垢 #ドット絵 #HabitQuest
+```
+« Fais des révisions une habitude 📚 La quête lecture rapporte de l'XP, 8 semaines avant les exams, et la récompense c'est la montée de niveau ! »
