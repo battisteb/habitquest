@@ -112,7 +112,7 @@ export default function ShopScreen() {
 
   // Loadout panel
   monthly: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
-  bannerRow: { flexDirection: 'row', alignItems: 'stretch', gap: spacing.sm, paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
+  bannerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
   loadoutPanel: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
