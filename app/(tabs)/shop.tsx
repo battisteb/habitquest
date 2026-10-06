@@ -111,8 +111,8 @@ export default function ShopScreen() {
   },
 
   // Loadout panel
-  monthly: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
-  bannerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, paddingBottom: spacing.sm },
+  monthly: { paddingHorizontal: spacing.md, marginTop: spacing.md, paddingBottom: spacing.sm },
+  bannerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, marginTop: spacing.md, paddingBottom: spacing.sm },
   loadoutPanel: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
@@ -121,7 +121,7 @@ export default function ShopScreen() {
     borderColor: colors.border,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    gap: spacing.lg,
+    gap: spacing.md,
     alignItems: 'center',
   },
   loadoutLeft: {
