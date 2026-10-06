@@ -3874,7 +3874,21 @@
             "s": 1
           }
         ],
-        "say": "The strongest sorcerer alive was asked one question."
+        "say": "The *strongest* sorcerer alive was asked *one* question.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "最強",
+            "font": "DotGothic16",
+            "x": 850,
+            "y": 300,
+            "rot": 8,
+            "size": 120,
+            "color": "#e94560",
+            "at": 0.5,
+            "life": 1.2
+          }
+        ]
       },
       {
         "type": "story",
@@ -3896,7 +3910,8 @@
             "s": 1.06
           }
         ],
-        "say": "Would you lose?"
+        "say": "Would you *lose?*",
+        "lines": true
       },
       {
         "type": "story",
@@ -3916,7 +3931,8 @@
             "s": 1.05
           }
         ],
-        "say": "He just smiled… and said:"
+        "say": "He just *smiled…* and said:",
+        "lines": true
       },
       {
         "type": "meme",
@@ -3945,7 +3961,7 @@
             "s": 1.02
           }
         ],
-        "say": "Spoiler: he lost.",
+        "say": "Spoiler: he *lost.*",
         "fx": [
           {
             "type": "stamp",
@@ -3969,7 +3985,46 @@
         "sayY": 1640,
         "title": "\"Would you<br><em>lose</em>?\"",
         "subtitle": "— your 2 AM doomscroll",
-        "say": "Now your 2 AM doomscroll asks you the same thing."
+        "say": "Now your *2 AM* doomscroll asks you the same thing.",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "Just one more video…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.45
+          },
+          {
+            "type": "notif",
+            "text": "You might like this",
+            "x": 700,
+            "y": 980,
+            "from": "right",
+            "rot": 2,
+            "at": 0.95
+          },
+          {
+            "type": "notif",
+            "text": "Autoplay in 3… 2…",
+            "x": 390,
+            "y": 1240,
+            "from": "left",
+            "rot": -2,
+            "at": 1.45
+          },
+          {
+            "type": "notif",
+            "text": "47 new reels",
+            "w": 440,
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 1.95
+          }
+        ]
       },
       {
         "type": "clip",
@@ -3981,7 +4036,23 @@
         "sayAt": 0.1,
         "captions": false,
         "title": "Your habits<br>become <em>quests</em>.",
-        "say": "HabitQuest turns your habits into quests."
+        "say": "HabitQuest turns your habits into quests.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ]
       },
       {
         "type": "boss",
@@ -3994,8 +4065,17 @@
         "sayY": 1740,
         "title": "<em>-24</em> HP!",
         "subtitle": "every quest = one hit",
-        "say": "Every quest you complete hits your boss.",
+        "say": "Every quest you complete *hits* your boss.",
         "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
           {
             "type": "bar",
             "from": 1,
@@ -4019,7 +4099,27 @@
         "sayAt": 0.1,
         "captions": false,
         "title": "Keep your <em>streak</em>.",
-        "say": "Keep your streak."
+        "say": "Keep your streak.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": " DAYS",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
       },
       {
         "type": "clip",
@@ -4030,7 +4130,26 @@
         "sayAt": 0.1,
         "captions": false,
         "title": "Level up your <em>hero</em>.",
-        "say": "Level up your hero."
+        "say": "Level up your hero.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "x": 780,
+            "y": 640,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "x": 780,
+            "y": 640,
+            "at": 1
+          }
+        ]
       },
       {
         "type": "hero",
@@ -4040,7 +4159,23 @@
         "title": "Day <em>30</em>.",
         "sayAt": 0.1,
         "sayY": 1740,
-        "say": "Thirty days later…",
+        "say": "Thirty days *later…*",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
         "looks": [
           {
             "hat": "hat_crown",
@@ -4062,8 +4197,17 @@
         "sayY": 1740,
         "title": "\"Stand proud.<br>You are <em>strong</em>.\"",
         "subtitle": "— the Kraken, defeated",
-        "say": "This time, the villain loses.",
+        "say": "This time, the villain *loses.*",
         "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
           {
             "type": "bar",
             "from": 0.3,
@@ -4086,7 +4230,7 @@
         "captions": false,
         "title": "So… would<br>you <em>lose</em>?",
         "subtitle": "Comment “Nah, I’d win” 👇",
-        "say": "So… would you lose?",
+        "say": "So… would you *lose?*",
         "pips": [
           "proud-worried",
           "joy-worried"

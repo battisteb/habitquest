@@ -259,7 +259,8 @@ function alignWords(text, spoken, offset) {
     while (k < tokens.length && !bare(tokens[k]).includes(bare(s.w))) k++;
     const w = k < tokens.length ? tokens[k] : s.w;
     if (k < tokens.length) j = k + 1;
-    return { w, t: +(offset + s.t).toFixed(3) };
+    // *word* in `say`: an emphasised word (red plate, camera shake), see reel.html camera().
+    return { w: w.replace(/\*/g, ''), em: w.includes('*'), t: +(offset + s.t).toFixed(3) };
   }).filter((w, i, a) => i === 0 || w.w !== a[i - 1].w || w.t - a[i - 1].t > 0.3);
 }
 
@@ -270,7 +271,7 @@ function alignWords(text, spoken, offset) {
  */
 function voiceOver(name, raw) {
   const lines = raw.segments
-    .map((seg, i) => seg.say && { id: `${name}-${i}`, text: seg.say, voice: seg.voice || raw.voice, rate: seg.voiceRate || raw.voiceRate, pitch: raw.voicePitch })
+    .map((seg, i) => seg.say && { id: `${name}-${i}`, text: seg.say.replace(/\*/g, ''), voice: seg.voice || raw.voice, rate: seg.voiceRate || raw.voiceRate, pitch: raw.voicePitch })
     .filter(Boolean);
   if (!lines.length) return raw;
   const dir = path.join(work, 'vo');
