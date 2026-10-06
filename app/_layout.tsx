@@ -36,6 +36,10 @@ import { achievementText } from '../src/lib/i18n/content';
 import { lang$, STARTUP_FONT_SCRIPT } from '../src/lib/i18n';
 import { installAppAlert } from '../src/lib/app-alert';
 import { PixelDialogHost } from '../src/ui/components/pixel-dialog';
+import { initSentry, wrapRoot } from '../src/lib/monitoring/sentry';
+
+// Error & crash monitoring. No-op until EXPO_PUBLIC_SENTRY_DSN is set.
+initSentry();
 
 installAppAlert();
 
@@ -174,7 +178,7 @@ const PIXEL_FONTS = {
   zh: { Jersey10_400Regular, FusionPixel12: require('../assets/fonts/FusionPixel12-zhTW.ttf') },
 }[STARTUP_FONT_SCRIPT];
 
-export default function RootLayout() {
+function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(PIXEL_FONTS);
   // Wait for the pixel font (bundled, so this takes a few ms); on failure the
   // app still starts with the system font.
@@ -195,3 +199,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
 });
+
+// Wrapped for Sentry (render-error & performance capture); unchanged when Sentry is disabled.
+export default wrapRoot(RootLayout);
