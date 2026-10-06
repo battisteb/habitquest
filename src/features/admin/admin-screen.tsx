@@ -16,12 +16,18 @@ import { PixelFrame } from '../../ui/components/pixel-frame';
 type DayPoint = { day: string; n: number };
 type Dashboard = {
   generated_at: string;
-  users: { total: number; new_today: number; new_7d: number; premium: number };
-  active: { dau: number; wau: number; mau: number };
-  engagement: { completions_7d: number; active_streaks: number; habits_total: number };
+  users: { total: number; new_today: number; new_7d: number; premium: number; activated: number; activation_rate: number; premium_rate: number };
+  active: { dau: number; wau: number; mau: number; stickiness: number; lapsed_7d: number };
+  retention: { d7_cohort: number; d7_rate: number | null };
+  engagement: { completions_today: number; completions_7d: number; active_streaks: number; habits_total: number; habits_archived: number; avg_completions_per_active_7d: number };
+  social: { friends: number; duels: number; kudos: number; moods: number };
+  funnel: { waitlist: number; support_open: number; purchases: number };
+  habits_by_category: { category: string; n: number }[];
   signups_14d: DayPoint[];
   completions_14d: DayPoint[];
 };
+
+const pct = (v: number | null) => (v === null || v === undefined ? '—' : `${v}%`);
 
 type State =
   | { status: 'loading' }
@@ -94,7 +100,8 @@ export default function AdminScreen() {
             <Metric label="TOTAL" value={state.data.users.total} />
             <Metric label="NEW TODAY" value={state.data.users.new_today} />
             <Metric label="NEW · 7D" value={state.data.users.new_7d} />
-            <Metric label="PREMIUM" value={state.data.users.premium} />
+            <Metric label="ACTIVATED" value={`${state.data.users.activated} (${pct(state.data.users.activation_rate)})`} />
+            <Metric label="PREMIUM" value={`${state.data.users.premium} (${pct(state.data.users.premium_rate)})`} />
           </View>
 
           <Text style={styles.section}>ACTIVE (completed a quest)</Text>
@@ -102,14 +109,54 @@ export default function AdminScreen() {
             <Metric label="DAU" value={state.data.active.dau} />
             <Metric label="WAU" value={state.data.active.wau} />
             <Metric label="MAU" value={state.data.active.mau} />
+            <Metric label="STICKINESS (DAU/WAU)" value={pct(state.data.active.stickiness)} />
+            <Metric label="LAPSED · 7D" value={state.data.active.lapsed_7d} />
+          </View>
+
+          <Text style={styles.section}>RETENTION</Text>
+          <View style={styles.row}>
+            <Metric label="D7 RETENTION" value={pct(state.data.retention.d7_rate)} />
+            <Metric label="D7 COHORT (size)" value={state.data.retention.d7_cohort} />
           </View>
 
           <Text style={styles.section}>ENGAGEMENT</Text>
           <View style={styles.row}>
+            <Metric label="COMPLETIONS · TODAY" value={state.data.engagement.completions_today} />
             <Metric label="COMPLETIONS · 7D" value={state.data.engagement.completions_7d} />
+            <Metric label="AVG / ACTIVE · 7D" value={state.data.engagement.avg_completions_per_active_7d} />
             <Metric label="ACTIVE STREAKS" value={state.data.engagement.active_streaks} />
             <Metric label="HABITS" value={state.data.engagement.habits_total} />
+            <Metric label="ARCHIVED HABITS" value={state.data.engagement.habits_archived} />
           </View>
+
+          <Text style={styles.section}>SOCIAL</Text>
+          <View style={styles.row}>
+            <Metric label="FRIENDSHIPS" value={state.data.social.friends} />
+            <Metric label="DUELS" value={state.data.social.duels} />
+            <Metric label="KUDOS" value={state.data.social.kudos} />
+            <Metric label="MOOD LOGS" value={state.data.social.moods} />
+          </View>
+
+          <Text style={styles.section}>FUNNEL</Text>
+          <View style={styles.row}>
+            <Metric label="WAITLIST" value={state.data.funnel.waitlist} />
+            <Metric label="SUPPORT OPEN" value={state.data.funnel.support_open} />
+            <Metric label="PURCHASES" value={state.data.funnel.purchases} />
+          </View>
+
+          <Text style={styles.section}>HABITS BY CATEGORY</Text>
+          <PixelFrame style={styles.chart} backgroundColor={colors.surface}>
+            {state.data.habits_by_category.length === 0 ? (
+              <Text style={styles.metricLabel}>No habits yet</Text>
+            ) : (
+              state.data.habits_by_category.map((c) => (
+                <View key={c.category} style={styles.catRow}>
+                  <Text style={styles.catName}>{c.category}</Text>
+                  <Text style={styles.catVal}>{c.n}</Text>
+                </View>
+              ))
+            )}
+          </PixelFrame>
 
           <Text style={styles.section}>LAST 14 DAYS</Text>
           <BarChart title="Signups / day" points={state.data.signups_14d} />
@@ -139,4 +186,7 @@ const styles = StyleSheet.create({
   barTrack: { width: '100%', height: 96, backgroundColor: colors.border, justifyContent: 'flex-end' },
   barFill: { width: '100%', backgroundColor: colors.accent },
   barDay: { color: colors.textMuted, fontSize: pixelSize(8), fontFamily: fonts.bold },
+  catRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 3 },
+  catName: { color: colors.text, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold },
+  catVal: { color: colors.accent, fontSize: pixelSize(fontSizes.sm), fontFamily: fonts.bold },
 });
