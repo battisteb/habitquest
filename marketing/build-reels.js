@@ -240,12 +240,53 @@ function prepare(raw) {
   const beat = 60 / bpm;
   TRANSITION = beat;
   const q = (d, min) => Math.max(min, Math.round(d / beat)) * beat;
+  // A segment with a voice-over is never cut short: rounded up to the next beat.
   const segments = raw.segments.map((seg) => ({
     ...seg,
-    dur: q(seg.dur, 2),
+    dur: seg.words ? Math.max(2, Math.ceil(seg.dur / beat - 1e-6)) * beat : q(seg.dur, 2),
     ...(seg.type === 'hero' ? { every: q(seg.every || 0.9, 1) } : {}),
   }));
   return { ...raw, segments, dynamic, theme, bpm, beat };
+}
+
+/** Puts the spoken words (edge-tts timing) back on the written ones, with their punctuation. */
+function alignWords(text, spoken, offset) {
+  const tokens = text.split(/\s+/).filter(Boolean);
+  const bare = (w) => w.toLowerCase().replace(/[^\p{L}\p{N}']/gu, '').replace(/’/g, "'");
+  let j = 0;
+  return spoken.map((s) => {
+    let k = j;
+    while (k < tokens.length && !bare(tokens[k]).includes(bare(s.w))) k++;
+    const w = k < tokens.length ? tokens[k] : s.w;
+    if (k < tokens.length) j = k + 1;
+    return { w, t: +(offset + s.t).toFixed(3) };
+  }).filter((w, i, a) => i === 0 || w.w !== a[i - 1].w || w.t - a[i - 1].t > 0.3);
+}
+
+/**
+ * Voice-over: each segment's `say` is spoken by an AI voice (marketing/audio/tts.py, free Edge
+ * voices; reel `voice`, `voiceRate`, `voicePitch`), `sayAt` s into the segment. The segment then
+ * lasts at least as long as its line and gets the word timings for the captions.
+ */
+function voiceOver(name, raw) {
+  const lines = raw.segments
+    .map((seg, i) => seg.say && { id: `${name}-${i}`, text: seg.say, voice: seg.voice || raw.voice, rate: seg.voiceRate || raw.voiceRate, pitch: raw.voicePitch })
+    .filter(Boolean);
+  if (!lines.length) return raw;
+  const dir = path.join(work, 'vo');
+  fs.mkdirSync(dir, { recursive: true });
+  const list = path.join(dir, `${name}.json`);
+  fs.writeFileSync(list, JSON.stringify(lines));
+  execFileSync(process.env.PYTHON || 'python', [path.join(root, 'audio', 'tts.py'), list, dir], { stdio: 'inherit' });
+  const segments = raw.segments.map((seg, i) => {
+    if (!seg.say) return seg;
+    const { words } = JSON.parse(fs.readFileSync(path.join(dir, `${name}-${i}.json`), 'utf8'));
+    const at = seg.sayAt ?? 0.12;
+    const last = words[words.length - 1];
+    const end = last ? last.t + last.d : 0;
+    return { ...seg, vo: path.join(dir, `${name}-${i}.mp3`), voAt: at, words: alignWords(seg.say, words, at), dur: Math.max(seg.dur || 0, at + end + (seg.sayTail ?? 0.25)) };
+  });
+  return { ...raw, segments };
 }
 
 /** A segment's stickers, with Pip's sprite resolved to colours. */
@@ -351,10 +392,11 @@ async function roundedMask(page, file) {
 
   for (const [name, raw] of Object.entries(reels)) {
     if (process.argv[2] && process.argv[2] !== name) continue;
-    const reel = prepare(raw);
+    const reel = prepare(voiceOver(name, raw));
     const live = reel.dynamic ? { dynamic: true, beat: reel.beat } : {};
     const parts = [];
     const sfx = [];
+    const vo = [];
     const { starts, total } = timeline(reel);
     for (const [i, seg] of reel.segments.entries()) {
       const clock = starts[i];
@@ -364,8 +406,9 @@ async function roundedMask(page, file) {
         // Video-only sounds (marketing/audio/sfx) take precedence over the app's.
         const own = path.join(root, 'audio', 'sfx', `${seg.sfx}.m4a`);
         const file = fs.existsSync(own) ? own : path.join(repo, 'assets', 'sounds', `${seg.sfx}.m4a`);
-        sfx.push({ file, at: clock + (seg.sfxAt || 0), vol: reel.dynamic ? 0.8 : 1.2 });
+        sfx.push({ file, at: clock + (seg.sfxAt || 0), vol: (seg.sfxVol ?? 1) * (reel.dynamic ? 0.8 : 1.2) });
       }
+      if (seg.vo) vo.push({ file: seg.vo, at: clock + seg.voAt });
       if (seg.type === 'kinetic') {
         await renderAnimated(page, { layout: 'kinetic', ...seg, smooth: !reel.punchy, ...live, clock, fx: stickers(seg, hero), entered: i > 0 && INSERTED.has(transitionInto(reel, i)) }, seg.dur, out, enc);
       } else if (seg.type === 'pip') {
@@ -386,12 +429,13 @@ async function roundedMask(page, file) {
         const grid = hero.BOSS_SPRITES[seg.boss].map((row) => [...row].map((c) => (c === '.' || c === ' ' ? null : (pal[c] || null))));
         const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
         await renderAnimated(page, { layout: 'boss', ...seg, grid, smooth: !reel.punchy, entered, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
-      } else if (seg.type === 'meme') {
+      } else if (seg.type === 'meme' || seg.type === 'story') {
         // Meme panels are third-party images: kept out of this public repo, read from MEME_DIR.
         const file = path.join(process.env.MEME_DIR || path.join(root, 'assets', 'memes'), seg.src);
         const mime = /\.png$/i.test(file) ? 'image/png' : 'image/jpeg';
         const img = `data:${mime};base64,${fs.readFileSync(file).toString('base64')}`;
-        await renderAnimated(page, { layout: 'meme', ...seg, img, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
+        const still = seg.type === 'story' && i > 0 && reel.segments[i - 1].src === seg.src && reel.segments[i - 1].type === 'story';
+        await renderAnimated(page, { layout: seg.type, ...seg, img, still, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
       } else if (seg.type === 'full' && reel.dynamic) {
         // Animated caption, glow and stickers (PNG with alpha) over the recording.
         const frames = await renderAnimated(page, { layout: 'full', ...seg, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc, true);
@@ -530,17 +574,28 @@ async function roundedMask(page, file) {
       musicFile = path.join(work, `${name}-music.wav`);
       execFileSync(process.env.PYTHON || 'python', [path.join(root, 'audio', 'chiptune.py'), 'reel', specFile, musicFile], { stdio: 'inherit' });
     }
-    // Music, plus the sound effects of the segments on top.
-    const sfxIn = sfx.flatMap((x) => ['-i', x.file]);
-    const sfxMix = sfx.map((x, k) => `[${k + 2}:a]adelay=${Math.round(x.at * 1000)}|${Math.round(x.at * 1000)},volume=${x.vol ?? 1.2}[s${k}];`).join('');
-    const mix = sfx.length
-      ? `${sfxMix}[m]${sfx.map((_, k) => `[s${k}]`).join('')}amix=inputs=${sfx.length + 1}:duration=first:normalize=0[a]`
-      : '[m]anull[a]';
+    // Music, plus the sound effects of the segments and the voice-over on top.
+    const sfxIn = [...sfx, ...vo].flatMap((x) => ['-i', x.file]);
+    const delay = (x) => `adelay=${Math.round(x.at * 1000)}|${Math.round(x.at * 1000)}`;
+    const sfxMix = sfx.map((x, k) => `[${k + 2}:a]${delay(x)},volume=${x.vol ?? 1.2}[s${k}];`).join('') +
+      vo.map((x, k) => `[${k + 2 + sfx.length}:a]${delay(x)},aresample=44100[v${k}];`).join('');
+    // The voice-over as one track ([vo]), plus a copy ([vk]) that ducks the music while it speaks.
+    const voBus = vo.length
+      ? `${vo.map((_, k) => `[v${k}]`).join('')}amix=inputs=${vo.length}:normalize=0,volume=${reel.voiceVol ?? 1.6},asplit=2[vo][vk];`
+      : '';
+    const layers = (base) => [base, ...sfx.map((_, k) => `[s${k}]`), ...(vo.length ? ['[vo]'] : [])];
+    const mixOf = (base) => {
+      const l = layers(base);
+      return `${sfxMix}${voBus}${l.length > 1 ? `${l.join('')}amix=inputs=${l.length}:duration=first:normalize=0[a]` : `${base}anull[a]`}`;
+    };
+    const duck = vo.length ? '[m0];[m0][vk]sidechaincompress=threshold=0.02:ratio=10:attack=15:release=450' : '';
+    const mix = mixOf('[m]');
     if (reel.dynamic) {
       // The track already ends on its final hit: no long fade. Then -14 LUFS, as on TikTok/Reels.
       const mixWav = path.join(work, `${name}-mix.wav`);
       run(['-f', 'concat', '-safe', '0', '-i', list, '-i', musicFile, ...sfxIn,
-        '-filter_complex', `[1:a]volume=1.0,afade=out:st=${(total - 0.3).toFixed(2)}:d=0.3[m];${mix}`,
+        '-filter_complex', `${sfxMix}${voBus}[1:a]volume=1.0,afade=out:st=${(total - 0.3).toFixed(2)}:d=0.3${duck}[m];` +
+          (layers('[m]').length > 1 ? `${layers('[m]').join('')}amix=inputs=${layers('[m]').length}:duration=first:normalize=0[a]` : '[m]anull[a]'),
         '-map', '[a]', '-t', String(total), mixWav]);
       run(['-f', 'concat', '-safe', '0', '-i', list, '-i', mixWav, '-af', loudnorm(mixWav),
         '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', String(total), '-movflags', '+faststart', out]);
@@ -558,10 +613,7 @@ async function roundedMask(page, file) {
     // editor: it keeps the game sounds, so it is never silent.
     const silent = path.join(outDir, 'sans-musique', `${name}.mp4`);
     fs.mkdirSync(path.dirname(silent), { recursive: true });
-    const base = `[1:a]atrim=0:${total.toFixed(2)}[b]`;
-    const sfxOnly = sfx.length
-      ? `${base};${sfxMix}[b]${sfx.map((_, k) => `[s${k}]`).join('')}amix=inputs=${sfx.length + 1}:duration=first:normalize=0[a]`
-      : `${base};[b]anull[a]`;
+    const sfxOnly = `[1:a]atrim=0:${total.toFixed(2)}[b];${mixOf('[b]').replace('asplit=2[vo][vk]', 'anull[vo]')}`;
     run(['-f', 'concat', '-safe', '0', '-i', list, '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', ...sfxIn,
       '-filter_complex', sfxOnly,
       '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-t', String(total), '-movflags', '+faststart', silent]);

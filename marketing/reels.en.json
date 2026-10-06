@@ -3848,27 +3848,154 @@
     "music": {
       "file": "marketing/audio/theme-epic.m4a",
       "theme": "epic",
-      "drop": 1,
-      "lift": 5
+      "drop": 3,
+      "lift": 9
     },
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+8%",
+    "voicePitch": "-2Hz",
     "segments": [
+      {
+        "type": "story",
+        "src": "gojo-q.png",
+        "tag": "SATORU GOJO · JUJUTSU KAISEN",
+        "dur": 2,
+        "sayAt": 0.3,
+        "say": "The strongest sorcerer alive was asked one question.",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.45,
+            "y": 0.65,
+            "z": 2.2
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "src": "gojo-q.png",
+        "tag": "SATORU GOJO · JUJUTSU KAISEN",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "sayTail": 0.5,
+        "say": "Would you lose?",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.3,
+            "z": 1
+          },
+          {
+            "u": 0.35,
+            "x": 0.47,
+            "y": 0.06,
+            "z": 2
+          },
+          {
+            "u": 1,
+            "x": 0.47,
+            "y": 0.06,
+            "z": 2.2
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "src": "gojo-q.png",
+        "tag": "SATORU GOJO · JUJUTSU KAISEN",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "say": "He just smiled… and said:",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.47,
+            "y": 0.06,
+            "z": 2.2
+          },
+          {
+            "u": 0.35,
+            "x": 0.45,
+            "y": 0.84,
+            "z": 2
+          },
+          {
+            "u": 1,
+            "x": 0.45,
+            "y": 0.86,
+            "z": 2.4
+          }
+        ]
+      },
+      {
+        "type": "meme",
+        "src": "gojo-nah.png",
+        "dur": 2.4,
+        "transition": "cut",
+        "imgW": 900,
+        "imgTop": 190,
+        "sfx": "attack",
+        "sfxAt": 0
+      },
+      {
+        "type": "story",
+        "src": "gojo-nah.png",
+        "tag": "SPOILER ALERT",
+        "gray": true,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "say": "Spoiler: he lost.",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.45,
+            "z": 1.12
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "HE LOST.",
+            "x": 540,
+            "y": 1150,
+            "rot": -9,
+            "size": 84,
+            "color": "#e94560",
+            "at": 1.22,
+            "sfx": "attack",
+            "vol": 0.6
+          }
+        ]
+      },
       {
         "type": "boss",
         "boss": "doomscroll_kraken",
         "night": true,
-        "dur": 1.6,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
         "title": "\"Would you<br><em>lose</em>?\"",
         "subtitle": "— your 2 AM doomscroll",
+        "say": "Now your 2 AM doomscroll asks you the same thing.",
         "sfx": "whoosh",
-        "sfxAt": 0
-      },
-      {
-        "type": "meme",
-        "src": "nah-id-win.jpg",
-        "dur": 1.6,
-        "transition": "cut",
-        "top": "me, day 1 of<br><em>HabitQuest</em>:",
-        "sfx": "attack",
         "sfxAt": 0
       },
       {
@@ -3876,9 +4003,11 @@
         "src": "milestone",
         "start": 1.3,
         "y": 0.4,
-        "dur": 0.8,
+        "dur": 1,
         "transition": "cut",
+        "sayAt": 0.05,
         "title": "Day <em>1</em> ✓",
+        "say": "Don't just say it.",
         "sfx": "complete",
         "sfxAt": 0.15
       },
@@ -3887,9 +4016,11 @@
         "src": "milestone",
         "start": 2.6,
         "y": 0.4,
-        "dur": 1.2,
+        "dur": 1,
         "transition": "cut",
+        "sayAt": 0.05,
         "title": "Day <em>14</em> 🔥",
+        "say": "Build it.",
         "sfx": "streak-milestone",
         "sfxAt": 0.05
       },
@@ -3898,37 +4029,13 @@
         "src": "levelup",
         "start": 2.5,
         "y": 0.4,
-        "dur": 1.2,
+        "dur": 1,
         "transition": "cut",
+        "sayAt": 0.05,
         "title": "Day 21: <em>LEVEL UP</em>",
+        "say": "Quest by quest.",
         "sfx": "level-up",
         "sfxAt": 0.1
-      },
-      {
-        "type": "boss",
-        "boss": "doomscroll_kraken",
-        "night": true,
-        "hit": true,
-        "dur": 1.6,
-        "transition": "cut",
-        "title": "\"Stand proud.<br>You are <em>strong</em>.\"",
-        "subtitle": "— the Kraken, defeated",
-        "sfx": "defeat",
-        "sfxAt": 0,
-        "fx": [
-          {
-            "type": "bar",
-            "from": 1,
-            "to": 0,
-            "w": 620,
-            "label": "KRAKEN HP",
-            "x": 540,
-            "y": 1580,
-            "at": 0.1,
-            "dur": 0.9,
-            "color": "#e94560"
-          }
-        ]
       },
       {
         "type": "hero",
@@ -3938,6 +4045,9 @@
         "title": "Day <em>30</em>.",
         "sfx": "victory",
         "sfxAt": 0.05,
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "Thirty days later…",
         "looks": [
           {
             "hat": "hat_crown",
@@ -3949,17 +4059,51 @@
         ]
       },
       {
-        "type": "pip",
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
         "dur": 2,
         "transition": "cut",
-        "title": "Your turn.<br>Nah, <em>you'd</em> win.",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "\"Stand proud.<br>You are <em>strong</em>.\"",
+        "subtitle": "— the Kraken, defeated",
+        "say": "This time, the villain loses.",
+        "sfx": "defeat",
+        "sfxAt": 0,
+        "fx": [
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 870,
+        "title": "So… would<br>you <em>lose</em>?",
+        "subtitle": "Comment “Nah, I’d win” 👇",
+        "say": "So… would you lose?",
         "pips": [
-          "joy-fire",
-          "joy-party"
+          "proud-worried",
+          "joy-worried"
         ],
-        "every": 1,
+        "captions": false,
+        "every": 1.2,
         "cta": "@habitquest.app",
-        "ctaBeat": 2
+        "ctaBeat": 4
       }
     ]
   }

@@ -637,6 +637,68 @@
       }
       ctx.restore();
     }
+    drawSay(s, ctx, t);
+  }
+
+  /**
+   * Word-by-word captions of the voice-over (s.words from build-reels.js: { w, t } with t in the
+   * segment): groups of up to 3 words, each word appearing as it is spoken, the spoken one on a
+   * yellow plate. At y = s.sayY (centre of the line).
+   */
+  function drawSay(s, ctx, t) {
+    if (!s.words || !s.words.length || s.captions === false) return;
+    const chunks = [];
+    let cur = [];
+    s.words.forEach((w) => {
+      cur.push(w);
+      if (/[.,?!:;…]$/.test(w.w) || cur.length >= 3 || cur.map((x) => x.w).join(' ').length > 15) { chunks.push(cur); cur = []; }
+    });
+    if (cur.length) chunks.push(cur);
+    let ci = -1;
+    chunks.forEach((c, i) => { if (t >= c[0].t) ci = i; });
+    if (ci < 0) return;
+    const shown = chunks[ci].filter((w) => t >= w.t);
+    const size = s.saySize || 74, y = s.sayY || 1560, gap = 26, padX = 18;
+    ctx.save();
+    ctx.font = `800 ${size}px Inter`;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const widths = shown.map((w) => ctx.measureText(w.w).width);
+    const total = widths.reduce((a, b) => a + b, 0) + gap * (shown.length - 1);
+    let x = 540 - total / 2;
+    shown.forEach((w, i) => {
+      const k = clamp01((t - w.t) / 0.14);
+      const sc = 0.6 + 0.4 * back(k);
+      const cx = x + widths[i] / 2;
+      ctx.save();
+      ctx.translate(cx, y); ctx.scale(sc, sc); ctx.translate(-cx, -y);
+      const active = i === shown.length - 1;
+      if (active) {
+        ctx.fillStyle = '#14142a'; ctx.fillRect(x - padX - 6, y - size * 0.62 - 6, widths[i] + 2 * padX + 12, size * 1.24 + 12);
+        ctx.fillStyle = s.sayColor || '#f5c518'; ctx.fillRect(x - padX, y - size * 0.62, widths[i] + 2 * padX, size * 1.24);
+        ctx.fillStyle = '#14142a'; ctx.fillText(w.w, x, y + 3);
+      } else {
+        ctx.lineJoin = 'round'; ctx.lineWidth = 14; ctx.strokeStyle = '#14142a'; ctx.strokeText(w.w, x, y + 3);
+        ctx.fillStyle = '#ffffff'; ctx.fillText(w.w, x, y + 3);
+      }
+      ctx.restore();
+      x += widths[i] + gap;
+    });
+    ctx.restore();
+  }
+
+  /** Small label at the top left, like a documentary (place · date). */
+  function drawTag(ctx, text, t) {
+    if (!text) return;
+    const k = clamp01(t / 0.25);
+    ctx.save();
+    ctx.globalAlpha = k;
+    ctx.font = `24px ${PF()}`;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(text).width + 36;
+    ctx.fillStyle = 'rgba(8,8,13,.85)'; ctx.fillRect(48, 96, w, 56);
+    ctx.fillStyle = '#f5c518'; ctx.fillRect(48, 96, 8, 56);
+    ctx.fillStyle = '#ffffff'; ctx.fillText(text, 70, 126);
+    ctx.restore();
   }
 
   const fxCanvas = '<canvas class="fx" width="1080" height="1920"></canvas>';
@@ -969,6 +1031,69 @@
           hits.forEach((h) => burst(fx, t - h.at, h.x, h.y, h.seed, 18, 0.7));
         }
         burst(fx, t - 0.06, 540, cy, 42, 46, 1.6);
+        drawFx(s, fx, t, b);
+      };
+    },
+    // Storytelling shot (voice-over reels): an image (MEME_DIR) on a tilted white card over a dark
+    // blurred copy of itself, a slow camera move inside it (cam: [{ u, x, y, z }], u = 0-1 of the
+    // segment, x/y the point in the image at the centre, z the zoom over "cover"), a tag at the top.
+    // `full`: the image fills the screen; `gray`: black and white, darker.
+    story: (s) => {
+      // The <img> is in the page so build-reels.js waits for it to decode before the first frame.
+      root.innerHTML = `<img class="storyimg" src="${s.img}" style="display:none" /><canvas class="stage" width="1080" height="1920"></canvas>
+        <div class="handle" style="color:#7d7aa8">@habitquest.app</div>${fxCanvas}`;
+      const ctx = root.querySelector('.stage').getContext('2d');
+      const fx = root.querySelector('.fx').getContext('2d');
+      const img = root.querySelector('.storyimg');
+      const cam = s.cam || [{ u: 0, x: 0.5, y: 0.5, z: 1 }, { u: 1, x: 0.5, y: 0.5, z: 1.08 }];
+      const at = (u) => {
+        let a = cam[0], b2 = cam[cam.length - 1];
+        for (let i = 0; i < cam.length - 1; i++) if (u >= cam[i].u && u <= cam[i + 1].u) { a = cam[i]; b2 = cam[i + 1]; }
+        const k = b2.u === a.u ? 1 : clamp01((u - a.u) / (b2.u - a.u));
+        const e = k * k * (3 - 2 * k);
+        return { x: a.x + (b2.x - a.x) * e, y: a.y + (b2.y - a.y) * e, z: a.z + (b2.z - a.z) * e };
+      };
+      // Draws the image into the box (bx, by, bw, bh) seen through the camera c.
+      const shot = (c, bx, by, bw, bh) => {
+        const sc = Math.max(bw / img.width, bh / img.height) * c.z;
+        const sw = bw / sc, sh = bh / sc;
+        const sx = Math.min(Math.max(c.x * img.width - sw / 2, 0), img.width - sw);
+        const sy = Math.min(Math.max(c.y * img.height - sh / 2, 0), img.height - sh);
+        ctx.drawImage(img, sx, sy, sw, sh, bx, by, bw, bh);
+      };
+      const tone = s.gray ? 'grayscale(1) brightness(.75) contrast(1.1)' : 'none';
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        const u = clamp01(t / (s.dur || 2));
+        const c = at(u);
+        ctx.clearRect(0, 0, 1080, 1920);
+        ctx.fillStyle = '#08080d'; ctx.fillRect(0, 0, 1080, 1920);
+        if (s.full) {
+          ctx.filter = tone; shot(c, 0, 0, 1080, 1920); ctx.filter = 'none';
+          const g = ctx.createLinearGradient(0, 1250, 0, 1920);
+          g.addColorStop(0, 'rgba(8,8,13,0)'); g.addColorStop(1, 'rgba(8,8,13,.85)');
+          ctx.fillStyle = g; ctx.fillRect(0, 1250, 1080, 670);
+        } else {
+          ctx.filter = `blur(28px) brightness(.32) ${s.gray ? 'grayscale(1)' : ''}`;
+          shot({ x: 0.5, y: 0.5, z: 1.15 }, -60, -60, 1200, 2040);
+          ctx.filter = 'none';
+          const W = s.cardW || 900, H = s.cardH || 1120, cy = s.cardY || 790;
+          // Arrives from below with a little spin (unless the previous shot was the same card).
+          const e = s.entered || s.still ? 1 : clamp01(t / 0.38);
+          const tilt = (s.tilt ?? -2.5) + (1 - back(e)) * 7;
+          const dy = (1 - back(e)) * 520;
+          const breathe = 1 + 0.006 * b.pulse;
+          ctx.save();
+          ctx.translate(540, cy + dy); ctx.rotate(tilt * Math.PI / 180); ctx.scale(breathe, breathe);
+          ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(-W / 2 - 4, -H / 2 + 26, W + 40, H + 40);
+          ctx.fillStyle = '#f4f1ea'; ctx.fillRect(-W / 2 - 18, -H / 2 - 18, W + 36, H + 36);
+          ctx.translate(-540, -cy);
+          ctx.filter = tone; shot(c, 540 - W / 2, cy - H / 2, W, H); ctx.filter = 'none';
+          ctx.restore();
+        }
+        if (s.flash && t < 0.2) { ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - t / 0.2)})`; ctx.fillRect(0, 0, 1080, 1920); }
+        fx.clearRect(0, 0, 1080, 1920);
+        drawTag(fx, s.tag, t);
         drawFx(s, fx, t, b);
       };
     },
