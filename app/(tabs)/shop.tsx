@@ -121,7 +121,7 @@ export default function ShopScreen() {
     borderColor: colors.border,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    gap: spacing.md,
+    gap: spacing.lg,
     alignItems: 'center',
   },
   loadoutLeft: {
