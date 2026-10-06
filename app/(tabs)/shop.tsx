@@ -113,7 +113,6 @@ export default function ShopScreen() {
   // Loadout panel
   monthly: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
   bannerRow: { flexDirection: 'row', alignItems: 'stretch', gap: spacing.sm, paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
-  bannerCol: { flex: 1 },
   loadoutPanel: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
@@ -538,8 +537,8 @@ export default function ShopScreen() {
 
       {seasonItem && monthly.item ? (
         <View style={styles.bannerRow}>
-          <View style={styles.bannerCol}>{renderSeason(true)}</View>
-          <View style={styles.bannerCol}>{renderMonthly(true)}</View>
+          {renderSeason(true)}
+          {renderMonthly(true)}
         </View>
       ) : (
         <>

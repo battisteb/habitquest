@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { PixelAvatar } from '../../avatar/renderer/pixel-avatar';
 import { PixelFrame } from '../../../ui/components/pixel-frame';
 import { PixelButton } from '../../../ui/components/pixel-button';
+import { useTileStyles } from '../../../ui/components/goal-tile';
 import { RUNE_PALETTES } from '../../arc/sprites';
 import { colors, fontSizes, fonts, pixelSize, spacing } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
@@ -20,6 +21,13 @@ const ARC_NAMES: Record<Season, string> = {
   autumn: 'AUTUMN ARC',
 };
 
+const SEASON_ICON: Record<Season, string> = {
+  winter: '❄️',
+  spring: '🌸',
+  summer: '☀️',
+  autumn: '🍂',
+};
+
 interface SeasonItemBannerProps {
   item: ShopItem;
   owned: boolean;
@@ -28,7 +36,7 @@ interface SeasonItemBannerProps {
   look: { hat?: string; outfit?: string; accessory?: string };
   onBuy: () => void;
   onEquip: () => void;
-  /** Side-by-side card (vertical layout) to share a row with the monthly item. */
+  /** Small goal-tile that shares a row with the monthly item (like the Today tiles). */
   compact?: boolean;
 }
 
@@ -38,29 +46,39 @@ export function SeasonItemBanner({ item, owned, equipped, look, onBuy, onEquip, 
   const lang = useLang();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
+  const tileStyles = useTileStyles();
   const season = (item.season ?? 'winter') as Season;
   const color = RUNE_PALETTES[season].s;
   const text = shopItemText(lang, item);
   const preview = { ...look, accessory: item.sprite_key ?? undefined };
+
+  if (compact) {
+    return (
+      <Pressable
+        onPress={owned ? onEquip : onBuy}
+        style={[tileStyles.tile, { borderColor: color }]}
+        accessibilityRole="button"
+        testID="season-item"
+      >
+        <View style={tileStyles.top}>
+          <Text style={styles.tileIcon}>{SEASON_ICON[season]}</Text>
+          <Text style={[tileStyles.label, { color }]} numberOfLines={1}>
+            {T.season_item_badge.replace('{arc}', ARC_NAMES[season])}
+          </Text>
+        </View>
+        <Text style={styles.tileName} numberOfLines={1}>{text.title}</Text>
+        <Text style={tileStyles.value} numberOfLines={1}>
+          {owned ? (equipped ? '✓' : T.monthly_equip) : `${item.price_gold} 💰`}
+        </Text>
+      </Pressable>
+    );
+  }
 
   const action = owned ? (
     <PixelButton title={equipped ? T.monthly_equipped : T.monthly_equip} onPress={onEquip} variant="secondary" disabled={equipped} />
   ) : (
     <PixelButton title={`${item.price_gold} 💰`} onPress={onBuy} testID="season-item-buy" />
   );
-
-  if (compact) {
-    return (
-      <PixelFrame borderColor={color} backgroundColor={colors.surface} contentStyle={styles.col} testID="season-item">
-        <PixelAvatar size={52} idleFrame={0} {...preview} />
-        <Text style={[styles.badge, { color }]} numberOfLines={1}>
-          {T.season_item_badge.replace('{arc}', ARC_NAMES[season])}
-        </Text>
-        <Text style={styles.name} numberOfLines={1}>{text.title}</Text>
-        {action}
-      </PixelFrame>
-    );
-  }
 
   return (
     <PixelFrame borderColor={color} backgroundColor={colors.surface} contentStyle={styles.row} testID="season-item">
@@ -80,11 +98,12 @@ export function SeasonItemBanner({ item, owned, equipped, look, onBuy, onEquip, 
 function createStyles() {
   return StyleSheet.create({
     row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, padding: spacing.sm },
-    col: { alignItems: 'center', gap: 6, padding: spacing.sm },
     avatar: { width: 64, height: 64 },
     info: { flex: 1, gap: 2 },
-    badge: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1, textAlign: 'center' },
-    name: { color: colors.text, fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold, textAlign: 'center' },
+    badge: { fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
+    name: { color: colors.text, fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold },
     sub: { color: colors.textMuted, fontSize: fontSizes.xs },
+    tileIcon: { fontSize: 14 },
+    tileName: { color: colors.text, fontFamily: fonts.bold, fontSize: pixelSize(9) },
   });
 }
