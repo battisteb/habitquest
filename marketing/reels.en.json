@@ -1771,7 +1771,7 @@
       },
       {
         "type": "hero",
-        "dur": 4.0,
+        "dur": 4,
         "title": "Level up<br>all <em>winter</em>",
         "every": 0.74,
         "sfx": "level-up",
@@ -1945,7 +1945,7 @@
       },
       {
         "type": "kinetic",
-        "dur": 2.0,
+        "dur": 2,
         "title": "Consistency<br>beats <em>perfection</em>",
         "sfx": "pop",
         "sfxAt": 1.3,
@@ -2216,7 +2216,7 @@
       },
       {
         "type": "kinetic",
-        "dur": 2.0,
+        "dur": 2,
         "title": "Mood × habits =<br>what <em>really</em> helps you",
         "sfx": "pop",
         "sfxAt": 1.3,
@@ -2256,7 +2256,7 @@
     "segments": [
       {
         "type": "pip",
-        "dur": 2.0,
+        "dur": 2,
         "title": "Too <em>tired</em> today…",
         "pips": [
           "sleepy-rest"
@@ -2512,7 +2512,7 @@
       },
       {
         "type": "hero",
-        "dur": 4.0,
+        "dur": 4,
         "title": "Your hero <em>evolves</em>",
         "every": 0.74,
         "sfx": "level-up",
@@ -2679,7 +2679,7 @@
       },
       {
         "type": "hero",
-        "dur": 4.0,
+        "dur": 4,
         "title": "Dress up your <em>hero</em>",
         "every": 0.74,
         "sfx": "level-up",
@@ -3478,6 +3478,161 @@
             "sfx": "pop"
           }
         ]
+      }
+    ]
+  },
+  "s1-pip-journal": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "title": "Pip's Journal<br><em>Day 7</em>",
+        "pips": [
+          "sad-worried",
+          "sad-calm"
+        ],
+        "every": 1.2,
+        "enter": "drop",
+        "sfx": "tap",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "pip",
+        "dur": 2.8,
+        "title": "He hasn't opened<br>the app in 3 days…",
+        "pips": [
+          "sad-worried",
+          "worried-worried"
+        ],
+        "every": 1.4
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "title": "Today… he<br><em>came back</em>.",
+        "pips": [
+          "worried-love",
+          "happy-love"
+        ],
+        "every": 1.2,
+        "enter": "drop",
+        "sfx": "coin",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "hero",
+        "dur": 2.6,
+        "title": "One quest. Just one.<br>But I am so <em>proud</em>.",
+        "every": 2.6,
+        "looks": [
+          {
+            "lv": 1
+          }
+        ],
+        "sfx": "level-up",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "See you tomorrow,<br>human. 🩷",
+        "pips": [
+          "happy-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app"
+      }
+    ]
+  },
+  "s5-glowup": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 1.6,
+        "title": "<em>Day 1</em>.",
+        "enter": "drop"
+      },
+      {
+        "type": "hero",
+        "dur": 5.4,
+        "title": "Your habits,<br>but make them a<br><em>glow-up</em>.",
+        "every": 1,
+        "sfx": "level-up",
+        "sfxAt": 0.2,
+        "looks": [
+          {
+            "lv": 1
+          },
+          {
+            "hat": "hat_adventurer",
+            "outfit": "outfit_leather",
+            "label": "APPRENTICE",
+            "lv": 5
+          },
+          {
+            "hat": "hat_knight",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_shield",
+            "label": "KNIGHT",
+            "lv": 12
+          },
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.2,
+        "title": "Your glow-up<br>starts today ⚔️",
+        "pips": [
+          "joy-party",
+          "joy-fire"
+        ],
+        "every": 1,
+        "cta": "@habitquest.app"
+      }
+    ]
+  },
+  "s6-pip-cry": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "pip",
+        "dur": 1.2,
+        "title": "Pip believes in you.",
+        "pips": [
+          "happy-love"
+        ],
+        "every": 1.2
+      },
+      {
+        "type": "pip",
+        "dur": 4.6,
+        "title": "Pip when you say<br>'I'll start tomorrow'<br>for the <em>5th time</em> 😭",
+        "pips": [
+          "sad-worried"
+        ],
+        "every": 4.6,
+        "sfx": "tap",
+        "sfxAt": 0.3,
+        "cta": "@habitquest.app"
       }
     ]
   }
