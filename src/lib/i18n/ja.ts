@@ -114,6 +114,7 @@ export const JA: Strings = {
   lang_en: '🇬🇧 English',
   lang_ja: '🇯🇵 日本語',
   lang_ko: '🇰🇷 한국어',
+  lang_zh: '🇹🇼 繁體中文',
   theme_active: '使用中',
   settings_theme_locked_title: 'ロック中のテーマ',
   settings_theme_locked_msg: 'クエストで集めたゴールドで、ショップからこのテーマを解放できます。',

@@ -114,6 +114,7 @@ export const KO: Strings = {
   lang_en: '🇬🇧 English',
   lang_ja: '🇯🇵 日本語',
   lang_ko: '🇰🇷 한국어',
+  lang_zh: '🇹🇼 繁體中文',
   theme_active: '사용 중',
   settings_theme_locked_title: '잠긴 테마',
   settings_theme_locked_msg: '퀘스트를 달성해 모은 골드로 상점에서 이 테마를 잠금 해제해요.',

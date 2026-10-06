@@ -165,12 +165,13 @@ function ThemedApp() {
   );
 }
 
-// The Japanese (2 MB) and Korean (2.6 MB, Galmuri, OFL) pixel fonts are only
-// loaded for players who use that language.
+// The Japanese (2 MB), Korean (2.6 MB, Galmuri, OFL) and Traditional Chinese
+// (7 MB, Fusion Pixel, OFL) pixel fonts are only loaded for players who use that language.
 const PIXEL_FONTS = {
   latin: { Jersey10_400Regular },
   ja: { Jersey10_400Regular, DotGothic16_400Regular },
   ko: { Jersey10_400Regular, Galmuri11Bold: require('../assets/fonts/Galmuri11-Bold.ttf') },
+  zh: { Jersey10_400Regular, FusionPixel12: require('../assets/fonts/FusionPixel12-zhTW.ttf') },
 }[STARTUP_FONT_SCRIPT];
 
 export default function RootLayout() {

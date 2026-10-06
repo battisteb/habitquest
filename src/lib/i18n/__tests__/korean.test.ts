@@ -44,8 +44,8 @@ describe('language detection', () => {
     expect(detectDeviceLang()).toBe('en');
   });
 
-  it('offers the four languages, formats dates the Korean way and has its own pixel font', () => {
-    expect(LANGS).toEqual(['en', 'fr', 'ja', 'ko']);
+  it('offers the five languages, formats dates the Korean way and has its own pixel font', () => {
+    expect(LANGS).toEqual(['en', 'fr', 'ja', 'ko', 'zh']);
     expect(localeTag('ko')).toBe('ko-KR');
     expect(fontScript('ko')).toBe('ko');
     expect(fontScript('fr')).toBe('latin');

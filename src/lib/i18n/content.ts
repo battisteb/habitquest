@@ -332,6 +332,114 @@ const SHOP_KO: Record<string, Text> = {
   'Royal Theme': { title: '로열 테마', description: '왕족을 위한 보라와 금' },
 };
 
+const QUESTS_ZH: Record<string, Text> = {
+  'Easy Does It': { title: '慢慢來', description: '只要完成 1 個習慣就好' },
+  'First Step': { title: '第一步', description: '今天完成 1 個習慣' },
+  'Morning Starter': { title: '好的開始', description: '完成任一習慣，展開你的一天' },
+  'Quick Win': { title: '快速達陣', description: '今天至少完成 1 個習慣' },
+  'All In': { title: '全力以赴', description: '同一天完成 4 個習慣' },
+  'Habit Master': { title: '習慣大師', description: '今天完成 5 個習慣' },
+  'Streak Guardian': { title: '連續紀錄守護者', description: '守住所有習慣的連續紀錄' },
+  'XP Grinder': { title: 'XP 狂刷', description: '今天賺到至少 100 XP' },
+  'Double Down': { title: '加倍', description: '完成 2 個習慣，證明你的動力' },
+  'Fitness Focus': { title: '運動專注', description: '完成一個運動習慣' },
+  'Healthy Mind': { title: '健康身心', description: '完成一個健康習慣' },
+  'Knowledge Seeker': { title: '求知者', description: '完成一個學習習慣' },
+  'Steady Progress': { title: '穩定前進', description: '今天完成 2 個習慣' },
+  'Triple Threat': { title: '三連發', description: '今天完成 3 個習慣' },
+  'XP Hunter': { title: 'XP 獵人', description: '今天賺到至少 30 XP' },
+  'Inner Peace': { title: '內心平靜', description: '完成一個正念習慣' },
+  'Getting Things Done': { title: '高效達成', description: '完成一個生產力習慣' },
+  'Eat Well': { title: '好好吃飯', description: '完成一個飲食習慣' },
+  'Well Rested': { title: '睡得飽', description: '完成一個睡眠習慣' },
+  'Creative Spark': { title: '創意火花', description: '完成一個創作習慣' },
+  'Good Company': { title: '好夥伴', description: '完成一個人際習慣' },
+};
+
+const ACHIEVEMENTS_ZH: Record<string, Text> = {
+  buy_1: { title: '第一位顧客', description: '購買你的第一個道具' },
+  buy_5: { title: '收藏家', description: '擁有 5 個道具' },
+  challenge_1: { title: '挑戰者', description: '完成你的第一個挑戰' },
+  challenge_win_1: { title: '勝者', description: '贏得你的第一個挑戰' },
+  complete_1: { title: '第一步', description: '完成你的第一個習慣' },
+  complete_10: { title: '啟動', description: '累計完成 10 次' },
+  complete_100: { title: '習慣機器', description: '累計完成 100 次' },
+  complete_50: { title: '努力家', description: '累計完成 50 次' },
+  complete_500: { title: '停不下來', description: '累計完成 500 次' },
+  equip_full: { title: '全副武裝', description: '在 4 個欄位都裝備道具' },
+  friend_1: { title: '社交達人', description: '加入你的第一位好友' },
+  friend_5: { title: '團隊領袖', description: '擁有 5 位好友' },
+  level_10: { title: '冠軍之路', description: '達到等級 10' },
+  level_5: { title: '成長中的修行者', description: '達到等級 5' },
+  streak_100: { title: '百人隊長', description: '達成 100 天連續紀錄' },
+  streak_14: { title: '兩週鬥士', description: '達成 14 天連續紀錄' },
+  streak_3: { title: '穩紮穩打', description: '達成 3 天連續紀錄' },
+  streak_30: { title: '一月達人', description: '達成 30 天連續紀錄' },
+  streak_7: { title: '一週戰士', description: '達成 7 天連續紀錄' },
+  xp_100: { title: 'XP 新手', description: '累計賺到 100 XP' },
+  xp_1000: { title: 'XP 老將', description: '累計賺到 1000 XP' },
+  xp_500: { title: 'XP 獵人', description: '累計賺到 500 XP' },
+  xp_5000: { title: 'XP 傳奇', description: '累計賺到 5000 XP' },
+};
+
+const SHOP_ZH: Record<string, Text> = {
+  'Wooden Shield': { title: '木盾', description: '基本的防護' },
+  'Pumpkin Hat': { title: '南瓜帽', description: '本月道具 — 2026 年 10 月。進階會員限定。' },
+  'Autumn Scarf': { title: '秋日圍巾', description: '本月道具 — 2026 年 11 月。進階會員限定。' },
+  'Winter Hat': { title: '冬季毛帽', description: '本月道具 — 2026 年 12 月。進階會員限定。' },
+  'Adventurer Scarf': { title: '冒險者圍巾', description: '冒險中也溫暖' },
+  'Iron Shield': { title: '鐵盾', description: '堅固的盾' },
+  'Steel Sword': { title: '鋼劍', description: '可靠的利刃' },
+  'Magic Amulet': { title: '魔法護身符', description: '閃耀著力量' },
+  'Royal Cape': { title: '王室披風', description: '隨風飄揚的紅色披風' },
+  'Flame Sword': { title: '烈焰之劍', description: '燃燒著怒火' },
+  'Angel Wings': { title: '天使之翼', description: '天上的羽翼' },
+  'Celestial Wings': { title: '天空之翼', description: '光之翼' },
+  'Mystic Aura': { title: '神祕光環', description: '淡淡的魔法光芒' },
+  Forest: { title: '森林', description: '寧靜的森林' },
+  Castle: { title: '城堡', description: '宏偉的城堡' },
+  'Ocean Depths': { title: '深海', description: '深藍的水底' },
+  'Sunset Peaks': { title: '夕照山峰', description: '黃昏中的群山' },
+  Volcano: { title: '火山', description: '熾熱的火山' },
+  'Ice Cavern': { title: '冰洞', description: '冰封的世界' },
+  'Neon City': { title: '霓虹都市', description: '賽博龐克的天際線' },
+  Starfield: { title: '星海', description: '置身群星之中' },
+  'Adventurer Cap': { title: '冒險者帽', description: '新手的第一頂帽子' },
+  'Knight Helmet': { title: '騎士頭盔', description: '堅固的鐵盔' },
+  'Pirate Tricorn': { title: '海盜三角帽', description: '令人聞風喪膽的帽子' },
+  'Wizard Hat': { title: '法師帽', description: '尖尖的，充滿神祕' },
+  'Viking Helm': { title: '維京頭盔', description: '為掠奪者與戰士而生' },
+  'Samurai Kabuto': { title: '武士兜', description: '榮譽與紀律' },
+  'Crown of Champions': { title: '冠軍之冠', description: '只屬於最有資格的人' },
+  'Frost Cape': { title: '霜之披風', description: '僅限 Winter Arc 期間（10 月至 12 月）。' },
+  'Blossom Cape': { title: '繁花披風', description: '僅限 Spring Arc 期間（1 月至 3 月）。' },
+  'Sun Cape': { title: '驕陽披風', description: '僅限 Summer Arc 期間（4 月至 6 月）。' },
+  'Harvest Cape': { title: '豐收披風', description: '僅限 Autumn Arc 期間（7 月至 9 月）。' },
+  'Crown of Seasons': { title: '四季之冠', description: '集齊四季符文的證明。' },
+  'Holy Halo': { title: '神聖光環', description: '一圈光之環' },
+  'Dragon Horns': { title: '龍角', description: '傳說之龍的角' },
+  'Peasant Clothes': { title: '村民服', description: '樸實的起點' },
+  'Leather Armor': { title: '皮甲', description: '輕盈又靈活' },
+  'Forest Ranger': { title: '森林遊俠', description: '與自然為伍' },
+  'Mage Robes': { title: '魔導士長袍', description: '施了魔法的布料' },
+  'Ice Armor': { title: '寒冰甲', description: '施了魔法的冰凍甲冑' },
+  'Crimson Battlegear': { title: '緋紅戰甲', description: '在戰鬥中淬鍊而成' },
+  'Golden Plate': { title: '黃金甲', description: '耀眼的金色鎧甲' },
+  'Royal Vestments': { title: '王者之衣', description: '與國王相襯' },
+  'Shadow Cloak': { title: '暗影斗篷', description: '以陰影織成' },
+  'Dark Dungeon': { title: '黑暗地城', description: '最初的暗色像素藝術主題。' },
+  'Pastel Dawn': { title: '粉彩黎明', description: '薰衣草與粉紅粉彩。' },
+  'Medieval Kingdom': { title: '中世紀王國', description: '石材、黃金與火炬的光。' },
+  'Forest Temple': { title: '森林神殿', description: '古老樹木與沉靜的綠。' },
+  'Lifestyle': { title: '生活風格', description: '清爽、沉靜。' },
+  'Cyberpunk City': { title: '賽博龐克都市', description: '霓虹與夜晚的街道。' },
+  'Ocean Theme': { title: '海洋主題', description: '沉靜的藍' },
+  'Forest Theme': { title: '森林主題', description: '自然的綠' },
+  'Sunset Theme': { title: '夕陽主題', description: '溫暖的橘' },
+  'Neon Theme': { title: '霓虹主題', description: '賽博龐克的光' },
+  'Royal Theme': { title: '皇家主題', description: '為王族而生的紫與金' },
+};
+
 type Maps = Partial<Record<Lang, Record<string, Text>>>;
 
 function pick(maps: Maps, key: string, lang: Lang, fallback: Text): Text {
@@ -339,19 +447,19 @@ function pick(maps: Maps, key: string, lang: Lang, fallback: Text): Text {
 }
 
 export function questText(lang: Lang, template: { title: string; description: string }): Text {
-  return pick({ fr: QUESTS_FR, ja: QUESTS_JA, ko: QUESTS_KO }, template.title, lang, template);
+  return pick({ fr: QUESTS_FR, ja: QUESTS_JA, ko: QUESTS_KO, zh: QUESTS_ZH }, template.title, lang, template);
 }
 
 export function achievementText(
   lang: Lang,
   achievement: { key?: string | null; name: string; description: string },
 ): Text {
-  return pick({ fr: ACHIEVEMENTS_FR, ja: ACHIEVEMENTS_JA, ko: ACHIEVEMENTS_KO }, achievement.key ?? '', lang, {
+  return pick({ fr: ACHIEVEMENTS_FR, ja: ACHIEVEMENTS_JA, ko: ACHIEVEMENTS_KO, zh: ACHIEVEMENTS_ZH }, achievement.key ?? '', lang, {
     title: achievement.name,
     description: achievement.description,
   });
 }
 
 export function shopItemText(lang: Lang, item: { name: string; description?: string | null }): Text {
-  return pick({ fr: SHOP_FR, ja: SHOP_JA, ko: SHOP_KO }, item.name, lang, { title: item.name, description: item.description ?? '' });
+  return pick({ fr: SHOP_FR, ja: SHOP_JA, ko: SHOP_KO, zh: SHOP_ZH }, item.name, lang, { title: item.name, description: item.description ?? '' });
 }

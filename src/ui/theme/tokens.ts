@@ -109,7 +109,7 @@ export const fontSizes = {
  * single weight. Chosen at startup: switching to or from Japanese or Korean
  * restarts the app (setLang).
  */
-const PIXEL_FONT = { latin: 'Jersey10_400Regular', ja: 'DotGothic16_400Regular', ko: 'Galmuri11Bold' }[STARTUP_FONT_SCRIPT];
+const PIXEL_FONT = { latin: 'Jersey10_400Regular', ja: 'DotGothic16_400Regular', ko: 'Galmuri11Bold', zh: 'FusionPixel12' }[STARTUP_FONT_SCRIPT];
 export const fonts = {
   bold: PIXEL_FONT,
   semibold: PIXEL_FONT,
