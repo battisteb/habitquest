@@ -588,13 +588,13 @@ async function roundedMask(page, file) {
       const l = layers(base);
       return `${sfxMix}${voBus}${l.length > 1 ? `${l.join('')}amix=inputs=${l.length}:duration=first:normalize=0[a]` : `${base}anull[a]`}`;
     };
-    const duck = vo.length ? '[m0];[m0][vk]sidechaincompress=threshold=0.02:ratio=10:attack=15:release=450' : '';
+    const duck = vo.length ? '[m0];[m0][vk]sidechaincompress=threshold=0.01:ratio=16:attack=10:release=500' : '';
     const mix = mixOf('[m]');
     if (reel.dynamic) {
       // The track already ends on its final hit: no long fade. Then -14 LUFS, as on TikTok/Reels.
       const mixWav = path.join(work, `${name}-mix.wav`);
       run(['-f', 'concat', '-safe', '0', '-i', list, '-i', musicFile, ...sfxIn,
-        '-filter_complex', `${sfxMix}${voBus}[1:a]volume=1.0,afade=out:st=${(total - 0.3).toFixed(2)}:d=0.3${duck}[m];` +
+        '-filter_complex', `${sfxMix}${voBus}[1:a]volume=${reel.musicVol ?? 1},afade=out:st=${(total - 0.3).toFixed(2)}:d=0.3${duck}[m];` +
           (layers('[m]').length > 1 ? `${layers('[m]').join('')}amix=inputs=${layers('[m]').length}:duration=first:normalize=0[a]` : '[m]anull[a]'),
         '-map', '[a]', '-t', String(total), mixWav]);
       run(['-f', 'concat', '-safe', '0', '-i', list, '-i', mixWav, '-af', loudnorm(mixWav),

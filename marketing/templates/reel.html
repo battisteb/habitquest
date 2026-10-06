@@ -1045,13 +1045,20 @@
       const ctx = root.querySelector('.stage').getContext('2d');
       const fx = root.querySelector('.fx').getContext('2d');
       const img = root.querySelector('.storyimg');
-      const cam = s.cam || [{ u: 0, x: 0.5, y: 0.5, z: 1 }, { u: 1, x: 0.5, y: 0.5, z: 1.08 }];
+      const cam = s.cam || [{ u: 0, x: 0.5, y: 0.5, z: 1 }, { u: 1, x: 0.5, y: 0.5, z: s.fit ? 1 : 1.08 }];
       const at = (u) => {
         let a = cam[0], b2 = cam[cam.length - 1];
         for (let i = 0; i < cam.length - 1; i++) if (u >= cam[i].u && u <= cam[i + 1].u) { a = cam[i]; b2 = cam[i + 1]; }
         const k = b2.u === a.u ? 1 : clamp01((u - a.u) / (b2.u - a.u));
         const e = k * k * (3 - 2 * k);
         return { x: a.x + (b2.x - a.x) * e, y: a.y + (b2.y - a.y) * e, z: a.z + (b2.z - a.z) * e };
+      };
+      const growAt = (u) => {
+        const g = s.grow || [{ u: 0, s: 0.96 }, { u: 1, s: 1 }];
+        let a = g[0], b2 = g[g.length - 1];
+        for (let i = 0; i < g.length - 1; i++) if (u >= g[i].u && u <= g[i + 1].u) { a = g[i]; b2 = g[i + 1]; }
+        const k = b2.u === a.u ? 1 : clamp01((u - a.u) / (b2.u - a.u));
+        return a.s + (b2.s - a.s) * k * k * (3 - 2 * k);
       };
       // Draws the image into the box (bx, by, bw, bh) seen through the camera c.
       const shot = (c, bx, by, bw, bh) => {
@@ -1077,12 +1084,20 @@
           ctx.filter = `blur(28px) brightness(.32) ${s.gray ? 'grayscale(1)' : ''}`;
           shot({ x: 0.5, y: 0.5, z: 1.15 }, -60, -60, 1200, 2040);
           ctx.filter = 'none';
-          const W = s.cardW || 900, H = s.cardH || 1120, cy = s.cardY || 790;
+          // `fit`: the card takes the image's shape (a whole manga panel, never cropped) inside
+          // fitW × fitH; the panel then grows (grow: [{ u, s }]) instead of the camera zooming in.
+          let W = s.cardW || 900, H = s.cardH || 1120;
+          if (s.fit && img.naturalWidth) {
+            const k = Math.min((s.fitW || 920) / img.naturalWidth, (s.fitH || 1180) / img.naturalHeight);
+            W = img.naturalWidth * k; H = img.naturalHeight * k;
+          }
+          const cy = s.cardY || 790;
+          const grow = growAt(u);
           // Arrives from below with a little spin (unless the previous shot was the same card).
           const e = s.entered || s.still ? 1 : clamp01(t / 0.38);
           const tilt = (s.tilt ?? -2.5) + (1 - back(e)) * 7;
           const dy = (1 - back(e)) * 520;
-          const breathe = 1 + 0.006 * b.pulse;
+          const breathe = grow * (1 + 0.006 * b.pulse);
           ctx.save();
           ctx.translate(540, cy + dy); ctx.rotate(tilt * Math.PI / 180); ctx.scale(breathe, breathe);
           ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(-W / 2 - 4, -H / 2 + 26, W + 40, H + 40);
