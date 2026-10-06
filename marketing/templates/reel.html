@@ -859,6 +859,119 @@
         drawFx(s, fx, t, b);
       };
     },
+    // A boss (16×16 sprite from src/features/boss) rising big, breathing on the beat, his line in a
+    // bubble. `night`: dark 2 a.m. background. `hit`: defeated (white flash, shake, blink, red glow).
+    boss: (s) => {
+      root.innerHTML = `${underHTML(false)}<div class="edge"></div>
+        <canvas class="stage" width="1080" height="1920"></canvas>
+        <div class="bubble"><h1>${wordSpans(s.title)}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
+        ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px;opacity:0">${s.cta}</span></div>` : ''}
+        ${fxCanvas}`;
+      if (s.night) {
+        const bg = root.querySelector('.under .bg');
+        if (bg) bg.style.background = 'radial-gradient(ellipse at 50% 58%, #33205c 0%, #120b24 55%, #07050f 100%)';
+        const grid = root.querySelector('.under .grid');
+        if (grid) grid.style.opacity = '0.04';
+        const handle = root.querySelector('.under .handle');
+        if (handle) handle.style.color = '#8f86c9';
+      }
+      const spans = [...root.querySelectorAll('.w')];
+      const bubble = root.querySelector('.bubble');
+      const sub = root.querySelector('.bubble p');
+      const cta = root.querySelector('.tag .cta');
+      const ctx = root.querySelector('.stage').getContext('2d');
+      const fx = root.querySelector('.fx').getContext('2d');
+      const g = s.grid, px = 46, size = g.length * px, cy = 1090;
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        drawUnder(b); drawEdge(b);
+        ctx.clearRect(0, 0, 1080, 1920);
+        fx.clearRect(0, 0, 1080, 1920);
+        const k0 = s.entered ? 1 : t / 0.3;
+        bubble.style.transform = `scale(${(0.3 + 0.7 * back(k0)) * (1 + 0.025 * b.pulse)})`;
+        bubble.style.opacity = String(clamp01(k0 * 3));
+        const { hits, landed } = popWords(spans, t, b.B / 2, 0.12);
+        if (sub) { const k = (t - landed) / 0.3; sub.style.opacity = String(clamp01(k * 2)); }
+        hits.forEach((h) => burst(fx, t - h.at, h.x, h.y, h.seed, 20, 0.8));
+        // Rises from below with an overshoot, then breathes and hops on the beat.
+        const e = s.entered ? 1 : clamp01(t / 0.4);
+        const rise = (1 - back(e)) * 760;
+        const hitK = s.hit ? Math.exp(-t * 4) : 0;
+        const shake = (s.hit ? 30 * hitK + 4 : 5) * Math.sin(t * 47);
+        const breathe = 1 + 0.045 * b.pulse;
+        const hx = 540 - size / 2 + shake, hy = cy - size / 2 + rise - (b.n % 2) * 10;
+        const glow = s.hit ? '233,69,96' : '160,96,232';
+        const rg = ctx.createRadialGradient(540, cy, 40, 540, cy, size * 0.85);
+        rg.addColorStop(0, `rgba(${glow},${0.4 + 0.3 * b.pulse})`); rg.addColorStop(1, `rgba(${glow},0)`);
+        ctx.fillStyle = rg; ctx.fillRect(540 - size, cy - size, size * 2, size * 2);
+        ctx.save();
+        ctx.translate(540, cy); ctx.scale(breathe, breathe); ctx.translate(-540, -cy);
+        ctx.globalAlpha = s.hit && t < 0.7 && Math.floor(t / 0.07) % 2 === 0 ? 0.3 : 1;
+        g.forEach((row, y) => row.forEach((c, x) => { if (c) { ctx.fillStyle = c; ctx.fillRect(hx + x * px, hy + y * px, px + 0.6, px + 0.6); } }));
+        ctx.restore();
+        if (s.hit) {
+          if (t < 0.22) { ctx.fillStyle = `rgba(255,255,255,${0.8 * (1 - t / 0.22)})`; ctx.fillRect(0, 0, 1080, 1920); }
+          burst(fx, t - 0.04, 540, cy, 99, 46, 1.5);
+        }
+        if (cta) {
+          const at = (s.ctaBeat || 4) * b.B;
+          const k = (t - at) / 0.3;
+          cta.style.opacity = k > 0 ? '1' : '0';
+          cta.style.display = 'inline-block';
+          cta.style.transform = `scale(${k > 0 ? (0.2 + 0.8 * back(k)) * (1 + 0.06 * b.pulse) : 0.2})`;
+          if (k > 0) burst(fx, t - at, 540, 1680, 77, 40, 1.2);
+        }
+        drawFx(s, fx, t, b);
+      };
+    },
+    // A meme panel (image from MEME_DIR, see build-reels.js) slammed full screen on the beat: white
+    // flash, punch-in zoom with a decaying shake, manga speed lines, a caption popping above.
+    meme: (s) => {
+      root.innerHTML = `<div class="under"><div class="memebg"></div><canvas class="lines" width="1080" height="1920"></canvas>
+          <div class="handle" style="color:#7d7aa8">@habitquest.app</div></div>
+        <img class="memeimg" src="${s.img}" />
+        ${s.top ? `<div class="memetop"><h2 style="font:inherit;margin:0">${wordSpans(s.top)}</h2></div>` : ''}
+        <div class="memeflash"></div>${fxCanvas}`;
+      const W = s.imgW || 1000, top = s.imgTop || 430;
+      Object.assign(root.querySelector('.memebg').style, { position: 'absolute', inset: '0', background: 'radial-gradient(ellipse at 50% 52%, #24233a 0%, #08080d 70%)' });
+      const img = root.querySelector('.memeimg');
+      Object.assign(img.style, { position: 'absolute', left: `${540 - W / 2}px`, top: `${top}px`, width: `${W}px`, border: '10px solid #fff',
+        boxShadow: '0 0 0 10px #14142a, 0 40px 90px rgba(0,0,0,.7)', transformOrigin: '50% 30%' });
+      const cap = root.querySelector('.memetop');
+      if (cap) Object.assign(cap.style, { position: 'absolute', left: '50px', right: '50px', top: `${s.topY || 140}px`, textAlign: 'center',
+        fontFamily: PF(), fontSize: `${s.topSize || 46}px`, lineHeight: '1.45', color: '#fff', textShadow: '0 6px 0 #000' });
+      const flash = root.querySelector('.memeflash');
+      Object.assign(flash.style, { position: 'absolute', inset: '0', background: '#fff', opacity: '0', pointerEvents: 'none' });
+      const spans = [...root.querySelectorAll('.w')];
+      const lc = root.querySelector('.lines').getContext('2d');
+      const fx = root.querySelector('.fx').getContext('2d');
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        const cx = 540, cy = top + 430;
+        lc.clearRect(0, 0, 1080, 1920);
+        const f = Math.floor(t * 24);
+        for (let i = 0; i < 96; i++) {
+          const a = (i / 96) * Math.PI * 2 + rand(f * 131 + i) * 0.05;
+          const r0 = 420 + rand(f * 7 + i) * 300;
+          lc.strokeStyle = `rgba(255,255,255,${0.08 + 0.2 * rand(f + i * 3) + 0.14 * b.pulse})`;
+          lc.lineWidth = 2 + rand(f * 13 + i) * 7;
+          lc.beginPath(); lc.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0);
+          lc.lineTo(cx + Math.cos(a) * 1600, cy + Math.sin(a) * 1600); lc.stroke();
+        }
+        const k = clamp01(t / 0.16);
+        const sc = (t < 0.16 ? 1.5 - 0.5 * back(k) : 1 + 0.05 * (t - 0.16)) * (1 + 0.012 * b.pulse);
+        const sh = 24 * Math.exp(-t * 9);
+        img.style.transform = `translate(${sh * Math.sin(t * 71)}px, ${sh * Math.cos(t * 53)}px) scale(${sc})`;
+        flash.style.opacity = String(Math.max(0, 0.95 * (1 - t / 0.2)));
+        fx.clearRect(0, 0, 1080, 1920);
+        if (spans.length) {
+          const { hits } = popWords(spans, t, b.B / 3, 0.05);
+          hits.forEach((h) => burst(fx, t - h.at, h.x, h.y, h.seed, 18, 0.7));
+        }
+        burst(fx, t - 0.06, 540, cy, 42, 46, 1.6);
+        drawFx(s, fx, t, b);
+      };
+    },
   };
 
   const JA = location.search.includes('ja');

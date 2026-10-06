@@ -386,6 +386,12 @@ async function roundedMask(page, file) {
         const grid = hero.BOSS_SPRITES[seg.boss].map((row) => [...row].map((c) => (c === '.' || c === ' ' ? null : (pal[c] || null))));
         const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
         await renderAnimated(page, { layout: 'boss', ...seg, grid, smooth: !reel.punchy, entered, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
+      } else if (seg.type === 'meme') {
+        // Meme panels are third-party images: kept out of this public repo, read from MEME_DIR.
+        const file = path.join(process.env.MEME_DIR || path.join(root, 'assets', 'memes'), seg.src);
+        const mime = /\.png$/i.test(file) ? 'image/png' : 'image/jpeg';
+        const img = `data:${mime};base64,${fs.readFileSync(file).toString('base64')}`;
+        await renderAnimated(page, { layout: 'meme', ...seg, img, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
       } else if (seg.type === 'full' && reel.dynamic) {
         // Animated caption, glow and stickers (PNG with alpha) over the recording.
         const frames = await renderAnimated(page, { layout: 'full', ...seg, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc, true);
