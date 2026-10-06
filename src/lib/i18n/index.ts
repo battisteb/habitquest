@@ -350,6 +350,7 @@ const FR = {
   // Social — friends
   social_friends_empty: 'Pas encore d\'amis.\nEnvoie ton lien à tes potes, ou cherche un pseudo.',
   invite_button: '➕ Inviter des amis',
+  invite_reward_hint: '🎁 Quand ton ami commence, vous gagnez 1 semaine de Premium chacun',
   invite_share_message: 'Rejoins-moi sur HabitQuest : on transforme nos habitudes en quêtes et on se défie ⚔️',
   invite_copied: 'Lien copié ! Colle-le à tes potes.',
   invite_friends_title: 'Toi et {name}, vous êtes amis !',
@@ -1532,6 +1533,7 @@ const EN = {
   // Social — friends
   social_friends_empty: 'No friends yet.\nSend your link to friends, or search a username.',
   invite_button: '➕ Invite friends',
+  invite_reward_hint: '🎁 When your friend gets started, you each get 1 week of Premium',
   invite_share_message: 'Join me on HabitQuest: we turn our habits into quests and challenge each other ⚔️',
   invite_copied: 'Link copied! Paste it to your friends.',
   invite_friends_title: 'You and {name} are now friends!',
