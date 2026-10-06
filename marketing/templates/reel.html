@@ -306,6 +306,38 @@
         title.style.transform = `translateY(${(1 - ease(t / 0.25)) * -50}px)`;
       };
     },
+
+    // A boss drawn big and menacing (16×16 grid, from marketing/boss sprites), bobbing and
+    // shaking, his line in a bubble above. Used by the Boss Saga / villain lore reels.
+    boss: (s) => {
+      root.innerHTML = `<div class="bg"></div><div class="grid"></div><div class="glow"></div>
+        <canvas width="1080" height="1920"></canvas>
+        <div class="bubble"><h1>${s.title}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
+        ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px">${s.cta}</span></div>` : ''}
+        <div class="handle">@habitquest.app</div>`;
+      const ctx = root.querySelector('canvas').getContext('2d');
+      const g = s.grid, N = g.length, px = 46, size = N * px;
+      window.frame = (t) => {
+        ctx.clearRect(0, 0, 1080, 1920);
+        root.querySelector('.grid').style.transform = `translate(${(t * 40) % 60}px, ${(t * 60) % 60}px)`;
+        const pop = s.entered ? 1 : ease(Math.min(t / 0.35, 1));
+        const grow = s.entered ? 1 : 0.6 + 0.4 * back(Math.min(t / 0.35, 1));
+        const shake = s.calm ? 0 : Math.sin(t * 9) * 7;
+        const bob = Math.sin(t * 2.2) * 16;
+        const hx = 540 - size / 2 + shake, hy = 1000 - size / 2 + bob;
+        ctx.save();
+        ctx.translate(540, 1000); ctx.scale(grow, grow); ctx.translate(-540, -1000);
+        ctx.globalAlpha = pop;
+        // red menace glow behind the boss
+        const rg = ctx.createRadialGradient(540, 1000, 40, 540, 1000, size * 0.75);
+        rg.addColorStop(0, 'rgba(233,69,96,0.35)'); rg.addColorStop(1, 'rgba(233,69,96,0)');
+        ctx.fillStyle = rg; ctx.fillRect(540 - size, 1000 - size, size * 2, size * 2);
+        g.forEach((row, y) => row.forEach((c, x) => { if (c) { ctx.fillStyle = c; ctx.fillRect(hx + x * px, hy + y * px, px + 0.6, px + 0.6); } }));
+        ctx.restore();
+        const b = root.querySelector('.bubble');
+        b.style.opacity = String(ease(t / 0.25));
+      };
+    },
   };
 
   // ------------------------------------------------------------ dynamic style (default)

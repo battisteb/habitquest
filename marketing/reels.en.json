@@ -3635,5 +3635,153 @@
         "cta": "@habitquest.app"
       }
     ]
+  },
+  "s3-boss-snooze": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "boss",
+        "dur": 2.6,
+        "boss": "snooze_golem",
+        "title": "He steals your<br><em>mornings</em>.",
+        "enter": "drop",
+        "sfx": "defeat",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "boss",
+        "dur": 2.6,
+        "boss": "snooze_golem",
+        "title": "Every time you hit<br>snooze… he <em>grows</em>."
+      },
+      {
+        "type": "hero",
+        "dur": 2.6,
+        "title": "Finish a quest →<br><em>10 damage</em>.",
+        "every": 2.6,
+        "sfx": "attack",
+        "sfxAt": 0.2,
+        "looks": [
+          {
+            "hat": "hat_knight",
+            "outfit": "outfit_crimson",
+            "accessory": "acc_sword",
+            "label": "YOU"
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "dur": 2.8,
+        "boss": "snooze_golem",
+        "title": "3 quests left to<br>defeat him.",
+        "subtitle": "To be continued…",
+        "cta": "@habitquest.app"
+      }
+    ]
+  },
+  "s4-lore-kraken": {
+    "vo": "Nobody knows where the Doomscroll Kraken came from. They say he was once a brilliant student. One night, at 2 a.m., he opened just one more video. He never resurfaced. Now, he waits inside everyone's phone. In HabitQuest, every quest you finish cuts one tentacle.",
+    "voVoice": "en-US-GuyNeural",
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "boss",
+        "dur": 3.2,
+        "boss": "doomscroll_kraken",
+        "title": "Where did he<br>come from?",
+        "enter": "drop"
+      },
+      {
+        "type": "kinetic",
+        "dur": 4,
+        "title": "Once, a <em>brilliant</em><br>student."
+      },
+      {
+        "type": "kinetic",
+        "dur": 4.2,
+        "title": "One night, 2 a.m.…<br>one more video."
+      },
+      {
+        "type": "boss",
+        "dur": 3.6,
+        "boss": "doomscroll_kraken",
+        "title": "He never<br>resurfaced."
+      },
+      {
+        "type": "boss",
+        "dur": 3.2,
+        "boss": "doomscroll_kraken",
+        "title": "Now he waits<br>in your phone."
+      },
+      {
+        "type": "hero",
+        "dur": 3.4,
+        "title": "Every quest cuts<br>one <em>tentacle</em>.",
+        "every": 3.4,
+        "sfx": "attack",
+        "sfxAt": 0.2,
+        "looks": [
+          {
+            "accessory": "acc_sword",
+            "label": "YOU"
+          }
+        ],
+        "cta": "@habitquest.app"
+      }
+    ]
+  },
+  "s7-doc-streaks": {
+    "vo": "Your brain is wired to break streaks. Here's the fix. Missing one day doesn't break a habit. What matters is repeating it over time. The hardest part isn't being perfect. It's the comeback. So the trick is making the comeback easy. That's why HabitQuest freezes your streak, halves the XP on hard days, and never punishes you.",
+    "voVoice": "en-US-GuyNeural",
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "kinetic",
+        "dur": 3.4,
+        "title": "Your brain is wired<br>to <em>break</em> streaks.",
+        "enter": "drop"
+      },
+      {
+        "type": "kinetic",
+        "dur": 4,
+        "title": "Missing one day<br>won’t break a habit."
+      },
+      {
+        "type": "kinetic",
+        "dur": 3.8,
+        "title": "The hard part?<br>The <em>comeback</em>."
+      },
+      {
+        "type": "pip",
+        "dur": 3.4,
+        "title": "Make the comeback<br><em>easy</em>.",
+        "pips": [
+          "proud-love",
+          "happy-love"
+        ],
+        "every": 1.7
+      },
+      {
+        "type": "pip",
+        "dur": 4.2,
+        "title": "Freeze your streak.<br>Half XP on hard days.<br>No punishment.",
+        "pips": [
+          "happy-love",
+          "joy-love"
+        ],
+        "every": 2.1,
+        "cta": "@habitquest.app"
+      }
+    ]
   }
 }

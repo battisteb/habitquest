@@ -66,6 +66,7 @@ function loadHeroModules() {
     'compose-hero': 'src/features/avatar/renderer/compose-hero.ts',
     'hero-scene': 'src/features/avatar/utils/hero-scene.ts',
     'pip-sprites': 'src/features/mascot/sprites.ts',
+    'boss-sprites': 'src/features/boss/sprites.ts',
   };
   for (const [name, file] of Object.entries(files)) {
     const out = ts.transpileModule(fs.readFileSync(path.join(repo, file), 'utf8'), {
@@ -77,6 +78,7 @@ function loadHeroModules() {
     ...require(path.join(dir, 'compose-hero.js')),
     ...require(path.join(dir, 'hero-scene.js')),
     ...require(path.join(dir, 'pip-sprites.js')),
+    ...require(path.join(dir, 'boss-sprites.js')),
   };
 }
 
@@ -379,6 +381,11 @@ async function roundedMask(page, file) {
         // After a flip or pixel transition the hero is already there (no fade from an empty frame).
         const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
         await renderAnimated(page, { layout: 'hero', ...seg, looks, scene, smooth: !reel.punchy, entered, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
+      } else if (seg.type === 'boss') {
+        const pal = hero.BOSS_PALETTES[seg.boss];
+        const grid = hero.BOSS_SPRITES[seg.boss].map((row) => [...row].map((c) => (c === '.' || c === ' ' ? null : (pal[c] || null))));
+        const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
+        await renderAnimated(page, { layout: 'boss', ...seg, grid, smooth: !reel.punchy, entered, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
       } else if (seg.type === 'full' && reel.dynamic) {
         // Animated caption, glow and stickers (PNG with alpha) over the recording.
         const frames = await renderAnimated(page, { layout: 'full', ...seg, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc, true);
