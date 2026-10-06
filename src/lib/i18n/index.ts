@@ -4,20 +4,21 @@ import { getLocales } from 'expo-localization';
 import { storage } from '../storage/mmkv';
 import { JA } from './ja';
 import { KO } from './ko';
+import { ZH } from './zh';
 import { restartApp } from '../restart-app';
 
-export type Lang = 'fr' | 'en' | 'ja' | 'ko';
+export type Lang = 'fr' | 'en' | 'ja' | 'ko' | 'zh';
 
 /** Languages of the app, in the order of the language pickers. */
-export const LANGS: Lang[] = ['en', 'fr', 'ja', 'ko'];
+export const LANGS: Lang[] = ['en', 'fr', 'ja', 'ko', 'zh'];
 
 const STORAGE_KEY = 'app_language';
 
-/** The device language when the app has it (French, Japanese, Korean), English otherwise. */
+/** The device language when the app has it (French, Japanese, Korean, Chinese), English otherwise. */
 export function detectDeviceLang(): Lang {
   try {
     const code = getLocales()[0]?.languageCode;
-    return code === 'fr' || code === 'ja' || code === 'ko' ? code : 'en';
+    return code === 'fr' || code === 'ja' || code === 'ko' || code === 'zh' ? code : 'en';
   } catch {
     return 'en';
   }
@@ -25,22 +26,22 @@ export function detectDeviceLang(): Lang {
 
 /** BCP 47 tag for dates and numbers in the app language. */
 export function localeTag(lang: Lang): string {
-  return lang === 'fr' ? 'fr-FR' : lang === 'ja' ? 'ja-JP' : lang === 'ko' ? 'ko-KR' : 'en-US';
+  return lang === 'fr' ? 'fr-FR' : lang === 'ja' ? 'ja-JP' : lang === 'ko' ? 'ko-KR' : lang === 'zh' ? 'zh-TW' : 'en-US';
 }
 
 function initialLang(): Lang {
   const saved = storage.getString(STORAGE_KEY);
-  return saved === 'fr' || saved === 'en' || saved === 'ja' || saved === 'ko' ? saved : detectDeviceLang();
+  return saved === 'fr' || saved === 'en' || saved === 'ja' || saved === 'ko' || saved === 'zh' ? saved : detectDeviceLang();
 }
 
 export const lang$ = observable<Lang>(initialLang());
 
 lang$.onChange(({ value }) => storage.set(STORAGE_KEY, value));
 
-/** Script of a language's pixel font: Japanese and Korean have their own. */
-export type FontScript = 'latin' | 'ja' | 'ko';
+/** Script of a language's pixel font: Japanese, Korean and Chinese have their own. */
+export type FontScript = 'latin' | 'ja' | 'ko' | 'zh';
 export function fontScript(l: Lang): FontScript {
-  return l === 'ja' || l === 'ko' ? l : 'latin';
+  return l === 'ja' || l === 'ko' || l === 'zh' ? l : 'latin';
 }
 
 /** Pixel font script the app started with (the font is chosen at startup). */
@@ -48,7 +49,7 @@ export const STARTUP_FONT_SCRIPT = fontScript(lang$.peek());
 
 export function setLang(l: Lang): void {
   lang$.set(l);
-  // Japanese and Korean use other pixel fonts, fixed at startup: restart to apply them.
+  // Japanese, Korean and Chinese use other pixel fonts, fixed at startup: restart to apply them.
   if (fontScript(l) !== STARTUP_FONT_SCRIPT) {
     restartApp();
   }
@@ -166,6 +167,7 @@ const FR = {
   lang_en: '🇬🇧 English',
   lang_ja: '🇯🇵 日本語',
   lang_ko: '🇰🇷 한국어',
+  lang_zh: '🇹🇼 繁體中文',
   theme_active: 'ACTIF',
   settings_theme_locked_title: 'Thème verrouillé',
   settings_theme_locked_msg: 'Ce thème se débloque dans la Boutique, avec l’or gagné en validant tes quêtes.',
@@ -1347,6 +1349,7 @@ const EN = {
   lang_en: '🇬🇧 English',
   lang_ja: '🇯🇵 日本語',
   lang_ko: '🇰🇷 한국어',
+  lang_zh: '🇹🇼 繁體中文',
   theme_active: 'ACTIVE',
   settings_theme_locked_title: 'Theme locked',
   settings_theme_locked_msg: 'Unlock this theme in the Shop with the gold you earn by completing quests.',
@@ -2420,7 +2423,7 @@ const EN = {
 
 export type Strings = Record<keyof typeof FR, string>;
 
-const STRINGS: Record<Lang, Strings> = { fr: FR, en: EN, ja: JA, ko: KO };
+const STRINGS: Record<Lang, Strings> = { fr: FR, en: EN, ja: JA, ko: KO, zh: ZH };
 
 /** Both dictionaries, for tests only. */
 export const STRINGS_FOR_TESTS = STRINGS;
