@@ -143,6 +143,7 @@ export default function SocialScreen() {
   emptyText: { color: colors.textMuted, textAlign: 'center', fontSize: fontSizes.md },
   inviteRow: { paddingHorizontal: spacing.md, paddingTop: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs, alignSelf: 'stretch' },
   inviteFeedback: { color: colors.success, textAlign: 'center', fontSize: fontSizes.sm },
+  inviteRewardHint: { color: colors.textMuted, textAlign: 'center', fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold },
 
   // Leaderboard
   podium: {
@@ -357,6 +358,7 @@ export default function SocialScreen() {
   const renderInviteButton = () => (
     <View style={styles.inviteRow}>
       <PixelButton title={T.invite_button} onPress={handleInvite} variant="secondary" />
+      <Text style={styles.inviteRewardHint}>{T.invite_reward_hint}</Text>
       {inviteFeedback && <Text style={styles.inviteFeedback}>{inviteFeedback}</Text>}
     </View>
   );

@@ -297,6 +297,7 @@ export const ZH: Strings = {
   // Social — friends
   social_friends_empty: '還沒有好友。\n把連結傳給朋友，或用使用者名稱搜尋。',
   invite_button: '➕ 邀請好友',
+  invite_reward_hint: '🎁 你邀請的朋友開始後，你們各得 1 週 Premium',
   invite_share_message: '來 HabitQuest 一起玩：把習慣變成任務，互相較量 ⚔️',
   invite_copied: '連結已複製！貼給你的朋友吧。',
   invite_friends_title: '你和 {name} 成為好友了！',

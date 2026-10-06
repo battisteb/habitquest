@@ -297,6 +297,7 @@ export const JA: Strings = {
   // Social — friends
   social_friends_empty: 'まだフレンドがいません。\nリンクを送るか、ユーザー名で検索しよう。',
   invite_button: '➕ フレンドを招待',
+  invite_reward_hint: '🎁 招待した友だちが始めると、ふたりとも1週間プレミアム',
   invite_share_message: 'HabitQuestで一緒にやろう：習慣をクエストに変えて競い合うんだ ⚔️',
   invite_copied: 'リンクをコピーしました！フレンドに貼り付けて送ろう。',
   invite_friends_title: '{name}さんとフレンドになりました！',

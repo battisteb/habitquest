@@ -297,6 +297,7 @@ export const KO: Strings = {
   // Social — friends
   social_friends_empty: '아직 친구가 없어요.\n친구에게 링크를 보내거나 사용자 이름으로 검색해 보세요.',
   invite_button: '➕ 친구 초대',
+  invite_reward_hint: '🎁 초대한 친구가 시작하면 두 사람 모두 프리미엄 1주일',
   invite_share_message: 'HabitQuest에서 같이 해요! 습관을 퀘스트로 바꾸고 서로 도전해요 ⚔️',
   invite_copied: '링크를 복사했어요! 친구에게 붙여 넣어 보내세요.',
   invite_friends_title: '{name}님과 친구가 됐어요!',
