@@ -23,6 +23,7 @@
     "@expo-google-fonts/jersey-10": "^0.4.1",
     "@legendapp/state": "3.0.0-beta.46",
     "@react-native-community/netinfo": "11.5.2",
+    "@sentry/react-native": "~7.11.0",
     "@supabase/supabase-js": "^2.49.0",
     "babel-preset-expo": "~55.0.8",
     "expo": "~55.0.31",
