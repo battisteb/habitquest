@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { PixelAvatar } from '../../avatar/renderer/pixel-avatar';
 import { PixelFrame } from '../../../ui/components/pixel-frame';
 import { PixelButton } from '../../../ui/components/pixel-button';
-import { useTileStyles } from '../../../ui/components/goal-tile';
 import { colors, fontSizes, fonts, pixelSize, spacing } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useLang, useT } from '../../../lib/i18n';
@@ -30,7 +29,6 @@ export function MonthlyItemBanner({ item, owned, equipped, look, onEquip, onUnlo
   const lang = useLang();
   const { themeKey } = useTheme();
   const styles = useMemo(createStyles, [themeKey]);
-  const tileStyles = useTileStyles();
   const text = shopItemText(lang, item);
   const preview = {
     ...look,
@@ -42,18 +40,18 @@ export function MonthlyItemBanner({ item, owned, equipped, look, onEquip, onUnlo
     return (
       <Pressable
         onPress={owned ? onEquip : onUnlock}
-        style={[tileStyles.tile, { borderColor: colors.accent }]}
+        style={[styles.compactTile, { borderColor: colors.accent }]}
         accessibilityRole="button"
         testID="monthly-item"
       >
-        <View style={tileStyles.top}>
-          <Text style={styles.tileIcon}>🎁</Text>
-          <Text style={[tileStyles.label, { color: colors.accent }]} numberOfLines={1}>{T.monthly_badge}</Text>
+        <PixelAvatar size={48} idleFrame={0} {...preview} />
+        <View style={styles.tileText}>
+          <Text style={[styles.tileLabel, { color: colors.accent }]} numberOfLines={1}>🎁 {T.monthly_badge}</Text>
+          <Text style={styles.tileName} numberOfLines={2}>{text.title}</Text>
+          <Text style={styles.tileValue} numberOfLines={1}>
+            {owned ? (equipped ? '✓' : T.monthly_equip) : '🔒 Premium'}
+          </Text>
         </View>
-        <Text style={styles.tileName} numberOfLines={1}>{text.title}</Text>
-        <Text style={tileStyles.value} numberOfLines={1}>
-          {owned ? (equipped ? '✓' : T.monthly_equip) : '🔒 Premium'}
-        </Text>
       </Pressable>
     );
   }
@@ -87,7 +85,10 @@ function createStyles() {
     badge: { color: colors.accent, fontSize: pixelSize(fontSizes.xs), fontFamily: fonts.bold, letterSpacing: 1 },
     name: { color: colors.text, fontSize: pixelSize(fontSizes.md), fontFamily: fonts.bold },
     sub: { color: colors.textMuted, fontSize: fontSizes.xs },
-    tileIcon: { fontSize: 14 },
-    tileName: { color: colors.text, fontFamily: fonts.bold, fontSize: pixelSize(9) },
+    compactTile: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: spacing.sm, backgroundColor: colors.surface, borderWidth: 2, borderRadius: 0, padding: spacing.xs + 2 },
+    tileText: { flex: 1, minWidth: 0, gap: 2 },
+    tileLabel: { fontFamily: fonts.bold, fontSize: pixelSize(9), letterSpacing: 0.5 },
+    tileName: { color: colors.text, fontFamily: fonts.bold, fontSize: pixelSize(10) },
+    tileValue: { color: colors.text, fontFamily: fonts.bold, fontSize: pixelSize(fontSizes.sm) },
   });
 }
