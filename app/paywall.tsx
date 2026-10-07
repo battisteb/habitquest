@@ -24,6 +24,7 @@ import {
   PRODUCT_MONTHLY,
   PRODUCT_ANNUAL,
   PRODUCT_LIFETIME,
+  findPackage,
 } from '../src/features/monetization/stores/subscription-store';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/tokens';
 import { useTheme } from '../src/ui/theme/theme-context';
@@ -242,15 +243,9 @@ export default function PaywallScreen() {
   }, []);
 
 
-  const monthlyPkg = offering?.availablePackages.find(
-    (p: any) => p.product.identifier === PRODUCT_MONTHLY,
-  );
-  const annualPkg = offering?.availablePackages.find(
-    (p: any) => p.product.identifier === PRODUCT_ANNUAL,
-  );
-  const lifetimePkg = offering?.availablePackages.find(
-    (p: any) => p.product.identifier === PRODUCT_LIFETIME,
-  );
+  const monthlyPkg = findPackage(offering, PRODUCT_MONTHLY);
+  const annualPkg = findPackage(offering, PRODUCT_ANNUAL);
+  const lifetimePkg = findPackage(offering, PRODUCT_LIFETIME);
 
   // Store prices (RevenueCat); dollar fallbacks before they load and on the web.
   const currency = annualPkg?.product.currencyCode ?? monthlyPkg?.product.currencyCode ?? FALLBACK_PRICES.currency;

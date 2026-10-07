@@ -30,6 +30,19 @@ export const PRODUCT_ANNUAL = 'habitquest_premium_annual';
 /** One-time purchase, Premium for life (I10). Same id in the webhook (premium-update.ts). */
 export const PRODUCT_LIFETIME = 'habitquest_premium_lifetime';
 
+/**
+ * Store product id without the Google Play base plan: Play subscriptions come
+ * back from RevenueCat as "habitquest_premium_monthly:monthly".
+ */
+export function baseProductId(identifier: string): string {
+  return identifier.split(':')[0];
+}
+
+/** The offering's package for one of our products, on iOS and Android alike. */
+export function findPackage(offering: PurchasesOffering | null, productId: string): any {
+  return offering?.availablePackages?.find((p: any) => baseProductId(p.product.identifier) === productId);
+}
+
 // ─── State ───────────────────────────────────────────────────────────────────
 interface SubscriptionState {
   isPremium: boolean;
@@ -156,10 +169,10 @@ export async function refreshTrialEligibility(): Promise<void> {
       const ELIGIBLE = Purchases.INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE;
       const eligibility = await Purchases.checkTrialOrIntroductoryPriceEligibility(withTrial);
       subscriptionStore$.trialProducts.set(
-        withTrial.filter((id: string) => eligibility[id]?.status === ELIGIBLE),
+        withTrial.filter((id: string) => eligibility[id]?.status === ELIGIBLE).map(baseProductId),
       );
     } else {
-      subscriptionStore$.trialProducts.set(withTrial);
+      subscriptionStore$.trialProducts.set(withTrial.map(baseProductId));
     }
   } catch {
     subscriptionStore$.trialProducts.set([]);
@@ -177,9 +190,7 @@ export async function purchaseSubscription(productIdentifier: string): Promise<b
     const offering = subscriptionStore$.offering.get();
     if (!offering) throw new Error('No offerings available');
 
-    const pkg = offering.availablePackages.find(
-      (p: any) => p.product.identifier === productIdentifier,
-    );
+    const pkg = findPackage(offering, productIdentifier);
     if (!pkg) throw new Error(`Product ${productIdentifier} not found`);
 
     const { customerInfo } = await Purchases.purchasePackage(pkg);
