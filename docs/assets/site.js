@@ -28,12 +28,12 @@
 // Visitors whose phone is in Chinese (Taiwan is the Instagram account's first audience) land on
 // the Japanese page from the bio link: offer the 繁體中文 page in a bar at the top.
 (function () {
-  var langs = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
+  const langs = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
   if (!/(^|,)zh/.test(langs)) return;
-  var html = document.documentElement.getAttribute('lang') || '';
+  const html = document.documentElement.getAttribute('lang') || '';
   if (html.indexOf('zh') === 0 || !document.querySelector('a.lang[hreflang="zh-Hant"]')) return;
-  var link = document.querySelector('a.lang[hreflang="zh-Hant"]').getAttribute('href');
-  var bar = document.createElement('a');
+  const link = document.querySelector('a.lang[hreflang="zh-Hant"]').getAttribute('href');
+  const bar = document.createElement('a');
   bar.className = 'zh-bar';
   bar.href = link;
   bar.textContent = '🇹🇼 本網站與 App 都有繁體中文版 → 切換';
