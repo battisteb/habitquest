@@ -30,7 +30,7 @@ import { initPurchases } from '../src/features/monetization/stores/subscription-
 import { preloadInterstitial, shouldShowAds } from '../src/features/monetization/utils/ad-service';
 import { requestTrackingConsent } from '../src/features/monetization/utils/tracking-consent';
 import { ResponsiveFrame } from '../src/ui/components/responsive-frame';
-import { syncTimezone } from '../src/features/auth/utils/sync-timezone';
+import { syncTimezone, trackSession } from '../src/features/auth/utils/sync-timezone';
 import { syncLanguage } from '../src/features/auth/utils/sync-language';
 import { achievementText } from '../src/lib/i18n/content';
 import { lang$, STARTUP_FONT_SCRIPT } from '../src/lib/i18n';
@@ -116,6 +116,7 @@ function ThemedApp() {
   useEffect(() => {
     if (authUserId) {
       void syncTimezone();
+      void trackSession();
       registerPushToken();
       initPurchases(authUserId)
         // Only ask for tracking consent when ads can actually be served

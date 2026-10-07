@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { supabase } from '../../../lib/supabase/client';
 
 /** IANA timezone of the device, e.g. "Europe/Paris". */
@@ -21,5 +22,19 @@ export async function syncTimezone(): Promise<void> {
     await supabase.rpc('set_timezone', { p_timezone: timezone });
   } catch {
     // Offline: retried on next launch.
+  }
+}
+
+/**
+ * Records the platform the player opened the app on (web, ios or android) for
+ * the aggregate founder metrics. Private: other players cannot read it.
+ */
+export async function trackSession(): Promise<void> {
+  const platform = Platform.OS;
+  if (platform !== 'web' && platform !== 'ios' && platform !== 'android') return;
+  try {
+    await supabase.rpc('track_session', { p_platform: platform });
+  } catch {
+    // Offline: recorded on next launch.
   }
 }
