@@ -1,7 +1,8 @@
 /**
  * Builds the landing page of the public site (GitHub Pages, docs/):
  * docs/index.html (English), docs/fr/index.html (French), docs/ja/index.html
- * (Japanese) and docs/ko/index.html (Korean), from one template.
+ * (Japanese), docs/ko/index.html (Korean) and docs/zh/index.html (Traditional
+ * Chinese, Taiwan), from one template.
  *
  *   node scripts/site/build-landing.js
  *
@@ -18,15 +19,25 @@ const STORES = {
 const WEB_APP = 'https://habitquest.expo.app';
 // Public Supabase values for the waitlist form (insert-only table, L4).
 const SITE_CONFIG = require('./site-config.json');
+// Two sets of accounts (checked 2026-10-07): the Japanese ones, followed by Japan, Taiwan and Korea,
+// for the Asian pages; the English ones for the English and French pages.
 const SOCIAL = {
-  Instagram: 'https://www.instagram.com/habitquest.app/',
-  TikTok: 'https://www.tiktok.com/@habitquest.application',
-  YouTube: 'https://www.youtube.com/@habitquest.application',
+  asia: {
+    Instagram: 'https://www.instagram.com/habitquest.app/',
+    TikTok: 'https://www.tiktok.com/@habitquest.app',
+    YouTube: 'https://www.youtube.com/@habitquest.application',
+  },
+  en: {
+    Instagram: 'https://www.instagram.com/habitquest.application/',
+    TikTok: 'https://www.tiktok.com/@habitquest.en',
+    YouTube: 'https://www.youtube.com/@habitquest.en.application',
+  },
 };
 
 const T = {
   en: {
     lang: 'en',
+    social: 'en',
     title: 'HabitQuest — Turn your habits into an RPG',
     description: 'A pixel art habit tracker: complete daily quests, keep your streaks, level up your hero and challenge your friends. On iPhone and Android.',
     nav: { features: 'Features', faq: 'FAQ', support: 'Support' },
@@ -64,7 +75,7 @@ const T = {
     faq: [
       ['Is HabitQuest free?', 'Yes. The whole game is free; Premium is an optional subscription that removes ads and adds extras. You can cancel it at any time in your App Store or Google Play settings.'],
       ['Which devices?', 'iPhone and Android phones, and any web browser. Your progress is saved to your account and follows you everywhere.'],
-      ['Which languages?', 'English, French, Japanese and Korean.'],
+      ['Which languages?', 'English, French, Japanese, Korean and Traditional Chinese (Taiwan).'],
       ['What about my data?', 'Your habits are private. We use no analytics SDK and never sell your data. Read the <a href="privacy-policy">Privacy Policy</a>.'],
       ['I need help', 'Write to us from Settings → Support in the app, or see the <a href="support">Support page</a>.'],
     ],
@@ -87,6 +98,7 @@ const T = {
   },
   fr: {
     lang: 'fr',
+    social: 'en',
     title: 'HabitQuest — Transforme tes habitudes en RPG',
     description: 'Un habit tracker en pixel art : valide tes quêtes du jour, garde tes séries, fais évoluer ton héros et défie tes amis. Sur iPhone et Android.',
     nav: { features: 'Fonctionnalités', faq: 'FAQ', support: 'Aide' },
@@ -124,7 +136,7 @@ const T = {
     faq: [
       ['HabitQuest est-il gratuit ?', 'Oui. Tout le jeu est gratuit ; Premium est un abonnement facultatif qui retire les publicités et ajoute des bonus. Tu peux le résilier à tout moment dans les réglages de l\'App Store ou de Google Play.'],
       ['Sur quels appareils ?', 'iPhone, téléphones Android et tout navigateur web. Ta progression est enregistrée sur ton compte et te suit partout.'],
-      ['Dans quelles langues ?', 'Français, anglais, japonais et coréen.'],
+      ['Dans quelles langues ?', 'Français, anglais, japonais, coréen et chinois traditionnel (Taïwan).'],
       ['Et mes données ?', 'Tes habitudes sont privées. Aucun outil d\'analyse, aucune revente de données. Lis la <a href="../privacy-policy.fr">politique de confidentialité</a>.'],
       ['J\'ai besoin d\'aide', 'Écris-nous depuis Réglages → Support dans l\'app, ou consulte la <a href="../support.fr">page d\'aide</a>.'],
     ],
@@ -147,6 +159,7 @@ const T = {
   },
   ja: {
     lang: 'ja',
+    social: 'asia',
     title: 'HabitQuest — 習慣をRPGに',
     description: 'ドット絵の習慣化アプリ：デイリークエストを達成して連続記録をつなぎ、ヒーローを育て、フレンドと競おう。iPhoneとAndroidに対応。',
     nav: { features: '機能', faq: 'よくある質問', support: 'サポート' },
@@ -184,7 +197,7 @@ const T = {
     faq: [
       ['HabitQuestは無料ですか？', 'はい。ゲームはすべて無料で遊べます。プレミアムは広告を消して特典を追加する任意のプランで、App StoreまたはGoogle Playの設定からいつでも解約できます。'],
       ['どの端末で使えますか？', 'iPhone、Androidスマホ、そしてウェブブラウザ。進行状況はアカウントに保存され、どこでも続きから遊べます。'],
-      ['対応言語は？', '日本語、英語、フランス語、韓国語。'],
+      ['対応言語は？', '日本語、英語、フランス語、韓国語、繁体字中国語（台湾）。'],
       ['データは大丈夫？', '習慣は非公開です。分析ツールは使わず、データを販売することもありません。<a href="../privacy-policy.ja">プライバシーポリシー</a>をご覧ください。'],
       ['困ったときは', 'アプリの設定 → サポートからご連絡いただくか、<a href="../support.ja">サポートページ</a>をご覧ください。'],
     ],
@@ -207,6 +220,7 @@ const T = {
   },
   ko: {
     lang: 'ko',
+    social: 'asia',
     title: 'HabitQuest — 습관을 RPG로',
     description: '픽셀 아트 습관 트래커: 매일 퀘스트를 달성하고, 연속 기록을 이어가고, 히어로를 키우고, 친구들과 겨뤄요. iPhone과 Android 지원.',
     nav: { features: '기능', faq: '자주 묻는 질문', support: '고객 지원' },
@@ -244,7 +258,7 @@ const T = {
     faq: [
       ['HabitQuest는 무료인가요?', '네. 게임은 모두 무료로 즐길 수 있어요. 프리미엄은 광고를 없애고 혜택을 더하는 선택 플랜이고, App Store 또는 Google Play 설정에서 언제든 해지할 수 있어요.'],
       ['어떤 기기에서 쓸 수 있나요?', 'iPhone, Android 스마트폰, 그리고 웹 브라우저. 진행 상황은 계정에 저장돼서 어디서든 이어서 할 수 있어요.'],
-      ['지원 언어는?', '한국어, 영어, 프랑스어, 일본어.'],
+      ['지원 언어는?', '한국어, 영어, 프랑스어, 일본어, 중국어 번체(대만).'],
       ['내 데이터는 안전한가요?', '습관은 비공개예요. 분석 도구를 쓰지 않고, 데이터를 판매하지도 않아요. <a href="../privacy-policy.ko">개인정보 처리방침</a>을 확인해 주세요.'],
       ['도움이 필요하면?', '앱의 설정 → 고객 지원으로 연락하거나 <a href="../support.ko">고객 지원 페이지</a>를 확인해 주세요.'],
     ],
@@ -264,6 +278,72 @@ const T = {
     screens: '../assets/screens/ko',
     badges: { ios: '../assets/badges/app-store-en.svg', android: '../assets/badges/google-play-en.png' },
     alts: { ios: 'App Store에서 다운로드', android: 'Google Play에서 다운로드' },
+  },
+  // Traditional Chinese, Taiwan wording (2026-10-07: Taiwan is the Instagram account's first audience).
+  zh: {
+    lang: 'zh',
+    htmlLang: 'zh-Hant-TW',
+    social: 'asia',
+    // Pixel headings: a subset of Fusion Pixel (OFL) with the characters of this page only.
+    head: '<style>@font-face { font-family: "FusionPixelZh"; src: url("../assets/fonts/fusion-pixel-zh.woff2") format("woff2"); font-display: swap; }\n.pixel, .card h3, .step b, .shots figcaption, .waitlist h3, .waitlist button, .store.soon::before { font-family: "Jersey 10", "FusionPixelZh", monospace !important; }</style>',
+    title: 'HabitQuest — 把習慣變成RPG',
+    description: '像素風習慣養成App：完成每日任務、延續連續紀錄、培養你的英雄，還能和好友一較高下。支援 iPhone 與 Android。',
+    nav: { features: '功能', faq: '常見問題', support: '客服' },
+    badge: '習慣養成RPG',
+    h1: '把習慣<br>變成<em>任務</em>',
+    pipSays: '你好，我是皮普！我會隨著你一天的狀態變換顏色喔。',
+    lead: '完成每日任務、延續連續紀錄，賺取 XP 和金幣，培養你的像素英雄。再向好友發起挑戰！',
+    soon: '即將推出',
+    web: '或直接在瀏覽器裡玩',
+    demo: { button: '▶ 立即試玩', note: '免費，直接在瀏覽器裡玩，不用安裝。你的英雄之後也能帶到 App 裡。', nav: '▶ 開玩', title: '等不及了？<em>現在就玩。</em>' },
+    featuresTitle: '讓習慣<em>持續下去</em>的一切',
+    featuresSub: '每個習慣都是一個任務。堅持越多天，英雄就越強。',
+    features: [
+      ['⚔️', '每日任務', '每天、指定星期幾或一週幾次，自由設定。附分類與範本。完成就能獲得 XP 和金幣。'],
+      ['🔥', '溫柔的連續紀錄', '不小心忘記的那天，每週一次的凍結會自動幫你補上。中斷也沒有懲罰：回來的那天 XP 加倍，48 小時內還能修復。'],
+      ['🧙', '會成長的英雄', '從見習生到傳說共 6 個階級。用商店的帽子、服裝、配件和主題，打扮你的 32×32 像素英雄。'],
+      ['🤺', '對戰與挑戰', '和好友的英雄進行回合制對戰。在一對一挑戰中，堅持最久的人獲勝。'],
+      ['🏟️', '競技場', '每天一次，和同聯盟的玩家對戰。每個賽季挑戰攀上 6 個聯盟。'],
+      ['👹', '本週頭目', '每週，壞習慣會變成怪物。每完成一個任務就對它造成傷害，在週日前打倒它吧。'],
+    ],
+    shotsTitle: '看看 App <em>裡面</em>',
+    shots: [['today', '任務'], ['profile', '英雄'], ['arena', '競技場'], ['stats', '成長紀錄']],
+    stepsTitle: '<em>怎麼</em>玩',
+    steps: [
+      ['創造英雄', '一分鐘內選好外觀和第一個任務。'],
+      ['完成任務', '每完成一個習慣就得到 XP 和金幣，連續紀錄也會延續。'],
+      ['升級、玩樂', '解鎖裝備、完成每日目標和成就，打敗你的好友。'],
+    ],
+    premiumTitle: '基本免費。想玩更多就選<em>進階版</em>',
+    freeTitle: '免費',
+    free: ['所有任務、連續紀錄、英雄', '每日目標與 23 個成就', '對戰、挑戰、合作挑戰、競技場', '商店基本商品'],
+    premiumName: '進階版（自由選擇）',
+    premium: ['無廣告', '更多連續紀錄凍結道具', '隨連續紀錄長大的龍夥伴，與每月限定道具', '完整期間的統計', '商店全部商品與限定品', '優先客服（48 小時內）'],
+    faqTitle: '常見問題',
+    faq: [
+      ['HabitQuest 免費嗎？', '是的，整個遊戲都可以免費玩。進階版是自由選擇的方案，可以移除廣告並增加福利，隨時都能在 App Store 或 Google Play 的設定中取消。'],
+      ['可以在哪些裝置上使用？', 'iPhone、Android 手機，以及網頁瀏覽器。進度會存在帳號裡，在哪裡都能接著玩。'],
+      ['支援哪些語言？', '繁體中文、英文、法文、日文和韓文。'],
+      ['我的資料安全嗎？', '你的習慣是私密的。我們不使用分析工具，也絕不販售資料。請參閱<a href="../privacy-policy">隱私權政策</a>（英文）。'],
+      ['遇到問題怎麼辦？', '在 App 的「設定 → 客服」聯絡我們，或查看<a href="../support">客服頁面</a>。'],
+    ],
+    ctaTitle: '冒險從<em>今天</em>開始',
+    waitlist: {
+      title: '上架時通知我',
+      email: '電子郵件',
+      consent: '我同意在 HabitQuest 於 App Store 和 Google Play 上架時，收到一封通知信。不會寄垃圾信，隨時可以取消。',
+      button: '通知我',
+      ok: '登記成功！上架那天會寄信通知你。',
+      error: '沒有成功，請確認電子郵件後再試一次。',
+      privacy: '隱私權政策',
+    },
+    footer: { support: '客服', privacy: '隱私權政策', terms: '使用條款', contact: '聯絡我們', rights: 'HabitQuest. 用 ⚔️ 和像素打造。' },
+    links: { privacy: '../privacy-policy', terms: '../terms', support: '../support' },
+    assets: '../assets',
+    // No Chinese screenshots yet: the English ones.
+    screens: '../assets/screens',
+    badges: { ios: '../assets/badges/app-store-en.svg', android: '../assets/badges/google-play-en.png' },
+    alts: { ios: '在 App Store 下載', android: '在 Google Play 取得' },
   },
 };
 
@@ -310,14 +390,14 @@ function demoButton(t) {
 /** Links to the other languages of the landing page (from the page of `lang`). */
 function otherLangs(lang) {
   const root = lang === 'en' ? '' : '../';
-  const home = { en: root || './', fr: `${root}fr/`, ja: `${root}ja/`, ko: `${root}ko/` };
-  return ['en', 'fr', 'ja', 'ko'].filter((l) => l !== lang).map((l) => [l, home[l]]);
+  const home = { en: root || './', fr: `${root}fr/`, ja: `${root}ja/`, ko: `${root}ko/`, zh: `${root}zh/` };
+  return ['en', 'fr', 'ja', 'ko', 'zh'].filter((l) => l !== lang).map((l) => [l, home[l]]);
 }
 
 function page(t) {
   const a = t.assets;
   return `<!doctype html>
-<html lang="${t.lang}">
+<html lang="${t.htmlLang || t.lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -330,12 +410,12 @@ function page(t) {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#CFE8FF">
 <link rel="icon" href="${a}/icon.png">
-<link rel="alternate" hreflang="en" href="/"><link rel="alternate" hreflang="fr" href="/fr/"><link rel="alternate" hreflang="ja" href="/ja/"><link rel="alternate" hreflang="ko" href="/ko/">
+<link rel="alternate" hreflang="en" href="/"><link rel="alternate" hreflang="fr" href="/fr/"><link rel="alternate" hreflang="ja" href="/ja/"><link rel="alternate" hreflang="ko" href="/ko/"><link rel="alternate" hreflang="zh-Hant" href="/zh/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jersey+10${t.lang === 'ja' ? '&family=DotGothic16' : ''}&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">${t.lang === 'ko' ? '\n<link href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css" rel="stylesheet">' : ''}
 <link rel="stylesheet" href="${a}/site.css">
 <script src="${a}/site.js" defer></script>
-<script src="${a}/waitlist.js" defer></script>
+<script src="${a}/waitlist.js" defer></script>${t.head ? `\n${t.head}` : ''}
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -343,7 +423,7 @@ function page(t) {
   <nav class="nav">
     <a class="nav-play pixel" href="${WEB_APP}">${t.demo.nav}</a>
     <a href="#features">${t.nav.features}</a><a href="#faq">${t.nav.faq}</a><a href="${t.links.support}">${t.nav.support}</a>
-${otherLangs(t.lang).map(([l, href]) => `    <a class="lang" href="${href}" hreflang="${l}">${l.toUpperCase()}</a>`).join('\n')}
+${otherLangs(t.lang).map(([l, href]) => `    <a class="lang" href="${href}" hreflang="${l === 'zh' ? 'zh-Hant' : l}">${l === 'zh' ? '中文' : l.toUpperCase()}</a>`).join('\n')}
   </nav>
 </div></header>
 
@@ -417,7 +497,7 @@ ${t.faq.map(([q, r]) => `  <details><summary>${q}</summary><p>${r}</p></details>
     <a href="${t.links.privacy}">${t.footer.privacy}</a>
     <a href="${t.links.terms}">${t.footer.terms}</a>
     <a href="mailto:habitquest.application@gmail.com">${t.footer.contact}</a>
-${Object.entries(SOCIAL).map(([n, u]) => `    <a href="${u}">${n}</a>`).join('\n')}
+${Object.entries(SOCIAL[t.social]).map(([n, u]) => `    <a href="${u}">${n}</a>`).join('\n')}
   </nav>
   <span>© 2026 ${t.footer.rights}</span>
 </div></footer>
@@ -434,4 +514,6 @@ fs.mkdirSync(path.join(docs, 'ja'), { recursive: true });
 fs.writeFileSync(path.join(docs, 'ja', 'index.html'), page(T.ja));
 fs.mkdirSync(path.join(docs, 'ko'), { recursive: true });
 fs.writeFileSync(path.join(docs, 'ko', 'index.html'), page(T.ko));
-console.log('docs/index.html, docs/fr/index.html, docs/ja/index.html, docs/ko/index.html');
+fs.mkdirSync(path.join(docs, 'zh'), { recursive: true });
+fs.writeFileSync(path.join(docs, 'zh', 'index.html'), page(T.zh));
+console.log('docs/index.html, docs/fr/index.html, docs/ja/index.html, docs/ko/index.html, docs/zh/index.html');
