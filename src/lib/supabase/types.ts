@@ -857,6 +857,7 @@ export type Database = {
     Functions: {
       accept_invite: { Args: { p_code: string }; Returns: Json };
       admin_dashboard: { Args: Record<PropertyKey, never>; Returns: Json };
+      admin_segments: { Args: Record<PropertyKey, never>; Returns: Json };
       cancel_coop_challenge: { Args: { p_id: string }; Returns: undefined };
       check_achievements: { Args: Record<PropertyKey, never>; Returns: Json };
       create_coop_challenge: {
@@ -957,6 +958,7 @@ export type Database = {
       rank_for_level: { Args: { p_level: number }; Returns: string };
       register_push_token: { Args: { p_token: string }; Returns: undefined };
       set_timezone: { Args: { p_timezone: string }; Returns: undefined };
+      track_session: { Args: { p_platform: string }; Returns: undefined };
       settle_challenge_wager: { Args: { p_challenge_id: string }; Returns: number };
       streak_continues: {
         Args: { p_last: string; p_today: string; p_user_id: string };

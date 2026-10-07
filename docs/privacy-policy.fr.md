@@ -21,6 +21,7 @@ HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cett
 | Votre humeur du jour (1 à 5), seulement si vous la notez | Vous montrer, dans vos propres stats, quelles habitudes vont avec une meilleure humeur ; jamais partagée ni montrée à quelqu'un d'autre | Supabase |
 | Amis, duels, défis, notifications in-app | Fonctions sociales | Supabase |
 | Fuseau horaire (ex. Europe/Paris) et langue de l'app | Compter les séries et limites quotidiennes selon votre jour local ; envoyer notifications et e-mails dans votre langue | Supabase |
+| Plateforme utilisée (web, iPhone ou Android) et date de dernière ouverture de l'app | Statistiques d'usage globales (ex. combien de joueurs sont sur Android) ; jamais montrées aux autres joueurs | Supabase |
 | Jeton de notifications push | Envoyer les rappels et notifications du jeu | Supabase |
 | Messages envoyés au Support, avec la version de l'app, la plateforme et la langue | Vous répondre et corriger les problèmes | Supabase |
 | Sur gethabitquest.com, seulement si vous rejoignez la liste d'attente : votre adresse e-mail, la langue du site et votre consentement | Vous envoyer un seul e-mail quand les apps seront disponibles | Supabase |

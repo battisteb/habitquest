@@ -21,6 +21,7 @@ HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy e
 | Your mood of the day (1 to 5), only if you log it | Show you which habits go with a better mood, in your own stats; never shared or shown to anyone else | Supabase |
 | Friends, duels, challenges, in-app notifications | Social features | Supabase |
 | Time zone (e.g. Europe/Paris) and app language | Count streaks and daily limits on your local day; send notifications and e-mails in your language | Supabase |
+| Platform you last used (web, iPhone or Android) and when you last opened the app | Aggregate usage statistics (e.g. how many players use Android); never shown to other players | Supabase |
 | Push notification token | Send reminders and game notifications | Supabase |
 | Messages you send to Support, with the app version, platform and language | Answer you and fix problems | Supabase |
 | On gethabitquest.com, only if you join the waitlist: your email address, the site language and your consent | Send you one e-mail when the apps are available | Supabase |
