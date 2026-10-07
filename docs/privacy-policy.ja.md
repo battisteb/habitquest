@@ -6,7 +6,7 @@ base: privacy-policy
 
 # HabitQuest — プライバシーポリシー
 
-*最終更新日：2026年10月4日*
+*最終更新日：2026年10月7日*
 
 *この日本語版は[英語版](privacy-policy)の翻訳です。内容に相違がある場合は英語版が優先します。*
 
@@ -29,7 +29,7 @@ HabitQuest（以下「本アプリ」）は **Battiste Boungo**（以下「当�
 | 購入履歴とサブスクリプションの状態 | プレミアムの有効化 | RevenueCat、Apple / Google |
 | 広告ID（IDFA / Androidの広告ID）— **トラッキングを許可した場合のみ** | 無料ユーザーへの広告表示 | Google AdMob |
 
-分析ツールやクラッシュレポートのSDKは使っておらず、データを販売することもありません。
+アプリやサイトでエラーが起きたときは、修正のために技術的なレポートをSentryに送ります（エラーの内容とコード上の発生場所、アプリのバージョン、端末またはブラウザの機種、OS）。このレポートには名前、メールアドレス、習慣、メッセージは含まれません（個人データの収集はオフにしています）。分析ツールのSDKは使っておらず、データを販売することもありません。
 
 ## 2. 広告とトラッキング
 
@@ -40,6 +40,7 @@ HabitQuest（以下「本アプリ」）は **Battiste Boungo**（以下「当�
 - **Supabase** — データベース、認証、サーバー機能（[プライバシー](https://supabase.com/privacy)）
 - **RevenueCat** — サブスクリプション管理（[プライバシー](https://www.revenuecat.com/privacy)）
 - **Google AdMob** — 広告（[プライバシー](https://policies.google.com/privacy)）
+- **Sentry** — エラー・クラッシュのレポート、EU内で保存（[プライバシー](https://sentry.io/privacy/)）
 - **Expo** — プッシュ通知の配信とウェブサイトのホスティング（[プライバシー](https://expo.dev/privacy)）
 - **Resend** — パスワード再設定などアカウント関連のメール（[プライバシー](https://resend.com/legal/privacy-policy)）
 - **Apple / Google** — App StoreとGoogle Playでの支払い

@@ -6,7 +6,7 @@ base: privacy-policy
 
 # HabitQuest — Politique de confidentialité
 
-*Dernière mise à jour : 4 octobre 2026*
+*Dernière mise à jour : 7 octobre 2026*
 
 HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cette politique explique quelles données l'app collecte, pourquoi, et quels choix vous avez. Contact : **batto060504@gmail.com**.
 
@@ -27,7 +27,7 @@ HabitQuest (« l'app ») est éditée par **Battiste Boungo** (« nous »). Cett
 | Historique d'achats et statut d'abonnement | Débloquer Premium | RevenueCat, Apple / Google |
 | Identifiant publicitaire (IDFA / identifiant Android) — **uniquement si vous autorisez le suivi** | Afficher des publicités aux utilisateurs gratuits | Google AdMob |
 
-Nous n'utilisons aucun SDK d'analyse ni de rapport de plantage, et nous ne vendons pas vos données.
+Quand l'app ou le site rencontre une erreur, un rapport technique est envoyé à Sentry pour que nous puissions la corriger : l'erreur et l'endroit du code où elle s'est produite, la version de l'app, le modèle d'appareil ou de navigateur et le système d'exploitation. Ces rapports ne contiennent ni nom, ni e-mail, ni habitudes, ni messages (la collecte de données personnelles est désactivée). Nous n'utilisons aucun SDK d'analyse, et nous ne vendons pas vos données.
 
 ## 2. Publicité et suivi
 
@@ -38,6 +38,7 @@ Les utilisateurs gratuits voient des publicités fournies par Google AdMob. Sur 
 - **Supabase** — base de données, authentification et fonctions serveur ([confidentialité](https://supabase.com/privacy))
 - **RevenueCat** — gestion des abonnements ([confidentialité](https://www.revenuecat.com/privacy))
 - **Google AdMob** — publicité ([confidentialité](https://policies.google.com/privacy))
+- **Sentry** — rapports d'erreurs et de plantages, hébergés dans l'Union européenne ([confidentialité](https://sentry.io/privacy/))
 - **Expo** — envoi des notifications push et hébergement du site ([confidentialité](https://expo.dev/privacy))
 - **Resend** — e-mails du compte, comme la réinitialisation du mot de passe ([confidentialité](https://resend.com/legal/privacy-policy))
 - **Apple / Google** — paiements via l'App Store et Google Play

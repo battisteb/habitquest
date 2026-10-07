@@ -6,7 +6,7 @@ base: privacy-policy
 
 # HabitQuest — Privacy Policy
 
-*Last updated: October 4, 2026*
+*Last updated: October 7, 2026*
 
 HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy explains what data the app collects, why, and the choices you have. Contact: **batto060504@gmail.com**.
 
@@ -27,7 +27,7 @@ HabitQuest ("the app") is published by **Battiste Boungo** ("we"). This policy e
 | Purchase history and subscription status | Unlock Premium | RevenueCat, Apple / Google |
 | Advertising identifier (IDFA / Android advertising ID) — **only if you allow tracking** | Show ads to free users | Google AdMob |
 
-We do not use analytics or crash-reporting SDKs, and we do not sell your data.
+When the app or the website hits an error, a technical report is sent to Sentry so we can fix it: the error and where it happened in the code, the app version, the device or browser model and the operating system. These reports contain no name, e-mail, habits or messages (personal data collection is turned off). We do not use analytics SDKs, and we do not sell your data.
 
 ## 2. Advertising and tracking
 
@@ -38,6 +38,7 @@ Free users see ads served by Google AdMob. On iOS, the app asks for permission (
 - **Supabase** — database, authentication and server functions ([privacy](https://supabase.com/privacy))
 - **RevenueCat** — subscription management ([privacy](https://www.revenuecat.com/privacy))
 - **Google AdMob** — advertising ([privacy](https://policies.google.com/privacy))
+- **Sentry** — error and crash reports, stored in the European Union ([privacy](https://sentry.io/privacy/))
 - **Expo** — push notification delivery and website hosting ([privacy](https://expo.dev/privacy))
 - **Resend** — account e-mails such as password reset ([privacy](https://resend.com/legal/privacy-policy))
 - **Apple / Google** — payments through the App Store and Google Play
