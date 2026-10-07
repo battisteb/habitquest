@@ -626,7 +626,7 @@
         ctx.fillStyle = f.color || '#e94560'; ctx.fillRect(-w / 2 + 18, -26, 52, 52);
         ctx.fillStyle = '#fff';
         ctx.beginPath(); ctx.moveTo(-w / 2 + 36, -14); ctx.lineTo(-w / 2 + 58, 0); ctx.lineTo(-w / 2 + 36, 14); ctx.fill();
-        ctx.fillStyle = '#14142A'; ctx.font = '800 34px Inter'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#14142A'; ctx.font = isJa() ? '800 32px "M PLUS Rounded 1c"' : '800 34px Inter'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
         ctx.fillText(f.text, -w / 2 + 88, 2);
         ctx.restore(); continue;
       }
@@ -669,16 +669,17 @@
     let cur = [];
     s.words.forEach((w) => {
       cur.push(w);
-      if (/[.,?!:;…]$/.test(w.w) || cur.length >= 3 || cur.map((x) => x.w).join(' ').length > 15) { chunks.push(cur); cur = []; }
+      const cjk = isJa();
+      if (/[.,?!:;…、。！？]$/.test(w.w) || cur.length >= 3 || cur.map((x) => x.w).join(cjk ? '' : ' ').length > (cjk ? 8 : 15)) { chunks.push(cur); cur = []; }
     });
     if (cur.length) chunks.push(cur);
     let ci = -1;
     chunks.forEach((c, i) => { if (t >= c[0].t) ci = i; });
     if (ci < 0) return;
     const shown = chunks[ci].filter((w) => t >= w.t);
-    const size = s.saySize || 74, y = s.sayY || 1560, gap = 26, padX = 18;
+    const size = s.saySize || (isJa() ? 70 : 74), y = s.sayY || 1560, gap = isJa() ? 8 : 26, padX = isJa() ? 12 : 18;
     ctx.save();
-    ctx.font = `800 ${size}px Inter`;
+    ctx.font = isJa() ? `800 ${size}px "M PLUS Rounded 1c"` : `800 ${size}px Inter`;
     ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     const widths = shown.map((w) => ctx.measureText(w.w).width);
     const total = widths.reduce((a, b) => a + b, 0) + gap * (shown.length - 1);
