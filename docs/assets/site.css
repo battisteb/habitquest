@@ -198,3 +198,7 @@ a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 
 .play:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--px) var(--accent), 3px 3px 0 4px #000; }
 .nav-play { white-space: nowrap; color: #14142a !important; background: var(--accent); padding: 3px 14px 5px; font-size: 22px !important; border: 3px solid #14142a; }
 .nav-play:hover { filter: brightness(1.1); }
+
+/* Bar offering the 繁體中文 page to visitors whose phone is in Chinese (site.js). */
+.zh-bar { display: block; text-align: center; padding: 10px 16px; background: var(--primary); color: #fff !important; font-weight: 700; font-size: 16px; border-bottom: var(--px) solid #000; text-decoration: none; }
+.zh-bar:hover { filter: brightness(1.08); }
