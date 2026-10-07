@@ -6035,24 +6035,21 @@
           "audio": 1,
           "crop": "1180:600:50:0"
         },
-        "full": true,
-        "flash": true,
-        "dur": 2.6,
-        "transition": "cut",
-        "cam": [
+        "lines": true,
+        "fitW": 1060,
+        "grow": [
           {
             "u": 0,
-            "x": 0.66,
-            "y": 0.5,
-            "z": 1
+            "s": 1.02
           },
           {
             "u": 1,
-            "x": 0.66,
-            "y": 0.5,
-            "z": 1.1
+            "s": 1.12
           }
         ],
+        "flash": true,
+        "dur": 2.6,
+        "transition": "cut",
         "fx": [
           {
             "type": "stamp",
