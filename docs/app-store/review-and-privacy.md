@@ -21,7 +21,7 @@ Réponses à donner, d'après l'inventaire des données (`docs/privacy-policy.md
 | Purchases → Purchase History | Oui | Oui | Non | App Functionality |
 | Usage Data → Product Interaction | Oui (collectée par AdMob) | Non | Oui | Third-Party Advertising |
 | Usage Data → Advertising Data | Oui (AdMob) | Non | Oui | Third-Party Advertising |
-| Diagnostics → Crash / Performance Data | Oui (collectée par le SDK AdMob) | Non | Non | Third-Party Advertising |
+| Diagnostics → Crash / Performance Data | Oui (Sentry, sans donnée personnelle ; et le SDK AdMob) | Non | Non | App Functionality (Sentry), Third-Party Advertising (AdMob) |
 
 Pas de collecte : localisation, santé, contacts, données financières, historique de navigation, données sensibles.
 
