@@ -4,7 +4,7 @@ import { localeTag, type Lang } from '../../../lib/i18n';
  * Prices shown before the stores answer (or on the web). The real prices
  * always come from the App Store / Google Play through RevenueCat.
  */
-export const FALLBACK_PRICES = { monthly: 5.99, annual: 39.99, lifetime: 79.99, currency: 'USD' };
+export const FALLBACK_PRICES = { monthly: 3.99, annual: 24.99, lifetime: 49.99, currency: 'USD' };
 
 /** "$5.99" / "5,99 $US" in the player's language, in the store's currency. */
 export function formatPrice(amount: number, currency: string, lang: Lang): string {
