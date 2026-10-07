@@ -4257,7 +4257,7 @@
       {
         "type": "story",
         "video": {
-          "src": "BAWImsYnpyo.mp4",
+          "src": "rock-lee/BAWImsYnpyo.mp4",
           "start": 20.5
         },
         "tag": "ROCK LEE · NARUTO",
@@ -4278,7 +4278,7 @@
       {
         "type": "story",
         "video": {
-          "src": "BAWImsYnpyo.mp4",
+          "src": "rock-lee/BAWImsYnpyo.mp4",
           "start": 26.3
         },
         "tag": "ROCK LEE · NARUTO",
@@ -4300,7 +4300,7 @@
       {
         "type": "story",
         "video": {
-          "src": "BAWImsYnpyo.mp4",
+          "src": "rock-lee/BAWImsYnpyo.mp4",
           "start": 127.5
         },
         "tag": "ROCK LEE · NARUTO",
@@ -4323,7 +4323,7 @@
       {
         "type": "story",
         "video": {
-          "src": "BAWImsYnpyo.mp4",
+          "src": "rock-lee/BAWImsYnpyo.mp4",
           "start": 341
         },
         "tag": "ROCK LEE · NARUTO",
@@ -4345,7 +4345,7 @@
       {
         "type": "story",
         "video": {
-          "src": "b429Zh63yI4.mp4",
+          "src": "rock-lee/b429Zh63yI4.mp4",
           "start": 102,
           "crop": "960:640:160:0"
         },
@@ -4381,7 +4381,7 @@
       {
         "type": "story",
         "video": {
-          "src": "b429Zh63yI4.mp4",
+          "src": "rock-lee/b429Zh63yI4.mp4",
           "start": 106.2,
           "crop": "960:640:160:0",
           "speed": 0.62
@@ -4406,7 +4406,7 @@
       {
         "type": "story",
         "video": {
-          "src": "b429Zh63yI4.mp4",
+          "src": "rock-lee/b429Zh63yI4.mp4",
           "start": 107.95,
           "crop": "960:640:160:0",
           "audio": 1
@@ -4453,7 +4453,7 @@
       {
         "type": "story",
         "video": {
-          "src": "b429Zh63yI4.mp4",
+          "src": "rock-lee/b429Zh63yI4.mp4",
           "start": 120.5,
           "crop": "960:640:160:0",
           "speed": 0.7
@@ -4744,6 +4744,2692 @@
         "title": "Your Day 1<br>starts <em>today</em>.",
         "subtitle": "Comment “Day 1” 👇",
         "say": "Your day one starts *today.*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "m3-saitama": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "epic",
+      "drop": 7,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+8%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/2lOM9P9yu4w.mp4",
+          "start": 28.6
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2.2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "The strongest hero alive has *one* secret.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "最強",
+            "font": "DotGothic16",
+            "x": 850,
+            "y": 300,
+            "rot": 8,
+            "size": 120,
+            "color": "#e94560",
+            "at": 0.6,
+            "life": 1.4
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 83.2
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "No powers. No *talent.*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 85.6
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Just *100* push-ups, 100 sit-ups, 100 squats…"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 118.6
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "and a *10 km* run.",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 122.6
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Every. *Single.* Day.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "× 365",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 70,
+            "color": "#e94560",
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 127,
+          "speed": 0.8
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Even when his body *begged* him to stop."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 109.4
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "For *three* years.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "DAY 1,095",
+            "x": 540,
+            "y": 1260,
+            "rot": -5,
+            "size": 60,
+            "color": "#e94560",
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/2lOM9P9yu4w.mp4",
+          "start": 39,
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2.4,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "ONE PUNCH.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 110,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 148
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Boring habits. *Unreal* results.",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "CONSISTENCY > TALENT",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 44,
+            "color": "#e94560",
+            "at": 1.2
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "junk_goblin",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "\"Skip the run.<br>Have a <em>burger</em>.\"",
+        "subtitle": "— your Junk Goblin",
+        "say": "Now your Junk Goblin says: skip it, have a *burger.*",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "2 for 1 tonight",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#c9853a",
+            "w": 460
+          },
+          {
+            "type": "notif",
+            "text": "Skip leg day?",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#c9853a",
+            "w": 460
+          },
+          {
+            "type": "notif",
+            "text": "Treat yourself",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#c9853a",
+            "w": 460
+          },
+          {
+            "type": "notif",
+            "text": "Start Monday?",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#c9853a",
+            "w": 460
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns your daily hundred into quests.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "junk_goblin",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-24</em> HP!",
+        "subtitle": "every quest = one hit",
+        "say": "Every rep you log *hits* your boss.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "GOBLIN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 2.3,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Keep your <em>streak</em>.",
+        "say": "Keep your streak.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": " DAYS",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "levelup",
+        "start": 1.8,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Level up your <em>hero</em>.",
+        "say": "Level up your hero.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "x": 780,
+            "y": 640,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "x": 780,
+            "y": 640,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "Day <em>30</em>.",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "Thirty days *later…*",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "junk_goblin",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "\"Okay…<br>you're <em>strong</em>.\"",
+        "subtitle": "— the Junk Goblin, defeated",
+        "say": "one punch is *enough.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "GOBLIN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "What's your<br>daily <em>100</em>?",
+        "subtitle": "Comment your daily habit 👇",
+        "say": "So… what's your daily *hundred?*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "m4-jinwoo": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "epic",
+      "drop": 7,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+8%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 11.7,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "He was the *weakest* hunter of all mankind."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 5,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Every dungeon almost *killed* him."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 8.2,
+          "crop": "1180:660:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Then one day, a system gave him a *daily quest.*",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 155.6
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Skip it… and your heart will *stop.*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 18,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "So he did it. Every *single* day."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 15,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "And day after day… he *changed.*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/7MvuIFR1rvg.mp4",
+          "start": 38.6,
+          "crop": "1180:640:50:0",
+          "speed": 0.6
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Until the notifications said…",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 120.9,
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2.4,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "LEVEL UP.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 110,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 235.4,
+          "crop": "1180:660:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "From the weakest… to the *strongest.*",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "E-RANK → S-RANK",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 50,
+            "color": "#e94560",
+            "at": 1.2
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "\"One more<br><em>video</em>…\"",
+        "subtitle": "— your 2 AM doomscroll",
+        "say": "Your phone sends you notifications too. They just never level you *up.*",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "Just one more video…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#e94560"
+          },
+          {
+            "type": "notif",
+            "text": "You might like this",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#e94560"
+          },
+          {
+            "type": "notif",
+            "text": "Autoplay in 3… 2…",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#e94560"
+          },
+          {
+            "type": "notif",
+            "text": "47 new reels",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#e94560",
+            "w": 460
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your own<br><em>daily quests</em>.",
+        "say": "HabitQuest gives you your own daily quests.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-24</em> HP!",
+        "subtitle": "every quest = one hit",
+        "say": "Every quest you clear *hits* your boss.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 2.3,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Keep your <em>streak</em>.",
+        "say": "Keep your streak.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": " DAYS",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "levelup",
+        "start": 1.8,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Level up your <em>hero</em>.",
+        "say": "Level up your hero.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "x": 780,
+            "y": 640,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "x": 780,
+            "y": 640,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "Day <em>30</em>.",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "Thirty days *later…*",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "\"Stand proud.<br>You're <em>S-rank</em>.\"",
+        "subtitle": "— the Kraken, defeated",
+        "say": "your notifications say level *up.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "Your daily quest<br>is <em>waiting</em>.",
+        "subtitle": "Comment “ARISE” 👇",
+        "say": "Your daily quest is *waiting.*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "m5-deku": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "epic",
+      "drop": 7,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+8%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 22.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "This kid was born with *no* powers."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 40.2,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Everyone told him to *give up.*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 42.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Until his hero said: you *can* be a hero."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 52.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "But first… he had to clean an *entire* beach.",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/IOocrVFg74Q.mp4",
+          "start": 48.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*Ten* months. Every *single* day.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "10 MONTHS",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 64,
+            "color": "#e94560",
+            "at": 1.1
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/IOocrVFg74Q.mp4",
+          "start": 63.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Piece by piece. Even when it *hurt.*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/XOo_o-R0kCw.mp4",
+          "start": 8.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Then, on the very last *morning…*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/XOo_o-R0kCw.mp4",
+          "start": 18.9,
+          "audio": 1,
+          "crop": "1180:600:50:0"
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2.6,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.66,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.66,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "HE DID IT.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 96,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/IOocrVFg74Q.mp4",
+          "start": 130,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Small actions. *Every* day.",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "1% A DAY",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 64,
+            "color": "#e94560",
+            "at": 1.1
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "\"Ten months?<br>Just <em>rest</em>.\"",
+        "subtitle": "— your Couch Troll",
+        "say": "Now your Couch Troll says it's way too *much.*",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "Maybe tomorrow…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#7fbf5a",
+            "w": 460
+          },
+          {
+            "type": "notif",
+            "text": "Just one more episode",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#7fbf5a"
+          },
+          {
+            "type": "notif",
+            "text": "You deserve a break",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#7fbf5a"
+          },
+          {
+            "type": "notif",
+            "text": "Start Monday?",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#7fbf5a",
+            "w": 460
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest breaks your beach into daily quests.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-24</em> HP!",
+        "subtitle": "every quest = one hit",
+        "say": "Every piece you move *hits* your boss.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "TROLL HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 2.3,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Keep your <em>streak</em>.",
+        "say": "Keep your streak.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": " DAYS",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "levelup",
+        "start": 1.8,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Level up your <em>hero</em>.",
+        "say": "Level up your hero.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "x": 780,
+            "y": 640,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "x": 780,
+            "y": 640,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "Day <em>30</em>.",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "Thirty days *later…*",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "\"Okay…<br>you're a <em>hero</em>.\"",
+        "subtitle": "— the Couch Troll, defeated",
+        "say": "the beach is *clean.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "TROLL HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "So… what's<br>your <em>beach</em>?",
+        "subtitle": "Comment your big goal 👇",
+        "say": "So… what's your *beach?*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "m6-tanjiro": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "epic",
+      "drop": 7,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+8%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/wWarogrnQ9M.mp4",
+          "start": 17.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "His master gave him *one* task."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/wWarogrnQ9M.mp4",
+          "start": 23.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Cut this *boulder.* With a sword."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/YFcMc0amTUM.mp4",
+          "start": 76,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "So he swung his sword. Every *single* day."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/YFcMc0amTUM.mp4",
+          "start": 80,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "A *thousand* swings. Then five hundred *more.*",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "× 1,000",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 70,
+            "color": "#e94560",
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/YFcMc0amTUM.mp4",
+          "start": 95,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "He failed. Again and *again.*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/wWarogrnQ9M.mp4",
+          "start": 42,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "For a whole *year*, the boulder didn't move."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 16.4
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Then one morning…"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 19.9,
+          "audio": 1
+        },
+        "lines": true,
+        "fitW": 1060,
+        "grow": [
+          {
+            "u": 0,
+            "s": 1.02
+          },
+          {
+            "u": 1,
+            "s": 1.12
+          }
+        ],
+        "flash": true,
+        "dur": 2.4,
+        "transition": "cut",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "SLASH.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 110,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 34.6
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "He cut it in *half.*",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "1 YEAR = 1 CUT",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 54,
+            "color": "#e94560",
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "snooze_golem",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "\"Too hard.<br>Go back to <em>sleep</em>.\"",
+        "subtitle": "— your Snooze Golem",
+        "say": "Your Snooze Golem is the boulder that *won't* move.",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "Snooze (9 min)",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#8a8fa3",
+            "w": 460
+          },
+          {
+            "type": "notif",
+            "text": "Five more minutes",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#8a8fa3"
+          },
+          {
+            "type": "notif",
+            "text": "Alarm off",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#8a8fa3",
+            "w": 460
+          },
+          {
+            "type": "notif",
+            "text": "Start tomorrow?",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#8a8fa3",
+            "w": 460
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns every swing into a daily quest.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "snooze_golem",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-24</em> HP!",
+        "subtitle": "every quest = one hit",
+        "say": "Every swing *hits* your boss.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "GOLEM HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 2.3,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Keep your <em>streak</em>.",
+        "say": "Keep your streak.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": " DAYS",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "levelup",
+        "start": 1.8,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Level up your <em>hero</em>.",
+        "say": "Level up your hero.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "x": 780,
+            "y": 640,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "x": 780,
+            "y": 640,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "Day <em>30</em>.",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "Thirty days *later…*",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "snooze_golem",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "\"Okay…<br>you're <em>awake</em>.\"",
+        "subtitle": "— the Snooze Golem, defeated",
+        "say": "the boulder *splits.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "GOLEM HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "So… what's<br>your <em>boulder</em>?",
+        "subtitle": "Comment your boulder 👇",
+        "say": "So… what's your *boulder?*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "m7-eren": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "epic",
+      "drop": 5,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+8%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 24.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "As a kid, he made *one* promise."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 34,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Then his whole world was *destroyed.*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Someone told him: if you don't fight… you *can't* win."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 13.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "So every night, alone, in front of a *mirror…*",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 17.2,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "he whispered *one* word."
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 10.9,
+          "audio": 1,
+          "crop": "1180:600:50:0"
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2.4,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "戦え",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15,
+            "font": "DotGothic16"
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 88,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "And one day, he lifted the boulder *nobody* could move.",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 91,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Step… by *step.*"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 104,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*Tatakae* means fight. Every day.",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "TATAKAE = FIGHT",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 54,
+            "color": "#e94560",
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "\"Give up.<br>Just <em>scroll</em>.\"",
+        "subtitle": "— your 2 AM doomscroll",
+        "say": "Now every night, your Kraken whispers: give *up.*",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "Just one more video…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#e94560"
+          },
+          {
+            "type": "notif",
+            "text": "You might like this",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#e94560"
+          },
+          {
+            "type": "notif",
+            "text": "Autoplay in 3… 2…",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#e94560"
+          },
+          {
+            "type": "notif",
+            "text": "47 new reels",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#e94560",
+            "w": 460
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns your fight into daily quests.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-24</em> HP!",
+        "subtitle": "every quest = one hit",
+        "say": "Every quest you finish *hits* your boss.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 2.3,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Keep your <em>streak</em>.",
+        "say": "Keep your streak.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": " DAYS",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "levelup",
+        "start": 1.8,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Level up your <em>hero</em>.",
+        "say": "Level up your hero.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "x": 780,
+            "y": 640,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "x": 780,
+            "y": 640,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "Day <em>30</em>.",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "Thirty days *later…*",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "\"Stand proud.<br>You <em>fought</em>.\"",
+        "subtitle": "— the Kraken, defeated",
+        "say": "the Kraken *loses.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "Say it with me:<br><em>Tatakae</em>.",
+        "subtitle": "Comment “Tatakae” 👇",
+        "say": "Say it with me… *Tatakae.*",
         "pips": [
           "proud-worried",
           "joy-worried"
