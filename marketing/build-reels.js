@@ -430,6 +430,25 @@ async function roundedMask(page, file) {
         const grid = hero.BOSS_SPRITES[seg.boss].map((row) => [...row].map((c) => (c === '.' || c === ' ' ? null : (pal[c] || null))));
         const entered = i > 0 && INSERTED.has(transitionInto(reel, i));
         await renderAnimated(page, { layout: 'boss', ...seg, grid, smooth: !reel.punchy, entered, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
+      } else if (seg.type === 'story' && seg.video) {
+        // An anime clip (third-party, kept out of this public repo: CLIP_DIR), played frame by frame
+        // inside the story shot: video: { src, start, crop: 'w:h:x:y', speed, audio: volume }.
+        const v = seg.video;
+        const src = path.join(process.env.CLIP_DIR || path.join(root, 'assets', 'clips'), v.src);
+        const dir = path.join(work, `${name}-${i}-clip`);
+        fs.rmSync(dir, { recursive: true, force: true });
+        fs.mkdirSync(dir, { recursive: true });
+        const vf = [v.crop && `crop=${v.crop}`, `setpts=PTS/${v.speed || 1}`, `fps=${FPS}`, 'scale=1080:-2'].filter(Boolean).join(',');
+        run(['-ss', String(v.start), '-i', src, '-vf', vf, '-t', String(seg.dur + 0.2), '-q:v', '3', path.join(dir, '%04d.jpg')]);
+        const frames = fs.readdirSync(dir).filter((f) => f.endsWith('.jpg')).sort().map((f) => pathToFileURL(path.join(dir, f)).href);
+        if (v.audio) {
+          // The clip's own sound (an impact, a shout) where the voice-over is silent.
+          const wav = path.join(work, `${name}-${i}-clip.wav`);
+          run(['-ss', String(v.start), '-i', src, '-vn', '-af', `atempo=${Math.max(0.5, v.speed || 1)}`, '-t', String(seg.dur), wav]);
+          sfx.push({ file: wav, at: clock, vol: v.audio });
+        }
+        await renderAnimated(page, { layout: 'story', fit: true, fitW: 1000, cardY: 760, ...seg, img: frames[0], frames, ...live, clock, fx: stickers(seg, hero) }, seg.dur, out, enc);
+        fs.rmSync(dir, { recursive: true, force: true });
       } else if (seg.type === 'meme' || seg.type === 'story') {
         // Meme panels are third-party images: kept out of this public repo, read from MEME_DIR.
         const file = path.join(process.env.MEME_DIR || path.join(root, 'assets', 'memes'), seg.src);

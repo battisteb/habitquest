@@ -1116,7 +1116,15 @@
         ctx.drawImage(img, sx, sy, sw, sh, bx, by, bw, bh);
       };
       const tone = s.gray ? 'grayscale(1) brightness(.75) contrast(1.1)' : 'none';
-      window.frame = (t) => {
+      // A clip (s.frames, one image per frame at 30 fps): load the frame of time t, then draw.
+      window.frame = async (t) => {
+        if (s.frames) {
+          const src = s.frames[Math.min(Math.floor(t * 30 + 1e-6), s.frames.length - 1)];
+          if (img.getAttribute('src') !== src) { img.src = src; await img.decode().catch(() => {}); }
+        }
+        draw(t);
+      };
+      const draw = (t) => {
         const b = beatAt(s, t);
         const u = clamp01(t / (s.dur || 2));
         const c = at(u);
