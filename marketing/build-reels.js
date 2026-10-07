@@ -222,7 +222,9 @@ function transitionInto(reel, i) {
 }
 
 // Tempo of each music theme (marketing/audio/chiptune.py, REEL_THEMES).
-const THEME_BPM = { quest: 140, epic: 150, chill: 128 };
+const THEME_BPM = { quest: 140, epic: 150, chill: 128, phonk: 150, rise: 150, sawano: 150 };
+// Styles other than the chiptune themes, written by audio/styles.py (same timeline spec).
+const STYLES = new Set(['phonk', 'rise', 'sawano']);
 
 /**
  * Dynamic style (default; `style: 'smooth'` or `punchy: true` keep the older ones): everything on
@@ -298,6 +300,23 @@ function stickers(seg, hero) {
     const grid = hero.pipSprite(f.expr || 'joy').map((row) => [...row].map((c) => (c === '.' ? null : mood[c])));
     return { ...f, grid };
   });
+}
+
+/**
+ * The music's timeline (seconds): riser and drop on the key moment (music.drop, segment 1 by default),
+ * snare fills on every scene change, key change on music.lift, final hit on the CTA.
+ */
+function musicSpec(reel, starts, total) {
+  const lastI = reel.segments.length - 1;
+  const lastSeg = reel.segments[lastI];
+  return {
+    theme: reel.theme, bpm: reel.bpm, total,
+    drop: starts[reel.music.drop ?? 1],
+    lift: reel.music.lift != null ? starts[reel.music.lift] : null,
+    cta: starts[lastI],
+    hit: starts[lastI] + (lastSeg.cta ? (lastSeg.ctaBeat || 4) * reel.beat : 0),
+    fills: starts.slice(1),
+  };
 }
 
 /** Two-pass loudness normalisation (-14 LUFS, -2 dBTP: room for the AAC encoder): the filter for the second pass. */
@@ -399,6 +418,12 @@ async function roundedMask(page, file) {
     const sfx = [];
     const vo = [];
     const { starts, total } = timeline(reel);
+    if (process.env.MUSIC_SPEC_ONLY) {
+      // Only the music's timeline (to try other tracks on an existing reel, see audio/styles.py).
+      fs.writeFileSync(path.join(work, `${name}-music.json`), JSON.stringify(musicSpec(reel, starts, total)));
+      console.log(`${name}: music spec`);
+      continue;
+    }
     for (const [i, seg] of reel.segments.entries()) {
       const clock = starts[i];
       const out = path.join(work, `${name}-${i}.mp4`);
@@ -579,20 +604,13 @@ async function roundedMask(page, file) {
     if (reel.dynamic) {
       // A track written for this reel: riser and drop on the key moment (music.drop, segment 1 by
       // default), snare fills on every scene change, key change on music.lift, final hit on the CTA.
-      const lastI = reel.segments.length - 1;
-      const lastSeg = reel.segments[lastI];
-      const spec = {
-        theme: reel.theme, bpm: reel.bpm, total,
-        drop: starts[reel.music.drop ?? 1],
-        lift: reel.music.lift != null ? starts[reel.music.lift] : null,
-        cta: starts[lastI],
-        hit: starts[lastI] + (lastSeg.cta ? (lastSeg.ctaBeat || 4) * reel.beat : 0),
-        fills: starts.slice(1),
-      };
+      const spec = musicSpec(reel, starts, total);
       const specFile = path.join(work, `${name}-music.json`);
       fs.writeFileSync(specFile, JSON.stringify(spec));
       musicFile = path.join(work, `${name}-music.wav`);
-      execFileSync(process.env.PYTHON || 'python', [path.join(root, 'audio', 'chiptune.py'), 'reel', specFile, musicFile], { stdio: 'inherit' });
+      execFileSync(process.env.PYTHON || 'python', STYLES.has(reel.theme)
+        ? [path.join(root, 'audio', 'styles.py'), specFile, musicFile]
+        : [path.join(root, 'audio', 'chiptune.py'), 'reel', specFile, musicFile], { stdio: 'inherit' });
     }
     // Music, plus the sound effects of the segments and the voice-over on top.
     const sfxIn = [...sfx, ...vo].flatMap((x) => ['-i', x.file]);
