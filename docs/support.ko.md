@@ -23,4 +23,4 @@ base: support
 
 **프리미엄은 어떻게 해지하나요?** 구독은 Apple 또는 Google이 관리해요. iPhone: 설정 → 내 이름 → 구독. Android: Google Play → 결제 및 정기 결제 → 정기 결제. 앱을 삭제해도 구독은 해지되지 않아요.
 
-**계정은 어떻게 삭제하나요?** 설정 → 계정 삭제. 계정과 모든 데이터가 영구히 삭제돼요([개인정보 처리방침](privacy-policy.ko) 참고).
+**계정은 어떻게 삭제하나요?** 설정 → 계정 삭제. 계정과 모든 데이터가 영구히 삭제돼요([개인정보 처리방침](privacy-policy.ko) 참고). **앱이 없다면**: [habitquest.expo.app](https://habitquest.expo.app)에 로그인 → 설정 → 계정 삭제, 또는 계정 이메일 주소로 [habitquest.application@gmail.com](mailto:habitquest.application@gmail.com)에 제목 "Delete my account"로 메일을 보내 주세요. 30일 이내에 삭제하고 이메일로 알려 드려요.

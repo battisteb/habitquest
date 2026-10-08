@@ -13,8 +13,8 @@ type PurchasesOffering = any;
 // ─── Config ──────────────────────────────────────────────────────────────────
 // RevenueCat API keys (public, safe to commit — server validates receipts)
 // Android: Google Play app of the RevenueCat project (2026-10-07).
-// iOS: test key until the App Store app exists (replace with appl_xxx).
-const RC_API_KEY_IOS = 'test_EcuySjKKaOeChKkSDdLjEXCqAts';
+// iOS: App Store app of the RevenueCat project (2026-10-08).
+const RC_API_KEY_IOS = 'appl_mMXENxnodFSyhwHwWvljtArDzvy';
 const RC_API_KEY_ANDROID = 'goog_wLnMaPxinuoqgyTiUcasJWUlHrH';
 
 function isRcConfigured(): boolean {
