@@ -11,8 +11,8 @@
 - ✅ Prompt App Tracking Transparency avant les pubs personnalisées
 
 ## Comptes et identifiants
-- ⏳ Apple Developer Program actif (99 $/an)
-- ⏳ App créée dans App Store Connect → renseigner `appleId`, `ascAppId`, `appleTeamId` dans `eas.json` (`submit.production.ios`)
+- ✅ Apple Developer Program actif (08/10/2026, compte individuel, Team ID HYGF39C97D)
+- ✅ App créée dans App Store Connect (ASC App ID 6820433050, bundle com.battiste.habitquest enregistré avec Push + In-App Purchase) ; `ascAppId` et `appleTeamId` dans `eas.json`. L'Apple ID n'est pas versionné : `eas submit` le demande, ou variable `EXPO_APPLE_ID`
 - ⏳ App iOS enregistrée dans AdMob → iOS App ID (dans `app.json`, plugin `react-native-google-mobile-ads`) + blocs bannière, interstitiel et interstitiel avec récompense (dans `src/features/monetization/utils/ad-service.ts`)
 - ⏳ RevenueCat : clé API iOS de production (`appl_…`) à la place de la clé `test_…` dans `subscription-store.ts`, produits IAP créés dans App Store Connect
 - ⏳ Offre « à vie » (I10) : dans App Store Connect, créer un achat intégré **non consommable** `habitquest_premium_lifetime` (49,99 $ ; abonnements 3,99 $ / mois et 24,99 $ / an avec essai gratuit de 14 jours sur l'annuel ; prix locaux par pays, validés par Battiste le 07/10/2026). Dans RevenueCat, l'attacher à l'entitlement `premium` et l'ajouter à l'offering par défaut comme package « Lifetime ». Le webhook le traite comme Premium sans date de fin ; la fin d'un ancien abonnement ne l'annule pas
