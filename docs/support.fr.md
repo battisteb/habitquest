@@ -23,4 +23,4 @@ Nous lisons tous les messages et répondons en général sous quelques jours. Le
 
 **Comment résilier Premium ?** Les abonnements sont gérés par Apple ou Google : iPhone → Réglages → ton nom → Abonnements ; Android → Google Play → Paiements et abonnements → Abonnements. Supprimer l'app ne résilie pas l'abonnement.
 
-**Comment supprimer mon compte ?** Réglages → Supprimer mon compte. Ton compte et toutes ses données sont effacés définitivement (voir la [politique de confidentialité](privacy-policy.fr)).
+**Comment supprimer mon compte ?** Réglages → Supprimer mon compte. Ton compte et toutes ses données sont effacés définitivement (voir la [politique de confidentialité](privacy-policy.fr)). **Sans l'app** : connecte-toi sur [habitquest.expo.app](https://habitquest.expo.app) → Réglages → Supprimer mon compte, ou écris à [habitquest.application@gmail.com](mailto:habitquest.application@gmail.com) depuis l'adresse de ton compte avec l'objet « Supprimer mon compte » : on l'efface sous 30 jours et on te le confirme par e-mail.

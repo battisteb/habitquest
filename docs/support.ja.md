@@ -23,4 +23,4 @@ base: support
 
 **プレミアムを解約するには？** サブスクリプションはAppleまたはGoogleが管理しています。iPhone：設定 → ユーザー名 → サブスクリプション。Android：Google Play → お支払いと定期購入 → 定期購入。アプリを削除しても解約にはなりません。
 
-**アカウントを削除するには？** 設定 → アカウントを削除。アカウントとすべてのデータが完全に消去されます（[プライバシーポリシー](privacy-policy.ja)をご覧ください）。
+**アカウントを削除するには？** 設定 → アカウントを削除。アカウントとすべてのデータが完全に消去されます（[プライバシーポリシー](privacy-policy.ja)をご覧ください）。**アプリがない場合**：[habitquest.expo.app](https://habitquest.expo.app) にログイン → 設定 → アカウントを削除。または、アカウントのメールアドレスから件名「Delete my account」で [habitquest.application@gmail.com](mailto:habitquest.application@gmail.com) までご連絡ください。30日以内に削除し、メールでお知らせします。

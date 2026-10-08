@@ -23,4 +23,4 @@ We read every message and usually answer within a few days. **Premium members** 
 
 **How do I cancel Premium?** Subscriptions are managed by Apple or Google: iPhone → Settings → your name → Subscriptions; Android → Google Play → Payments & subscriptions → Subscriptions. Deleting the app does not cancel a subscription.
 
-**How do I delete my account?** Settings → Delete my account. Your account and all its data are permanently erased (see the [Privacy Policy](privacy-policy)).
+**How do I delete my account?** Settings → Delete my account. Your account and all its data are permanently erased (see the [Privacy Policy](privacy-policy)). **Without the app**: sign in at [habitquest.expo.app](https://habitquest.expo.app) → Settings → Delete my account, or e-mail [habitquest.application@gmail.com](mailto:habitquest.application@gmail.com) from your account's address with the subject "Delete my account": we erase it within 30 days and confirm by e-mail.
