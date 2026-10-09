@@ -153,19 +153,19 @@
   }
 
   const layouts = {
-    bg: () => { root.innerHTML = '<div class="bg"></div><div class="handle">@habitquest.app</div>'; },
+    bg: () => { root.innerHTML = `<div class="bg"></div><div class="handle">${HANDLE}</div>`; },
     phone: (s) => { root.innerHTML = `<div class="frame"></div><div class="title"><div>${s.title}</div></div>`; },
     // Phone frame and title as separate layers, for a phone that zooms under a fixed title.
     frame: () => { root.innerHTML = '<div class="frame"></div>'; },
     title: (s) => { root.innerHTML = `<div class="title"><div class="plate">${s.title}</div></div>`; },
-    full: (s) => { root.innerHTML = `<div class="band"></div><div class="caption">${s.title}</div><div class="bottom"></div><div class="handle">@habitquest.app</div>`; },
+    full: (s) => { root.innerHTML = `<div class="band"></div><div class="caption">${s.title}</div><div class="bottom"></div><div class="handle">${HANDLE}</div>`; },
     card: (s) => {
       root.innerHTML = `<div class="bg"></div><div class="card">
           ${s.icon ? '<img src="../assets/icon.png" />' : ''}
           <h1>${s.title}</h1>
           ${s.subtitle ? `<p>${s.subtitle}</p>` : ''}
           ${s.cta ? `<div class="cta">${s.cta}</div>` : ''}
-        </div><div class="handle">@habitquest.app</div>`;
+        </div><div class="handle">${HANDLE}</div>`;
     },
 
     kinetic: (s) => {
@@ -175,7 +175,7 @@
           <h1>${ws.map((w) => (w.br ? '<br>' : `<span class="w"${w.space ? ' style="margin-left:.5em"' : ''}>${w.em ? `<em>${w.w}</em>` : w.w}</span>`)).join('')}</h1>
           ${s.subtitle ? `<p>${s.subtitle}</p>` : ''}
           ${s.cta ? '<div class="cta" style="opacity:0">' + s.cta + '</div>' : ''}
-        </div><div class="handle">@habitquest.app</div>`;
+        </div><div class="handle">${HANDLE}</div>`;
       const spans = [...root.querySelectorAll('.w')];
       const step = s.step || 0.24;
       const last = (spans.length - 1) * step;
@@ -226,7 +226,7 @@
         <div class="bubble"><h1>${s.title}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
         ${keys.map((k, i) => `<img class="pip-img" data-i="${i}" src="../brand/pip/pip-${k}.png" />`).join('')}
         ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px">${s.cta}</span></div>` : ''}
-        <div class="handle">@habitquest.app</div>`;
+        <div class="handle">${HANDLE}</div>`;
       const imgs = [...root.querySelectorAll('.pip-img')];
       const every = s.every || 1;
       const bubble = root.querySelector('.bubble');
@@ -249,7 +249,7 @@
     hero: (s) => {
       root.innerHTML = `<div class="bg"></div><div class="grid"></div><div class="glow"></div>
         <canvas width="1080" height="1920"></canvas>
-        <div class="hero-title">${s.title}</div><div class="tag"><span></span></div><div class="handle">@habitquest.app</div>`;
+        <div class="hero-title">${s.title}</div><div class="tag"><span></span></div><div class="handle">${HANDLE}</div>`;
       const ctx = root.querySelector('canvas').getContext('2d');
       const tag = root.querySelector('.tag span');
       const every = s.every || 0.9;
@@ -316,7 +316,7 @@
         <canvas width="1080" height="1920"></canvas>
         <div class="bubble"><h1>${s.title}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
         ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px">${s.cta}</span></div>` : ''}
-        <div class="handle">@habitquest.app</div>`;
+        <div class="handle">${HANDLE}</div>`;
       const ctx = root.querySelector('canvas').getContext('2d');
       const g = s.grid, N = g.length, px = 46, size = N * px;
       window.frame = (t) => {
@@ -452,7 +452,7 @@
     const path = `M0 0H1080V1920H0Z M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}` +
       `H${x + r}A${r} ${r} 0 0 1 ${x} ${y + h - r}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z`;
     return `<div class="under"${hole ? ` style="clip-path:path(evenodd,'${path}')"` : ''}><div class="bg"></div><div class="grid"></div><div class="glow"></div>
-      <canvas class="stars" width="1080" height="1920"></canvas><div class="handle">@habitquest.app</div></div>`;
+      <canvas class="stars" width="1080" height="1920"></canvas><div class="handle">${HANDLE}</div></div>`;
   }
 
   function drawUnder(b) {
@@ -834,7 +834,7 @@
     },
     full: (s) => {
       root.innerHTML = `<div class="band"></div><div class="caption"><h2 style="font:inherit">${wordSpans(s.title)}</h2></div>
-        <div class="bottom"></div><div class="handle">@habitquest.app</div><div class="edge"></div>${fxCanvas}`;
+        <div class="bottom"></div><div class="handle">${HANDLE}</div><div class="edge"></div>${fxCanvas}`;
       const spans = [...root.querySelectorAll('.w')];
       const h2 = root.querySelector('.caption h2');
       const ctx = root.querySelector('.fx').getContext('2d');
@@ -1038,7 +1038,7 @@
     // flash, punch-in zoom with a decaying shake, manga speed lines, a caption popping above.
     meme: (s) => {
       root.innerHTML = `<div class="under"><div class="memebg"></div><canvas class="lines" width="1080" height="1920"></canvas>
-          <div class="handle" style="color:#7d7aa8">@habitquest.app</div></div>
+          <div class="handle" style="color:#7d7aa8">${HANDLE}</div></div>
         <img class="memeimg" src="${s.img}" />
         ${s.top ? `<div class="memetop"><h2 style="font:inherit;margin:0">${wordSpans(s.top)}</h2></div>` : ''}
         <div class="memeflash"></div>${fxCanvas}`;
@@ -1089,7 +1089,7 @@
     story: (s) => {
       // The <img> is in the page so build-reels.js waits for it to decode before the first frame.
       root.innerHTML = `<img class="storyimg" src="${s.img}" style="display:none" /><canvas class="stage" width="1080" height="1920"></canvas>
-        <div class="handle" style="color:#7d7aa8">@habitquest.app</div>${fxCanvas}`;
+        <div class="handle" style="color:#7d7aa8">${HANDLE}</div>${fxCanvas}`;
       const ctx = root.querySelector('.stage').getContext('2d');
       const fx = root.querySelector('.fx').getContext('2d');
       const img = root.querySelector('.storyimg');
@@ -1210,6 +1210,8 @@
 
   const JA = location.search.includes('ja');
   const SKY = location.search.includes('sky');
+  // The account shown on every scene: the English one (@habitquest.application) or the Japanese one.
+  const HANDLE = SKY ? '@habitquest.application' : '@habitquest.app';
   window.render = (s) => {
     document.body.classList.toggle('ja', JA);
     document.body.classList.toggle('sky', SKY);
