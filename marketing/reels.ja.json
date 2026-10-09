@@ -6365,5 +6365,570 @@
         "sayTail": 0.15
       }
     ]
+  },
+  "j-m8-keikaku": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 2,
+      "lift": 3
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "light/a7eWvOJDw3Q.mp4",
+          "start": 6
+        },
+        "tag": "夜神月 · DEATH NOTE",
+        "dur": 2,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "すべて、*計画通り*。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "計画通り",
+            "x": 540,
+            "y": 1300,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.5,
+            "font": "DotGothic16"
+          }
+        ],
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "light/a7eWvOJDw3Q.mp4",
+          "start": 3
+        },
+        "tag": "夜神月 · DEATH NOTE",
+        "dur": 2,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "6時起き、筋トレ、*勉強*。",
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "light/a7eWvOJDw3Q.mp4",
+          "start": 7.2
+        },
+        "tag": "3日後",
+        "gray": true,
+        "dur": 1.6,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.97
+          },
+          {
+            "u": 1,
+            "s": 1.02
+          }
+        ],
+        "say": "結果：*三日坊主*。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "三日坊主",
+            "x": 540,
+            "y": 1250,
+            "rot": -8,
+            "size": 120,
+            "color": "#e94560",
+            "at": 0.6
+          }
+        ],
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestなら、毎日が*クエスト*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "snooze_golem",
+        "hit": true,
+        "night": false,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "続けるたびに<br><em>一撃</em>。",
+        "subtitle": "スヌーズゴーレム",
+        "say": "続けるたびに、*一撃*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.6,
+            "w": 620,
+            "label": "GOLEM HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの計画は<br><em>何日</em>続く？",
+        "subtitle": "コメントで教えて👇",
+        "say": "*何日*続く？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "j-m9-anzai": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 2,
+      "lift": 3
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "anzai/HhCg6gOxfug.mp4",
+          "start": 11
+        },
+        "tag": "安西先生 · SLAM DUNK",
+        "dur": 2.2,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*諦めたら*そこで試合終了ですよ。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "試合終了",
+            "x": 540,
+            "y": 1250,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 1.2,
+            "font": "DotGothic16"
+          }
+        ],
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "anzai/HhCg6gOxfug.mp4",
+          "start": 0.3
+        },
+        "tag": "連続記録",
+        "gray": true,
+        "dur": 1.8,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.97
+          },
+          {
+            "u": 1,
+            "s": 1.02
+          }
+        ],
+        "say": "連続記録が、*途切れた*日。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "0日",
+            "x": 540,
+            "y": 1250,
+            "rot": -8,
+            "size": 140,
+            "color": "#e94560",
+            "at": 0.7
+          }
+        ],
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "anzai/HhCg6gOxfug.mp4",
+          "start": 8
+        },
+        "tag": "安西先生 · SLAM DUNK",
+        "dur": 1.8,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "でも、*また始めればいい*。",
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestで、毎日を*クエスト*に。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "hit": true,
+        "night": false,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "今日から<br><em>再開</em>。",
+        "subtitle": "カウチトロール",
+        "say": "今日のクエストで、*再スタート*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.6,
+            "w": 620,
+            "label": "TROLL HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみは<br><em>諦めない</em>？",
+        "subtitle": "コメントで「諦めない」👇",
+        "say": "きみは、*諦めない*？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "j-m10-kenshiro": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 1,
+      "lift": 3
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "kenshiro/9efbPwAJzBU.mp4",
+          "start": 10.5
+        },
+        "tag": "ケンシロウ · 北斗の拳",
+        "dur": 2.2,
+        "sayAt": 0.15,
+        "say": "お前はもう、*死んでいる*。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "お前はもう死んでいる",
+            "x": 540,
+            "y": 1250,
+            "rot": -8,
+            "size": 78,
+            "color": "#e94560",
+            "at": 1.1
+          }
+        ],
+        "sayTail": 0.15,
+        "transition": "cut",
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.06
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1640,
+        "title": "相手は<br><em>夜中のスマホ</em>。",
+        "subtitle": "ドゥームスクロール・クラーケン",
+        "say": "相手は、夜中の*ドゥームスクロール*。",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "あと1本だけ…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.45
+          },
+          {
+            "type": "notif",
+            "text": "おすすめの動画",
+            "x": 700,
+            "y": 980,
+            "from": "right",
+            "rot": 2,
+            "at": 0.95
+          },
+          {
+            "type": "notif",
+            "text": "新着リール 47件",
+            "w": 440,
+            "x": 390,
+            "y": 1240,
+            "from": "left",
+            "rot": -2,
+            "at": 1.45
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>ひでぶ！</em>",
+        "subtitle": "クエスト達成 = 秘孔を突く",
+        "say": "毎日のクエストで、*秘孔*を突け。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "習慣を、*クエスト*に。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの<br><em>ボス</em>はなに？",
+        "subtitle": "コメントで教えて👇",
+        "say": "きみの*ボス*は、なに？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
   }
 }

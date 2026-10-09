@@ -8401,5 +8401,479 @@
         "sayTail": 0.15
       }
     ]
+  },
+  "m8-pikachu": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 1,
+      "lift": 2
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "src": "pika-q.png",
+        "fit": true,
+        "dur": 2,
+        "sayAt": 0.15,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.9
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "Me: skips my habits for *three weeks.*",
+        "captions": false,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "fitW": 1060
+      },
+      {
+        "type": "meme",
+        "src": "pika.png",
+        "dur": 2,
+        "imgW": 960,
+        "imgTop": 300,
+        "sayAt": 0.1,
+        "say": "Also me: why am I not getting *better?*",
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "hit": true,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "Every habit<br>is a <em>hit</em>.",
+        "subtitle": "skip it, the boss wins",
+        "say": "In HabitQuest, every habit *hits* the boss.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "TROLL HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "levelup",
+        "start": 1.8,
+        "dur": 1.8,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Level up your <em>hero</em>.",
+        "say": "Show up daily, your hero *levels up.*",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "x": 780,
+            "y": 640,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "x": 780,
+            "y": 640,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "Don’t be<br>this <em>Pikachu</em>.",
+        "subtitle": "Tag a friend who needs this 👇",
+        "say": "Don’t be *this* Pikachu.",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "m9-always-has-been": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 1,
+      "lift": 2
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "src": "ahb-q.png",
+        "fit": true,
+        "fitW": 1060,
+        "dur": 2,
+        "sayAt": 0.15,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.96
+          },
+          {
+            "u": 1,
+            "s": 1.02
+          }
+        ],
+        "say": "Wait… my life is just an *RPG?*",
+        "captions": false,
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "meme",
+        "src": "ahb-a.png",
+        "dur": 1.8,
+        "imgW": 1040,
+        "imgTop": 560,
+        "sayAt": 0.1,
+        "say": "Always has been.",
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "Your habits are *daily quests.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "snooze_golem",
+        "hit": true,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "Bad habits<br>are <em>bosses</em>.",
+        "subtitle": "every quest = one hit",
+        "say": "Your bad habits are *bosses.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.6,
+            "w": 620,
+            "label": "GOLEM HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "levelup",
+        "start": 1.8,
+        "dur": 1.8,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Level up your <em>hero</em>.",
+        "say": "And *you* level up.",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "x": 780,
+            "y": 640,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "x": 780,
+            "y": 640,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "Your life.<br>Your <em>RPG</em>.",
+        "subtitle": "Comment “always has been” 👇",
+        "say": "Press *start.*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "m10-galaxy-brain": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 3,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "src": "brain1.png",
+        "fit": true,
+        "fitH": 1100,
+        "dur": 1.4,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.94
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "Writing a *to-do list.*",
+        "captions": false,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "fitW": 1060
+      },
+      {
+        "type": "story",
+        "src": "brain2.png",
+        "fit": true,
+        "fitH": 1100,
+        "dur": 1.4,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.97
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "Downloading a *habit tracker.*",
+        "captions": false,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "fitW": 1060
+      },
+      {
+        "type": "story",
+        "src": "brain3.png",
+        "fit": true,
+        "fitH": 1100,
+        "dur": 1.4,
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.97
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "*Actually* doing your habits.",
+        "captions": false,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "fitW": 1060
+      },
+      {
+        "type": "meme",
+        "src": "brain4.png",
+        "dur": 2,
+        "imgW": 900,
+        "imgTop": 200,
+        "sayAt": 0.1,
+        "say": "Turning your habits into an *RPG.*",
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "Bosses. Loot.<br><em>Level ups.</em>",
+        "subtitle": "every quest = one hit",
+        "say": "Bosses, loot, *level ups.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-24",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "That’s *HabitQuest.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "sayTail": 0.15,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "Which brain<br>are <em>you</em>?",
+        "subtitle": "Comment 1, 2, 3 or 4 👇",
+        "say": "Which brain are *you?*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4
+      }
+    ]
   }
 }
