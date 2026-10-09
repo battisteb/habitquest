@@ -485,7 +485,7 @@
             "y": 1700,
             "from": 0.125,
             "to": 1,
-            "dur": 1.0,
+            "dur": 1,
             "label": "1/8 → 8/8"
           }
         ],
@@ -1466,6 +1466,3776 @@
             "n": 8
           }
         ]
+      }
+    ]
+  },
+  "j-s1-pip-journal": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "title": "ピップの日記<br><em>7日目</em>",
+        "pips": [
+          "sad-worried",
+          "sad-calm"
+        ],
+        "every": 1.2,
+        "enter": "drop",
+        "sfx": "tap",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "pip",
+        "dur": 2.8,
+        "title": "3日間、アプリを<br>開いてくれない…",
+        "pips": [
+          "sad-worried",
+          "worried-worried"
+        ],
+        "every": 1.4
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "title": "今日…<em>帰ってきた</em>。",
+        "pips": [
+          "worried-love",
+          "happy-love"
+        ],
+        "every": 1.2,
+        "enter": "drop",
+        "sfx": "coin",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "hero",
+        "dur": 2.6,
+        "title": "クエストを1つだけ。<br>でも、すごく<em>誇らしい</em>。",
+        "every": 2.6,
+        "looks": [
+          {
+            "lv": 1
+          }
+        ],
+        "sfx": "level-up",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "pip",
+        "dur": 2.6,
+        "title": "また明日、<br>人間さん。🩷",
+        "pips": [
+          "happy-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app"
+      }
+    ]
+  },
+  "j-s2-pip-day": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "pip",
+        "dur": 2,
+        "title": "朝7時",
+        "subtitle": "zzz…",
+        "pips": [
+          "sleepy-rest",
+          "sleepy-calm"
+        ],
+        "every": 1,
+        "enter": "drop"
+      },
+      {
+        "type": "pip",
+        "dur": 2,
+        "title": "8時 — 起きた！",
+        "pips": [
+          "happy-calm",
+          "joy-calm"
+        ],
+        "every": 0.9
+      },
+      {
+        "type": "pip",
+        "dur": 2.2,
+        "title": "13時 — <em>勉強</em>完了！",
+        "pips": [
+          "proud-love",
+          "joy-party"
+        ],
+        "every": 0.8,
+        "sfx": "coin",
+        "sfxAt": 0.2
+      },
+      {
+        "type": "pip",
+        "dur": 2.2,
+        "title": "23:58 — <em>連続記録が</em>！",
+        "pips": [
+          "worried-worried",
+          "sad-worried"
+        ],
+        "every": 0.5
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "title": "セーフ！🔥",
+        "pips": [
+          "joy-fire",
+          "happy-party"
+        ],
+        "every": 0.6,
+        "sfx": "level-up",
+        "sfxAt": 0.1
+      },
+      {
+        "type": "pip",
+        "dur": 2.2,
+        "title": "おやすみ。🌙",
+        "pips": [
+          "sleepy-love",
+          "sleepy-rest"
+        ],
+        "every": 1,
+        "cta": "@habitquest.app"
+      }
+    ]
+  },
+  "j-s6-pip-cry": {
+    "music": {
+      "file": "marketing/audio/theme-chill.m4a",
+      "start": 0
+    },
+    "segments": [
+      {
+        "type": "pip",
+        "dur": 1.2,
+        "title": "ピップはきみを信じてる。",
+        "pips": [
+          "happy-love"
+        ],
+        "every": 1.2
+      },
+      {
+        "type": "pip",
+        "dur": 4.6,
+        "title": "「明日から本気出す」<br>5回目を聞いた<br>ピップ 😭",
+        "pips": [
+          "sad-worried"
+        ],
+        "every": 4.6,
+        "sfx": "tap",
+        "sfxAt": 0.3,
+        "cta": "@habitquest.app"
+      }
+    ]
+  },
+  "j-m1-katsusa": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 3,
+      "lift": 10
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+16%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "src": "gojo-q-ja.png",
+        "fit": true,
+        "tag": "五条悟 · 呪術廻戦",
+        "dur": 2,
+        "sayAt": 0.3,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.86
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "かつて、*最強*の呪術師に、ひとつの質問が投げられた。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "最強",
+            "font": "DotGothic16",
+            "x": 850,
+            "y": 300,
+            "rot": 8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.5,
+            "life": 1.2
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "src": "box-q-ja.png",
+        "fit": true,
+        "fitW": 900,
+        "tag": "五条悟 · 呪術廻戦",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayTail": 0.5,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.92
+          },
+          {
+            "u": 1,
+            "s": 1.06
+          }
+        ],
+        "say": "「……*勝てる？*」",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "src": "face-q.png",
+        "fit": true,
+        "tag": "五条悟 · 呪術廻戦",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.92
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "彼は、ただ*笑って*、こう言った。",
+        "lines": true
+      },
+      {
+        "type": "meme",
+        "src": "gojo-nah-ja.png",
+        "dur": 2.4,
+        "transition": "cut",
+        "imgW": 900,
+        "imgTop": 190
+      },
+      {
+        "type": "story",
+        "src": "gojo-nah-ja.png",
+        "fit": true,
+        "tag": "ネタバレ注意",
+        "gray": true,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.97
+          },
+          {
+            "u": 1,
+            "s": 1.02
+          }
+        ],
+        "say": "ネタバレ。*負けた。*",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "負けた。",
+            "x": 540,
+            "y": 1150,
+            "rot": -9,
+            "size": 122,
+            "color": "#e94560",
+            "at": 1.22
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "「……<em>勝てる</em>？」",
+        "subtitle": "— 深夜2時のスマホ",
+        "say": "今、深夜2時のスマホが、きみに*同じ*ことを聞いてくる。",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "あと1本だけ…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "おすすめの動画があります",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "自動再生まで3…2…",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "新着リール47件",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#e94560",
+            "w": 500
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestは、習慣をクエストに変えるアプリ。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-21</em> HP!",
+        "subtitle": "クエスト1つ = 1撃",
+        "say": "クエストをクリアするたびに、ボスに*ダメージ*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-21",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "<em>連続記録</em>を<br>つなごう。",
+        "say": "連続記録を、つなごう。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": "日",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "profile",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "ヒーローを<br><em>レベルアップ</em>。",
+        "say": "ヒーローを、レベルアップ。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "<em>30</em>日目。",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "*30日後*…",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "「誇っていい。<br>きみは<em>強い</em>。」",
+        "subtitle": "— 倒されたクラーケン",
+        "say": "今度は、ヴィランが*負ける*番だ。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみは……<br><em>勝てる</em>？",
+        "subtitle": "コメントで「勝つさ」👇",
+        "say": "きみは……*勝てる？*",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "j-m2-rock-lee": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 6,
+      "lift": 13
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+16%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/BAWImsYnpyo.mp4",
+          "start": 20.5
+        },
+        "tag": "ロック・リー · NARUTO",
+        "dur": 2,
+        "sayAt": 0.3,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.9
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "忍術も幻術も、*ひとつ*も使えない少年がいた。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/BAWImsYnpyo.mp4",
+          "start": 26.3
+        },
+        "tag": "ロック・リー · NARUTO",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.94
+          },
+          {
+            "u": 1,
+            "s": 1.04
+          }
+        ],
+        "say": "みんなに「忍者には*なれない*」と言われた。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/BAWImsYnpyo.mp4",
+          "start": 127.5
+        },
+        "tag": "ロック・リー · NARUTO",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "lines": true,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.92
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "だから彼は、*毎日*修行した。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/BAWImsYnpyo.mp4",
+          "start": 341
+        },
+        "tag": "ロック・リー · NARUTO",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.94
+          },
+          {
+            "u": 1,
+            "s": 1.04
+          }
+        ],
+        "say": "*痛くても*、やめなかった。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/b429Zh63yI4.mp4",
+          "start": 102,
+          "crop": "960:640:160:0"
+        },
+        "tag": "ロック・リー · NARUTO",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.92
+          },
+          {
+            "u": 1,
+            "s": 1.06
+          }
+        ],
+        "say": "何年も、*これ*を背負って。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "根性",
+            "font": "DotGothic16",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 87,
+            "color": "#e94560",
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/b429Zh63yI4.mp4",
+          "start": 106.2,
+          "crop": "960:640:160:0",
+          "speed": 0.62
+        },
+        "tag": "ロック・リー · NARUTO",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "lines": true,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.95
+          },
+          {
+            "u": 1,
+            "s": 1.08
+          }
+        ],
+        "say": "そして、みんなの前で……*外した*。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/b429Zh63yI4.mp4",
+          "start": 107.95,
+          "crop": "960:640:160:0",
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.6,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.6,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "ドンッ！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1100,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/b429Zh63yI4.mp4",
+          "start": 120.5,
+          "crop": "960:640:160:0",
+          "speed": 0.7
+        },
+        "tag": "ロック・リー · NARUTO",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "lines": true,
+        "grow": [
+          {
+            "u": 0,
+            "s": 1
+          },
+          {
+            "u": 1,
+            "s": 1.1
+          }
+        ],
+        "say": "*努力*は、才能を超える。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "努力 ＞ 才能",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 73,
+            "color": "#e94560",
+            "at": 1.1
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "「今日はサボろう。<br>きみに<em>才能</em>はない。」",
+        "subtitle": "— ソファのトロール",
+        "say": "今、ソファのトロールが「きみには*才能*がない」とささやく。",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "また明日でいいよ…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#7fbf5a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "あと1話だけ",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#7fbf5a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "休んでもいいじゃん",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#7fbf5a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "月曜から始めよう？",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#7fbf5a",
+            "w": 500
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestは、習慣を毎日のクエストに変える。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-21</em> HP!",
+        "subtitle": "クエスト1つ = 修行1回",
+        "say": "クエストは修行。修行のたびに、ボスに*ダメージ*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-21",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "TROLL HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "<em>連続記録</em>を<br>つなごう。",
+        "say": "連続記録を、つなごう。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": "日",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "profile",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "ヒーローを<br><em>レベルアップ</em>。",
+        "say": "ヒーローを、レベルアップ。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "<em>30</em>日目。",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "*30日後*…",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "「……きみは<br><em>強い</em>。」",
+        "subtitle": "— 倒されたソファのトロール",
+        "say": "おもりを*外す*日が来る。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "TROLL HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの1日目は<br><em>今日</em>。",
+        "subtitle": "コメントで「1日目」👇",
+        "say": "きみの1日目は、*今日*だよ。",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "j-m3-saitama": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 7,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+16%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/2lOM9P9yu4w.mp4",
+          "start": 28.6
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2.2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "最強のヒーローには、*ひとつ*の秘密がある。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "最強",
+            "font": "DotGothic16",
+            "x": 850,
+            "y": 300,
+            "rot": 8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.6,
+            "life": 1.4
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 83.2
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "能力なし。*才能*なし。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 85.6
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "腕立て*100回*、上体起こし100回、スクワット100回。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 118.6
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "そして、ランニング*10キロ*。",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 122.6
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "これを、*毎日*。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "× 365",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 102,
+            "color": "#e94560",
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 127,
+          "speed": 0.8
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "体が*悲鳴*を上げても。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 109.4
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "それを*3年間*。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "1,095日目",
+            "x": 540,
+            "y": 1260,
+            "rot": -5,
+            "size": 87,
+            "color": "#e94560",
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/2lOM9P9yu4w.mp4",
+          "start": 39,
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2.4,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "ワンパン！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 148
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "地味な習慣が、*とんでもない*結果を生む。",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "継続 ＞ 才能",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 64,
+            "color": "#e94560",
+            "at": 1.2
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "junk_goblin",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "「走るのやめて、<br><em>バーガー</em>食べよ。」",
+        "subtitle": "— ジャンクゴブリン",
+        "say": "今、ジャンクゴブリンが言う。「やめて、*バーガー*食べよ」",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "今夜だけ2個で1個分",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#c9853a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "脚の日、サボる？",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#c9853a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "自分へのごほうび",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#c9853a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "月曜から始めよう？",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#c9853a",
+            "w": 500
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestは、きみの毎日の100回をクエストに。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "junk_goblin",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-21</em> HP!",
+        "subtitle": "1回 = 1撃",
+        "say": "1回1回が、ボスへの*一撃*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-21",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "GOBLIN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "<em>連続記録</em>を<br>つなごう。",
+        "say": "連続記録を、つなごう。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": "日",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "profile",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "ヒーローを<br><em>レベルアップ</em>。",
+        "say": "ヒーローを、レベルアップ。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "<em>30</em>日目。",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "*30日後*…",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "junk_goblin",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "「……きみは<br><em>強い</em>。」",
+        "subtitle": "— 倒されたジャンクゴブリン",
+        "say": "ワンパンで、*十分*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "GOBLIN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの毎日の<br><em>100回</em>は？",
+        "subtitle": "コメントで教えて👇",
+        "say": "きみの毎日の*100回*は、なに？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "j-m4-shun": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 7,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+16%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 11.7,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "彼は、*人類最弱*のハンターと呼ばれていた。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 5,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "ダンジョンのたびに、*死にかけた*。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 8.2,
+          "crop": "1180:660:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "ある日、システムが彼に*デイリークエスト*を与えた。",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 155.6
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "サボれば……心臓が*止まる*。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 18,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "だから彼は、*毎日*やりとげた。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 15,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "そして日に日に……*変わっていった*。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/7MvuIFR1rvg.mp4",
+          "start": 38.6,
+          "crop": "1180:640:50:0",
+          "speed": 0.6
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "通知が、こう告げるまで……",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 120.9,
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2.4,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "レベルアップ！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 235.4,
+          "crop": "1180:660:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "最弱から……*最強*へ。",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "E級 → S級",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 73,
+            "color": "#e94560",
+            "at": 1.2
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "「あと1本だけ<br><em>動画</em>……」",
+        "subtitle": "— 深夜2時のスマホ",
+        "say": "きみのスマホも、通知をくれる。でも、*レベル*は上がらない。",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "あと1本だけ…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "おすすめの動画があります",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "自動再生まで3…2…",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "新着リール47件",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#e94560",
+            "w": 500
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみだけの<br><em>デイリークエスト</em>。",
+        "say": "HabitQuestは、きみだけのデイリークエストをくれる。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-21</em> HP!",
+        "subtitle": "クエスト1つ = 1撃",
+        "say": "クエストをクリアするたびに、ボスに*ダメージ*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-21",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "<em>連続記録</em>を<br>つなごう。",
+        "say": "連続記録を、つなごう。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": "日",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "profile",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "ヒーローを<br><em>レベルアップ</em>。",
+        "say": "ヒーローを、レベルアップ。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "<em>30</em>日目。",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "*30日後*…",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "「誇っていい。<br>きみは<em>S級</em>だ。」",
+        "subtitle": "— 倒されたクラーケン",
+        "say": "通知が、「*レベルアップ*」と告げる。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "デイリークエストが<br><em>待ってる</em>よ。",
+        "subtitle": "コメントで「起きろ」👇",
+        "say": "デイリークエストが、*待ってる*よ。",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "j-m5-deku": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 7,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+16%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 22.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "この少年は、*個性*を持たずに生まれた。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 40.2,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "みんなに「*あきらめろ*」と言われた。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 42.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "憧れのヒーローに、「きみは*ヒーロー*になれる」と言われるまで。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 52.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "でもまずは、海浜公園を*まるごと*掃除すること。",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/IOocrVFg74Q.mp4",
+          "start": 48.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*10か月*。毎日。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "10か月",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 93,
+            "color": "#e94560",
+            "at": 1.1
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/IOocrVFg74Q.mp4",
+          "start": 63.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "少しずつ。*痛くても*。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/XOo_o-R0kCw.mp4",
+          "start": 8.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "そして、最後の*朝*……"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/XOo_o-R0kCw.mp4",
+          "start": 18.9,
+          "audio": 1,
+          "crop": "1180:600:50:0"
+        },
+        "lines": true,
+        "fitW": 1060,
+        "grow": [
+          {
+            "u": 0,
+            "s": 1.02
+          },
+          {
+            "u": 1,
+            "s": 1.12
+          }
+        ],
+        "flash": true,
+        "dur": 2.6,
+        "transition": "cut",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "やりとげた！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/IOocrVFg74Q.mp4",
+          "start": 130,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "小さな行動を、*毎日*。",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "1日1%",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 93,
+            "color": "#e94560",
+            "at": 1.1
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "「10か月？<br>もう<em>休もう</em>よ。」",
+        "subtitle": "— ソファのトロール",
+        "say": "今、ソファのトロールが「そんなの*無理*だよ」と言う。",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "また明日でいいよ…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#7fbf5a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "あと1話だけ",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#7fbf5a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "休んでもいいじゃん",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#7fbf5a",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "月曜から始めよう？",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#7fbf5a",
+            "w": 500
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestは、大きな目標を毎日のクエストに分ける。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-21</em> HP!",
+        "subtitle": "クエスト1つ = 1撃",
+        "say": "ひとつ運ぶたびに、ボスに*ダメージ*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-21",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "TROLL HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "<em>連続記録</em>を<br>つなごう。",
+        "say": "連続記録を、つなごう。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": "日",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "profile",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "ヒーローを<br><em>レベルアップ</em>。",
+        "say": "ヒーローを、レベルアップ。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "<em>30</em>日目。",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "*30日後*…",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "couch_troll",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "「……きみは<br><em>ヒーロー</em>だ。」",
+        "subtitle": "— 倒されたソファのトロール",
+        "say": "海は、*きれい*になる。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "TROLL HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの<br><em>海浜公園</em>は？",
+        "subtitle": "コメントで大きな目標を👇",
+        "say": "きみの*海浜公園*は、なに？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "j-m6-tanjiro": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 7,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+16%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/wWarogrnQ9M.mp4",
+          "start": 17.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "師匠は彼に、*ひとつ*だけ課題を出した。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/wWarogrnQ9M.mp4",
+          "start": 23.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "刀で、この*岩*を斬れ。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/YFcMc0amTUM.mp4",
+          "start": 76,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "だから彼は、*毎日*刀を振った。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/YFcMc0amTUM.mp4",
+          "start": 80,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*千回*。さらに、五百回。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "× 1,000",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 102,
+            "color": "#e94560",
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/YFcMc0amTUM.mp4",
+          "start": 95,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*失敗*。何度も、何度も。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/wWarogrnQ9M.mp4",
+          "start": 42,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*一年*、岩はびくともしなかった。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 16.4
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "そして、ある朝……"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 19.9,
+          "audio": 1
+        },
+        "lines": true,
+        "fitW": 1060,
+        "grow": [
+          {
+            "u": 0,
+            "s": 1.02
+          },
+          {
+            "u": 1,
+            "s": 1.12
+          }
+        ],
+        "flash": true,
+        "dur": 2.4,
+        "transition": "cut",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "斬！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 34.6
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "岩を、*真っ二つ*に。",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "1年 = 一太刀",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 78,
+            "color": "#e94560",
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "snooze_golem",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "「むりむり。<br>もう一回<em>寝よ</em>。」",
+        "subtitle": "— 二度寝ゴーレム",
+        "say": "二度寝ゴーレムは、*動かない*岩だ。",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "スヌーズ（9分）",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#8a8fa3",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "あと5分だけ",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#8a8fa3",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "アラームオフ",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#8a8fa3",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "明日からでいい？",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#8a8fa3",
+            "w": 500
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestは、一振り一振りをクエストに。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "snooze_golem",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-21</em> HP!",
+        "subtitle": "一振り = 1撃",
+        "say": "一振りごとに、ボスに*ダメージ*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-21",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "GOLEM HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "<em>連続記録</em>を<br>つなごう。",
+        "say": "連続記録を、つなごう。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": "日",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "profile",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "ヒーローを<br><em>レベルアップ</em>。",
+        "say": "ヒーローを、レベルアップ。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "<em>30</em>日目。",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "*30日後*…",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "snooze_golem",
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "「……きみは<br><em>起きてる</em>。」",
+        "subtitle": "— 倒された二度寝ゴーレム",
+        "say": "岩は、*割れる*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "GOLEM HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの<br><em>岩</em>はなに？",
+        "subtitle": "コメントで教えて👇",
+        "say": "きみの*岩*は、なに？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
+  },
+  "j-m7-eren": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 5,
+      "lift": 14
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+16%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 24.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "子どものころ、彼は*ひとつ*の約束をした。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 34,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "そして、彼の世界は*壊された*。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "誰かが言った。「戦わなければ……*勝てない*」"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 13.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "だから毎晩、ひとりで、*鏡*の前で……",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 17.2,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*ひとつ*の言葉をつぶやいた。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 10.9,
+          "audio": 1,
+          "crop": "1180:600:50:0"
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2.4,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "戦え",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15,
+            "font": "DotGothic16"
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ]
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 88,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "そしてある日、誰にも動かせない*岩*を持ち上げた。",
+        "lines": true
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 91,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "一歩、*一歩*。"
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 104,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*戦え*。毎日。",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "毎日、戦え",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 78,
+            "color": "#e94560",
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "「あきらめて、<br><em>スクロール</em>しよ。」",
+        "subtitle": "— 深夜2時のスマホ",
+        "say": "今夜も、クラーケンがささやく。「*あきらめろ*」",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "あと1本だけ…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.5,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "おすすめの動画があります",
+            "x": 700,
+            "y": 970,
+            "from": "right",
+            "rot": 2,
+            "at": 1,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "自動再生まで3…2…",
+            "x": 380,
+            "y": 1220,
+            "from": "left",
+            "rot": -2,
+            "at": 1.5,
+            "color": "#e94560",
+            "w": 500
+          },
+          {
+            "type": "notif",
+            "text": "新着リール47件",
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 2,
+            "color": "#e94560",
+            "w": 500
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestは、きみの戦いを毎日のクエストに。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayY": 1740,
+        "title": "<em>-21</em> HP!",
+        "subtitle": "クエスト1つ = 1撃",
+        "say": "クエストを終えるたびに、ボスに*ダメージ*。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-21",
+            "size": 60,
+            "color": "#e94560",
+            "x": 760,
+            "y": 880,
+            "at": 0.2
+          },
+          {
+            "type": "bar",
+            "from": 1,
+            "to": 0.7,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.6,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "<em>連続記録</em>を<br>つなごう。",
+        "say": "連続記録を、つなごう。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 13,
+            "to": 14,
+            "icon": "fire",
+            "suffix": "日",
+            "size": 36,
+            "x": 760,
+            "y": 640,
+            "at": 0.35,
+            "dur": 0.6
+          },
+          {
+            "type": "burst",
+            "x": 760,
+            "y": 640,
+            "at": 0.95
+          }
+        ]
+      },
+      {
+        "type": "still",
+        "src": "profile",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "ヒーローを<br><em>レベルアップ</em>。",
+        "say": "ヒーローを、レベルアップ。",
+        "fx": [
+          {
+            "type": "counter",
+            "from": 5,
+            "to": 6,
+            "prefix": "LV ",
+            "size": 40,
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 0.6,
+            "dur": 0.4
+          },
+          {
+            "type": "burst",
+            "sx": 0.82,
+            "sy": 0.54,
+            "at": 1
+          }
+        ]
+      },
+      {
+        "type": "hero",
+        "dur": 1.6,
+        "every": 1.6,
+        "transition": "cut",
+        "title": "<em>30</em>日目。",
+        "sayAt": 0.1,
+        "sayY": 1740,
+        "say": "*30日後*…",
+        "fx": [
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.3,
+            "n": 40
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 950,
+            "at": 0.9,
+            "n": 40
+          }
+        ],
+        "looks": [
+          {
+            "hat": "hat_crown",
+            "outfit": "outfit_royal",
+            "accessory": "acc_wings",
+            "label": "LEGEND",
+            "lv": 30
+          }
+        ]
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "hit": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.3,
+        "sayY": 1740,
+        "title": "「誇っていい。<br>きみは<em>戦った</em>。」",
+        "subtitle": "— 倒されたクラーケン",
+        "say": "クラーケンの、*負け*だ。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "-999",
+            "size": 64,
+            "color": "#e94560",
+            "x": 360,
+            "y": 860,
+            "at": 0.15
+          },
+          {
+            "type": "bar",
+            "from": 0.3,
+            "to": 0,
+            "w": 620,
+            "label": "KRAKEN HP",
+            "x": 540,
+            "y": 1590,
+            "at": 0.1,
+            "dur": 0.9,
+            "color": "#e94560"
+          }
+        ]
+      },
+      {
+        "type": "pip",
+        "dur": 2.4,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "いっしょに言おう。<br><em>戦え</em>。",
+        "subtitle": "コメントで「戦え」👇",
+        "say": "いっしょに言おう。*戦え*！",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
       }
     ]
   }

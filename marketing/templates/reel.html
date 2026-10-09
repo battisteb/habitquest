@@ -64,6 +64,8 @@
   .hero-title { position: absolute; left: 70px; right: 70px; top: 170px; text-align: center;
                 font-family: 'Press Start 2P'; font-size: 60px; line-height: 1.45; text-shadow: 0 8px 0 #000; }
   canvas { position: absolute; left: 0; top: 0; }
+  /* Full-frame box so the camera (shake, punch-in) can move the whole layer. */
+  #root { position: absolute; inset: 0; transform-origin: 50% 45%; }
   .tag { position: absolute; left: 0; right: 0; top: 1560px; text-align: center; }
   .tag span { display: inline-block; font-family: 'Press Start 2P'; font-size: 40px; padding: 26px 36px; color: #0d0f1c;
               background: #f5c518; border-bottom: 8px solid #b38d0f; }
@@ -306,6 +308,38 @@
         title.style.transform = `translateY(${(1 - ease(t / 0.25)) * -50}px)`;
       };
     },
+
+    // A boss drawn big and menacing (16×16 grid, from marketing/boss sprites), bobbing and
+    // shaking, his line in a bubble above. Used by the Boss Saga / villain lore reels.
+    boss: (s) => {
+      root.innerHTML = `<div class="bg"></div><div class="grid"></div><div class="glow"></div>
+        <canvas width="1080" height="1920"></canvas>
+        <div class="bubble"><h1>${s.title}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
+        ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px">${s.cta}</span></div>` : ''}
+        <div class="handle">@habitquest.app</div>`;
+      const ctx = root.querySelector('canvas').getContext('2d');
+      const g = s.grid, N = g.length, px = 46, size = N * px;
+      window.frame = (t) => {
+        ctx.clearRect(0, 0, 1080, 1920);
+        root.querySelector('.grid').style.transform = `translate(${(t * 40) % 60}px, ${(t * 60) % 60}px)`;
+        const pop = s.entered ? 1 : ease(Math.min(t / 0.35, 1));
+        const grow = s.entered ? 1 : 0.6 + 0.4 * back(Math.min(t / 0.35, 1));
+        const shake = s.calm ? 0 : Math.sin(t * 9) * 7;
+        const bob = Math.sin(t * 2.2) * 16;
+        const hx = 540 - size / 2 + shake, hy = 1000 - size / 2 + bob;
+        ctx.save();
+        ctx.translate(540, 1000); ctx.scale(grow, grow); ctx.translate(-540, -1000);
+        ctx.globalAlpha = pop;
+        // red menace glow behind the boss
+        const rg = ctx.createRadialGradient(540, 1000, 40, 540, 1000, size * 0.75);
+        rg.addColorStop(0, 'rgba(233,69,96,0.35)'); rg.addColorStop(1, 'rgba(233,69,96,0)');
+        ctx.fillStyle = rg; ctx.fillRect(540 - size, 1000 - size, size * 2, size * 2);
+        g.forEach((row, y) => row.forEach((c, x) => { if (c) { ctx.fillStyle = c; ctx.fillRect(hx + x * px, hy + y * px, px + 0.6, px + 0.6); } }));
+        ctx.restore();
+        const b = root.querySelector('.bubble');
+        b.style.opacity = String(ease(t / 0.25));
+      };
+    },
   };
 
   // ------------------------------------------------------------ dynamic style (default)
@@ -472,6 +506,7 @@
 
   /** Draws the stickers of a segment at time t. */
   function drawFx(s, ctx, t, b) {
+    camera(s, t);
     for (const [idx, f] of (s.fx || []).entries()) {
       const at = f.at ?? (f.beat || 0) * b.B;
       const k = t - at;
@@ -573,12 +608,27 @@
         const sc = k < 0.18 ? 2.2 - 1.2 * ease(k / 0.18) : 1 + 0.05 * b.pulse;
         ctx.translate(x, y); ctx.rotate((f.rot ?? -8) * Math.PI / 180); ctx.scale(sc, sc);
         const size = f.size || 72;
-        ctx.font = `${size}px ${PF()}`;
+        ctx.font = `${size}px ${f.font || PF()}`;
         const tw = ctx.measureText(f.text).width + 70, th = size + 50;
         ctx.fillStyle = '#14142A'; ctx.fillRect(-tw / 2 - 8, -th / 2 - 8, tw + 16, th + 16);
         ctx.fillStyle = f.color || '#ff5a8a'; ctx.fillRect(-tw / 2, -th / 2, tw, th);
         ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(f.text, 0, 4);
         ctx.restore(); burst(ctx, k - 0.15, x, y, idx + 21, 30, 1.1); continue;
+      }
+      if (f.type === 'notif') {
+        // A phone notification sliding in from the side (doomscroll bait around a boss).
+        const slide = 1 - ease(clamp01(k / 0.22));
+        const w = f.w || 560, h = 100;
+        ctx.translate(x + slide * (f.from === 'left' ? -900 : 900), y - k * 18);
+        ctx.rotate((f.rot ?? 0) * Math.PI / 180);
+        ctx.fillStyle = '#14142A'; ctx.fillRect(-w / 2 - 6, -h / 2 - 6, w + 12, h + 12);
+        ctx.fillStyle = '#f4f4ff'; ctx.fillRect(-w / 2, -h / 2, w, h);
+        ctx.fillStyle = f.color || '#e94560'; ctx.fillRect(-w / 2 + 18, -26, 52, 52);
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.moveTo(-w / 2 + 36, -14); ctx.lineTo(-w / 2 + 58, 0); ctx.lineTo(-w / 2 + 36, 14); ctx.fill();
+        ctx.fillStyle = '#14142A'; ctx.font = isJa() ? '800 32px "M PLUS Rounded 1c"' : '800 34px Inter'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText(f.text, -w / 2 + 88, 2);
+        ctx.restore(); continue;
       }
       if (f.type === 'counter') {
         const dur = f.dur || 0.8;
@@ -605,6 +655,98 @@
       }
       ctx.restore();
     }
+    drawSay(s, ctx, t);
+  }
+
+  /**
+   * Word-by-word captions of the voice-over (s.words from build-reels.js: { w, t } with t in the
+   * segment): groups of up to 3 words, each word appearing as it is spoken, the spoken one on a
+   * yellow plate. At y = s.sayY (centre of the line).
+   */
+  function drawSay(s, ctx, t) {
+    if (!s.words || !s.words.length || s.captions === false) return;
+    const chunks = [];
+    let cur = [];
+    s.words.forEach((w) => {
+      cur.push(w);
+      const cjk = isJa();
+      if (/[.,?!:;…、。！？]$/.test(w.w) || cur.length >= 3 || cur.map((x) => x.w).join(cjk ? '' : ' ').length > (cjk ? 8 : 15)) { chunks.push(cur); cur = []; }
+    });
+    if (cur.length) chunks.push(cur);
+    let ci = -1;
+    chunks.forEach((c, i) => { if (t >= c[0].t) ci = i; });
+    if (ci < 0) return;
+    const shown = chunks[ci].filter((w) => t >= w.t);
+    const size = s.saySize || (isJa() ? 70 : 74), y = s.sayY || 1560, gap = isJa() ? 8 : 26, padX = isJa() ? 12 : 18;
+    ctx.save();
+    ctx.font = isJa() ? `800 ${size}px "M PLUS Rounded 1c"` : `800 ${size}px Inter`;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const widths = shown.map((w) => ctx.measureText(w.w).width);
+    const total = widths.reduce((a, b) => a + b, 0) + gap * (shown.length - 1);
+    let x = 540 - total / 2;
+    shown.forEach((w, i) => {
+      const k = clamp01((t - w.t) / 0.14);
+      const sc = 0.6 + 0.4 * back(k);
+      const cx = x + widths[i] / 2;
+      ctx.save();
+      ctx.translate(cx, y); ctx.scale(sc, sc); ctx.translate(-cx, -y);
+      const active = i === shown.length - 1;
+      if (w.em) {
+        // Emphasised word: red plate, bigger, confetti.
+        const big = 1 + 0.25 * (1 - clamp01((t - w.t) / 0.2));
+        ctx.translate(cx, y); ctx.scale(big, big); ctx.translate(-cx, -y);
+        ctx.fillStyle = '#14142a'; ctx.fillRect(x - padX - 6, y - size * 0.62 - 6, widths[i] + 2 * padX + 12, size * 1.24 + 12);
+        ctx.fillStyle = '#e94560'; ctx.fillRect(x - padX, y - size * 0.62, widths[i] + 2 * padX, size * 1.24);
+        ctx.fillStyle = '#ffffff'; ctx.fillText(w.w, x, y + 3);
+        ctx.restore();
+        burst(ctx, t - w.t, cx, y, i * 11 + 5, 22, 0.8);
+        x += widths[i] + gap;
+        return;
+      }
+      if (active) {
+        ctx.fillStyle = '#14142a'; ctx.fillRect(x - padX - 6, y - size * 0.62 - 6, widths[i] + 2 * padX + 12, size * 1.24 + 12);
+        ctx.fillStyle = s.sayColor || '#f5c518'; ctx.fillRect(x - padX, y - size * 0.62, widths[i] + 2 * padX, size * 1.24);
+        ctx.fillStyle = '#14142a'; ctx.fillText(w.w, x, y + 3);
+      } else {
+        ctx.lineJoin = 'round'; ctx.lineWidth = 14; ctx.strokeStyle = '#14142a'; ctx.strokeText(w.w, x, y + 3);
+        ctx.fillStyle = '#ffffff'; ctx.fillText(w.w, x, y + 3);
+      }
+      ctx.restore();
+      x += widths[i] + gap;
+    });
+    ctx.restore();
+  }
+
+  /**
+   * Camera on the whole layer: a punch-in on every hard cut, a shake and a zoom kick on each
+   * emphasised word (*word* in `say`) and each stamp. Not on layers composited over a recording
+   * (phone, full): the screen under them would not move.
+   */
+  function camera(s, t) {
+    if (s.layout === 'phone' || s.layout === 'full' || s.camera === false) return;
+    let imp = 0;
+    if (!s.entered && s.punch !== false) imp = 0.7 * (1 - clamp01(t / 0.2));
+    (s.words || []).forEach((w) => { if (w.em && t >= w.t) imp = Math.max(imp, Math.exp(-(t - w.t) * 7)); });
+    (s.fx || []).forEach((f) => { if (f.type === 'stamp' && t >= f.at) imp = Math.max(imp, Math.exp(-(t - f.at) * 7)); });
+    // Scale ≥ 1 + 0.04·imp keeps the shaken frame covering the edges.
+    root.style.transform = imp > 0.01
+      ? `translate(${Math.sin(t * 83) * 14 * imp}px, ${Math.cos(t * 67) * 14 * imp}px) scale(${1 + 0.045 * imp})`
+      : 'none';
+  }
+
+  /** Small label at the top left, like a documentary (place · date). */
+  function drawTag(ctx, text, t) {
+    if (!text) return;
+    const k = clamp01(t / 0.25);
+    ctx.save();
+    ctx.globalAlpha = k;
+    ctx.font = `24px ${PF()}`;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(text).width + 36;
+    ctx.fillStyle = 'rgba(8,8,13,.85)'; ctx.fillRect(48, 96, w, 56);
+    ctx.fillStyle = '#f5c518'; ctx.fillRect(48, 96, 8, 56);
+    ctx.fillStyle = '#ffffff'; ctx.fillText(text, 70, 126);
+    ctx.restore();
   }
 
   const fxCanvas = '<canvas class="fx" width="1080" height="1920"></canvas>';
@@ -824,6 +966,243 @@
         const { hits, landed } = popWords(spans, t, b.B / 2);
         h2.style.transform = `scale(${1 + (t > landed ? 0.035 * b.pulse : 0)})`;
         hits.forEach((h) => burst(fx, t - h.at, h.x, h.y, h.seed, 18, 0.7));
+        drawFx(s, fx, t, b);
+      };
+    },
+    // A boss (16×16 sprite from src/features/boss) rising big, breathing on the beat, his line in a
+    // bubble. `night`: dark 2 a.m. background. `hit`: defeated (white flash, shake, blink, red glow).
+    boss: (s) => {
+      root.innerHTML = `${underHTML(false)}<div class="edge"></div>
+        <canvas class="stage" width="1080" height="1920"></canvas>
+        <div class="bubble"><h1>${wordSpans(s.title)}</h1>${s.subtitle ? `<p>${s.subtitle}</p>` : ''}</div>
+        ${s.cta ? `<div class="tag" style="top:1640px"><span class="cta" style="padding:26px 40px;opacity:0">${s.cta}</span></div>` : ''}
+        ${fxCanvas}`;
+      if (s.night) {
+        const bg = root.querySelector('.under .bg');
+        if (bg) bg.style.background = 'radial-gradient(ellipse at 50% 58%, #33205c 0%, #120b24 55%, #07050f 100%)';
+        const grid = root.querySelector('.under .grid');
+        if (grid) grid.style.opacity = '0.04';
+        const handle = root.querySelector('.under .handle');
+        if (handle) handle.style.color = '#8f86c9';
+      }
+      const spans = [...root.querySelectorAll('.w')];
+      const bubble = root.querySelector('.bubble');
+      const sub = root.querySelector('.bubble p');
+      const cta = root.querySelector('.tag .cta');
+      const ctx = root.querySelector('.stage').getContext('2d');
+      const fx = root.querySelector('.fx').getContext('2d');
+      const g = s.grid, px = 46, size = g.length * px, cy = 1090;
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        drawUnder(b); drawEdge(b);
+        ctx.clearRect(0, 0, 1080, 1920);
+        fx.clearRect(0, 0, 1080, 1920);
+        const k0 = s.entered ? 1 : t / 0.3;
+        bubble.style.transform = `scale(${(0.3 + 0.7 * back(k0)) * (1 + 0.025 * b.pulse)})`;
+        bubble.style.opacity = String(clamp01(k0 * 3));
+        const { hits, landed } = popWords(spans, t, b.B / 2, 0.12);
+        if (sub) { const k = (t - landed) / 0.3; sub.style.opacity = String(clamp01(k * 2)); }
+        hits.forEach((h) => burst(fx, t - h.at, h.x, h.y, h.seed, 20, 0.8));
+        // Rises from below with an overshoot, then breathes and hops on the beat.
+        const e = s.entered ? 1 : clamp01(t / 0.4);
+        const rise = (1 - back(e)) * 760;
+        const hitK = s.hit ? Math.exp(-t * 4) : 0;
+        const shake = (s.hit ? 30 * hitK + 4 : 5) * Math.sin(t * 47);
+        const breathe = 1 + 0.045 * b.pulse;
+        const hx = 540 - size / 2 + shake, hy = cy - size / 2 + rise - (b.n % 2) * 10;
+        const glow = s.hit ? '233,69,96' : '160,96,232';
+        const rg = ctx.createRadialGradient(540, cy, 40, 540, cy, size * 0.85);
+        rg.addColorStop(0, `rgba(${glow},${0.4 + 0.3 * b.pulse})`); rg.addColorStop(1, `rgba(${glow},0)`);
+        ctx.fillStyle = rg; ctx.fillRect(540 - size, cy - size, size * 2, size * 2);
+        ctx.save();
+        ctx.translate(540, cy); ctx.scale(breathe, breathe); ctx.translate(-540, -cy);
+        ctx.globalAlpha = s.hit && t < 0.7 && Math.floor(t / 0.07) % 2 === 0 ? 0.3 : 1;
+        g.forEach((row, y) => row.forEach((c, x) => { if (c) { ctx.fillStyle = c; ctx.fillRect(hx + x * px, hy + y * px, px + 0.6, px + 0.6); } }));
+        ctx.restore();
+        if (s.hit) {
+          if (t < 0.22) { ctx.fillStyle = `rgba(255,255,255,${0.8 * (1 - t / 0.22)})`; ctx.fillRect(0, 0, 1080, 1920); }
+          burst(fx, t - 0.04, 540, cy, 99, 46, 1.5);
+        }
+        if (cta) {
+          const at = (s.ctaBeat || 4) * b.B;
+          const k = (t - at) / 0.3;
+          cta.style.opacity = k > 0 ? '1' : '0';
+          cta.style.display = 'inline-block';
+          cta.style.transform = `scale(${k > 0 ? (0.2 + 0.8 * back(k)) * (1 + 0.06 * b.pulse) : 0.2})`;
+          if (k > 0) burst(fx, t - at, 540, 1680, 77, 40, 1.2);
+        }
+        drawFx(s, fx, t, b);
+      };
+    },
+    // A meme panel (image from MEME_DIR, see build-reels.js) slammed full screen on the beat: white
+    // flash, punch-in zoom with a decaying shake, manga speed lines, a caption popping above.
+    meme: (s) => {
+      root.innerHTML = `<div class="under"><div class="memebg"></div><canvas class="lines" width="1080" height="1920"></canvas>
+          <div class="handle" style="color:#7d7aa8">@habitquest.app</div></div>
+        <img class="memeimg" src="${s.img}" />
+        ${s.top ? `<div class="memetop"><h2 style="font:inherit;margin:0">${wordSpans(s.top)}</h2></div>` : ''}
+        <div class="memeflash"></div>${fxCanvas}`;
+      const W = s.imgW || 1000, top = s.imgTop || 430;
+      Object.assign(root.querySelector('.memebg').style, { position: 'absolute', inset: '0', background: 'radial-gradient(ellipse at 50% 52%, #24233a 0%, #08080d 70%)' });
+      const img = root.querySelector('.memeimg');
+      Object.assign(img.style, { position: 'absolute', left: `${540 - W / 2}px`, top: `${top}px`, width: `${W}px`, border: '10px solid #fff',
+        boxShadow: '0 0 0 10px #14142a, 0 40px 90px rgba(0,0,0,.7)', transformOrigin: '50% 30%' });
+      const cap = root.querySelector('.memetop');
+      if (cap) Object.assign(cap.style, { position: 'absolute', left: '50px', right: '50px', top: `${s.topY || 140}px`, textAlign: 'center',
+        fontFamily: PF(), fontSize: `${s.topSize || 46}px`, lineHeight: '1.45', color: '#fff', textShadow: '0 6px 0 #000' });
+      const flash = root.querySelector('.memeflash');
+      Object.assign(flash.style, { position: 'absolute', inset: '0', background: '#fff', opacity: '0', pointerEvents: 'none' });
+      const spans = [...root.querySelectorAll('.w')];
+      const lc = root.querySelector('.lines').getContext('2d');
+      const fx = root.querySelector('.fx').getContext('2d');
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        const cx = 540, cy = top + 430;
+        lc.clearRect(0, 0, 1080, 1920);
+        const f = Math.floor(t * 24);
+        for (let i = 0; i < 96; i++) {
+          const a = (i / 96) * Math.PI * 2 + rand(f * 131 + i) * 0.05;
+          const r0 = 420 + rand(f * 7 + i) * 300;
+          lc.strokeStyle = `rgba(255,255,255,${0.08 + 0.2 * rand(f + i * 3) + 0.14 * b.pulse})`;
+          lc.lineWidth = 2 + rand(f * 13 + i) * 7;
+          lc.beginPath(); lc.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0);
+          lc.lineTo(cx + Math.cos(a) * 1600, cy + Math.sin(a) * 1600); lc.stroke();
+        }
+        const k = clamp01(t / 0.16);
+        const sc = (t < 0.16 ? 1.5 - 0.5 * back(k) : 1 + 0.05 * (t - 0.16)) * (1 + 0.012 * b.pulse);
+        const sh = 24 * Math.exp(-t * 9);
+        img.style.transform = `translate(${sh * Math.sin(t * 71)}px, ${sh * Math.cos(t * 53)}px) scale(${sc})`;
+        flash.style.opacity = String(Math.max(0, 0.95 * (1 - t / 0.2)));
+        fx.clearRect(0, 0, 1080, 1920);
+        if (spans.length) {
+          const { hits } = popWords(spans, t, b.B / 3, 0.05);
+          hits.forEach((h) => burst(fx, t - h.at, h.x, h.y, h.seed, 18, 0.7));
+        }
+        burst(fx, t - 0.06, 540, cy, 42, 46, 1.6);
+        drawFx(s, fx, t, b);
+      };
+    },
+    // Storytelling shot (voice-over reels): an image (MEME_DIR) on a tilted white card over a dark
+    // blurred copy of itself, a slow camera move inside it (cam: [{ u, x, y, z }], u = 0-1 of the
+    // segment, x/y the point in the image at the centre, z the zoom over "cover"), a tag at the top.
+    // `full`: the image fills the screen; `gray`: black and white, darker.
+    story: (s) => {
+      // The <img> is in the page so build-reels.js waits for it to decode before the first frame.
+      root.innerHTML = `<img class="storyimg" src="${s.img}" style="display:none" /><canvas class="stage" width="1080" height="1920"></canvas>
+        <div class="handle" style="color:#7d7aa8">@habitquest.app</div>${fxCanvas}`;
+      const ctx = root.querySelector('.stage').getContext('2d');
+      const fx = root.querySelector('.fx').getContext('2d');
+      const img = root.querySelector('.storyimg');
+      const cam = s.cam || [{ u: 0, x: 0.5, y: 0.5, z: 1 }, { u: 1, x: 0.5, y: 0.5, z: s.fit ? 1 : 1.08 }];
+      const at = (u) => {
+        let a = cam[0], b2 = cam[cam.length - 1];
+        for (let i = 0; i < cam.length - 1; i++) if (u >= cam[i].u && u <= cam[i + 1].u) { a = cam[i]; b2 = cam[i + 1]; }
+        const k = b2.u === a.u ? 1 : clamp01((u - a.u) / (b2.u - a.u));
+        const e = k * k * (3 - 2 * k);
+        return { x: a.x + (b2.x - a.x) * e, y: a.y + (b2.y - a.y) * e, z: a.z + (b2.z - a.z) * e };
+      };
+      const growAt = (u) => {
+        const g = s.grow || [{ u: 0, s: 0.96 }, { u: 1, s: 1 }];
+        let a = g[0], b2 = g[g.length - 1];
+        for (let i = 0; i < g.length - 1; i++) if (u >= g[i].u && u <= g[i + 1].u) { a = g[i]; b2 = g[i + 1]; }
+        const k = b2.u === a.u ? 1 : clamp01((u - a.u) / (b2.u - a.u));
+        return a.s + (b2.s - a.s) * k * k * (3 - 2 * k);
+      };
+      // Draws the image into the box (bx, by, bw, bh) seen through the camera c.
+      const shot = (c, bx, by, bw, bh) => {
+        const sc = Math.max(bw / img.width, bh / img.height) * c.z;
+        const sw = bw / sc, sh = bh / sc;
+        const sx = Math.min(Math.max(c.x * img.width - sw / 2, 0), img.width - sw);
+        const sy = Math.min(Math.max(c.y * img.height - sh / 2, 0), img.height - sh);
+        ctx.drawImage(img, sx, sy, sw, sh, bx, by, bw, bh);
+      };
+      const tone = s.gray ? 'grayscale(1) brightness(.75) contrast(1.1)' : 'none';
+      // A clip (s.frames, one image per frame at 30 fps): load the frame of time t, then draw.
+      window.frame = async (t) => {
+        if (s.frames) {
+          const src = s.frames[Math.min(Math.floor(t * 30 + 1e-6), s.frames.length - 1)];
+          if (img.getAttribute('src') !== src) { img.src = src; await img.decode().catch(() => {}); }
+        }
+        draw(t);
+      };
+      const draw = (t) => {
+        const b = beatAt(s, t);
+        const u = clamp01(t / (s.dur || 2));
+        const c = at(u);
+        ctx.clearRect(0, 0, 1080, 1920);
+        ctx.fillStyle = '#08080d'; ctx.fillRect(0, 0, 1080, 1920);
+        if (s.full) {
+          ctx.filter = tone; shot(c, 0, 0, 1080, 1920); ctx.filter = 'none';
+          const g = ctx.createLinearGradient(0, 1250, 0, 1920);
+          g.addColorStop(0, 'rgba(8,8,13,0)'); g.addColorStop(1, 'rgba(8,8,13,.85)');
+          ctx.fillStyle = g; ctx.fillRect(0, 1250, 1080, 670);
+        } else {
+          ctx.filter = `blur(28px) brightness(.32) ${s.gray ? 'grayscale(1)' : ''}`;
+          shot({ x: 0.5, y: 0.5, z: 1.15 + 0.04 * u }, -60, -60, 1200, 2040);
+          ctx.filter = 'none';
+          if (s.lines) {
+            // Manga speed lines behind the card, redrawn 24 times a second.
+            const f = Math.floor(t * 24);
+            for (let i = 0; i < 90; i++) {
+              const a = (i / 90) * Math.PI * 2 + rand(f * 131 + i) * 0.05;
+              const r0 = 380 + rand(f * 7 + i) * 260;
+              ctx.strokeStyle = `rgba(255,255,255,${0.1 + 0.22 * rand(f + i * 3) + 0.12 * b.pulse})`;
+              ctx.lineWidth = 2 + rand(f * 13 + i) * 7;
+              ctx.beginPath(); ctx.moveTo(540 + Math.cos(a) * r0, 790 + Math.sin(a) * r0);
+              ctx.lineTo(540 + Math.cos(a) * 1700, 790 + Math.sin(a) * 1700); ctx.stroke();
+            }
+          }
+          // Dust motes drifting up in the light.
+          for (let q = 0; q < 34; q++) {
+            const px = rand(q * 3.1 + 2) * 1080 + Math.sin(t * 0.8 + q) * 30;
+            const py = ((rand(q * 7.7 + 1) * 2000 - (s.clock + t) * (30 + rand(q) * 50)) % 2000 + 2000) % 2000 - 40;
+            ctx.fillStyle = `rgba(255,246,220,${0.15 + 0.35 * rand(q * 5.5)})`;
+            const sz = rand(q * 9.1) > 0.6 ? 8 : 5;
+            ctx.fillRect(px, py, sz, sz);
+          }
+          // `fit`: the card takes the image's shape (a whole manga panel, never cropped) inside
+          // fitW × fitH; the panel then grows (grow: [{ u, s }]) instead of the camera zooming in.
+          let W = s.cardW || 900, H = s.cardH || 1120;
+          if (s.fit && img.naturalWidth) {
+            const k = Math.min((s.fitW || 920) / img.naturalWidth, (s.fitH || 1180) / img.naturalHeight);
+            W = img.naturalWidth * k; H = img.naturalHeight * k;
+          }
+          const cy = s.cardY || 790;
+          const grow = growAt(u);
+          // Arrives from below with a little spin (unless the previous shot was the same card).
+          const e = s.entered || s.still ? 1 : clamp01(t / 0.38);
+          const tilt = (s.tilt ?? -2.5) + (1 - back(e)) * 7;
+          const dy = (1 - back(e)) * 520;
+          const breathe = grow * (1 + 0.006 * b.pulse);
+          // Handheld drift: the card never stands still.
+          const driftX = Math.sin((s.clock + t) * 1.3) * 10, driftR = Math.sin((s.clock + t) * 0.9) * 0.7;
+          ctx.save();
+          ctx.translate(540 + driftX, cy + dy); ctx.rotate((tilt + driftR) * Math.PI / 180); ctx.scale(breathe, breathe);
+          ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(-W / 2 - 4, -H / 2 + 26, W + 40, H + 40);
+          ctx.fillStyle = '#f4f1ea'; ctx.fillRect(-W / 2 - 18, -H / 2 - 18, W + 36, H + 36);
+          ctx.translate(-540, -cy);
+          ctx.filter = tone; shot(c, 540 - W / 2, cy - H / 2, W, H); ctx.filter = 'none';
+          // A light sweep crossing the card once per shot.
+          ctx.save();
+          ctx.beginPath(); ctx.rect(540 - W / 2 - 18, cy - H / 2 - 18, W + 36, H + 36); ctx.clip();
+          const sx0 = 540 - W - 300 + (W * 2 + 600) * clamp01(t / Math.min(s.dur || 2, 1.6));
+          const sg = ctx.createLinearGradient(sx0 - 160, 0, sx0 + 160, 0);
+          sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(255,255,255,.28)'); sg.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = sg; ctx.fillRect(540 - W, cy - H, W * 2, H * 2);
+          ctx.restore();
+          ctx.restore();
+        }
+        // Film grain and vignette.
+        for (let q = 0; q < 220; q++) {
+          ctx.fillStyle = `rgba(${q % 2 ? '255,255,255' : '0,0,0'},${0.05 + 0.07 * rand(q + t * 977)})`;
+          ctx.fillRect(rand(q * 1.7 + t * 131) * 1080, rand(q * 2.3 + t * 71) * 1920, 3, 3);
+        }
+        const vg = ctx.createRadialGradient(540, 860, 500, 540, 860, 1250);
+        vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(0,0,0,${0.55 - 0.15 * b.pulse})`);
+        ctx.fillStyle = vg; ctx.fillRect(0, 0, 1080, 1920);
+        if (s.flash && t < 0.2) { ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - t / 0.2)})`; ctx.fillRect(0, 0, 1080, 1920); }
+        fx.clearRect(0, 0, 1080, 1920);
+        drawTag(fx, s.tag, t);
         drawFx(s, fx, t, b);
       };
     },
