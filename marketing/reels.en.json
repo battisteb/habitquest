@@ -8406,7 +8406,7 @@
     "music": {
       "file": "marketing/audio/theme-epic.m4a",
       "theme": "phonk",
-      "drop": 1,
+      "drop": 0,
       "lift": 2
     },
     "musicVol": 0.8,
@@ -8416,35 +8416,47 @@
     "voicePitch": "-2Hz",
     "segments": [
       {
-        "type": "story",
-        "src": "pika-q.png",
-        "fit": true,
-        "dur": 2,
-        "sayAt": 0.15,
-        "grow": [
-          {
-            "u": 0,
-            "s": 0.9
-          },
-          {
-            "u": 1,
-            "s": 1
-          }
-        ],
-        "say": "Me: skips my habits for *three weeks.*",
-        "captions": false,
-        "sayTail": 0.15,
-        "transition": "cut",
-        "fitW": 1060
-      },
-      {
         "type": "meme",
         "src": "pika.png",
         "dur": 2,
         "imgW": 960,
         "imgTop": 300,
+        "sayAt": 0.15,
+        "say": "Me: skips my habits for *three weeks.*",
+        "sayTail": 0.15,
+        "transition": "cut"
+      },
+      {
+        "type": "story",
+        "src": "pika-face.png",
+        "fit": true,
+        "fitW": 1000,
+        "dur": 2,
         "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.95
+          },
+          {
+            "u": 1,
+            "s": 1.12
+          }
+        ],
         "say": "Also me: why am I not getting *better?*",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "?!",
+            "x": 820,
+            "y": 330,
+            "rot": 10,
+            "size": 150,
+            "color": "#e94560",
+            "at": 0.9,
+            "life": 1.2
+          }
+        ],
         "sayTail": 0.15,
         "transition": "cut"
       },
