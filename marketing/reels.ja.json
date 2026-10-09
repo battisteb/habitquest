@@ -5238,5 +5238,1132 @@
         "ctaBeat": 4
       }
     ]
+  },
+  "j-m1-katsusa-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 2,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "src": "gojo-q-ja.png",
+        "fit": true,
+        "tag": "五条悟 · 呪術廻戦",
+        "dur": 2,
+        "sayAt": 0.3,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.86
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "最強の呪術師への、*質問*。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "最強",
+            "font": "DotGothic16",
+            "x": 850,
+            "y": 300,
+            "rot": 8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.5,
+            "life": 1.2
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "src": "box-q-ja.png",
+        "fit": true,
+        "fitW": 900,
+        "tag": "五条悟 · 呪術廻戦",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayTail": 0.15,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.92
+          },
+          {
+            "u": 1,
+            "s": 1.06
+          }
+        ],
+        "say": "「……*勝てる？*」",
+        "lines": true
+      },
+      {
+        "type": "meme",
+        "src": "gojo-nah-ja.png",
+        "dur": 2,
+        "transition": "cut",
+        "imgW": 900,
+        "imgTop": 190,
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "src": "gojo-nah-ja.png",
+        "fit": true,
+        "tag": "ネタバレ注意",
+        "gray": true,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.97
+          },
+          {
+            "u": 1,
+            "s": 1.02
+          }
+        ],
+        "say": "ネタバレ。*負けた。*",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "負けた。",
+            "x": 540,
+            "y": 1150,
+            "rot": -9,
+            "size": 122,
+            "color": "#e94560",
+            "at": 1.22
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "習慣を、*クエスト*に。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみは……<br><em>勝てる</em>？",
+        "subtitle": "コメントで「勝つさ」👇",
+        "say": "きみは……*勝てる？*",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "j-m4-shun-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 3,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 11.7,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*人類最弱*のハンター。",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 8.2,
+          "crop": "1180:660:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "ある日、*デイリークエスト*が届いた。",
+        "lines": true,
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 18,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "水篠旬 · 俺だけレベルアップな件",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "だから彼は、*毎日*やりとげた。",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 120.9,
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "レベルアップ！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみだけの<br><em>デイリークエスト</em>。",
+        "say": "習慣を、*クエスト*に。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "デイリークエストが<br><em>待ってる</em>よ。",
+        "subtitle": "コメントで「起きろ」👇",
+        "say": "デイリークエストが、*待ってる*よ。",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "j-m5-deku-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 3,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 22.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "この少年は、*個性*を持たずに生まれた。",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 52.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "最初の課題：海浜公園の*掃除*。",
+        "lines": true,
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/IOocrVFg74Q.mp4",
+          "start": 48.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "緑谷出久 · 僕のヒーローアカデミア",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*10か月*。毎日。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "10か月",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 93,
+            "color": "#e94560",
+            "at": 1.1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/XOo_o-R0kCw.mp4",
+          "start": 18.9,
+          "audio": 1,
+          "crop": "1180:600:50:0"
+        },
+        "lines": true,
+        "fitW": 1060,
+        "grow": [
+          {
+            "u": 0,
+            "s": 1.02
+          },
+          {
+            "u": 1,
+            "s": 1.12
+          }
+        ],
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "やりとげた！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "習慣を、*クエスト*に。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの<br><em>海浜公園</em>は？",
+        "subtitle": "コメントで大きな目標を👇",
+        "say": "きみの*海浜公園*は、なに？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "j-m6-tanjiro-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 2,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/wWarogrnQ9M.mp4",
+          "start": 17.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "師匠の課題：この*岩*を斬れ。",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/YFcMc0amTUM.mp4",
+          "start": 76,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "だから彼は、*毎日*刀を振った。",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 19.9,
+          "audio": 1
+        },
+        "lines": true,
+        "fitW": 1060,
+        "grow": [
+          {
+            "u": 0,
+            "s": 1.02
+          },
+          {
+            "u": 1,
+            "s": 1.12
+          }
+        ],
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "斬！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 34.6
+        },
+        "tag": "竈門炭治郎 · 鬼滅の刃",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "岩を、*真っ二つ*に。",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "1年 = 一太刀",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 78,
+            "color": "#e94560",
+            "at": 1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "HabitQuestは、一振り一振りをクエストに。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの<br><em>岩</em>はなに？",
+        "subtitle": "コメントで教えて👇",
+        "say": "きみの*岩*は、なに？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "j-m3-saitama-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 3,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/2lOM9P9yu4w.mp4",
+          "start": 28.6
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2.2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "最強のヒーローには、*ひとつ*の秘密がある。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "最強",
+            "font": "DotGothic16",
+            "x": 850,
+            "y": 300,
+            "rot": 8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.6,
+            "life": 1.4
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 85.6
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "腕立て、腹筋、スクワット、*100回*。",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 122.6
+        },
+        "tag": "サイタマ · ワンパンマン",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "これを、*毎日*。",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "× 365",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 102,
+            "color": "#e94560",
+            "at": 1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/2lOM9P9yu4w.mp4",
+          "start": 39,
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "ワンパン！",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "習慣を、*クエスト*に。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "きみの毎日の<br><em>100回</em>は？",
+        "subtitle": "コメントで教えて👇",
+        "say": "きみの*100回*は？",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "j-m7-eren-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 2,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "ja-JP-KeitaNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 13.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "だから毎晩、ひとりで、*鏡*の前で……",
+        "lines": true,
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 17.2,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*ひとつ*の言葉をつぶやいた。",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 10.9,
+          "audio": 1,
+          "crop": "1180:600:50:0"
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "戦え",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15,
+            "font": "DotGothic16"
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 104,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "エレン・イェーガー · 進撃の巨人",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*戦え*。毎日。",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "毎日、戦え",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 78,
+            "color": "#e94560",
+            "at": 1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "still",
+        "src": "today",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "きみの習慣が<br><em>クエスト</em>に。",
+        "say": "習慣を、*クエスト*に。",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+21 XP",
+            "icon": "coin",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          },
+          {
+            "type": "burst",
+            "sx": 0.86,
+            "sy": 0.41,
+            "at": 0.9
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "voice": "ja-JP-NanamiNeural",
+        "voiceRate": "+5%",
+        "title": "いっしょに言おう。<br><em>戦え</em>。",
+        "subtitle": "コメントで「戦え」👇",
+        "say": "言おう。*戦え*！",
+        "pips": [
+          "proud-love",
+          "joy-love"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
   }
 }

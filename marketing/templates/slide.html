@@ -50,13 +50,25 @@
   .swipe { font-family: 'Press Start 2P'; font-size: 20px; color: var(--accent); }
   .xpbar { height: 22px; border-radius: 11px; background: #262d5a; overflow: hidden; max-width: 700px; }
   .xpbar i { display: block; height: 100%; background: var(--accent); }
+  /* ?sky: Pip's Sky, the app's default theme (ADR 030), for the English account. */
+  body.sky { --bg: #CFE8FF; --text: #2B3A6B; --muted: #4A5A8C; --accent: #2F7BEA;
+    background: radial-gradient(circle at 20% 0%, #EAF5FF 0%, transparent 55%), radial-gradient(circle at 100% 100%, #B6DAFF 0%, transparent 50%), var(--bg); }
+  body.sky::before { background-image: linear-gradient(#2B3A6B 1px, transparent 1px), linear-gradient(90deg, #2B3A6B 1px, transparent 1px); opacity: .05; }
+  body.sky p.body { color: #3B4A7A; }
+  body.sky .phone { background: #fff; box-shadow: 0 0 0 6px #2B3A6B, 0 24px 60px rgba(43,58,107,.25); }
+  body.sky .xpbar { background: #fff; border: 4px solid #2B3A6B; }
+  body.sky .cta { color: #fff; }
 </style>
 </head>
 <body>
   <div class="top"><img src="../assets/icon.png" alt="" /><span>HABITQUEST</span><span class="counter" id="counter"></span></div>
   <div class="content" id="content"></div>
-  <div class="footer"><span>@habitquest.app</span><span class="swipe" id="swipe"></span></div>
+  <div class="footer"><span id="handle">@habitquest.app</span><span class="swipe" id="swipe"></span></div>
 <script>
+  // ?sky: Pip's Sky theme; ?handle=name: the account shown in the footer.
+  const q = new URLSearchParams(location.search);
+  if (q.has('sky')) document.body.classList.add('sky');
+  if (q.get('handle')) document.getElementById('handle').textContent = '@' + q.get('handle');
   // Filled by render-posts.js: window.render({ layout, emoji, title, body, image, cta, index, total, xp })
   window.render = (s) => {
     document.getElementById('counter').textContent = s.total > 1 ? `${s.index}/${s.total}` : '';

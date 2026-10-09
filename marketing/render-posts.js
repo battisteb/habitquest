@@ -21,7 +21,8 @@ const posts = JSON.parse(fs.readFileSync(path.join(root, lang === 'fr' ? 'posts.
 const screens = lang === 'fr' ? 'screens' : `screens-${lang}`;
 const exportsDir = lang === 'fr' ? 'posts' : `posts-${lang}`;
 // The Japanese account has its own kawaii template where Pip speaks (strategy.ja.md).
-const template = pathToFileURL(path.join(root, 'templates', lang === 'ja' ? 'slide-ja.html' : 'slide.html')).href;
+// English account: Pip's Sky like the app and its own handle (@habitquest.application).
+const template = pathToFileURL(path.join(root, 'templates', lang === 'ja' ? 'slide-ja.html' : 'slide.html')).href + (lang === 'en' ? '?sky&handle=habitquest.application' : '');
 const only = process.argv[2];
 
 (async () => {

@@ -3545,7 +3545,7 @@
           "joy-love"
         ],
         "every": 1.2,
-        "cta": "@habitquest.app"
+        "cta": "@habitquest.application"
       }
     ]
   },
@@ -3603,7 +3603,7 @@
           "joy-fire"
         ],
         "every": 1,
-        "cta": "@habitquest.app"
+        "cta": "@habitquest.application"
       }
     ]
   },
@@ -3632,7 +3632,7 @@
         "every": 4.6,
         "sfx": "tap",
         "sfxAt": 0.3,
-        "cta": "@habitquest.app"
+        "cta": "@habitquest.application"
       }
     ]
   },
@@ -3679,7 +3679,7 @@
         "boss": "snooze_golem",
         "title": "3 quests left to<br>defeat him.",
         "subtitle": "To be continued…",
-        "cta": "@habitquest.app"
+        "cta": "@habitquest.application"
       }
     ]
   },
@@ -3733,7 +3733,7 @@
             "label": "YOU"
           }
         ],
-        "cta": "@habitquest.app"
+        "cta": "@habitquest.application"
       }
     ]
   },
@@ -3780,7 +3780,7 @@
           "joy-love"
         ],
         "every": 2.1,
-        "cta": "@habitquest.app"
+        "cta": "@habitquest.application"
       }
     ]
   },
@@ -3840,7 +3840,7 @@
           "joy-fire"
         ],
         "every": 1,
-        "cta": "@habitquest.app"
+        "cta": "@habitquest.application"
       }
     ]
   },
@@ -4236,7 +4236,7 @@
           "joy-worried"
         ],
         "every": 1.2,
-        "cta": "@habitquest.app",
+        "cta": "@habitquest.application",
         "ctaBeat": 4
       }
     ]
@@ -4749,7 +4749,7 @@
           "joy-worried"
         ],
         "every": 1.2,
-        "cta": "@habitquest.app",
+        "cta": "@habitquest.application",
         "ctaBeat": 4
       }
     ]
@@ -5307,7 +5307,7 @@
           "joy-worried"
         ],
         "every": 1.2,
-        "cta": "@habitquest.app",
+        "cta": "@habitquest.application",
         "ctaBeat": 4
       }
     ]
@@ -5835,7 +5835,7 @@
           "joy-worried"
         ],
         "every": 1.2,
-        "cta": "@habitquest.app",
+        "cta": "@habitquest.application",
         "ctaBeat": 4
       }
     ]
@@ -6370,7 +6370,7 @@
           "joy-worried"
         ],
         "every": 1.2,
-        "cta": "@habitquest.app",
+        "cta": "@habitquest.application",
         "ctaBeat": 4
       }
     ]
@@ -6902,7 +6902,7 @@
           "joy-worried"
         ],
         "every": 1.2,
-        "cta": "@habitquest.app",
+        "cta": "@habitquest.application",
         "ctaBeat": 4
       }
     ]
@@ -7432,8 +7432,973 @@
           "joy-worried"
         ],
         "every": 1.2,
-        "cta": "@habitquest.app",
+        "cta": "@habitquest.application",
         "ctaBeat": 4
+      }
+    ]
+  },
+  "m3-saitama-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 3,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/2lOM9P9yu4w.mp4",
+          "start": 28.6
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2.2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "The strongest hero’s *secret:*",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "最強",
+            "font": "DotGothic16",
+            "x": 850,
+            "y": 300,
+            "rot": 8,
+            "size": 120,
+            "color": "#e94560",
+            "at": 0.6,
+            "life": 1.4
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 85.6
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*100* push-ups, sit-ups and squats.",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/_2L7O7dYhvs.mp4",
+          "start": 122.6
+        },
+        "tag": "SAITAMA · ONE PUNCH MAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Every *single* day.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "× 365",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 70,
+            "color": "#e94560",
+            "at": 1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "saitama/2lOM9P9yu4w.mp4",
+          "start": 39,
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "ONE PUNCH.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 110,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns it into *daily quests.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "What's your<br>daily <em>100</em>?",
+        "subtitle": "Comment your daily habit 👇",
+        "say": "What’s your daily *hundred?*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "m4-jinwoo-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 3,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 11.7,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "He was the *weakest* hunter of all mankind.",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 8.2,
+          "crop": "1180:660:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Then a system gave him a *daily quest.*",
+        "lines": true,
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/TgjAfb68epI.mp4",
+          "start": 18,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "SUNG JINWOO · SOLO LEVELING",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "He did it. Every *single* day.",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "jinwoo/ZXESwvJqBwA.mp4",
+          "start": 120.9,
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "LEVEL UP.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 110,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your own<br><em>daily quests</em>.",
+        "say": "HabitQuest gives you your own daily quests.",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "Your daily quest<br>is <em>waiting</em>.",
+        "subtitle": "Comment “ARISE” 👇",
+        "say": "Your daily quest is *waiting.*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "m5-deku-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 3,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 22.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "This kid was born with *no* powers.",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/yMnf_t9lBV0.mp4",
+          "start": 52.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "First quest: clean a *whole* beach.",
+        "lines": true,
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/IOocrVFg74Q.mp4",
+          "start": 48.4,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "IZUKU MIDORIYA · MY HERO ACADEMIA",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Ten months. *Every* day.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "10 MONTHS",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 64,
+            "color": "#e94560",
+            "at": 1.1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "deku/XOo_o-R0kCw.mp4",
+          "start": 18.9,
+          "audio": 1,
+          "crop": "1180:600:50:0"
+        },
+        "lines": true,
+        "fitW": 1060,
+        "grow": [
+          {
+            "u": 0,
+            "s": 1.02
+          },
+          {
+            "u": 1,
+            "s": 1.12
+          }
+        ],
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "HE DID IT.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 96,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns it into *daily quests.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "So… what's<br>your <em>beach</em>?",
+        "subtitle": "Comment your big goal 👇",
+        "say": "So… what's your *beach?*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "m6-tanjiro-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 2,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/wWarogrnQ9M.mp4",
+          "start": 17.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "His master’s task: cut this *boulder.*",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/YFcMc0amTUM.mp4",
+          "start": 76,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "He swung his sword every *single* day.",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 19.9,
+          "audio": 1
+        },
+        "lines": true,
+        "fitW": 1060,
+        "grow": [
+          {
+            "u": 0,
+            "s": 1.02
+          },
+          {
+            "u": 1,
+            "s": 1.12
+          }
+        ],
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "SLASH.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 110,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "tanjiro/tbPvK1f96hQ.mp4",
+          "start": 34.6
+        },
+        "tag": "TANJIRO · DEMON SLAYER",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "He cut it in *half.*",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "1 YEAR = 1 CUT",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 54,
+            "color": "#e94560",
+            "at": 1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns it into *daily quests.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "So… what's<br>your <em>boulder</em>?",
+        "subtitle": "Comment your boulder 👇",
+        "say": "So… what's your *boulder?*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "m7-eren-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 2,
+      "lift": 4
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 13.6,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "Every night, alone, in front of a *mirror…*",
+        "lines": true,
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 17.2,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "he whispered *one* word.",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/AoabtFiAtv4.mp4",
+          "start": 10.9,
+          "audio": 1,
+          "crop": "1180:600:50:0"
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "戦え",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 130,
+            "color": "#e94560",
+            "at": 0.15,
+            "font": "DotGothic16"
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1000,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "eren/Nyo16f5A6JM.mp4",
+          "start": 104,
+          "crop": "1180:600:50:0"
+        },
+        "tag": "EREN YEAGER · ATTACK ON TITAN",
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.93
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "*Tatakae* means fight. Every day.",
+        "lines": true,
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "TATAKAE = FIGHT",
+            "x": 540,
+            "y": 1300,
+            "rot": -5,
+            "size": 54,
+            "color": "#e94560",
+            "at": 1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns it into *daily quests.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "Say it with me:<br><em>Tatakae</em>.",
+        "subtitle": "Comment “Tatakae” 👇",
+        "say": "Say it with me… *Tatakae.*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4,
+        "sayTail": 0.15
       }
     ]
   }
