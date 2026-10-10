@@ -173,7 +173,8 @@ export default function ShopScreen() {
   },
 
   // Category tabs
-  categoryScroll: { flexGrow: 0, borderBottomWidth: 2, borderBottomColor: colors.border },
+  // flexShrink 0: on iOS a horizontal ScrollView shrinks to a sliver when the column is full.
+  categoryScroll: { flexGrow: 0, flexShrink: 0, borderBottomWidth: 2, borderBottomColor: colors.border },
   categoryBar: {
     flexDirection: 'row',
     paddingHorizontal: spacing.sm,
