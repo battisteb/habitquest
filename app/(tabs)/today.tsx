@@ -392,8 +392,10 @@ export default function TodayScreen() {
   toolsRow: { paddingHorizontal: spacing.md, paddingBottom: spacing.xs },
 
   // Empty state
+  emptyScroll: { flexGrow: 1, paddingBottom: spacing.xxl },
   empty: {
-    flex: 1,
+    // flexGrow (not flex: 1): fills the free space but never shrinks below its content.
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: spacing.xl,
@@ -835,7 +837,9 @@ export default function TodayScreen() {
 
       {/* Unified list */}
       {habits.length === 0 ? (
-        <View>
+        // A scrolling column that fills the screen: on iOS a plain View has no height here,
+        // so the centered empty state collapsed onto the hero's bubble.
+        <ScrollView style={styles.list} contentContainerStyle={styles.emptyScroll} testID="today-empty">
           {hero}
           <View style={styles.empty}>
             <Pip expression="happy" size={72} accessibilityLabel="Pip" />
@@ -857,7 +861,7 @@ export default function TodayScreen() {
               pausedCategories={pausedCategories}
             />
           )}
-        </View>
+        </ScrollView>
       ) : (
         <FlatList
           data={displayedHabits}
