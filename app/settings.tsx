@@ -37,6 +37,7 @@ import {
   setMusicEnabled,
 } from '../src/lib/audio/sound-service';
 import { premium$ } from '../src/features/monetization/stores/premium';
+import { adsAvailable } from '../src/features/monetization/utils/ad-service';
 
 const THEME_KEYS: ThemeKey[] = ['default', 'medieval', 'cyberpunk', 'nature', 'lifestyle'];
 
@@ -287,7 +288,7 @@ export default function SettingsScreen() {
           </View>
         ) : (
           <PixelButton
-            title={T.settings_go_premium}
+            title={adsAvailable() ? T.settings_go_premium : T.settings_go_premium_no_ads}
             onPress={() => router.push('/paywall')}
             variant="secondary"
           />

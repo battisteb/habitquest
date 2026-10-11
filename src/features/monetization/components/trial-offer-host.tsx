@@ -19,6 +19,7 @@ import {
 import { scheduleTrialEndingNotice } from '../../notifications/utils/notification-service';
 import { showDialog } from '../../../lib/app-alert';
 import { getStrings } from '../../../lib/i18n';
+import { adsAvailable } from '../utils/ad-service';
 
 /**
  * Offers the 14-day free trial: the Premium screen once right after the
@@ -55,7 +56,7 @@ export function TrialOfferHost() {
       if (!shouldRemindTrial(state, ctx)) return;
       recordTrialOfferShown(false);
       const T = getStrings();
-      showDialog(T.trial_reminder_title, T.trial_reminder_msg, [
+      showDialog(T.trial_reminder_title, adsAvailable() ? T.trial_reminder_msg : T.trial_reminder_msg_no_ads, [
         { text: T.trial_reminder_later, style: 'cancel', onPress: () => recordTrialOfferRefused() },
         { text: T.trial_reminder_try, onPress: () => router.push('/paywall?from=reminder') },
       ]);
@@ -75,7 +76,7 @@ export function TrialOfferHost() {
     if (!shouldOfferTrialAtStreak(loadTrialOfferState(), { eligible, isPremium }, streakCount)) return;
     recordStreakOfferShown();
     const T = getStrings();
-    showDialog(T.trial_streak_title, T.trial_streak_msg, [
+    showDialog(T.trial_streak_title, adsAvailable() ? T.trial_streak_msg : T.trial_streak_msg_no_ads, [
       { text: T.trial_reminder_later, style: 'cancel' },
       { text: T.trial_reminder_try, onPress: () => router.push('/paywall?from=streak') },
     ]);

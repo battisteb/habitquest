@@ -30,6 +30,7 @@ import { colors, fontSizes, spacing, fonts, pixelSize } from '../src/ui/theme/to
 import { useTheme } from '../src/ui/theme/theme-context';
 import { premium$ } from '../src/features/monetization/stores/premium';
 import { recordTrialOfferRefused, trialDaysLeft, TRIAL_DAYS } from '../src/features/monetization/utils/trial-offer';
+import { adsAvailable } from '../src/features/monetization/utils/ad-service';
 
 const STORE_NAME = Platform.OS === 'android' ? 'Google Play' : 'App Store';
 
@@ -47,7 +48,8 @@ export default function PaywallScreen() {
     { icon: '❄️', label: T.paywall_feat_freezes_label, free: T.paywall_feat_freezes_free, premium: T.paywall_feat_freezes_premium },
     { icon: '📊', label: T.paywall_feat_stats_label, free: T.paywall_feat_stats_free, premium: T.paywall_feat_stats_premium },
     { icon: '🛍️', label: T.paywall_feat_shop_label, free: T.paywall_feat_shop_free, premium: T.paywall_feat_shop_premium },
-    { icon: '🚫', label: T.paywall_feat_ads_label, free: T.paywall_feat_ads_free, premium: T.paywall_feat_ads_premium },
+    // No "ads" row where the free version has none (web, iOS 1.0).
+    ...(adsAvailable() ? [{ icon: '🚫', label: T.paywall_feat_ads_label, free: T.paywall_feat_ads_free, premium: T.paywall_feat_ads_premium }] : []),
     { icon: '🐉', label: T.paywall_feat_companion_label, free: T.paywall_feat_companion_free, premium: T.paywall_feat_companion_premium },
     { icon: '🎁', label: T.paywall_feat_monthly_label, free: T.paywall_feat_monthly_free, premium: T.paywall_feat_monthly_premium },
     { icon: '⚡', label: T.paywall_feat_support_label, free: T.paywall_feat_support_free, premium: T.paywall_feat_support_premium },

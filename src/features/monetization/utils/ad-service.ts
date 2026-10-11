@@ -148,6 +148,11 @@ export function inInterstitialGracePeriod(createdAt: string | null | undefined, 
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
+/** Whether this platform serves ads at all (not on web, nor on iOS until AdMob iOS is set up). */
+export function adsAvailable(): boolean {
+  return isNative && (__DEV__ || isAdMobConfigured);
+}
+
 export function shouldShowAds(): boolean {
   return isNative && (__DEV__ || isAdMobConfigured) && !premium$.get();
 }
