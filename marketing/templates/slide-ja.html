@@ -60,6 +60,11 @@
   }
   .footer { display: flex; justify-content: space-between; align-items: center; font-size: 28px; color: var(--muted); font-weight: 800; z-index: 1; }
   .swipe { font-family: 'DotGothic16'; font-size: 30px; color: var(--accent); }
+  /* Pip facing a weekly boss (`boss` slides). */
+  .duo { display: flex; align-items: center; gap: 24px; }
+  .duo .pip { width: 260px; height: 260px; margin-left: 10px; }
+  .duo canvas { width: 320px; height: 320px; image-rendering: pixelated; }
+  .vs { font-family: 'DotGothic16'; font-size: 64px; color: var(--accent); }
 </style>
 </head>
 <body>
@@ -68,7 +73,17 @@
   <div class="footer"><span>@habitquest.app</span><span class="swipe" id="swipe"></span></div>
 <script>
   // Filled by render-posts.js (LANG=ja):
-  // window.render({ pip, title, body, image, pips, cta, index, total, screens })
+  // window.render({ pip, title, body, image, pips, cta, index, total, screens, bossArt })
+  // A weekly boss drawn from its pixel grid ('.' = transparent, other letters = palette).
+  const drawBoss = ({ rows, palette }) => {
+    const cv = document.createElement('canvas');
+    cv.width = rows[0].length; cv.height = rows.length;
+    const g = cv.getContext('2d');
+    rows.forEach((row, y) => [...row].forEach((ch, x) => {
+      if (palette[ch]) { g.fillStyle = palette[ch]; g.fillRect(x, y, 1, 1); }
+    }));
+    return cv;
+  };
   const pipImg = (key, cls = 'pip') => `<img class="${cls}" src="../brand/pip/pip-${key}.png" alt="" />`;
   window.render = (s) => {
     document.getElementById('counter').textContent = s.total > 1 ? `${s.index}/${s.total}` : '';
@@ -82,7 +97,10 @@
     c.innerHTML = s.image
       ? `<div class="row"><div class="left">${bubble}${s.pip ? pipImg(s.pip) : ''}</div>
            <div class="phone"><img src="../assets/${s.screens}/${s.image}.png" /></div></div>${cta}`
-      : `${bubble}${pips}${s.pip && !s.pips ? pipImg(s.pip) : ''}${cta}`;
+      : s.bossArt
+        ? `${bubble}<div class="duo">${s.pip ? pipImg(s.pip) : ''}<span class="vs">VS</span><span class="boss-slot"></span></div>${cta}`
+        : `${bubble}${pips}${s.pip && !s.pips ? pipImg(s.pip) : ''}${cta}`;
+    if (s.bossArt) c.querySelector('.boss-slot').appendChild(drawBoss(s.bossArt));
   };
 </script>
 </body>

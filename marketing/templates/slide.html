@@ -29,6 +29,8 @@
   .counter { margin-left: auto; font-size: 18px; }
   .content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 36px; }
   .emoji { font-size: 120px; line-height: 1; }
+  canvas.boss { width: 384px; height: 384px; image-rendering: pixelated; display: block; }
+  .boss-slot { margin: -30px 0 -10px; }
   h1 { font-family: 'Press Start 2P'; font-size: 58px; line-height: 1.35; letter-spacing: 1px; }
   h1 em { font-style: normal; color: var(--accent); }
   p.body { font-size: 40px; line-height: 1.4; color: #c9cbef; font-weight: 500; max-width: 880px; }
@@ -69,12 +71,23 @@
   const q = new URLSearchParams(location.search);
   if (q.has('sky')) document.body.classList.add('sky');
   if (q.get('handle')) document.getElementById('handle').textContent = '@' + q.get('handle');
-  // Filled by render-posts.js: window.render({ layout, emoji, title, body, image, cta, index, total, xp })
+  // A weekly boss drawn from its pixel grid ('.' = transparent, other letters = palette).
+  const drawBoss = ({ rows, palette }) => {
+    const cv = document.createElement('canvas');
+    cv.width = rows[0].length; cv.height = rows.length; cv.className = 'boss';
+    const g = cv.getContext('2d');
+    rows.forEach((row, y) => [...row].forEach((ch, x) => {
+      if (palette[ch]) { g.fillStyle = palette[ch]; g.fillRect(x, y, 1, 1); }
+    }));
+    return cv;
+  };
+  // Filled by render-posts.js: window.render({ layout, emoji, title, body, image, cta, index, total, xp, bossArt })
   window.render = (s) => {
     document.getElementById('counter').textContent = s.total > 1 ? `${s.index}/${s.total}` : '';
     document.getElementById('swipe').textContent = s.index < s.total ? 'SWIPE ▶' : '';
     const c = document.getElementById('content');
     const text = `
+      ${s.bossArt ? '<div class="boss-slot"></div>' : ''}
       ${s.emoji ? `<div class="emoji">${s.emoji}</div>` : ''}
       <h1>${s.title}</h1>
       ${s.body ? `<p class="body">${s.body}</p>` : ''}
@@ -83,6 +96,7 @@
     c.innerHTML = s.image
       ? `<div class="row"><div class="text">${text}</div><div class="phone"><img src="../assets/${s.screens || 'screens'}/${s.image}.png" /></div></div>`
       : text;
+    if (s.bossArt) c.querySelector('.boss-slot').appendChild(drawBoss(s.bossArt));
   };
 </script>
 </body>

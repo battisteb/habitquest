@@ -112,5 +112,79 @@
       "body": "Drop your current rank in the comments 👇",
       "cta": "COMING SOON"
     }
+  ],
+  "c5-boss-bestiary": [
+    {
+      "emoji": "👾",
+      "title": "Your bad habits are <em>bosses</em>.",
+      "body": "Meet the 4 monsters stealing your days.<br><b>Which one is yours?</b>"
+    },
+    {
+      "boss": "snooze_golem",
+      "title": "The <em>Snooze</em> Golem",
+      "body": "Hits “snooze” for you and turns your mornings to stone.<br><b>Weakness:</b> feet on the floor before the 2nd alarm."
+    },
+    {
+      "boss": "doomscroll_kraken",
+      "title": "The <em>Doomscroll</em> Kraken",
+      "body": "Glues your thumb to the screen and swallows your evenings.<br><b>Weakness:</b> phone charging outside the bedroom."
+    },
+    {
+      "boss": "couch_troll",
+      "title": "The <em>Couch</em> Troll",
+      "body": "“Just one episode”… then four.<br><b>Weakness:</b> 10 push-ups before the remote."
+    },
+    {
+      "boss": "junk_goblin",
+      "title": "The <em>Junk Food</em> Goblin",
+      "body": "Hides snacks in your cupboards and burgers in your cart.<br><b>Weakness:</b> a glass of water and a fruit first."
+    },
+    {
+      "emoji": "⚔️",
+      "title": "Every quest = <em>one hit</em>.",
+      "body": "In HabitQuest, a new boss shows up every Monday.<br>Complete your habits all week to <b>defeat it</b>."
+    },
+    {
+      "emoji": "👇",
+      "title": "Which boss is <em>yours</em>?",
+      "body": "Comment its name.<br>Save this for your next battle 📌",
+      "cta": "FIGHT BACK"
+    }
+  ],
+  "c6-training-arcs": [
+    {
+      "emoji": "🔥",
+      "title": "3 anime <em>training arcs</em> to steal",
+      "body": "Real habits hidden in your favorite shows."
+    },
+    {
+      "emoji": "🥊",
+      "title": "<em>Saitama</em><br>One Punch Man",
+      "body": "100 push-ups, 100 sit-ups, 100 squats, 10 km. Every day.<br><b>Steal it:</b> pick one tiny daily number. Start with 10.",
+      "xp": 33
+    },
+    {
+      "emoji": "🍃",
+      "title": "<em>Rock Lee</em><br>Naruto",
+      "body": "No talent for ninjutsu, so he outworked everyone.<br><b>Steal it:</b> on bad days, do the mini version. Never zero.",
+      "xp": 66
+    },
+    {
+      "emoji": "🌊",
+      "title": "<em>Tanjiro</em><br>Demon Slayer",
+      "body": "Two years of training before he could cut one boulder.<br><b>Steal it:</b> track the streak, not the result.",
+      "xp": 100
+    },
+    {
+      "emoji": "🎮",
+      "title": "Make your arc a <em>game</em>.",
+      "body": "HabitQuest turns each habit into a quest: <b>XP, streaks, levels</b>, and a boss to beat every week."
+    },
+    {
+      "emoji": "⬆️",
+      "title": "Your arc starts <em>today</em>.",
+      "body": "Which training arc are you on? 👇<br>Save this 📌",
+      "cta": "DAY 1"
+    }
   ]
 }

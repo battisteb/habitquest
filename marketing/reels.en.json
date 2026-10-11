@@ -8887,5 +8887,438 @@
         "ctaBeat": 4
       }
     ]
+  },
+  "m2-rock-lee-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 4,
+      "lift": 5
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/BAWImsYnpyo.mp4",
+          "start": 20.5
+        },
+        "tag": "ROCK LEE · NARUTO",
+        "dur": 2,
+        "sayAt": 0.3,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.9
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "This kid had *zero* ninja talent.",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/BAWImsYnpyo.mp4",
+          "start": 127.5
+        },
+        "tag": "ROCK LEE · NARUTO",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "lines": true,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.92
+          },
+          {
+            "u": 1,
+            "s": 1.05
+          }
+        ],
+        "say": "So he trained *every* single day.",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/b429Zh63yI4.mp4",
+          "start": 102,
+          "crop": "960:640:160:0"
+        },
+        "tag": "ROCK LEE · NARUTO",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.92
+          },
+          {
+            "u": 1,
+            "s": 1.06
+          }
+        ],
+        "say": "He carried *these* for years.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "根性 = GUTS",
+            "font": "DotGothic16",
+            "x": 540,
+            "y": 1260,
+            "rot": -6,
+            "size": 60,
+            "color": "#e94560",
+            "at": 1
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/b429Zh63yI4.mp4",
+          "start": 106.2,
+          "crop": "960:640:160:0",
+          "speed": 0.62
+        },
+        "tag": "ROCK LEE · NARUTO",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "lines": true,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.95
+          },
+          {
+            "u": 1,
+            "s": 1.08
+          }
+        ],
+        "say": "Then… he let *go.*",
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "video": {
+          "src": "rock-lee/b429Zh63yI4.mp4",
+          "start": 107.95,
+          "crop": "960:640:160:0",
+          "audio": 1
+        },
+        "full": true,
+        "flash": true,
+        "dur": 2,
+        "transition": "cut",
+        "cam": [
+          {
+            "u": 0,
+            "x": 0.5,
+            "y": 0.6,
+            "z": 1
+          },
+          {
+            "u": 1,
+            "x": 0.5,
+            "y": 0.6,
+            "z": 1.1
+          }
+        ],
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "BOOM.",
+            "x": 540,
+            "y": 1450,
+            "rot": -8,
+            "size": 110,
+            "color": "#e94560",
+            "at": 0.15
+          },
+          {
+            "type": "burst",
+            "x": 540,
+            "y": 1100,
+            "at": 0.1,
+            "n": 50,
+            "power": 1.6
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns your reps into *daily quests.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "Your Day 1<br>starts <em>today</em>.",
+        "subtitle": "Comment “Day 1” 👇",
+        "say": "Your day one starts *today.*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
+  },
+  "m1-nah-id-win-15s": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 2,
+      "lift": 5
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1.8,
+    "voice": "en-US-ChristopherNeural",
+    "voiceRate": "+15%",
+    "voicePitch": "-2Hz",
+    "segments": [
+      {
+        "type": "story",
+        "src": "gojo-q.png",
+        "fit": true,
+        "tag": "SATORU GOJO · JUJUTSU KAISEN",
+        "dur": 2,
+        "sayAt": 0.3,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.86
+          },
+          {
+            "u": 1,
+            "s": 1
+          }
+        ],
+        "say": "The *strongest* sorcerer got *one* question.",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "最強",
+            "font": "DotGothic16",
+            "x": 850,
+            "y": 300,
+            "rot": 8,
+            "size": 120,
+            "color": "#e94560",
+            "at": 0.5,
+            "life": 1.2
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "src": "box-q.png",
+        "fit": true,
+        "fitW": 900,
+        "tag": "SATORU GOJO · JUJUTSU KAISEN",
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "sayTail": 0.5,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.92
+          },
+          {
+            "u": 1,
+            "s": 1.06
+          }
+        ],
+        "say": "Would you *lose?*",
+        "lines": true
+      },
+      {
+        "type": "meme",
+        "src": "gojo-nah.png",
+        "dur": 2,
+        "transition": "cut",
+        "imgW": 900,
+        "imgTop": 190,
+        "sayTail": 0.15
+      },
+      {
+        "type": "story",
+        "src": "gojo-nah.png",
+        "fit": true,
+        "tag": "SPOILER ALERT",
+        "gray": true,
+        "dur": 1.6,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "grow": [
+          {
+            "u": 0,
+            "s": 0.97
+          },
+          {
+            "u": 1,
+            "s": 1.02
+          }
+        ],
+        "say": "Spoiler: he *lost.*",
+        "fx": [
+          {
+            "type": "stamp",
+            "text": "HE LOST.",
+            "x": 540,
+            "y": 1150,
+            "rot": -9,
+            "size": 84,
+            "color": "#e94560",
+            "at": 1.22
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "boss",
+        "boss": "doomscroll_kraken",
+        "night": true,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.2,
+        "sayY": 1640,
+        "title": "\"Would you<br><em>lose</em>?\"",
+        "subtitle": "— your 2 AM doomscroll",
+        "say": "Your *2 AM* doomscroll asks the same.",
+        "fx": [
+          {
+            "type": "notif",
+            "text": "Just one more video…",
+            "x": 380,
+            "y": 720,
+            "from": "left",
+            "rot": -3,
+            "at": 0.45
+          },
+          {
+            "type": "notif",
+            "text": "You might like this",
+            "x": 700,
+            "y": 980,
+            "from": "right",
+            "rot": 2,
+            "at": 0.95
+          },
+          {
+            "type": "notif",
+            "text": "Autoplay in 3… 2…",
+            "x": 390,
+            "y": 1240,
+            "from": "left",
+            "rot": -2,
+            "at": 1.45
+          },
+          {
+            "type": "notif",
+            "text": "47 new reels",
+            "w": 440,
+            "x": 700,
+            "y": 1470,
+            "from": "right",
+            "rot": 3,
+            "at": 1.95
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "clip",
+        "src": "milestone",
+        "start": 0.3,
+        "speed": 0.8,
+        "dur": 2,
+        "transition": "cut",
+        "sayAt": 0.1,
+        "captions": false,
+        "title": "Your habits<br>become <em>quests</em>.",
+        "say": "HabitQuest turns habits into *quests.*",
+        "fx": [
+          {
+            "type": "xp",
+            "text": "+24 XP",
+            "icon": "coin",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          },
+          {
+            "type": "burst",
+            "x": 690,
+            "y": 1330,
+            "at": 1.25
+          }
+        ],
+        "sayTail": 0.15
+      },
+      {
+        "type": "pip",
+        "dur": 1.8,
+        "transition": "cut",
+        "sayAt": 0.15,
+        "captions": false,
+        "title": "So… would<br>you <em>lose</em>?",
+        "subtitle": "Comment “Nah, I’d win” 👇",
+        "say": "So… would you *lose?*",
+        "pips": [
+          "proud-worried",
+          "joy-worried"
+        ],
+        "every": 1.2,
+        "cta": "@habitquest.application",
+        "ctaBeat": 4,
+        "sayTail": 0.15
+      }
+    ]
   }
 }

@@ -9,6 +9,7 @@
  * English version: LANG=en node marketing/render-posts.js
  * → posts.en.json, screenshots from assets/screens-en, output exports/posts-en.
  * Japanese account: LANG=ja → posts.ja.json, templates/slide-ja.html (Pip), exports/posts-ja.
+ * A slide with `boss: '<key>'` shows that weekly boss big, drawn from the app's sprites.
  */
 const fs = require('fs');
 const path = require('path');
@@ -25,12 +26,24 @@ const exportsDir = lang === 'fr' ? 'posts' : `posts-${lang}`;
 const template = pathToFileURL(path.join(root, 'templates', lang === 'ja' ? 'slide-ja.html' : 'slide.html')).href + (lang === 'en' ? '?sky&handle=habitquest.application' : '');
 const only = process.argv[2];
 
+/** The weekly bosses' pixel grids and palettes (src/features/boss/sprites.ts), compiled for Node. */
+function bossArt() {
+  const ts = require('typescript');
+  const src = fs.readFileSync(path.join(root, '..', 'src/features/boss/sprites.ts'), 'utf8');
+  const { outputText } = ts.transpileModule(src, { compilerOptions: { module: ts.ModuleKind.CommonJS } });
+  const mod = { exports: {} };
+  new Function('module', 'exports', outputText)(mod, mod.exports);
+  const { BOSS_SPRITES, BOSS_PALETTES } = mod.exports;
+  return (key) => ({ rows: BOSS_SPRITES[key], palette: BOSS_PALETTES[key] });
+}
+
 (async () => {
   const browser = await puppeteer.launch({
     executablePath: process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
     headless: 'new',
     args: ['--allow-file-access-from-files'],
   });
+  const boss = Object.values(posts).flat().some((sl) => sl.boss) ? bossArt() : null;
   const page = await browser.newPage();
   await page.setViewport({ width: 1080, height: 1350, deviceScaleFactor: 1 });
 
@@ -40,7 +53,7 @@ const only = process.argv[2];
     fs.mkdirSync(outDir, { recursive: true });
     for (let i = 0; i < slides.length; i++) {
       await page.goto(template, { waitUntil: 'networkidle0' });
-      await page.evaluate((s) => window.render(s), { ...slides[i], screens, index: i + 1, total: slides.length });
+      await page.evaluate((s) => window.render(s), { ...slides[i], bossArt: slides[i].boss ? boss(slides[i].boss) : undefined, screens, index: i + 1, total: slides.length });
       await page.evaluate(() => document.fonts.ready);
       await page.evaluate(() => Promise.all([...document.images].map((img) => img.decode().catch(() => {}))));
       await page.screenshot({ path: path.join(outDir, `${i + 1}.png`) });

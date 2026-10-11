@@ -51,5 +51,27 @@
   "j9-release": [
     { "pip": "joy-party", "title": "もうすぐ<em>リリース</em>！", "body": "iPhone と Android で、ぼくといっしょに冒険しよう。" },
     { "pip": "joy-love", "title": "<em>フォロー</em>して待っててね", "body": "リリースの日に、ここでお知らせするよ🌸", "cta": "プロフィールのリンクへ ▲" }
+  ],
+  "j10-pip-asa": [
+    { "pip": "sleepy-rest", "title": "ピップの<em>朝ルーティン</em>☀️", "body": "ぼくの小さな朝のクエスト、<span class=\"nw\">見てみる？</span>" },
+    { "pip": "happy-calm", "title": "① お水を<em>1杯</em>💧", "body": "起きたら、まずコップ1杯。<br><b>クエストクリア！</b>" },
+    { "pip": "joy-fire", "title": "② <em>カーテン</em>をあける", "body": "朝の光で、目がぱっちり。<br><b>クエストクリア！</b>" },
+    { "pip": "happy-love", "title": "③ <em>ストレッチ</em>1分", "body": "のびーっとするだけでOK。<br><b>クエストクリア！</b>" },
+    { "pip": "proud-love", "title": "④ 今日の<em>ひとこと</em>📝", "body": "日記に一行だけ書くよ。<br>これで<b>レベルアップ</b>！" },
+    { "pip": "joy-party", "title": "きみの<em>朝クエスト</em>は？", "body": "コメントで教えてね👇<br>保存して、明日ためしてみて📌", "cta": "保存する" }
+  ],
+  "j11-pip-dore": [
+    { "title": "今のきみは<em>どのピップ</em>？", "body": "番号でコメントしてね👇", "pips": [{ "pip": "sleepy-rest", "label": "①ねむい" }, { "pip": "worried-worried", "label": "②あせる" }, { "pip": "happy-calm", "label": "③まったり" }, { "pip": "joy-fire", "label": "④やる気" }, { "pip": "sad-rest", "label": "⑤つかれた" }] },
+    { "pip": "happy-love", "title": "<span class=\"nw\">どのピップでも</span><br><em>だいじょうぶ</em>", "body": "つかれた日は<b>ミニ版</b>でOK。<br>やる気の日は<b>ボス戦</b>へ！" },
+    { "image": "today", "pip": "joy-love", "title": "<span class=\"nw\">きみのペースで</span><br><em>いっしょに</em>", "body": "HabitQuestで、習慣が<b>RPGのクエスト</b>になるよ。", "cta": "フォローしてね" }
+  ],
+  "j12-pip-boss": [
+    { "pip": "worried-worried", "title": "ピップの<em>こわいもの</em>😱", "body": "きみの毎日にも、<span class=\"nw\">かくれてるかも…</span>" },
+    { "boss": "snooze_golem", "pip": "sleepy-worried", "title": "<em>スヌーズゴーレム</em>", "body": "朝をカチカチの石にしちゃう。<br><b>弱点：</b>2回目のアラームの前に起きる" },
+    { "boss": "doomscroll_kraken", "pip": "worried-fire", "title": "ドゥームスクロール<br><em>クラーケン</em>", "body": "夜の時間をぜんぶ飲みこむ。<br><b>弱点：</b>スマホは寝室の外で充電" },
+    { "boss": "couch_troll", "pip": "worried-calm", "title": "ソファの<em>トロール</em>", "body": "「あと1話だけ」が4話に…<br><b>弱点：</b>リモコンの前にスクワット10回" },
+    { "boss": "junk_goblin", "pip": "sad-worried", "title": "ジャンクフード<br><em>ゴブリン</em>", "body": "お菓子をポケットにしのばせる。<br><b>弱点：</b>まずお水1杯とくだもの" },
+    { "pip": "proud-fire", "title": "クエストで<em>ボスにダメージ</em>⚔️", "body": "毎週月曜、新しいボスが出るよ。<br>習慣をこなして、<b>いっしょにたおそう！</b>" },
+    { "pip": "joy-party", "title": "きみのボスは<em>どれ</em>？", "body": "コメントで教えてね👇<br>保存して、次のバトルに📌", "cta": "たたかう！" }
   ]
 }
