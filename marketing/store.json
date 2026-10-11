@@ -148,5 +148,48 @@
       "title": "<em>성장</em>이<br>한눈에",
       "sub": "달성률, 연속 기록, 매일의 기록을 한눈에."
     }
+  },
+  "sky": {
+    "dir": "screens-en",
+    "screens": [
+      "today",
+      "profile",
+      "duels",
+      "arena",
+      "pause",
+      "stats"
+    ],
+    "text": {
+      "today": {
+        "badge": "DAILY QUESTS",
+        "title": "Turn habits<br>into <em>quests</em>",
+        "sub": "Check off a habit, earn XP and gold, keep your streak alive."
+      },
+      "profile": {
+        "badge": "YOUR HERO",
+        "title": "Level up<br>a <em>pixel hero</em>",
+        "sub": "Six ranks from Novice to Legend, with gear you choose."
+      },
+      "duels": {
+        "badge": "DUELS",
+        "title": "Challenge<br>your <em>friends</em>",
+        "sub": "Turn-based duels: your habits power your attacks."
+      },
+      "arena": {
+        "badge": "ARENA",
+        "title": "Climb the<br><em>league</em>",
+        "sub": "One fight a day in your league. The most consistent go up."
+      },
+      "pause": {
+        "badge": "STREAKS THAT FORGIVE",
+        "title": "Take a break,<br><em>keep</em> your streak",
+        "sub": "Freezes, focus modes and pauses: a bad day never resets you."
+      },
+      "stats": {
+        "badge": "STATS",
+        "title": "See your<br><em>progress</em>",
+        "sub": "Completion rate, streaks and your daily history at a glance."
+      }
+    }
   }
 }
