@@ -202,3 +202,19 @@ a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 
 /* Bar offering the 繁體中文 page to visitors whose phone is in Chinese (site.js). */
 .zh-bar { display: block; text-align: center; padding: 10px 16px; background: var(--primary); color: #fff !important; font-weight: 700; font-size: 16px; border-bottom: var(--px) solid #000; text-decoration: none; }
 .zh-bar:hover { filter: brightness(1.08); }
+
+/* Launch waitlist in the hero, Android beta section (2026-10-11). */
+.waitlist.in-hero { margin: 28px 0 0; max-width: 520px; }
+.waitlist.in-hero h3 { text-align: left; font-size: 26px; }
+.notify { margin: 26px 0 0; }
+.beta-section { padding-top: 0; }
+.beta { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; align-items: center; border: var(--px) solid var(--accent); background: linear-gradient(180deg, rgba(255, 215, 0, .10), transparent); padding: 36px 32px; }
+.beta h2 { margin: 14px 0 10px; }
+.beta p { color: var(--text-2); }
+.beta ol { margin: 14px 0 0; padding-left: 22px; color: var(--text-2); display: grid; gap: 6px; }
+.beta-cta { text-align: center; }
+.beta-cta p { font-size: 14px; margin-top: 12px; }
+.beta-pill { display: table; margin-bottom: 18px; padding: 8px 14px; border: var(--px) solid var(--ink); background: var(--accent); color: #1B1B2F; font-weight: 700; font-size: 15px; text-decoration: none; box-shadow: 4px 4px 0 var(--ink); }
+.beta-pill:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.nav-beta { color: var(--ink) !important; font-weight: 700; }
+@media (max-width: 760px) { .beta { grid-template-columns: 1fr; padding: 28px 20px; } }
