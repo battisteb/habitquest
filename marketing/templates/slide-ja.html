@@ -65,6 +65,12 @@
   .duo .pip { width: 260px; height: 260px; margin-left: 10px; }
   .duo canvas { width: 320px; height: 320px; image-rendering: pixelated; }
   .vs { font-family: 'DotGothic16'; font-size: 64px; color: var(--accent); }
+
+  /* ?story: Instagram story (1080×1920) with a dashed slot for the link sticker. */
+  html.story, html.story body { height: 1920px; }
+  html.story body { padding-top: 150px; padding-bottom: 150px; }
+  html.story #counter, html.story #swipe { visibility: hidden; }
+  .slot { margin-top: 10px; border: 6px dashed var(--accent); padding: 34px; text-align: center; font-weight: 800; font-size: 36px; }
 </style>
 </head>
 <body>
@@ -84,6 +90,7 @@
     }));
     return cv;
   };
+  if (new URLSearchParams(location.search).has('story')) document.documentElement.classList.add('story');
   const pipImg = (key, cls = 'pip') => `<img class="${cls}" src="../brand/pip/pip-${key}.png" alt="" />`;
   window.render = (s) => {
     document.getElementById('counter').textContent = s.total > 1 ? `${s.index}/${s.total}` : '';
@@ -92,7 +99,7 @@
     const pips = s.pips
       ? `<div class="pips">${s.pips.map((p) => `<figure>${pipImg(p.pip, '')}<figcaption>${p.label}</figcaption></figure>`).join('')}</div>`
       : '';
-    const cta = s.cta ? `<div class="cta">${s.cta}</div>` : '';
+    const cta = (s.cta ? `<div class="cta">${s.cta}</div>` : '') + (s.slot ? `<div class="slot">${s.slot}</div>` : '');
     const c = document.getElementById('content');
     c.innerHTML = s.image
       ? `<div class="row"><div class="left">${bubble}${s.pip ? pipImg(s.pip) : ''}</div>

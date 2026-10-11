@@ -186,5 +186,45 @@
       "body": "Which training arc are you on? 👇<br>Save this 📌",
       "cta": "DAY 1"
     }
+  ],
+  "c7-android-beta": [
+    {
+      "emoji": "🧪",
+      "title": "Android testers <em>wanted</em>",
+      "body": "Play HabitQuest before everyone else.<br><b>Free, 2 minutes.</b>",
+      "image": "today"
+    },
+    {
+      "emoji": "🤖",
+      "title": "Why <em>12 testers</em>?",
+      "body": "Google asks every new app for <b>12 testers during 14 days</b> before it can go on Google Play. You can be one of them."
+    },
+    {
+      "emoji": "📲",
+      "title": "Just <em>3 steps</em>",
+      "body": "1. Join the testers group with your phone’s Google account<br>2. Install from Google Play when we post the link<br>3. Keep it 14 days and open it from time to time"
+    },
+    {
+      "emoji": "⚔️",
+      "title": "Join the <em>beta</em>",
+      "body": "Link in bio 👆<br><b>gethabitquest.com/#beta</b>",
+      "cta": "I’M IN"
+    }
+  ],
+  "s-android-beta": [
+    {
+      "story": true,
+      "emoji": "🧪",
+      "title": "Android testers <em>wanted</em>!",
+      "body": "Play HabitQuest before everyone else.<br><b>Free, 2 minutes.</b><br><br>1. Join the testers group<br>2. Install from Google Play<br>3. Keep it 14 days",
+      "slot": "👆 Tap the link to join"
+    },
+    {
+      "story": true,
+      "emoji": "🤖",
+      "title": "Only <em>12 testers</em> needed",
+      "body": "Google asks for <b>12 testers during 14 days</b> before HabitQuest can go on Google Play.<br><br>Be one of them 💪",
+      "slot": "👆 Join the beta"
+    }
   ]
 }

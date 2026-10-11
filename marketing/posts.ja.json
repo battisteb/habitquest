@@ -73,5 +73,15 @@
     { "boss": "junk_goblin", "pip": "sad-worried", "title": "ジャンクフード<br><em>ゴブリン</em>", "body": "お菓子をポケットにしのばせる。<br><b>弱点：</b>まずお水1杯とくだもの" },
     { "pip": "proud-fire", "title": "クエストで<em>ボスにダメージ</em>⚔️", "body": "毎週月曜、新しいボスが出るよ。<br>習慣をこなして、<b>いっしょにたおそう！</b>" },
     { "pip": "joy-party", "title": "きみのボスは<em>どれ</em>？", "body": "コメントで教えてね👇<br>保存して、次のバトルに📌", "cta": "たたかう！" }
+  ],
+  "j13-android-beta": [
+    { "image": "today", "pip": "joy-party", "title": "<em>Androidテスター</em>募集中🧪", "body": "HabitQuestをだれよりも早く、<span class=\"nw\">無料で遊べるよ🌸</span>" },
+    { "pip": "happy-calm", "title": "どうして<em>12人</em>？", "body": "Google Playで公開するには、新しいアプリは<b>12人のテスターが14日間</b>必要なんだ。" },
+    { "pip": "happy-love", "title": "<em>3ステップ</em>だけ", "body": "① スマホのGoogleアカウントでグループに参加<br>② リンクが届いたらPlayストアから入手<br>③ 14日間ときどき開いてね" },
+    { "pip": "joy-love", "title": "ピップからの<em>お願い</em>🙏", "body": "プロフィールのリンクから参加してね👆<br>台灣的朋友也歡迎！", "cta": "参加する" }
+  ],
+  "js-android-beta": [
+    { "story": true, "pip": "joy-party", "title": "<em>Androidテスター</em>募集中🧪", "body": "いちばん早く、無料で遊べるよ🌸<br><br>① グループに参加<br>② Playストアで入手<br>③ 14日間残してね", "slot": "👆 ここにリンク" },
+    { "story": true, "pip": "joy-love", "title": "ピップからの<em>お願い</em>🙏", "body": "<b>12人</b>集まったら公開できるよ！<br>台灣的朋友：Android 測試員招募中！", "slot": "👆 ここにリンク" }
   ]
 }

@@ -10,6 +10,8 @@
  * → posts.en.json, screenshots from assets/screens-en, output exports/posts-en.
  * Japanese account: LANG=ja → posts.ja.json, templates/slide-ja.html (Pip), exports/posts-ja.
  * A slide with `boss: '<key>'` shows that weekly boss big, drawn from the app's sprites.
+ * A slide with `story: true` is an Instagram story (1080×1920), with an optional dashed `slot`
+ * where the link sticker goes.
  */
 const fs = require('fs');
 const path = require('path');
@@ -52,7 +54,9 @@ function bossArt() {
     const outDir = path.join(root, 'exports', exportsDir, name);
     fs.mkdirSync(outDir, { recursive: true });
     for (let i = 0; i < slides.length; i++) {
-      await page.goto(template, { waitUntil: 'networkidle0' });
+      const story = !!slides[i].story;
+      await page.setViewport({ width: 1080, height: story ? 1920 : 1350, deviceScaleFactor: 1 });
+      await page.goto(template + (story ? (template.includes('?') ? '&story' : '?story') : ''), { waitUntil: 'networkidle0' });
       await page.evaluate((s) => window.render(s), { ...slides[i], bossArt: slides[i].boss ? boss(slides[i].boss) : undefined, screens, index: i + 1, total: slides.length });
       await page.evaluate(() => document.fonts.ready);
       await page.evaluate(() => Promise.all([...document.images].map((img) => img.decode().catch(() => {}))));
