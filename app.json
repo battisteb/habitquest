@@ -99,8 +99,7 @@
         "react-native-google-mobile-ads",
         {
           "androidAppId": "ca-app-pub-3756522162472324~3680871118",
-          "iosAppId": "ca-app-pub-3756522162472324~3680871118",
-          "userTrackingUsageDescription": "This identifier will be used to show you personalized ads."
+          "iosAppId": "ca-app-pub-3756522162472324~3680871118"
         }
       ],
       [
@@ -115,7 +114,7 @@
       [
         "expo-tracking-transparency",
         {
-          "userTrackingPermission": "This identifier will be used to show you personalized ads."
+          "userTrackingPermission": false
         }
       ],
       "expo-asset",
