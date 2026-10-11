@@ -10,7 +10,9 @@ const isNative = Platform.OS !== 'web';
 // ─── Ad Unit IDs ──────────────────────────────────────────────────────────────
 // AdMob app IDs and ad units are per platform. The iOS app is not registered in
 // AdMob yet: leave the iOS IDs empty until it is, so release builds show no ads on
-// iOS rather than requesting Android units.
+// iOS rather than requesting Android units. iOS 1.0 ships without ads and without the
+// tracking prompt text: when filling these IDs, put the ATT text back in app.json
+// (expo-tracking-transparency `userTrackingPermission`), or the prompt crashes the app.
 const PROD_BANNER_IOS = '';
 const PROD_BANNER_AND = 'ca-app-pub-3756522162472324/4591462256';
 const PROD_INTER_IOS  = '';
