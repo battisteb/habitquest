@@ -12,6 +12,8 @@
  * A slide with `boss: '<key>'` shows that weekly boss big, drawn from the app's sprites.
  * A slide with `story: true` is an Instagram story (1080×1920), with an optional dashed `slot`
  * where the link sticker goes.
+ * VIDEO=1 renders every slide in that vertical format (exports/<dir>-video), the input of
+ * carousel-video.js, which turns a carousel into a TikTok / YouTube Shorts video.
  */
 const fs = require('fs');
 const path = require('path');
@@ -22,7 +24,8 @@ const root = __dirname;
 const lang = ['en', 'ja'].includes(process.env.LANG) ? process.env.LANG : 'fr';
 const posts = JSON.parse(fs.readFileSync(path.join(root, lang === 'fr' ? 'posts.json' : `posts.${lang}.json`), 'utf8'));
 const screens = lang === 'fr' ? 'screens' : `screens-${lang}`;
-const exportsDir = lang === 'fr' ? 'posts' : `posts-${lang}`;
+const video = !!process.env.VIDEO;
+const exportsDir = (lang === 'fr' ? 'posts' : `posts-${lang}`) + (video ? '-video' : '');
 // The Japanese account has its own kawaii template where Pip speaks (strategy.ja.md).
 // English account: Pip's Sky like the app and its own handle (@habitquest.application).
 const template = pathToFileURL(path.join(root, 'templates', lang === 'ja' ? 'slide-ja.html' : 'slide.html')).href + (lang === 'en' ? '?sky&handle=habitquest.application' : '');
@@ -54,7 +57,7 @@ function bossArt() {
     const outDir = path.join(root, 'exports', exportsDir, name);
     fs.mkdirSync(outDir, { recursive: true });
     for (let i = 0; i < slides.length; i++) {
-      const story = !!slides[i].story;
+      const story = video || !!slides[i].story;
       await page.setViewport({ width: 1080, height: story ? 1920 : 1350, deviceScaleFactor: 1 });
       await page.goto(template + (story ? (template.includes('?') ? '&story' : '?story') : ''), { waitUntil: 'networkidle0' });
       await page.evaluate((s) => window.render(s), { ...slides[i], bossArt: slides[i].boss ? boss(slides[i].boss) : undefined, screens, index: i + 1, total: slides.length });
