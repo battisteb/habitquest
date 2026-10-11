@@ -8,7 +8,8 @@
  * App screens: marketing/assets/store-<lang>/<screen>.png, captured from the
  * app at 390×844 with a device scale of 3 (demo account PixelHero).
  * Output: marketing/exports/store/<lang>/<size>/NN-<screen>.png (git-ignored),
- * sizes: iPhone 6.7"/6.9" (1290×2796), iPhone 6.5" (1242×2688), Android (1080×1920).
+ * sizes: iPhone 6.3" (1206×2622, App Store Connect « écran moyen »), iPhone 6.7"/6.9" (1290×2796),
+ * iPhone 6.5" (1242×2688), Android (1080×1920).
  *
  * SKY=1 LANG=en: Pip's Sky set (the app's default theme), from store.json `sky` and the English app
  * screens of assets/screens-en (390×844 @2x); output exports/store/en-sky.
