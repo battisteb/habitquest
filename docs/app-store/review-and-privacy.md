@@ -2,14 +2,16 @@
 
 ## Informations pour la revue (App Store Connect → App Review Information)
 
-- **Compte de démo** : ⏳ créer un compte de test avec quelques habitudes, un ami et un duel terminé, puis renseigner e-mail + mot de passe.
+- **Compte de démo** : QuestTester (e-mail et mot de passe : `PROD_MAIL_TEST_EMAIL` / `PROD_MAIL_TEST_PASSWORD` dans `.env.deploy.local`, à recopier par Battiste dans App Store Connect). Avant chaque soumission, lancer `scripts/demo/seed-review-demo.sql` sur la prod : 6 habitudes avec des séries jusqu'à la veille, niveau 6, l'ami DemoHero et un duel terminé.
 - **Notes pour la revue** (à coller) :
 
-  > HabitQuest is a gamified habit tracker. Sign in with the demo account to see existing habits, streaks, a friend and a completed duel. Tap a habit on the Today tab to complete it and earn XP. Account deletion: Settings (gear icon on the Me tab) → "Delete my account". Ads (Google AdMob) are shown to free users only after the App Tracking Transparency prompt; declining still shows non-personalized ads. Premium (in-app subscription via RevenueCat) removes ads.
+  > HabitQuest is a gamified habit tracker: habits become daily quests that earn XP and gold, level up a pixel-art hero and damage a weekly boss. Sign in with the demo account (Sign in → e-mail and password) to see habits with running streaks, a level 6 hero, a friend (DemoHero) and a finished duel (Social tab). Tap a habit on the Quests tab to complete it. Account deletion: Me tab → gear icon → "Delete my account". Premium is an auto-renewable subscription (monthly or yearly) or a one-time lifetime purchase, sold through In-App Purchase. This iOS version shows no ads and does not track users, so there is no App Tracking Transparency prompt.
 
 ## Fiche App Privacy (App Store Connect → App Privacy)
 
-Réponses à donner, d'après l'inventaire des données (`docs/privacy-policy.md`) :
+**Version iOS 1.0 : pas de publicité** (l'app iOS n'est pas encore dans AdMob, aucun bloc de pub iOS, pas de demande ATT, cf. `ad-service.ts`). Répondre seulement les lignes « App Functionality » ci-dessous, sans IDFA, Advertising Data ni Product Interaction, et **« Data Used to Track You » : aucune**. Le jour où les pubs iOS arrivent, revenir au tableau complet (les lignes AdMob) avant de publier la mise à jour.
+
+Tableau complet (avec AdMob, comme sur Android), d'après l'inventaire des données (`docs/privacy-policy.md`) :
 
 | Type de donnée Apple | Collectée | Liée à l'identité | Suivi (tracking) | Finalités |
 |---|---|---|---|---|

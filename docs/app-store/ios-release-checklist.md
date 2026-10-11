@@ -24,7 +24,7 @@
 - ✅ Suppression de compte depuis l'app (règle 5.1.1(v)) — PR #4 ; ⏳ déployer la migration et la fonction `delete-account` en prod
 - ✅ Politique de confidentialité complétée ; ⏳ activer GitHub Pages (main, dossier `/docs`) → `https://gethabitquest.com/privacy-policy`
 - ⏳ Fiche « App Privacy » : réponses prêtes dans `review-and-privacy.md`
-- ⏳ Compte de démo pour l'équipe de revue ; notes de revue prêtes dans `review-and-privacy.md`
+- ✅ Compte de démo QuestTester (`scripts/demo/seed-review-demo.sql`, à relancer avant chaque soumission) et notes de revue dans `review-and-privacy.md`
 - ⏳ Classification d'âge : réponses proposées dans `review-and-privacy.md` (9+ attendu, la fiche actuelle indique 4+)
 
 ## Métadonnées (`docs/app-store/metadata.md`)
