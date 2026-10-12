@@ -68,7 +68,11 @@ function renderSegment(seg, len, file, cardPng) {
   const z = keyed(cam.map(([u, zz]) => [u, zz]), U);
   const cx = keyed(cam.map(([u, , x = 0.5]) => [u, x]), U);
   const cy = keyed(cam.map(([u, , , y = 0.5]) => [u, y]), U);
-  const zoompan = `zoompan=z='${z}':x='max(0,min(iw-iw/zoom,(${cx})*iw-iw/zoom/2))':y='max(0,min(ih-ih/zoom,(${cy})*ih-ih/zoom/2))':d=1:s=${W}x${H}:fps=${FPS}`;
+  // Camera with sub-pixel precision (perspective, cubic): zoompan rounds its window to whole pixels,
+  // which makes slow pushes and pans shake.
+  const vw = `(W/(${z}))`, vh = `(H/(${z}))`;
+  const x0 = `max(0,min(W-${vw},(${cx})*W-${vw}/2))`, y0 = `max(0,min(H-${vh},(${cy})*H-${vh}/2))`;
+  const camera = `scale=${W}:${H}:flags=lanczos,perspective=x0='${x0}':y0='${y0}':x1='${x0}+${vw}':y1='${y0}':x2='${x0}':y2='${y0}+${vh}':x3='${x0}+${vw}':y3='${y0}+${vh}':interpolation=cubic:eval=frame`;
   const speed = seg.speed || 1;
   let input, crop;
   if (seg.card) {
@@ -88,7 +92,7 @@ function renderSegment(seg, len, file, cardPng) {
     input = ['-ss', String(seg.start || 0), '-t', (len * speed + 0.2).toFixed(3), '-i', src];
   }
   const sharpen = seg.clip ? ',unsharp=5:5:0.6' : '';
-  run([...input, '-an', '-vf', `${crop},setpts=PTS/${speed},fps=${FPS},${zoompan}${sharpen},setsar=1,format=yuv420p,trim=end_frame=${n}`,
+  run([...input, '-an', '-vf', `${crop},setpts=PTS/${speed},fps=${FPS},${camera}${sharpen},setsar=1,format=yuv420p,trim=end_frame=${n}`,
     '-c:v', 'libx264', '-crf', '14', '-preset', 'fast', file]);
 }
 
