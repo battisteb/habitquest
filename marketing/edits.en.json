@@ -1,0 +1,783 @@
+{
+  "e1-saitama-day3": {
+    "segments": [
+      {
+        "clip": "saitama/_2L7O7dYhvs.mp4",
+        "start": 127.5,
+        "dur": 1.3,
+        "focus": [
+          0.45,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.14,
+            0.5,
+            0.45
+          ]
+        ]
+      },
+      {
+        "clip": "saitama/_2L7O7dYhvs.mp4",
+        "start": 109.4,
+        "dur": 1,
+        "focus": [
+          0.47,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1.2,
+            0.5,
+            0.55
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      {
+        "clip": "saitama/_2L7O7dYhvs.mp4",
+        "start": 119,
+        "dur": 1,
+        "focus": [
+          0.47,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.1,
+            0.5,
+            0.55
+          ]
+        ]
+      },
+      {
+        "clip": "saitama/_2L7O7dYhvs.mp4",
+        "start": 122.6,
+        "dur": 1,
+        "focus": [
+          0.6,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1.1,
+            0.5,
+            0.55
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      {
+        "clip": "saitama/_2L7O7dYhvs.mp4",
+        "start": 133,
+        "dur": 1.1,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.12,
+            0.5,
+            0.42
+          ]
+        ]
+      },
+      {
+        "clip": "saitama/2lOM9P9yu4w.mp4",
+        "start": 39,
+        "dur": 1.3,
+        "focus": [
+          0.64,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.22,
+            0.45,
+            0.42
+          ]
+        ]
+      },
+      {
+        "clip": "saitama/2lOM9P9yu4w.mp4",
+        "start": 41,
+        "dur": 0.45,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.35
+          ]
+        ]
+      },
+      {
+        "app": "A-meditate.mp4",
+        "start": 0.55,
+        "dur": 2.9,
+        "focus": [
+          0.5,
+          0
+        ],
+        "in": "flash",
+        "inDur": 0.3,
+        "cam": [
+          [
+            0,
+            1.35,
+            0.62,
+            0.27
+          ],
+          [
+            0.3,
+            1.35,
+            0.62,
+            0.27
+          ],
+          [
+            0.55,
+            1.3,
+            0.55,
+            0.86
+          ],
+          [
+            1,
+            1.3,
+            0.55,
+            0.86
+          ]
+        ]
+      },
+      {
+        "card": {
+          "pip": "pip-joy-worried",
+          "line": "Your habits become *quests.*",
+          "sub": "Free · link in bio"
+        },
+        "dur": 1.9,
+        "in": "fade",
+        "inDur": 0.35,
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.04
+          ]
+        ]
+      }
+    ],
+    "captions": [
+      {
+        "t": 0,
+        "end": 1.3,
+        "text": "Day 3.",
+        "y": 0.27,
+        "size": 160
+      },
+      {
+        "t": 0.3,
+        "end": 1.3,
+        "text": "This is where|you *quit.*",
+        "y": 0.38,
+        "size": 84,
+        "pop": true
+      },
+      {
+        "t": 1.3,
+        "end": 2.3,
+        "text": "He *didn't.*",
+        "y": 0.24,
+        "size": 110
+      },
+      {
+        "t": 2.3,
+        "end": 3.3,
+        "text": "100 squats.",
+        "y": 0.24,
+        "size": 96
+      },
+      {
+        "t": 3.3,
+        "end": 4.3,
+        "text": "100 push-ups.|*Every* day.",
+        "y": 0.22,
+        "size": 90
+      },
+      {
+        "t": 4.3,
+        "end": 5.4,
+        "text": "*3 years* later.",
+        "y": 0.22,
+        "size": 100
+      },
+      {
+        "t": 7.3,
+        "end": 8.6,
+        "text": "Track it like *he* did.",
+        "y": 0.3,
+        "size": 84,
+        "pop": true
+      },
+      {
+        "t": 8.6,
+        "end": 9.95,
+        "text": "One check a day.|*That's it.*",
+        "y": 0.3,
+        "size": 84
+      }
+    ],
+    "audio": [
+      {
+        "clip": "saitama/2lOM9P9yu4w.mp4",
+        "start": 34.3,
+        "at": 0,
+        "dur": 11.85,
+        "fadeOut": 1.6
+      }
+    ],
+    "sfx": [
+      {
+        "file": "assets/sounds/complete.m4a",
+        "at": 7.55,
+        "vol": 0.9
+      },
+      {
+        "file": "assets/sounds/coin.m4a",
+        "at": 8.15,
+        "vol": 0.6
+      }
+    ]
+  },
+  "e2-jinwoo-one-year": {
+    "segments": [
+      {
+        "clip": "jinwoo/ZXESwvJqBwA.mp4",
+        "start": 2.6,
+        "dur": 1.2,
+        "focus": [
+          0.66,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.12,
+            0.5,
+            0.45
+          ]
+        ]
+      },
+      {
+        "clip": "jinwoo/ZXESwvJqBwA.mp4",
+        "start": 124.2,
+        "dur": 1.2,
+        "focus": [
+          0.55,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.12,
+            0.5,
+            0.45
+          ]
+        ]
+      },
+      {
+        "clip": "jinwoo/ZXESwvJqBwA.mp4",
+        "start": 8,
+        "dur": 1.6,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.55,
+            0.5,
+            0.46
+          ]
+        ]
+      },
+      {
+        "app": "B-levelup.mp4",
+        "start": 0.3,
+        "dur": 3.6,
+        "focus": [
+          0.5,
+          0
+        ],
+        "in": "zoom",
+        "inDur": 0.3,
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            0.25,
+            1
+          ],
+          [
+            0.5,
+            1.3,
+            0.5,
+            0.62
+          ],
+          [
+            1,
+            1.3,
+            0.5,
+            0.62
+          ]
+        ]
+      },
+      {
+        "clip": "jinwoo/ZXESwvJqBwA.mp4",
+        "start": 120.9,
+        "dur": 1.3,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "in": "flash",
+        "inDur": 0.2,
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.14
+          ]
+        ]
+      },
+      {
+        "card": {
+          "pip": "pip-joy-worried",
+          "line": "Your daily quest|is *waiting.*",
+          "sub": "Free · link in bio"
+        },
+        "dur": 1.9,
+        "in": "fade",
+        "inDur": 0.35,
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.04
+          ]
+        ]
+      }
+    ],
+    "captions": [
+      {
+        "t": 0,
+        "end": 1.2,
+        "text": "This is *you* today.",
+        "y": 0.3,
+        "size": 100,
+        "pop": true
+      },
+      {
+        "t": 1.2,
+        "end": 2.4,
+        "text": "This is you|in *1 year.*",
+        "y": 0.3,
+        "size": 100,
+        "pop": true
+      },
+      {
+        "t": 2.4,
+        "end": 4,
+        "text": "The difference?|*One daily quest.*",
+        "y": 0.2,
+        "size": 84
+      },
+      {
+        "t": 4.05,
+        "end": 5.4,
+        "text": "*Your* daily quest.",
+        "y": 0.2,
+        "size": 84
+      },
+      {
+        "t": 5.4,
+        "end": 7.6,
+        "text": "Do it. *Level up.*",
+        "y": 0.2,
+        "size": 90
+      },
+      {
+        "t": 7.6,
+        "end": 8.9,
+        "text": "Every. *Single.* Day.",
+        "y": 0.3,
+        "size": 96,
+        "pop": true
+      }
+    ],
+    "audio": [
+      {
+        "clip": "jinwoo/ZXESwvJqBwA.mp4",
+        "start": 113.3,
+        "at": 0,
+        "dur": 10.8,
+        "fadeOut": 1.6
+      }
+    ],
+    "sfx": [
+      {
+        "file": "assets/sounds/tap.m4a",
+        "at": 4.5,
+        "vol": 0.8
+      },
+      {
+        "file": "assets/sounds/level-up.m4a",
+        "at": 4.8,
+        "vol": 0.9
+      }
+    ]
+  },
+  "e3-rock-lee-untrained": {
+    "segments": [
+      {
+        "clip": "rock-lee/b429Zh63yI4.mp4",
+        "start": 97.6,
+        "dur": 1.1,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.14,
+            0.5,
+            0.42
+          ]
+        ]
+      },
+      {
+        "clip": "rock-lee/BAWImsYnpyo.mp4",
+        "start": 20.5,
+        "dur": 1.2,
+        "focus": [
+          0.33,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.12,
+            0.5,
+            0.45
+          ]
+        ]
+      },
+      {
+        "clip": "rock-lee/BAWImsYnpyo.mp4",
+        "start": 35,
+        "dur": 1,
+        "focus": [
+          0.27,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.1
+          ]
+        ]
+      },
+      {
+        "clip": "rock-lee/BAWImsYnpyo.mp4",
+        "start": 130.6,
+        "dur": 1.2,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.12,
+            0.5,
+            0.42
+          ]
+        ]
+      },
+      {
+        "clip": "rock-lee/b429Zh63yI4.mp4",
+        "start": 101,
+        "dur": 1.2,
+        "focus": [
+          0.55,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.18
+          ]
+        ]
+      },
+      {
+        "clip": "rock-lee/b429Zh63yI4.mp4",
+        "start": 106.6,
+        "dur": 0.9,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1.22,
+            0.5,
+            0.4
+          ],
+          [
+            1,
+            1.12,
+            0.5,
+            0.4
+          ]
+        ]
+      },
+      {
+        "clip": "rock-lee/b429Zh63yI4.mp4",
+        "start": 108,
+        "dur": 0.8,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.25
+          ]
+        ]
+      },
+      {
+        "app": "C-stats.mp4",
+        "start": 0.6,
+        "dur": 3.6,
+        "focus": [
+          0.5,
+          0
+        ],
+        "in": "whip",
+        "inDur": 0.22,
+        "cam": [
+          [
+            0,
+            1.6,
+            0.27,
+            0.2
+          ],
+          [
+            0.28,
+            1.6,
+            0.27,
+            0.2
+          ],
+          [
+            0.45,
+            1.6,
+            0.73,
+            0.4
+          ],
+          [
+            0.62,
+            1.6,
+            0.73,
+            0.4
+          ],
+          [
+            0.9,
+            1,
+            0.5,
+            0.5
+          ],
+          [
+            1,
+            1,
+            0.5,
+            0.5
+          ]
+        ]
+      },
+      {
+        "card": {
+          "pip": "pip-joy-worried",
+          "line": "Train like Lee.|*Track it.*",
+          "sub": "Free · link in bio"
+        },
+        "dur": 1.9,
+        "in": "fade",
+        "inDur": 0.35,
+        "cam": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1.04
+          ]
+        ]
+      }
+    ],
+    "captions": [
+      {
+        "t": 0,
+        "end": 1.1,
+        "text": "You're not *lazy.*",
+        "y": 0.28,
+        "size": 116,
+        "pop": true
+      },
+      {
+        "t": 1.1,
+        "end": 2.3,
+        "text": "You're *untrained.*",
+        "y": 0.22,
+        "size": 110
+      },
+      {
+        "t": 2.3,
+        "end": 3.3,
+        "text": "Zero talent.|Zero *ninjutsu.*",
+        "y": 0.2,
+        "size": 88
+      },
+      {
+        "t": 3.3,
+        "end": 4.5,
+        "text": "So he trained.|*Every* day.",
+        "y": 0.2,
+        "size": 88
+      },
+      {
+        "t": 4.5,
+        "end": 5.7,
+        "text": "For *years.*",
+        "y": 0.22,
+        "size": 104
+      },
+      {
+        "t": 7,
+        "end": 8.6,
+        "text": "*130* small wins.",
+        "y": 0.72,
+        "size": 88,
+        "pop": true
+      },
+      {
+        "t": 8.6,
+        "end": 10.6,
+        "text": "*15 days.* No break.",
+        "y": 0.72,
+        "size": 88
+      }
+    ],
+    "audio": [
+      {
+        "clip": "rock-lee/b429Zh63yI4.mp4",
+        "start": 101.4,
+        "at": 0,
+        "dur": 12.9,
+        "fadeOut": 1.6
+      }
+    ],
+    "sfx": [
+      {
+        "file": "marketing/audio/sfx/whoosh.m4a",
+        "at": 6.95,
+        "vol": 0.7
+      }
+    ]
+  }
+}

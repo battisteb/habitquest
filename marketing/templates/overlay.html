@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<style>
+  /* Transparent 1080×1920 layers for edit-reel.js: on-screen text (captions, hooks) and the end card. */
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+  /* Native short-video text: heavy sans, white with a dark outline, the key word in yellow. */
+  .cap { position: absolute; left: 70px; right: 70px; transform: translateY(-50%); text-align: center;
+    font-family: Inter, sans-serif; font-weight: 900; color: #fff; letter-spacing: -0.01em; word-spacing: 0.14em; line-height: 1.1;
+    -webkit-text-stroke: 11px #0b0b14; paint-order: stroke fill; text-shadow: 0 6px 18px rgba(0, 0, 0, .45); }
+  .cap em { font-style: normal; color: #FFD60A; }
+  .cap .w { opacity: 0; }
+  .cap .w.on { opacity: 1; }
+  /* End card: Pip's Sky, the app's default theme. */
+  .card { position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, #EAF5FF 0%, #CFE8FF 55%, #B6DAFF 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 44px; color: #2B3A6B; }
+  .card img { width: 560px; image-rendering: pixelated; }
+  .card .logo { font-family: 'Press Start 2P'; font-size: 84px; color: #2F7BEA; text-shadow: 6px 6px 0 #2B3A6B; }
+  .card .line { font-family: Inter; font-weight: 900; font-size: 86px; text-align: center; line-height: 1.1; max-width: 900px; }
+  .card .line em { font-style: normal; color: #2F7BEA; }
+  .card .sub { font-family: Inter; font-weight: 800; font-size: 50px; color: #4A5A8C; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  // window.caption({ text, y, size, words }) — `*word*` in yellow, `|` line break; `words`: how many
+  // words are shown (word-by-word reveal), all by default.
+  window.caption = ({ text, y = 0.4, size = 80, words }) => {
+    let n = 0;
+    const html = text.split('|').map((line) => line.trim().split(/\s+/).map((w) => {
+      const em = /^\*.*\*[.,!?…:]*$/.test(w);
+      const body = w.replace(/\*/g, '');
+      n += 1;
+      const on = words == null || n <= words;
+      return `<span class="w${on ? ' on' : ''}">${em ? `<em>${body}</em>` : body}</span>`;
+    }).join(' ')).join('<br>');
+    document.getElementById('root').innerHTML = `<div class="cap" style="top:${y * 1920}px;font-size:${size}px">${html}</div>`;
+    return n;
+  };
+  // window.card({ pip, line, sub }) — the closing card.
+  window.card = ({ pip, line, sub }) => {
+    document.getElementById('root').innerHTML = `<div class="card">
+      <img src="../brand/pip/${pip}.png" alt="" />
+      <div class="logo">HabitQuest</div>
+      <div class="line">${line.replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/\|/g, '<br>')}</div>
+      ${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
+  };
+</script>
+</body>
+</html>
