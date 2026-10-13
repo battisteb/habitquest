@@ -105,6 +105,19 @@ export function composeHero(look: HeroLook): (string | null)[][] {
   return grid;
 }
 
+/** The pixels of a front accessory (a held item) in its colors, for poses that move it with the hand. */
+export function frontAccessoryCells(look: HeroLook): [number, number, string][] {
+  const acc = look.accessory ? ACCESSORY_SPRITES[look.accessory] : undefined;
+  if (acc?.layer !== 'front') return [];
+  const base = basePalette(look.skin, look.hair, look.eye);
+  const palette = itemPalette(ACCESSORY_COLORS[look.accessory!] ?? ['#888888', '#bbbbbb']);
+  const cells: [number, number, string][] = [];
+  acc.rows.forEach((row, y) => [...row].forEach((ch, x) => {
+    if (ch !== '.') cells.push([x, y, palette[ch] ?? base[ch] ?? '#ff00ff']);
+  }));
+  return cells;
+}
+
 /** Merges same-colored neighbors of a row into one strip: far fewer views than one per pixel. */
 export function toStrips(grid: (string | null)[][]): [number, number, number, string][] {
   const strips: [number, number, number, string][] = [];
