@@ -1,18 +1,16 @@
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-export function isStreakActive(lastCompletedAt: string | null): boolean {
+/** Calendar days between two dates on the device's clock, whatever the length of the days between
+ * them (a daylight-saving change makes one day 23 or 25 hours long). */
+function localDaysBetween(from: Date, to: Date): number {
+  const day = (d: Date) => Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+  return Math.round((day(to) - day(from)) / ONE_DAY_MS);
+}
+
+export function isStreakActive(lastCompletedAt: string | null, now: Date = new Date()): boolean {
   if (!lastCompletedAt) return false;
-
-  const lastDate = new Date(lastCompletedAt);
-  const today = new Date();
-
-  // Reset time parts to compare dates only
-  const lastDay = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate());
-  const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-  const diffMs = todayDay.getTime() - lastDay.getTime();
   // Streak is active if completed today or yesterday
-  return diffMs <= ONE_DAY_MS;
+  return localDaysBetween(new Date(lastCompletedAt), now) <= 1;
 }
 
 export function isCompletedToday(lastCompletedAt: string | null): boolean {

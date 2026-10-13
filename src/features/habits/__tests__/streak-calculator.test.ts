@@ -33,6 +33,28 @@ describe('isStreakActive', () => {
   it('returns false if completed 2 days ago', () => {
     expect(isStreakActive(daysAgo(2))).toBe(false);
   });
+
+  describe('across a daylight-saving change (Paris)', () => {
+    const tz = process.env.TZ;
+    beforeAll(() => {
+      process.env.TZ = 'Europe/Paris';
+    });
+    afterAll(() => {
+      process.env.TZ = tz;
+    });
+
+    it('keeps the streak the day after the 25-hour day (clocks back on 25 Oct 2026)', () => {
+      const completed = new Date(2026, 9, 25, 20, 0).toISOString();
+      expect(isStreakActive(completed, new Date(2026, 9, 26, 8, 0))).toBe(true);
+      expect(isStreakActive(completed, new Date(2026, 9, 27, 8, 0))).toBe(false);
+    });
+
+    it('keeps the streak the day after the 23-hour day (clocks forward on 28 Mar 2027)', () => {
+      const completed = new Date(2027, 2, 28, 20, 0).toISOString();
+      expect(isStreakActive(completed, new Date(2027, 2, 29, 8, 0))).toBe(true);
+      expect(isStreakActive(completed, new Date(2027, 2, 30, 8, 0))).toBe(false);
+    });
+  });
 });
 
 describe('isCompletedToday', () => {
