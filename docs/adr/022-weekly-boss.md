@@ -1,7 +1,7 @@
 # ADR 022 — Le boss de la semaine
 
 **Date** : 2026-10-03
-**Statut** : accepté (idée I9 de l'étude concurrentielle, validée par Battiste)
+**Statut** : accepté (idée I9 de l'étude concurrentielle, validée par Battiste). PV revus dans l'ADR 031 (7 par validation prévue, ~70 %).
 
 ## Contexte
 

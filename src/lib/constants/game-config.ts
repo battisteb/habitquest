@@ -311,7 +311,7 @@ export const SEASON_ITEM_PRICE = 300;
 
 export const BOSS = {
   HIT: 10,
-  HP_PER_PLANNED: 8,
+  HP_PER_PLANNED: 7,
   MIN_PLANNED: 5,
   REWARD_XP: 50,
   REWARD_GOLD: 25,
