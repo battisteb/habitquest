@@ -64,6 +64,8 @@ EXPO_TOKEN=$(getv EXPO_TOKEN) npm run update:preview -- --message "fix: …"    
 EXPO_TOKEN=$(getv EXPO_TOKEN) npm run update:production -- --message "fix: …"
 ```
 
+Avant de publier, vérifier que rien de natif n'a changé depuis les builds installés : `npx eas-cli build:list --json` donne le commit de chaque build, puis `git diff --stat <commit> origin/main -- package.json app.json eas.json plugins` ne doit rien montrer de natif (la politique `appVersion` enverrait sinon du JS incompatible). Après la publication, vérifier que les bundles contiennent la configuration de prod (les scripts passent `--environment`, qui prend les variables EAS) : `grep -c aksxyaullvozlkzcegth dist/_expo/static/js/*/entry-*.hbc`.
+
 Si la mise à jour dépend d'une migration : migration d'abord, compatible avec la version précédente de l'app. Retour en arrière : `npx eas-cli update:republish --group <id précédent>`.
 
 ## 5. Vérifier

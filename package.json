@@ -15,8 +15,8 @@
     "check:bundle": "expo export --platform ios --platform android --platform web --output-dir .bundle-check",
     "export:web": "expo export --platform web --clear",
     "deploy:web": "npm run export:web && npx eas-cli@latest deploy --prod",
-    "update:preview": "npx eas-cli@latest update --channel preview --platform all --non-interactive",
-    "update:production": "npx eas-cli@latest update --channel production --platform all --non-interactive"
+    "update:preview": "npx eas-cli@latest update --channel preview --environment preview --platform all --non-interactive",
+    "update:production": "npx eas-cli@latest update --channel production --environment production --platform all --non-interactive"
   },
   "dependencies": {
     "@expo-google-fonts/dotgothic16": "^0.4.1",
