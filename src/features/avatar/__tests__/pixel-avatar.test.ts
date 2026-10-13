@@ -1,5 +1,5 @@
 import { composeHero, toStrips, tint } from '../renderer/pixel-avatar';
-import { GRID, HAT_SPRITES, OUTFIT_SPRITES, ACCESSORY_SPRITES, HAT_COLORS, OUTFIT_COLORS, ACCESSORY_COLORS } from '../renderer/sprites';
+import { BODY, GRID, HAT_SPRITES, OUTFIT_SPRITES, ACCESSORY_SPRITES, HAT_COLORS, OUTFIT_COLORS, ACCESSORY_COLORS } from '../renderer/sprites';
 
 // sprite_key of every avatar item sold in the shop (shop_items.sprite_key).
 const SHOP_KEYS = {
@@ -15,6 +15,21 @@ describe('32x32 hero sprites', () => {
     for (const k of SHOP_KEYS.hat) expect([k, !!HAT_SPRITES[k] && !!HAT_COLORS[k]]).toEqual([k, true]);
     for (const k of SHOP_KEYS.outfit) expect([k, !!OUTFIT_SPRITES[k] && !!OUTFIT_COLORS[k]]).toEqual([k, true]);
     for (const k of SHOP_KEYS.accessory) expect([k, !!ACCESSORY_SPRITES[k] && !!ACCESSORY_COLORS[k]]).toEqual([k, true]);
+  });
+
+  it('holds swords and shields in a hand instead of floating beside the hero', () => {
+    // The hands: the body's pixels at the end of each arm (rows 23-25, outer columns).
+    const hands = new Set<string>();
+    BODY.forEach((row, y) => [...row].forEach((ch, x) => {
+      if (ch !== '.' && y >= 23 && y <= 25 && (x <= 10 || x >= 21)) hands.add(`${x},${y}`);
+    }));
+    for (const key of ['acc_sword', 'acc_flame_sword', 'acc_shield', 'acc_shield_wood']) {
+      let covered = 0;
+      ACCESSORY_SPRITES[key].rows.forEach((row, y) => [...row].forEach((ch, x) => {
+        if (ch !== '.' && hands.has(`${x},${y}`)) covered++;
+      }));
+      expect([key, covered >= 2]).toEqual([key, true]);
+    }
   });
 
   it('keeps every sprite on the grid', () => {
