@@ -60,6 +60,8 @@ export function HeroGreeting({ totalHabits, restDay, pendingStreaks, xp, level, 
             skinColor={skinColor}
             hairColor={hairColor}
             eyeColor={eyeColor}
+            pose={restDay ? 'rest' : undefined}
+            reactive
           />
         </PixelFrame>
       </Pressable>

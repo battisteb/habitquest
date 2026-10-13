@@ -1,7 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { use$ } from '@legendapp/state/react';
 import { GRID } from './sprites';
-import { DEFAULTS, composeHero, toStrips } from './compose-hero';
+import { DEFAULTS, toStrips } from './compose-hero';
+import { poseHero, type HeroPose } from './poses';
+import { IDLE_LOOP, REACTIONS, type HeroFrame } from '../utils/hero-animation';
+import { heroReaction$ } from '../stores/hero-reaction-store';
 
 export { composeHero, toStrips, tint, type HeroLook } from './compose-hero';
 
@@ -14,10 +18,14 @@ export interface PixelAvatarProps {
   outfit?: string;
   accessory?: string;
   background?: string;
-  /** If provided, locks the bounce frame (use 0 for static previews). Otherwise auto-animates. */
+  /** If provided, the hero stays still (use 0 for static previews). Otherwise it breathes. */
   idleFrame?: number;
-  /** Auto-bounce period in ms (default 700). Ignored when `idleFrame` is set. */
+  /** Pace of the breathing in ms per image (default 700). Ignored when `idleFrame` is set. */
   idleIntervalMs?: number;
+  /** A still pose instead of the breathing loop (e.g. 'rest' on a rest day). */
+  pose?: HeroPose;
+  /** Plays the hero's reactions to game events (quest done, boss hit, boss defeated). */
+  reactive?: boolean;
   /** Hero only, without its square and background: for scenes such as HeroStage. */
   bare?: boolean;
 }
@@ -48,29 +56,24 @@ export function PixelAvatar({
   background,
   idleFrame,
   idleIntervalMs = 700,
+  pose,
+  reactive = false,
   bare = false,
 }: PixelAvatarProps) {
-  // Auto-animate when caller doesn't pin the frame. Static frame for previews.
-  const [autoFrame, setAutoFrame] = useState(0);
-  useEffect(() => {
-    if (idleFrame !== undefined) return;
-    const id = setInterval(() => setAutoFrame((f) => (f + 1) % 2), idleIntervalMs);
-    return () => clearInterval(id);
-  }, [idleFrame, idleIntervalMs]);
-  const frame = idleFrame ?? autoFrame;
+  const frame = useHeroFrame({ still: idleFrame !== undefined || !!pose, pose, idleIntervalMs, reactive });
 
   const strips = useMemo(
-    () => toStrips(composeHero({ skin: skinColor, hair: hairColor, eye: eyeColor, hat, outfit, accessory })),
-    [skinColor, hairColor, eyeColor, hat, outfit, accessory],
+    () => toStrips(poseHero({ skin: skinColor, hair: hairColor, eye: eyeColor, hat, outfit, accessory }, frame.pose)),
+    [skinColor, hairColor, eyeColor, hat, outfit, accessory, frame.pose],
   );
 
   const cell = size / GRID;
-  // Idle bounce: the hero rises by one grid pixel every other frame.
-  const bounceY = frame % 2 === 0 ? 0 : -cell;
+  const shiftX = (frame.dx ?? 0) * cell;
+  const bounceY = (frame.dy ?? 0) * cell;
   const bgColors = background && BG_COLORS[background] ? BG_COLORS[background] : BG_COLORS.default;
 
   return (
-    <View style={[styles.container, bare && styles.bare, { width: size, height: size }]}>
+    <View style={[styles.container, bare && styles.bare, { width: size, height: size }]} testID={`hero-pose-${frame.pose}`}>
       {!bare && (
         <>
           <View style={{ position: 'absolute', top: 0, left: 0, width: size, height: size, backgroundColor: bgColors[0] }} />
@@ -82,7 +85,7 @@ export function PixelAvatar({
           key={i}
           style={{
             position: 'absolute',
-            left: x * cell,
+            left: x * cell + shiftX,
             top: y * cell + bounceY,
             // +0.5 hides hairline gaps between strips at fractional sizes.
             width: w * cell + 0.5,
@@ -93,6 +96,43 @@ export function PixelAvatar({
       ))}
     </View>
   );
+}
+
+/**
+ * The image to show: the still pose, or the breathing loop; a reaction (when `reactive`) plays its
+ * sequence once, then the hero goes back to its rest.
+ */
+function useHeroFrame({ still, pose, idleIntervalMs, reactive }: { still: boolean; pose?: HeroPose; idleIntervalMs: number; reactive: boolean }): HeroFrame {
+  const rest: HeroFrame = { pose: pose ?? 'idle', ms: 0 };
+  const [loopIndex, setLoopIndex] = useState(0);
+  const [played, setPlayed] = useState<HeroFrame | null>(null);
+  const reactionId = use$(heroReaction$.id);
+  const seenId = useRef(reactionId);
+
+  useEffect(() => {
+    if (still) return;
+    const id = setInterval(() => setLoopIndex((i) => (i + 1) % IDLE_LOOP.length), idleIntervalMs);
+    return () => clearInterval(id);
+  }, [still, idleIntervalMs]);
+
+  useEffect(() => {
+    if (!reactive || reactionId === seenId.current) return;
+    seenId.current = reactionId;
+    const reaction = heroReaction$.reaction.get();
+    if (!reaction) return;
+    const frames = REACTIONS[reaction];
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    let t = 0;
+    frames.forEach((f) => {
+      timers.push(setTimeout(() => setPlayed(f), t));
+      t += f.ms;
+    });
+    timers.push(setTimeout(() => setPlayed(null), t));
+    return () => timers.forEach(clearTimeout);
+  }, [reactive, reactionId]);
+
+  if (played) return played;
+  return still ? rest : IDLE_LOOP[loopIndex];
 }
 
 const styles = StyleSheet.create({

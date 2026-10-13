@@ -12,6 +12,7 @@ import { BOSS_GRID, BOSS_PALETTES, BOSS_SPRITES, type BossKey } from '../sprites
 import { fetchWeeklyBoss, type WeeklyBoss } from '../api';
 import { useTileStyles } from '../../../ui/components/goal-tile';
 import { showDialog } from '../../../lib/app-alert';
+import { heroReaction$, playHeroReaction } from '../../avatar/stores/hero-reaction-store';
 
 function BossSprite({ bossKey, size, defeated }: { bossKey: BossKey; size: number; defeated: boolean }) {
   const parts = useMemo(() => strips(BOSS_SPRITES[bossKey], BOSS_PALETTES[bossKey]), [bossKey]);
@@ -49,6 +50,8 @@ export function BossCard({ variant = 'line' }: { variant?: 'line' | 'tile' }) {
       .then((b) => {
         if (cancelled) return;
         setBoss((prev) => {
+          // The hero raises its weapon when this week's boss falls.
+          if (prev && !prev.defeated && b.defeated) playHeroReaction('victory');
           if (prev && b.damage > prev.damage) {
             Animated.sequence(
               [6, -6, 4, -4, 0].map((x) => Animated.timing(shake, { toValue: x, duration: 60, useNativeDriver: true })),
@@ -64,6 +67,12 @@ export function BossCard({ variant = 'line' }: { variant?: 'line' | 'tile' }) {
       cancelled = true;
     };
   }, [doneToday, shake]);
+
+  // While the boss is alive, a validated quest makes the hero strike it (hero-reaction-store).
+  useEffect(() => {
+    heroReaction$.bossActive.set(!!boss && !boss.defeated);
+    return () => heroReaction$.bossActive.set(false);
+  }, [boss]);
 
   if (!boss) return null;
   const name = T[`boss_${boss.boss_key}_name`];

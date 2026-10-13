@@ -35,6 +35,7 @@ import { subscriptionStore$ } from '../../src/features/monetization/stores/subsc
 import { trialDaysLeft } from '../../src/features/monetization/utils/trial-offer';
 import { streakRepairCost } from '../../src/lib/constants/game-config';
 import { HeroGreeting } from '../../src/features/avatar/components/hero-greeting';
+import { heroQuestDone } from '../../src/features/avatar/stores/hero-reaction-store';
 import { useTourTarget } from '../../src/features/onboarding/tour/tour-targets';
 import { fullyPausedCategories } from '../../src/features/habits/utils/pause';
 import { profileStore$, fetchProfile, refreshProfile } from '../../src/features/gamification/stores/profile-store';
@@ -546,6 +547,7 @@ export default function TodayScreen() {
     const completedBefore = activeHabits.filter((h) => isHabitCompletedEnough(h.id)).length;
     const result = await completeHabit(habitId, undefined, mini);
     if (!result) return;
+    heroQuestDone();
     clearBrokenStreakForHabit(habitId);
     // Show what the server actually granted (freezes, bonuses…).
     setXpToast({ visible: true, xp: result.xp_earned, gold: result.gold_earned });
