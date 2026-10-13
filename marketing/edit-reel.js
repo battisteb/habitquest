@@ -21,8 +21,9 @@
  *             one by one (every 0.08 s) instead of all at once
  *   audio:    [{ clip | file, start, at, dur, vol, fadeIn, fadeOut }] — the soundtrack pieces
  *   sfx:      [{ file, at, vol }] — app sounds (assets/sounds) on taps and rewards
- * Audio (Battiste, 2026-10-13): only the characters' voices are kept (demucs splits them from the
- * score) and the music is a trending sound added in the apps; FULL_AUDIO=1 renders the full mix.
+ * Audio (Battiste, 2026-10-13): a voice-over reads the captions (Kokoro, tts-kokoro.py; VO_VOICE,
+ * VO_SPEED) and the music is a trending sound added in the apps. AUDIO=voices keeps the characters'
+ * voices instead (demucs splits them from the score), AUDIO=full the scene's whole soundtrack.
  * Output: marketing/exports/edits-en/<reel>.mp4 (git-ignored), loudness -14 LUFS like TikTok.
  */
 const fs = require('fs');
@@ -50,7 +51,47 @@ const probe = (file) => {
   return { w: +m[1], h: +m[2] };
 };
 
-const FULL_AUDIO = process.env.FULL_AUDIO === '1';
+const AUDIO = process.env.AUDIO || 'vo';
+const VOICE = process.env.VO_VOICE || 'am_michael';
+const voDir = path.join(root, 'exports', 'vo');
+
+/**
+ * The voice-over: every caption (and the closing card's line) read aloud when it appears, one after
+ * the other, by Kokoro (tts-kokoro.py). Returns audio pieces; warns when a line overruns its caption.
+ */
+function voiceOver(name, spec, total) {
+  const card = spec.segments[spec.segments.length - 1];
+  const lines = [...(spec.captions || []).map((c) => ({ t: c.t, end: c.end, text: c.text })),
+    ...(card.card ? [{ t: total - card.dur + 0.25, end: total, text: card.card.line }] : [])];
+  const speed = Number(process.env.VO_SPEED || 1.15);
+  fs.mkdirSync(voDir, { recursive: true });
+  const items = lines.map((l) => {
+    const text = l.text.replace(/\*/g, '').replace(/\s*\|\s*/g, ' ');
+    const id = require('crypto').createHash('sha1').update(`${VOICE}|${speed}|${text}`).digest('hex').slice(0, 12);
+    return { text, out: path.join(voDir, `${id}.wav`) };
+  });
+  const durs = JSON.parse(execFileSync(process.env.PYTHON || 'python', [path.join(root, 'tts-kokoro.py')],
+    { input: JSON.stringify({ voice: VOICE, speed, items }), stdio: ['pipe', 'pipe', 'inherit'] }).toString());
+  let free = 0;
+  const pieces = lines.map((l, k) => {
+    const at = Math.max(l.t, free);
+    free = at + durs[k] + 0.08;
+    if (at + durs[k] > total) console.warn(`${name}: "${items[k].text}" ends at ${(at + durs[k]).toFixed(2)} s, after the reel (${total} s)`);
+    return { path: items[k].out, start: 0, at, dur: durs[k] };
+  });
+  // Each caption shows while its line is spoken: moved to the voice's start, kept at least until the
+  // line ends, without running into the caption that follows it (captions shown together stay so).
+  const caps = spec.captions || [];
+  const captions = caps.map((c, k) => {
+    const p = pieces[k];
+    let end = Math.max(c.end + (p.at - c.t), p.at + p.dur + 0.1);
+    const next = caps[k + 1];
+    if (next && next.t >= c.end - 0.01) end = Math.min(end, pieces[k + 1].at);
+    return { ...c, t: p.at, end: Math.min(end, total) };
+  });
+  return { pieces, captions };
+}
+
 const stemDir = path.join(root, 'exports', 'voice-stems');
 /** The characters' voice in an audio piece, without the score (demucs, cached): `pip install demucs`. */
 function voiceStem(a) {
@@ -156,8 +197,9 @@ async function build(name, spec, page) {
     return file;
   });
   const total = segs.reduce((a, s) => a + s.dur, 0);
+  const vo = AUDIO === 'vo' ? voiceOver(name, spec, total) : null;
   // Transitions (xfade at each segment's start), then the text layers.
-  const layers = await renderLayers(page, spec, work);
+  const layers = await renderLayers(page, vo ? { ...spec, captions: vo.captions } : spec, work);
   const inputs = [...files.flatMap((f) => ['-i', f]), ...layers.flatMap((l) => ['-i', l.file])];
   const graph = [];
   let last = '[0:v]';
@@ -175,15 +217,16 @@ async function build(name, spec, page) {
     last = out;
   });
   graph.push(`${last}trim=duration=${total.toFixed(3)},format=yuv420p[v]`);
-  // Soundtrack: by default only the characters' voices (no score, no app sounds), so a trending sound
-  // can be added in Instagram / TikTok; FULL_AUDIO=1 keeps the scene's audio and the app sounds.
-  const audio = FULL_AUDIO
-    ? [...(spec.audio || []), ...(spec.sfx || []).map((x) => ({ ...x, start: 0, dur: 4 }))]
-    : (spec.audio || []).map((a) => (a.clip ? { ...a, voice: voiceStem(a), start: 0 } : a));
+  // Soundtrack (AUDIO): vo — the voice-over alone, the music being a sound added in Instagram /
+  // TikTok (default); voices — the characters' voices without the score; full — the scene's audio
+  // and the app sounds.
+  const audio = vo ? vo.pieces
+    : AUDIO === 'voices' ? (spec.audio || []).map((a) => (a.clip ? { ...a, path: voiceStem(a), start: 0 } : a))
+      : [...(spec.audio || []), ...(spec.sfx || []).map((x) => ({ ...x, start: 0, dur: 4 }))];
   const aIn = [];
   const aGraph = [];
   audio.forEach((a, k) => {
-    const src = a.voice || (a.clip ? path.join(clipDir, a.clip) : path.join(repo, a.file));
+    const src = a.path || (a.clip ? path.join(clipDir, a.clip) : path.join(repo, a.file));
     aIn.push('-i', src);
     const idx = files.length + layers.length + k;
     const d = a.dur;
