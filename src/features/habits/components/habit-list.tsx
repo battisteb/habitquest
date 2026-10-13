@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { habitsStore$, completeHabit } from '../stores/habits-store';
 import { HabitCard } from './habit-card';
 import { XpToast } from '../../../ui/animations/xp-toast';
-import { calculateXpEarned, calculateGoldEarned } from '../../../lib/constants/game-config';
+import { calculateXpEarned, calculateGoldEarned, masteredXp } from '../../../lib/constants/game-config';
 import { colors, spacing, fontSizes, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -73,13 +73,13 @@ export function HabitList() {
   const handleComplete = useCallback(async (habitId: string) => {
     const streak = streaks[habitId];
     const currentCount = streak?.current_count ?? 0;
-    const xp = calculateXpEarned(currentCount + 1);
+    const xp = masteredXp(calculateXpEarned(currentCount + 1), habits.find((h) => h.id === habitId)?.mastery_level ?? 0);
     const gold = calculateGoldEarned(xp);
 
     await completeHabit(habitId);
 
     setXpToast({ visible: true, xp, gold });
-  }, [streaks]);
+  }, [streaks, habits]);
 
   if (habits.length === 0) {
     return (
@@ -121,6 +121,7 @@ export function HabitList() {
         renderItem={({ item }) => (
           <HabitCard
             name={item.name}
+            masteryLevel={item.mastery_level ?? 0}
             category={item.category}
             streakCount={streaks[item.id]?.current_count ?? 0}
             isCompletedToday={!!todayCompletions[item.id]}

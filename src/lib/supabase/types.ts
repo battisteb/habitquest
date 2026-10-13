@@ -352,9 +352,13 @@ export type Database = {
           days: number[] | null;
           emoji: string | null;
           frequency: string;
+          goal_unit: string | null;
+          goal_value: number | null;
           id: string;
           is_archived: boolean;
           is_paused: boolean;
+          mastery_level: number;
+          mastery_since: string | null;
           mini: string | null;
           name: string;
           paused_at: string | null;
@@ -369,6 +373,10 @@ export type Database = {
           days?: number[] | null;
           emoji?: string | null;
           frequency?: string;
+          goal_unit?: string | null;
+          goal_value?: number | null;
+          mastery_level?: number;
+          mastery_since?: string | null;
           id?: string;
           is_archived?: boolean;
           is_paused?: boolean;
@@ -386,6 +394,10 @@ export type Database = {
           days?: number[] | null;
           emoji?: string | null;
           frequency?: string;
+          goal_unit?: string | null;
+          goal_value?: number | null;
+          mastery_level?: number;
+          mastery_since?: string | null;
           id?: string;
           is_archived?: boolean;
           is_paused?: boolean;
@@ -909,6 +921,7 @@ export type Database = {
       claim_duel_reward: { Args: { p_duel_id: string }; Returns: Json };
       complete_habit: { Args: { p_habit_id: string; p_note?: string; p_mini?: boolean }; Returns: Json };
       uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json };
+      raise_habit_goal: { Args: { p_habit_id: string; p_new_value: number }; Returns: Json };
       log_mood: { Args: { p_mood: number }; Returns: Json };
       repair_streak: { Args: { p_habit_id: string; p_with_ad?: boolean }; Returns: Json };
       give_kudos: { Args: { p_friend_id: string }; Returns: Json };

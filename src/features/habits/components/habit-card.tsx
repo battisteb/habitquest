@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { colors, spacing, fontSizes, borderRadius, fonts, pixelSize, isLightTheme } from '../../../ui/theme/tokens';
-import { calculateXpEarned } from '../../../lib/constants/game-config';
+import { calculateXpEarned, masteredXp } from '../../../lib/constants/game-config';
 import { CompletionBurst } from '../../../ui/animations/completion-burst';
 import { PixelFrame, mix, shade } from '../../../ui/components/pixel-frame';
 import { useTourTarget } from '../../onboarding/tour/tour-targets';
@@ -21,9 +21,12 @@ import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
 import { categoryLabel } from '../../../lib/i18n/labels';
 import { daysLabel } from '../utils/schedule';
+import { masteryStars } from '../utils/goal';
 
 interface HabitCardProps {
   name: string;
+  /** Stars earned by raising the goal (ADR 033), 0-3. */
+  masteryLevel?: number;
   category: string;
   streakCount: number;
   isCompletedToday: boolean;
@@ -89,6 +92,7 @@ const SWIPE_THRESHOLD = 80;
 
 export function HabitCard({
   name,
+  masteryLevel = 0,
   category,
   streakCount,
   isCompletedToday,
@@ -148,6 +152,7 @@ export function HabitCard({
     gap: spacing.sm,
   },
   info: { flex: 1, gap: 3 },
+  stars: { color: '#f0c43c' },
   name: {
     color: colors.text,
     fontSize: pixelSize(fontSizes.md),
@@ -225,7 +230,7 @@ export function HabitCard({
 
   const { color: categoryColor, icon: categoryIcon } = getCategoryConfig(category);
   const displayIcon = emoji ?? categoryIcon;
-  const nextXp = calculateXpEarned(streakCount + 1);
+  const nextXp = masteredXp(calculateXpEarned(streakCount + 1), masteryLevel);
   const flame = streakFlame(streakCount);
   const [burst, setBurst] = useState(false);
 
@@ -320,6 +325,11 @@ export function HabitCard({
                 <View style={styles.info}>
                   <Text style={[styles.name, effectiveDone && styles.nameCompleted]} numberOfLines={1}>
                     {isPinned ? '📌 ' : ''}{displayIcon} {name}{contentType ? ` ${CONTENT_TYPE_ICON[contentType]}` : ''}
+                    {masteryLevel > 0 && (
+                      <Text style={styles.stars} accessibilityLabel={T.mastery_stars_a11y.replace('{n}', String(masteryLevel))} testID="habit-stars">
+                        {' '}{masteryStars(masteryLevel)}
+                      </Text>
+                    )}
                   </Text>
                   <View style={styles.meta}>
                     <Text style={[styles.category, { color: categoryColor }]}>

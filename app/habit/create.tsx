@@ -11,6 +11,8 @@ import { EmojiPicker } from '../../src/features/habits/components/emoji-picker';
 import { createHabit } from '../../src/features/habits/stores/habits-store';
 import { DayPicker } from '../../src/features/habits/components/day-picker';
 import { MotivationFields, cleanMotivation } from '../../src/features/habits/components/motivation-fields';
+import { GoalField, parseGoal } from '../../src/features/habits/components/goal-field';
+import { goalNumber, renameWithGoal, type GoalUnit } from '../../src/features/habits/utils/goal';
 import { defaultDays, scheduleToSave } from '../../src/features/habits/utils/schedule';
 import { HABIT_CATEGORIES, CATEGORY_CONFIG, type HabitCategory } from '../../src/lib/constants/categories';
 
@@ -88,6 +90,9 @@ export default function CreateHabitScreen() {
   const [why, setWhy] = useState('');
   const [anchor, setAnchor] = useState('');
   const [mini, setMini] = useState('');
+  // The goal (ADR 033): from the idea when it has a number ("Read 20 min").
+  const [goalValue, setGoalValue] = useState(prefilledTemplate?.goal ? goalNumber(prefilledTemplate.goal.value) : '');
+  const [goalUnit, setGoalUnit] = useState<GoalUnit | null>(prefilledTemplate?.goal?.unit ?? null);
   const [showMore, setShowMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -95,6 +100,17 @@ export default function CreateHabitScreen() {
     setName(templateName(t));
     setCategory(t.category as HabitCategory);
     setDays(t.frequency === 'daily' ? null : defaultDays(t.frequency));
+    setGoalValue(t.goal ? goalNumber(t.goal.value) : '');
+    setGoalUnit(t.goal?.unit ?? null);
+  };
+
+  // Changing the goal's number also changes it in the name ("Read 20 min" → "Read 30 min").
+  const onGoalChange = (value: string, unit: GoalUnit | null) => {
+    const before = parseGoal(goalValue);
+    const after = parseGoal(value);
+    if (before && after && before !== after) setName((n) => renameWithGoal(n, before, after));
+    setGoalValue(value);
+    setGoalUnit(unit);
   };
 
   const handleCreate = async () => {
@@ -106,7 +122,7 @@ export default function CreateHabitScreen() {
         why: cleanMotivation(why),
         anchor: cleanMotivation(anchor),
         mini: cleanMotivation(mini),
-      });
+      }, parseGoal(goalValue) && goalUnit ? { value: parseGoal(goalValue)!, unit: goalUnit } : null);
       goBack(router);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : T.habit_create_error;
@@ -162,6 +178,9 @@ export default function CreateHabitScreen() {
           ))}
         </ScrollView>
       </View>
+
+      {/* Goal, optional: a number the player can raise after 21 days (ADR 033) */}
+      <GoalField value={goalValue} unit={goalUnit} onChange={onGoalChange} />
 
       {/* 2. Category: color code instead of emojis */}
       <View style={styles.section}>
