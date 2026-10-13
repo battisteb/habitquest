@@ -52,26 +52,33 @@ const probe = (file) => {
 };
 
 const AUDIO = process.env.AUDIO || 'vo';
-const VOICE = process.env.VO_VOICE || 'am_michael';
+const ENGINE = process.env.VO_ENGINE || 'chatterbox';
 const voDir = path.join(root, 'exports', 'vo');
+const MUSIC = process.env.MUSIC;
 
 /**
  * The voice-over: every caption (and the closing card's line) read aloud when it appears, one after
- * the other, by Kokoro (tts-kokoro.py). Returns audio pieces; warns when a line overruns its caption.
+ * the other, by Chatterbox (tts-chatterbox.py: VO_EXAGGERATION, VO_CFG; its own venv in VO_PYTHON) or
+ * Kokoro (VO_ENGINE=kokoro, tts-kokoro.py: VO_VOICE, VO_SPEED). Captions follow the voice.
  */
 function voiceOver(name, spec, total) {
   const card = spec.segments[spec.segments.length - 1];
   const lines = [...(spec.captions || []).map((c) => ({ t: c.t, end: c.end, text: c.text })),
     ...(card.card ? [{ t: total - card.dur + 0.25, end: total, text: card.card.line }] : [])];
-  const speed = Number(process.env.VO_SPEED || 1.15);
+  const opts = ENGINE === 'kokoro'
+    ? { voice: process.env.VO_VOICE || 'af_bella', speed: Number(process.env.VO_SPEED || 1) }
+    : { exaggeration: Number(process.env.VO_EXAGGERATION || 0.6), cfg: Number(process.env.VO_CFG || 0.4) };
   fs.mkdirSync(voDir, { recursive: true });
   const items = lines.map((l) => {
     const text = l.text.replace(/\*/g, '').replace(/\s*\|\s*/g, ' ');
-    const id = require('crypto').createHash('sha1').update(`${VOICE}|${speed}|${text}`).digest('hex').slice(0, 12);
+    const id = require('crypto').createHash('sha1').update(`${ENGINE}|${JSON.stringify(opts)}|${text}`).digest('hex').slice(0, 12);
     return { text, out: path.join(voDir, `${id}.wav`) };
   });
-  const durs = JSON.parse(execFileSync(process.env.PYTHON || 'python', [path.join(root, 'tts-kokoro.py')],
-    { input: JSON.stringify({ voice: VOICE, speed, items }), stdio: ['pipe', 'pipe', 'inherit'] }).toString());
+  const python = ENGINE === 'kokoro' ? process.env.PYTHON || 'python' : process.env.VO_PYTHON || 'python';
+  // The durations are the last line printed (the models log on stdout too).
+  const durs = JSON.parse(execFileSync(python, [path.join(root, `tts-${ENGINE}.py`)],
+    { input: JSON.stringify({ ...opts, items }), stdio: ['pipe', 'pipe', 'inherit'], maxBuffer: 1 << 24 })
+    .toString().trim().split('\n').pop());
   let free = 0;
   const pieces = lines.map((l, k) => {
     const at = Math.max(l.t, free);
@@ -176,7 +183,16 @@ async function build(name, spec, page) {
   const work = path.join(outDir, '.work', name);
   fs.rmSync(work, { recursive: true, force: true });
   fs.mkdirSync(work, { recursive: true });
-  const segs = spec.segments;
+  let segs = spec.segments;
+  let total = segs.reduce((a, s) => a + s.dur, 0);
+  let vo = AUDIO === 'vo' ? voiceOver(name, spec, total) : null;
+  // A voice-over longer than the edit holds the closing card until it has finished.
+  const over = vo ? Math.max(...vo.pieces.map((p) => p.at + p.dur)) + 0.4 - total : 0;
+  if (over > 0) {
+    segs = segs.map((s, i) => (i === segs.length - 1 ? { ...s, dur: s.dur + over } : s));
+    total += over;
+    vo = voiceOver(name, { ...spec, segments: segs }, total);
+  }
   // Closing card image.
   const card = segs.find((s) => s.card);
   let cardPng;
@@ -196,8 +212,6 @@ async function build(name, spec, page) {
     renderSegment(s, len, file, cardPng);
     return file;
   });
-  const total = segs.reduce((a, s) => a + s.dur, 0);
-  const vo = AUDIO === 'vo' ? voiceOver(name, spec, total) : null;
   // Transitions (xfade at each segment's start), then the text layers.
   const layers = await renderLayers(page, vo ? { ...spec, captions: vo.captions } : spec, work);
   const inputs = [...files.flatMap((f) => ['-i', f]), ...layers.flatMap((l) => ['-i', l.file])];
@@ -234,7 +248,16 @@ async function build(name, spec, page) {
     const ms = Math.round(a.at * 1000);
     aGraph.push(`[${idx}:a]atrim=${a.start}:${(a.start + d).toFixed(3)},asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo${fades},volume=${a.vol ?? 1},adelay=${ms}|${ms}[a${k}]`);
   });
-  aGraph.push(`${audio.map((_, k) => `[a${k}]`).join('')}amix=inputs=${audio.length}:normalize=0:duration=longest,atrim=0:${total.toFixed(3)},loudnorm=I=-14:TP=-1.5:LRA=11[a]`);
+  const mixed = `${audio.map((_, k) => `[a${k}]`).join('')}amix=inputs=${audio.length}:normalize=0:duration=longest,atrim=0:${total.toFixed(3)},apad=whole_dur=${total.toFixed(3)}`;
+  if (MUSIC) {
+    // A music bed under the voice: low, ducked further while the voice speaks, faded out at the end.
+    aIn.push('-ss', String(Number(process.env.MUSIC_START || 30)), '-i', MUSIC);
+    const idx = files.length + layers.length + audio.length;
+    aGraph.push(`${mixed},asplit[voice][key]`);
+    aGraph.push(`[${idx}:a]atrim=0:${total.toFixed(3)},asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo,afade=t=in:d=0.4,afade=t=out:st=${(total - 1.2).toFixed(3)}:d=1.2,volume=${process.env.MUSIC_VOL || 0.35}[bed]`);
+    aGraph.push('[bed][key]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=350[ducked]');
+    aGraph.push('[voice][ducked]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-14:TP=-1.5:LRA=11[a]');
+  } else aGraph.push(`${mixed},loudnorm=I=-14:TP=-1.5:LRA=11[a]`);
   const out = path.join(outDir, `${name}.mp4`);
   run([...inputs, ...aIn, '-filter_complex', [...graph, ...aGraph].join(';'), '-map', '[v]', '-map', '[a]',
     '-c:v', 'libx264', '-crf', '17', '-preset', 'medium', '-r', String(FPS), '-pix_fmt', 'yuv420p',
