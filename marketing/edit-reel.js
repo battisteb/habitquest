@@ -21,6 +21,8 @@
  *             one by one (every 0.08 s) instead of all at once
  *   audio:    [{ clip | file, start, at, dur, vol, fadeIn, fadeOut }] — the soundtrack pieces
  *   sfx:      [{ file, at, vol }] — app sounds (assets/sounds) on taps and rewards
+ * Audio (Battiste, 2026-10-13): only the characters' voices are kept (demucs splits them from the
+ * score) and the music is a trending sound added in the apps; FULL_AUDIO=1 renders the full mix.
  * Output: marketing/exports/edits-en/<reel>.mp4 (git-ignored), loudness -14 LUFS like TikTok.
  */
 const fs = require('fs');
@@ -47,6 +49,20 @@ const probe = (file) => {
   const m = out.match(/Video:.*?, (\d{3,5})x(\d{3,5})/);
   return { w: +m[1], h: +m[2] };
 };
+
+const FULL_AUDIO = process.env.FULL_AUDIO === '1';
+const stemDir = path.join(root, 'exports', 'voice-stems');
+/** The characters' voice in an audio piece, without the score (demucs, cached): `pip install demucs`. */
+function voiceStem(a) {
+  const id = `${a.clip.replace(/[\\/.]/g, '_')}_${a.start}_${a.dur}`;
+  const vocals = path.join(stemDir, 'htdemucs', id, 'vocals.wav');
+  if (fs.existsSync(vocals)) return vocals;
+  fs.mkdirSync(stemDir, { recursive: true });
+  const wav = path.join(stemDir, `${id}.wav`);
+  run(['-ss', String(a.start), '-t', String(a.dur), '-i', path.join(clipDir, a.clip), '-vn', '-ac', '2', '-ar', '44100', wav]);
+  execFileSync(process.env.PYTHON || 'python', ['-m', 'demucs', '--two-stems=vocals', '-n', 'htdemucs', '-o', stemDir, wav], { stdio: 'pipe' });
+  return vocals;
+}
 
 /** ffmpeg expression of keyframed values [[u, v]…] (smoothstep), u = progress of the segment. */
 function keyed(keys, U) {
@@ -159,12 +175,15 @@ async function build(name, spec, page) {
     last = out;
   });
   graph.push(`${last}trim=duration=${total.toFixed(3)},format=yuv420p[v]`);
-  // Soundtrack: the scene's audio pieces and the app sounds, mixed and normalised.
-  const audio = [...(spec.audio || []), ...(spec.sfx || []).map((x) => ({ ...x, start: 0, dur: 4 }))];
+  // Soundtrack: by default only the characters' voices (no score, no app sounds), so a trending sound
+  // can be added in Instagram / TikTok; FULL_AUDIO=1 keeps the scene's audio and the app sounds.
+  const audio = FULL_AUDIO
+    ? [...(spec.audio || []), ...(spec.sfx || []).map((x) => ({ ...x, start: 0, dur: 4 }))]
+    : (spec.audio || []).map((a) => (a.clip ? { ...a, voice: voiceStem(a), start: 0 } : a));
   const aIn = [];
   const aGraph = [];
   audio.forEach((a, k) => {
-    const src = a.clip ? path.join(clipDir, a.clip) : path.join(repo, a.file);
+    const src = a.voice || (a.clip ? path.join(clipDir, a.clip) : path.join(repo, a.file));
     aIn.push('-i', src);
     const idx = files.length + layers.length + k;
     const d = a.dur;
