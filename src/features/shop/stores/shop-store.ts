@@ -70,10 +70,10 @@ export async function fetchShop() {
     const ownedIds = (purchases ?? []).map((p) => p.item_id);
     shopStore$.ownedItemIds.set(ownedIds);
 
-    // Items for sale, the current arc's item (G6b), plus owned items that are
-    // not sold (items of the month, past seasons, the Crown of Seasons).
+    // Items for sale, the current arc's item (G6b), the category set pieces to earn (ADR 032),
+    // plus owned items that are not sold (items of the month, past seasons, the Crown of Seasons).
     const notSold = ownedIds.filter(Boolean);
-    const forSale = `is_available.eq.true,season.eq.${arcSeasonOf()}`;
+    const forSale = `is_available.eq.true,season.eq.${arcSeasonOf()},unlock_category.not.is.null`;
     const { data: items } = await supabase
       .from('shop_items')
       .select('*')

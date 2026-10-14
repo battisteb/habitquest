@@ -12,9 +12,9 @@ describe('hat sprites', () => {
   });
 
   it.each(Object.keys(HAT_SPRITES))('%s is centered on the head', (hat) => {
-    const cols = HAT_SPRITES[hat].flatMap((row) =>
-      [...row].flatMap((c, x) => (c === '.' ? [] : [x])),
-    );
+    // Measured on its widest row: a knot or a tassel may hang on one side (category sets, ADR 032).
+    const widest = HAT_SPRITES[hat].reduce((a, row) => (row.replace(/\./g, '').length > a.replace(/\./g, '').length ? row : a));
+    const cols = [...widest].flatMap((c, x) => (c === '.' ? [] : [x]));
     const left = Math.min(...cols);
     const right = Math.max(...cols);
     // The hero is symmetric around the middle of the grid.

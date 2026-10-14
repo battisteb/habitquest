@@ -37,6 +37,7 @@ import { shopItemText } from '../../src/lib/i18n/content';
 import { themeKeyOfItem } from '../../src/features/shop/utils/owned-themes';
 import { MonthlyItemBanner } from '../../src/features/shop/components/monthly-item-banner';
 import { SeasonItemBanner } from '../../src/features/shop/components/season-item-banner';
+import { isSetPiece, setPieceText } from '../../src/features/shop/utils/set-piece';
 import { arcSeasonOf } from '../../src/lib/constants/game-config';
 import { showDialog } from '../../src/lib/app-alert';
 
@@ -384,6 +385,12 @@ export default function ShopScreen() {
         return;
       }
 
+      // Category set piece (ADR 032): earned with a streak, never sold.
+      if (isSetPiece(item)) {
+        Alert.alert(T.shop_set_title, setPieceText(T, item, true));
+        return;
+      }
+
       // Premium lock
       if (isPremiumLocked_map.get(item.id)) {
         Alert.alert(T.shop_premium_required_title, T.shop_premium_required_msg, [
@@ -616,16 +623,19 @@ export default function ShopScreen() {
             const meetsStreak = staticItem
               ? isItemUnlocked(staticItem, userLevel, longestStreak)
               : true;
-            const canUnlock = meetsLevel && meetsStreak;
+            const setPiece = isSetPiece(item);
+            const canUnlock = meetsLevel && meetsStreak && !setPiece;
 
             // Build a combined unlock label to surface in the card
-            const unlockLabel: string | undefined = !meetsLevel
+            const unlockLabel: string | undefined = setPiece
+              ? setPieceText(T, item)
+              : !meetsLevel
               ? T.shop_unlock_level.replace('{n}', String(item.required_level))
               : !meetsStreak && staticItem?.unlockCondition
               ? formatUnlock(T, staticItem.unlockCondition)
               : undefined;
 
-            const premiumLocked = !canViewShopItem(item.rarity);
+            const premiumLocked = !setPiece && !canViewShopItem(item.rarity);
 
             return (
               <ShopItemCard

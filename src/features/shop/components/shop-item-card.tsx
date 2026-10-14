@@ -238,7 +238,7 @@ export function ShopItemCard({
         <Text style={[styles.status, isEquipped && styles.statusEquipped]}>
           {isEquipped ? `● ${T.shop_equipped_label}` : `○ ${T.shop_card_owned}`}
         </Text>
-      ) : (
+      ) : priceGold === 0 && !canUnlock ? null : (
         <View style={styles.priceRow}>
           <Text style={[styles.price, !canAfford && styles.priceLocked]}>
             {priceGold}g

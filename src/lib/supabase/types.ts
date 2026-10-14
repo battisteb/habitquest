@@ -616,6 +616,8 @@ export type Database = {
           required_level: number;
           season: string | null;
           sprite_key: string;
+          unlock_category: string | null;
+          unlock_streak: number | null;
         };
         Insert: {
           category: string;
@@ -629,6 +631,8 @@ export type Database = {
           required_level?: number;
           season?: string | null;
           sprite_key?: string;
+          unlock_category?: string | null;
+          unlock_streak?: number | null;
         };
         Update: {
           category?: string;
@@ -642,6 +646,8 @@ export type Database = {
           required_level?: number;
           season?: string | null;
           sprite_key?: string;
+          unlock_category?: string | null;
+          unlock_streak?: number | null;
         };
         Relationships: [];
       };
