@@ -25,6 +25,9 @@ import type { HabitContent } from '../../src/features/habits/types/habit-content
 import { useTheme } from '../../src/ui/theme/theme-context';
 import { useT } from '../../src/lib/i18n';
 import { categoryLabel } from '../../src/lib/i18n/labels';
+import { MasteryCard, isMasteryPutOff } from '../../src/features/habits/components/mastery-card';
+import { canRaiseGoal } from '../../src/features/habits/utils/goal';
+import { localDateKey } from '../../src/lib/local-date';
 
 export default function HabitDetailScreen() {
   const T = useT();
@@ -507,7 +510,12 @@ export default function HabitDetailScreen() {
       )}
 
       {/* Dynamic goal suggestion */}
-      {goalSuggestion.type !== 'none' && (() => {
+      {/* Habit mastery (ADR 033): after 21 days, raise the goal for a star. */}
+      <MasteryCard habit={habit} streak={streakCount} />
+
+      {goalSuggestion.type !== 'none'
+        && !(goalSuggestion.type === 'level_up' && canRaiseGoal(habit, streakCount, localDateKey()) && !isMasteryPutOff(habit.id))
+        && (() => {
         const n = String(goalSuggestion.completions);
         const total = String(goalSuggestion.total);
         const msgKey = goalSuggestion.type === 'level_up' ? 'goal_level_up_msg'

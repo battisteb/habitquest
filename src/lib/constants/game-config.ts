@@ -309,6 +309,22 @@ export function arcSeasonOf(date: Date = new Date()): Season {
 /** Seasonal cosmetics (G6b): the arc's cape, sold for gold during the arc. */
 export const SEASON_ITEM_PRICE = 300;
 
+/**
+ * Habit mastery (ADR 033): after 21 days in a row a quest's goal can be raised (20 → 25 min); it
+ * gains a star (up to 3) and its full validations earn 20 % more XP. Mirrors complete_habit and
+ * raise_habit_goal.
+ */
+export const MASTERY = {
+  STREAK_DAYS: 21,
+  MAX_STARS: 3,
+  XP_BONUS: 0.2,
+} as const;
+
+/** XP of a full validation of a quest with stars (mirrors complete_habit). */
+export function masteredXp(xp: number, masteryLevel = 0): number {
+  return masteryLevel > 0 ? Math.round(xp * (1 + MASTERY.XP_BONUS)) : xp;
+}
+
 export const BOSS = {
   HIT: 10,
   HP_PER_PLANNED: 7,

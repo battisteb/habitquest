@@ -889,6 +889,7 @@ export default function TodayScreen() {
             return (
               <HabitCard
                 name={item.name}
+                masteryLevel={item.mastery_level ?? 0}
                 category={item.category}
                 streakCount={streaks[item.id]?.current_count ?? 0}
                 isCompletedToday={!!todayCompletions[item.id]}

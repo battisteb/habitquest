@@ -29,6 +29,10 @@ const habit = (id: string) => ({
   why: null,
   anchor: null,
   mini: null,
+  goal_value: null,
+  goal_unit: null,
+  mastery_level: 0,
+  mastery_since: null,
   created_at: new Date().toISOString(),
 });
 

@@ -196,6 +196,7 @@ export async function createHabit(
   emoji?: string | null,
   days?: number[] | null,
   motivation?: { why?: string | null; anchor?: string | null; mini?: string | null },
+  goal?: { value: number; unit: string } | null,
 ) {
   const userId = authStore$.user.get()?.id;
   if (!userId) return;
@@ -214,6 +215,8 @@ export async function createHabit(
       why: motivation?.why ?? null,
       anchor: motivation?.anchor ?? null,
       mini: motivation?.mini ?? null,
+      goal_value: goal?.value ?? null,
+      goal_unit: goal?.unit ?? null,
     });
 
   if (error) throw error;
@@ -221,10 +224,22 @@ export async function createHabit(
   await fetchHabits();
 }
 
-export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null; why?: string | null; anchor?: string | null; mini?: string | null }) {
+export async function updateHabit(id: string, updates: { name?: string; category?: string; content?: HabitContent | null; frequency?: string; emoji?: string | null; days?: number[] | null; why?: string | null; anchor?: string | null; mini?: string | null; goal_value?: number | null; goal_unit?: string | null }) {
   const { error } = await supabase.from('habits').update({ ...updates, content: updates.content as Json | null | undefined }).eq('id', id);
   if (error) throw error;
   await fetchHabits();
+}
+
+/**
+ * Raises a quest's goal after 21 days in a row (ADR 033): the server checks, gives the star and
+ * renames the quest ("Run 20 min" → "Run 25 min").
+ */
+export async function raiseHabitGoal(id: string, value: number): Promise<{ success: boolean; reason?: string; mastery_level?: number }> {
+  const { data, error } = await supabase.rpc('raise_habit_goal', { p_habit_id: id, p_new_value: value });
+  if (error) throw error;
+  const result = (data ?? { success: false }) as { success: boolean; reason?: string; mastery_level?: number };
+  if (result.success) await fetchHabits();
+  return result;
 }
 
 export async function archiveHabit(id: string) {

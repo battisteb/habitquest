@@ -17,6 +17,8 @@ import { useT } from '../../../src/lib/i18n';
 import { categoryLabel } from '../../../src/lib/i18n/labels';
 import { DayPicker } from '../../../src/features/habits/components/day-picker';
 import { MotivationFields, cleanMotivation } from '../../../src/features/habits/components/motivation-fields';
+import { GoalField, parseGoal } from '../../../src/features/habits/components/goal-field';
+import { goalNumber, renameWithGoal, type GoalUnit } from '../../../src/features/habits/utils/goal';
 import { defaultDays, scheduleToSave } from '../../../src/features/habits/utils/schedule';
 
 export default function EditHabitScreen() {
@@ -108,7 +110,18 @@ export default function EditHabitScreen() {
   const [why, setWhy] = useState(habit?.why ?? '');
   const [anchor, setAnchor] = useState(habit?.anchor ?? '');
   const [mini, setMini] = useState(habit?.mini ?? '');
+  const [goalValue, setGoalValue] = useState(habit?.goal_value ? goalNumber(habit.goal_value) : '');
+  const [goalUnit, setGoalUnit] = useState<GoalUnit | null>((habit?.goal_unit as GoalUnit | null) ?? null);
   const [loading, setLoading] = useState(false);
+
+  // Changing the goal's number also changes it in the name ("Read 20 min" → "Read 30 min").
+  const onGoalChange = (value: string, unit: GoalUnit | null) => {
+    const before = parseGoal(goalValue);
+    const after = parseGoal(value);
+    if (before && after && before !== after) setName((n) => renameWithGoal(n, before, after));
+    setGoalValue(value);
+    setGoalUnit(unit);
+  };
 
   if (!habit) {
     return (
@@ -131,6 +144,8 @@ export default function EditHabitScreen() {
         why: cleanMotivation(why),
         anchor: cleanMotivation(anchor),
         mini: cleanMotivation(mini),
+        goal_value: goalUnit ? parseGoal(goalValue) : null,
+        goal_unit: parseGoal(goalValue) ? goalUnit : null,
         ...schedule,
       });
       goBack(router);
@@ -216,6 +231,8 @@ export default function EditHabitScreen() {
         </View>
         {frequency === 'days' && <DayPicker value={days} onChange={setDays} />}
       </View>
+
+      <GoalField value={goalValue} unit={goalUnit} onChange={onGoalChange} />
 
       <MotivationFields why={why} anchor={anchor} onWhyChange={setWhy} onAnchorChange={setAnchor} mini={mini} onMiniChange={setMini} />
 
