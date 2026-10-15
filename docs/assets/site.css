@@ -27,12 +27,23 @@ img { max-width: 100%; display: block; image-rendering: auto; }
 .nav a { color: var(--text-2); text-decoration: none; font-weight: 600; font-size: 15px; }
 .nav a:hover { color: var(--text); }
 .lang { border: 3px solid var(--border); padding: 2px 10px; color: var(--text) !important; }
+/* Language menu: the current language, the others in a small list under it. */
+.langs, .langs:hover, .langs[open] { position: relative; background: none; border: 0; padding: 0; margin: 0; box-shadow: none; }
+.langs summary { list-style: none; cursor: pointer; border: 3px solid var(--border); padding: 2px 10px; font-weight: 700; font-size: 15px; color: var(--text); background: var(--surface); }
+.langs summary::-webkit-details-marker { display: none; }
+.langs summary::after { content: ' ▾'; }
+.langs > div { position: absolute; right: 0; top: calc(100% + 6px); display: grid; min-width: 96px; background: var(--surface); border: 3px solid var(--border); box-shadow: 4px 4px 0 #000; }
+.langs > div a { padding: 8px 14px; color: var(--text) !important; }
+.langs > div a:hover { background: var(--surface-2); }
+/* The header's Play button appears once the hero's has scrolled away (site.js). */
+.nav-play { display: none; }
+body.scrolled .nav-play { display: inline-block; }
 
 /* Hero */
 .hero { padding: 72px 0 56px; }
 .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
 .badge { display: inline-block; font-size: 22px; color: var(--ink); border: var(--px) solid var(--ink); padding: 0 12px; background: rgba(47,111,214,.08); }
-.hero h1 { font-size: clamp(52px, 6.4vw, 84px); line-height: .92; margin: 22px 0 18px; }
+.hero h1 { font-size: clamp(52px, 6.4vw, 84px); line-height: .92; margin: 0 0 18px; }
 .hero h1 em, h2 em { font-style: normal; color: var(--ink); }
 .hero p.lead { font-size: 20px; color: var(--text-2); max-width: 520px; }
 .stores { display: flex; flex-wrap: wrap; gap: 30px 16px; align-items: center; margin-top: 44px; }
@@ -103,15 +114,21 @@ footer a:hover { color: var(--text); }
   .hero .phone { max-width: 250px; }
   .grid, .steps, .premium { grid-template-columns: 1fr; }
   .shots { grid-template-columns: repeat(2, minmax(0, 160px)); gap: 32px 36px; }
-  .nav a:not(.lang):not(.nav-play) { display: none; }
+  .nav > a:not(.nav-play) { display: none; }
+  /* First screen on a phone: the promise, one button, then the app right under it. */
+  .hero { padding: 36px 0 40px; }
+  .hero .wrap { gap: 36px; }
+  .hero h1 { font-size: 48px; }
+  .hero p.lead { font-size: 18px; }
+  .demo { margin-top: 26px; }
+  .play { font-size: 32px; padding: 16px 28px 18px; }
 }
-/* Phones: Pip, the Play button and three language buttons on one line. */
 @media (max-width: 480px) {
-  .brand { font-size: 0; gap: 0; } /* Pip alone: the Play button needs the room */
+  .brand { font-size: 26px; gap: 10px; }
   .brand img { width: 32px; height: 32px; }
-  .nav { gap: 6px; }
-  .lang { padding: 2px 6px; }
+  .nav { gap: 8px; }
   .nav-play { padding: 2px 8px 4px; font-size: 19px !important; }
+  body.scrolled .brand { font-size: 0; gap: 0; } /* Pip alone when the Play button needs the room */
 }
 
 /* Motion: hover lifts important elements with a hard pixel shadow and a lit
@@ -168,7 +185,8 @@ a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 
 @keyframes pip-hop { 0%, 100% { transform: scale(1, 1); } 30% { transform: scale(1.08, .9); } 60% { transform: scale(.94, 1.08) translateY(-8px); } }
 .pip:hover .pip-sprite { animation-duration: .6s; }
 @media (max-width: 1100px) { .pip { position: static; grid-auto-flow: column; align-items: end; justify-content: center; margin-top: 22px; } .pip-says { order: 1; } }
-@media (max-width: 880px) { .pip-says { max-width: 190px; font-size: 12px; } .pip-sprite { width: 72px; height: 72px; } }
+/* Phones: Pip sits on the phone's corner, without its bubble. */
+@media (max-width: 880px) { .pip { position: absolute; left: -34px; bottom: -18px; margin: 0; } .pip-says { display: none; } .pip-sprite { width: 72px; height: 72px; } }
 @media (prefers-reduced-motion: reduce) { .pip-sprite img:first-child { opacity: 1; } }
 
 /* Launch waitlist (L4), in the final call to action. */
@@ -203,18 +221,13 @@ a.store:hover { transform: translate(-3px, -3px); filter: drop-shadow(6px 6px 0 
 .zh-bar { display: block; text-align: center; padding: 10px 16px; background: var(--primary); color: #fff !important; font-weight: 700; font-size: 16px; border-bottom: var(--px) solid #000; text-decoration: none; }
 .zh-bar:hover { filter: brightness(1.08); }
 
-/* Launch waitlist in the hero, Android beta section (2026-10-11). */
-.waitlist.in-hero { margin: 28px 0 0; max-width: 520px; }
-.waitlist.in-hero h3 { text-align: left; font-size: 26px; }
-.notify { margin: 26px 0 0; }
-.beta-section { padding-top: 0; }
+/* Quiet link under the hero's button (launch waitlist), Android beta section (2026-10-11). */
+.soft { display: inline-block; margin-top: 20px; font-weight: 600; font-size: 15px; color: var(--text-2); }
+.soft:hover { color: var(--ink); }
 .beta { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; align-items: center; border: var(--px) solid var(--accent); background: linear-gradient(180deg, rgba(255, 215, 0, .10), transparent); padding: 36px 32px; }
 .beta h2 { margin: 14px 0 10px; }
 .beta p { color: var(--text-2); }
 .beta ol { margin: 14px 0 0; padding-left: 22px; color: var(--text-2); display: grid; gap: 6px; }
 .beta-cta { text-align: center; }
 .beta-cta p { font-size: 14px; margin-top: 12px; }
-.beta-pill { display: table; margin-bottom: 18px; padding: 8px 14px; border: var(--px) solid var(--ink); background: var(--accent); color: #1B1B2F; font-weight: 700; font-size: 15px; text-decoration: none; box-shadow: 4px 4px 0 var(--ink); }
-.beta-pill:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-.nav-beta { color: var(--ink) !important; font-weight: 700; }
 @media (max-width: 760px) { .beta { grid-template-columns: 1fr; padding: 28px 20px; } }
