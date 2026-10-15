@@ -331,7 +331,7 @@ export default function PaywallScreen() {
                 .replace('{store}', STORE_NAME)}
             </Text>
           )}
-          <Text style={styles.legal}>{Platform.OS === 'web' ? T.paywall_active_manage_web : T.paywall_active_manage}</Text>
+          <Text style={styles.legal}>{Platform.OS === 'web' ? T.paywall_active_manage_web : T.paywall_active_manage.replace('{store}', STORE_NAME)}</Text>
         </ScrollView>
       ) : (
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -444,7 +444,7 @@ export default function PaywallScreen() {
           </Text>
         )}
 
-        <Text style={styles.legal}>{selected === 'lifetime' ? T.paywall_legal_lifetime : T.paywall_legal}</Text>
+        <Text style={styles.legal}>{selected === 'lifetime' ? T.paywall_legal_lifetime : T.paywall_legal.replace('{store}', STORE_NAME)}</Text>
         <View style={styles.legalLinks}>
           <Pressable onPress={() => openLegalPage('terms', lang)} accessibilityRole="link">
             <Text style={styles.legalLink}>{T.legal_terms}</Text>
