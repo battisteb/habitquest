@@ -25,35 +25,23 @@
 <header class="top"><div class="wrap">
   <a class="brand pixel" href="./"><img src="../assets/icon.png" alt="">HabitQuest</a>
   <nav class="nav">
+    <a href="#features">功能</a><a href="#faq">常見問題</a><a href="../support">客服</a>
     <a class="nav-play pixel" href="https://habitquest.expo.app">▶ 開玩</a>
-    <a class="nav-beta" href="#beta">Android 測試版</a><a href="#features">功能</a><a href="#faq">常見問題</a><a href="../support">客服</a>
-    <a class="lang" href="../" hreflang="en">EN</a>
-    <a class="lang" href="../fr/" hreflang="fr">FR</a>
-    <a class="lang" href="../ja/" hreflang="ja">JA</a>
-    <a class="lang" href="../ko/" hreflang="ko">KO</a>
+    <details class="langs"><summary>中文</summary><div>
+      <a href="../" hreflang="en" lang="en">English</a>
+      <a href="../fr/" hreflang="fr" lang="fr">Français</a>
+      <a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+      <a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+    </div></details>
   </nav>
 </div></header>
 
 <main>
 <section class="hero"><div class="wrap">
   <div>
-    <a class="beta-pill" href="#beta">🧪 招募 Android 測試員 — 加入測試 →</a>
-    <span class="badge pixel">習慣養成RPG</span>
     <h1 class="pixel">把習慣<br>變成<em>任務</em></h1>
     <p class="lead">完成每日任務、延續連續紀錄，賺取 XP 和金幣，培養你的像素英雄。再向好友發起挑戰！</p>
-    <div class="demo"><a class="play pixel" href="https://habitquest.expo.app">▶ 立即試玩</a><p>免費，直接在瀏覽器裡玩，不用安裝。你的英雄之後也能帶到 App 裡。</p></div>
-    <form class="waitlist in-hero" id="waitlist" data-url="https://aksxyaullvozlkzcegth.supabase.co" data-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc3h5YXVsbHZvemxremNlZ3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NDg2MjUsImV4cCI6MjA4MjEyNDYyNX0.9GfZsW1PqDnOcV2zuOaqGrt1zj76PTwss6OfFl0PVOo" data-lang="zh" novalidate>
-      <h3 class="pixel">上架時通知我</h3>
-      <div class="waitlist-row">
-        <label class="sr" for="wl-email">電子郵件</label>
-        <input id="wl-email" name="email" type="email" required autocomplete="email" placeholder="電子郵件">
-        <button type="submit">通知我</button>
-      </div>
-      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <label class="waitlist-consent"><input id="wl-consent" name="consent" type="checkbox" required> <span>我同意在 HabitQuest 於 App Store 和 Google Play 上架時，收到一封通知信。不會寄垃圾信，隨時可以取消。 <a href="../privacy-policy">隱私權政策</a></span></label>
-      <p class="waitlist-msg" role="status" data-ok="登記成功！上架那天會寄信通知你。" data-error="沒有成功，請確認電子郵件後再試一次。"></p>
-    </form>
-    <div class="stores"><span class="store as soon" data-soon="即將推出" aria-label="在 App Store 下載 (即將推出)"><img src="../assets/badges/app-store-en.svg" alt="在 App Store 下載"></span><span class="store gp soon" data-soon="即將推出" aria-label="在 Google Play 取得 (即將推出)"><img src="../assets/badges/google-play-en.png" alt="在 Google Play 取得"></span></div>
+    <div class="demo"><a class="play pixel" href="https://habitquest.expo.app">▶ 立即試玩</a><p>免費，直接在瀏覽器裡玩，不用安裝。你的英雄之後也能帶到 App 裡。</p></div><a class="soft" href="#join">📩 上架當天通知我 ↓</a>
   </div>
   <div class="hero-art">
     <div class="phone"><img src="../assets/screens/today.png" alt="" width="390" height="844"></div>
@@ -64,18 +52,24 @@
   </div>
 </div></section>
 
-<section id="beta" class="beta-section"><div class="wrap"><div class="beta">
-  <div>
-    <span class="badge pixel">ANDROID 測試版</span>
-    <h2 class="pixel">成為 <em>Android 測試員</em></h2>
-    <p>上架 Google Play 前，Google 需要 12 位測試員連續測試 14 天。搶先免費遊玩，一起打造這款遊戲。</p>
-    <ol><li>用手機上的 Google 帳號加入測試員群組。</li><li>Google Play 安裝連結準備好後，我們會立即在群組公告。</li><li>安裝 HabitQuest，並在 14 天內不時打開它。</li></ol>
+<section><div class="wrap">
+  <h2 class="pixel"><em>怎麼</em>玩</h2>
+  <div class="steps">
+    <div class="step"><b>創造英雄</b><span>一分鐘內選好外觀和第一個任務。</span></div>
+    <div class="step"><b>完成任務</b><span>每完成一個習慣就得到 XP 和金幣，連續紀錄也會延續。</span></div>
+    <div class="step"><b>升級、玩樂</b><span>解鎖裝備、完成每日目標和成就，打敗你的好友。</span></div>
   </div>
-  <div class="beta-cta">
-    <a class="play pixel" href="https://groups.google.com/g/habitquest-app-testers" target="_blank" rel="noopener">🧪 加入 Android 測試</a>
-    <p>免費。你的電子郵件只會用於加入 Google 網上論壇。</p>
+</div></section>
+
+<section><div class="wrap">
+  <h2 class="pixel">看看 App <em>裡面</em></h2>
+  <div class="shots">
+    <figure><div class="phone"><img src="../assets/screens/today.png" alt="任務" loading="lazy" width="390" height="844"></div><figcaption>任務</figcaption></figure>
+    <figure><div class="phone"><img src="../assets/screens/profile.png" alt="英雄" loading="lazy" width="390" height="844"></div><figcaption>英雄</figcaption></figure>
+    <figure><div class="phone"><img src="../assets/screens/arena.png" alt="競技場" loading="lazy" width="390" height="844"></div><figcaption>競技場</figcaption></figure>
+    <figure><div class="phone"><img src="../assets/screens/stats.png" alt="成長紀錄" loading="lazy" width="390" height="844"></div><figcaption>成長紀錄</figcaption></figure>
   </div>
-</div></div></section>
+</div></section>
 
 <section id="features"><div class="wrap">
   <h2 class="pixel">讓習慣<em>持續下去</em>的一切</h2>
@@ -91,25 +85,6 @@
 </div></section>
 
 <section><div class="wrap">
-  <h2 class="pixel">看看 App <em>裡面</em></h2>
-  <div class="shots">
-    <figure><div class="phone"><img src="../assets/screens/today.png" alt="任務" loading="lazy" width="390" height="844"></div><figcaption>任務</figcaption></figure>
-    <figure><div class="phone"><img src="../assets/screens/profile.png" alt="英雄" loading="lazy" width="390" height="844"></div><figcaption>英雄</figcaption></figure>
-    <figure><div class="phone"><img src="../assets/screens/arena.png" alt="競技場" loading="lazy" width="390" height="844"></div><figcaption>競技場</figcaption></figure>
-    <figure><div class="phone"><img src="../assets/screens/stats.png" alt="成長紀錄" loading="lazy" width="390" height="844"></div><figcaption>成長紀錄</figcaption></figure>
-  </div>
-</div></section>
-
-<section><div class="wrap">
-  <h2 class="pixel"><em>怎麼</em>玩</h2>
-  <div class="steps">
-    <div class="step"><b>創造英雄</b><span>一分鐘內選好外觀和第一個任務。</span></div>
-    <div class="step"><b>完成任務</b><span>每完成一個習慣就得到 XP 和金幣，連續紀錄也會延續。</span></div>
-    <div class="step"><b>升級、玩樂</b><span>解鎖裝備、完成每日目標和成就，打敗你的好友。</span></div>
-  </div>
-</div></section>
-
-<section><div class="wrap">
   <h2 class="pixel">基本免費。想玩更多就選<em>進階版</em></h2>
   <div class="premium">
     <div class="card"><h3>免費</h3><ul><li>所有任務、連續紀錄、英雄</li><li>每日目標與 23 個成就</li><li>對戰、挑戰、合作挑戰、競技場</li><li>商店基本商品</li></ul></div>
@@ -117,9 +92,17 @@
   </div>
 </div></section>
 
-<section><div class="wrap"><div class="cta">
-  <h2 class="pixel">等不及了？<em>現在就玩。</em></h2>
-  <div class="demo"><a class="play pixel" href="https://habitquest.expo.app">▶ 立即試玩</a><p>免費，直接在瀏覽器裡玩，不用安裝。你的英雄之後也能帶到 App 裡。</p></div>
+<section id="beta"><div class="wrap"><div class="beta">
+  <div>
+    <span class="badge pixel">ANDROID 測試版</span>
+    <h2 class="pixel">成為 <em>Android 測試員</em></h2>
+    <p>上架 Google Play 前，Google 需要 12 位測試員連續測試 14 天。搶先免費遊玩，一起打造這款遊戲。</p>
+    <ol><li>用手機上的 Google 帳號加入測試員群組。</li><li>Google Play 安裝連結準備好後，我們會立即在群組公告。</li><li>安裝 HabitQuest，並在 14 天內不時打開它。</li></ol>
+  </div>
+  <div class="beta-cta">
+    <a class="play pixel" href="https://groups.google.com/g/habitquest-app-testers" target="_blank" rel="noopener">🧪 加入 Android 測試</a>
+    <p>免費。你的電子郵件只會用於加入 Google 網上論壇。</p>
+  </div>
 </div></div></section>
 
 <section id="faq"><div class="wrap">
@@ -131,10 +114,19 @@
   <details><summary>遇到問題怎麼辦？</summary><p>在 App 的「設定 → 客服」聯絡我們，或查看<a href="../support">客服頁面</a>。</p></details>
 </div></section>
 
-<section><div class="wrap"><div class="cta">
+<section id="join"><div class="wrap"><div class="cta">
   <h2 class="pixel">冒險從<em>今天</em>開始</h2>
-  <div class="stores"><span class="store as soon" data-soon="即將推出" aria-label="在 App Store 下載 (即將推出)"><img src="../assets/badges/app-store-en.svg" alt="在 App Store 下載"></span><span class="store gp soon" data-soon="即將推出" aria-label="在 Google Play 取得 (即將推出)"><img src="../assets/badges/google-play-en.png" alt="在 Google Play 取得"></span></div>
-  <p class="notify"><a class="play pixel" href="#waitlist">📩 上架當天通知我</a></p>
+  <div class="demo"><a class="play pixel" href="https://habitquest.expo.app">▶ 立即試玩</a><p>免費，直接在瀏覽器裡玩，不用安裝。你的英雄之後也能帶到 App 裡。</p></div><form class="waitlist" id="waitlist" data-url="https://aksxyaullvozlkzcegth.supabase.co" data-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc3h5YXVsbHZvemxremNlZ3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NDg2MjUsImV4cCI6MjA4MjEyNDYyNX0.9GfZsW1PqDnOcV2zuOaqGrt1zj76PTwss6OfFl0PVOo" data-lang="zh" novalidate>
+    <h3 class="pixel">上架時通知我</h3>
+    <div class="waitlist-row">
+      <label class="sr" for="wl-email">電子郵件</label>
+      <input id="wl-email" name="email" type="email" required autocomplete="email" placeholder="電子郵件">
+      <button type="submit">通知我</button>
+    </div>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="waitlist-consent"><input id="wl-consent" name="consent" type="checkbox" required> <span>我同意在 HabitQuest 於 App Store 和 Google Play 上架時，收到一封通知信。不會寄垃圾信，隨時可以取消。 <a href="../privacy-policy">隱私權政策</a></span></label>
+    <p class="waitlist-msg" role="status" data-ok="登記成功！上架那天會寄信通知你。" data-error="沒有成功，請確認電子郵件後再試一次。"></p>
+  </form>
 </div></div></section>
 </main>
 

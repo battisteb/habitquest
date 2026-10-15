@@ -17,6 +17,8 @@ const STORES = {
   android: null, // e.g. 'https://play.google.com/store/apps/details?id=com.battiste.habitquest'
 };
 const WEB_APP = 'https://habitquest.expo.app';
+// Android testers (Google asks for 12 testers for 14 days before a Play Store release).
+const BETA_GROUP = 'https://groups.google.com/g/habitquest-app-testers';
 // Public Supabase values for the waitlist form (insert-only table, L4).
 const SITE_CONFIG = require('./site-config.json');
 // Two sets of accounts (checked 2026-10-07): the Japanese ones, followed by Japan, Taiwan and Korea,
@@ -41,13 +43,16 @@ const T = {
     title: 'HabitQuest — Turn your habits into an RPG',
     description: 'A pixel art habit tracker: complete daily quests, keep your streaks, level up your hero and challenge your friends. On iPhone and Android.',
     nav: { features: 'Features', faq: 'FAQ', support: 'Support' },
-    badge: 'HABIT TRACKER RPG',
     h1: 'Turn your habits<br>into <em>quests</em>',
     pipSays: 'Hi, I’m Pip! I change colour with your day.',
     lead: 'Complete your daily quests, keep your streaks alive, earn XP and gold, and level up a pixel hero. Then take on your friends.',
     soon: 'Coming soon',
     web: 'Or play now in your browser',
-    demo: { button: '▶ Play the demo', note: 'Free, right in your browser. Nothing to install, and your hero follows you to the app.', nav: '▶ Play', title: 'Can’t wait? <em>Play now.</em>' },
+    demo: { button: '▶ Play the demo', note: 'Free, right in your browser. Nothing to install, and your hero follows you to the app.', nav: '▶ Play' },
+    beta: { badge: 'ANDROID BETA', title: 'Become an <em>Android tester</em>', text: 'Help us launch on Google Play: Google asks for 12 testers for 14 days. Play before everyone else, for free, and help shape the game.',
+      steps: ['Join the testers group with the Google account of your phone.', 'We post the Google Play install link in the group as soon as it is ready.', 'Install HabitQuest and open it from time to time for 14 days.'],
+      button: '🧪 Join the Android beta', note: 'Free. Google Groups only uses your address to let you in.' },
+    notify: '📩 Get told on launch day',
     featuresTitle: 'Everything that makes <em>habits stick</em>',
     featuresSub: 'Every habit becomes a quest. Every day you show up, your hero gets stronger.',
     features: [
@@ -102,13 +107,16 @@ const T = {
     title: 'HabitQuest — Transforme tes habitudes en RPG',
     description: 'Un habit tracker en pixel art : valide tes quêtes du jour, garde tes séries, fais évoluer ton héros et défie tes amis. Sur iPhone et Android.',
     nav: { features: 'Fonctionnalités', faq: 'FAQ', support: 'Aide' },
-    badge: 'HABIT TRACKER RPG',
     h1: 'Tes habitudes<br>deviennent des <em>quêtes</em>',
     pipSays: 'Salut, moi c’est Pip ! Je change de couleur selon ta journée.',
     lead: 'Valide tes quêtes du jour, garde tes séries, gagne de l\'XP et de l\'or, et fais évoluer ton héros pixel. Puis défie tes amis.',
     soon: 'Bientôt',
     web: 'Ou joue dès maintenant dans ton navigateur',
-    demo: { button: '▶ Jouer à la démo', note: 'Gratuit, directement dans ton navigateur. Rien à installer, et ton héros te suivra dans l’app.', nav: '▶ Jouer', title: 'Pas envie d’attendre ? <em>Joue maintenant.</em>' },
+    demo: { button: '▶ Jouer à la démo', note: 'Gratuit, directement dans ton navigateur. Rien à installer, et ton héros te suivra dans l’app.', nav: '▶ Jouer' },
+    beta: { badge: 'BÊTA ANDROID', title: 'Deviens <em>testeur Android</em>', text: 'Aide-nous à sortir sur Google Play : Google demande 12 testeurs pendant 14 jours. Joue avant tout le monde, gratuitement, et fais évoluer le jeu.',
+      steps: ['Rejoins le groupe des testeurs avec le compte Google de ton téléphone.', 'On y publie le lien d’installation Google Play dès qu’il est prêt.', 'Installe HabitQuest et ouvre-le de temps en temps pendant 14 jours.'],
+      button: '🧪 Rejoindre la bêta Android', note: 'Gratuit. Google Groups utilise ton adresse uniquement pour t’inscrire.' },
+    notify: '📩 Être prévenu le jour de la sortie',
     featuresTitle: 'Tout pour que tes <em>habitudes tiennent</em>',
     featuresSub: 'Chaque habitude devient une quête. Chaque jour où tu t\'y tiens, ton héros devient plus fort.',
     features: [
@@ -163,13 +171,16 @@ const T = {
     title: 'HabitQuest — 習慣をRPGに',
     description: 'ドット絵の習慣化アプリ：デイリークエストを達成して連続記録をつなぎ、ヒーローを育て、フレンドと競おう。iPhoneとAndroidに対応。',
     nav: { features: '機能', faq: 'よくある質問', support: 'サポート' },
-    badge: '習慣化RPG',
     h1: '習慣を<br><em>クエスト</em>に',
     pipSays: 'こんにちは、ピップだよ！1日の様子で色が変わるんだ。',
     lead: 'デイリークエストを達成して連続記録をつなぎ、XPとゴールドを稼いで、ドット絵のヒーローを育てよう。そしてフレンドに挑戦！',
     soon: '近日公開',
     web: 'ブラウザで今すぐ遊ぶ',
-    demo: { button: '▶ デモで遊ぶ', note: '無料・ブラウザでそのまま遊べます。インストール不要、ヒーローはアプリにも引き継がれます。', nav: '▶ 遊ぶ', title: '待ちきれない？<em>今すぐ遊ぼう。</em>' },
+    demo: { button: '▶ デモで遊ぶ', note: '無料・ブラウザでそのまま遊べます。インストール不要、ヒーローはアプリにも引き継がれます。', nav: '▶ 遊ぶ' },
+    beta: { badge: 'ANDROID ベータ', title: '<em>Androidテスター</em>になろう', text: 'Google Playでの公開には、12人のテスターが14日間必要です。だれよりも早く無料で遊んで、ゲームづくりに参加しよう。',
+      steps: ['スマホのGoogleアカウントでテスターグループに参加。', 'Google Playのインストールリンクを、準備ができしだいグループで案内します。', 'HabitQuestをインストールして、14日間ときどき開いてね。'],
+      button: '🧪 Androidベータに参加', note: '無料です。メールアドレスはGoogleグループへの参加にだけ使われます。' },
+    notify: '📩 リリース日に知らせてもらう',
     featuresTitle: '<em>習慣が続く</em>しかけがぜんぶ',
     featuresSub: '習慣はすべてクエストに。続けた日の数だけ、ヒーローは強くなる。',
     features: [
@@ -224,13 +235,16 @@ const T = {
     title: 'HabitQuest — 습관을 RPG로',
     description: '픽셀 아트 습관 트래커: 매일 퀘스트를 달성하고, 연속 기록을 이어가고, 히어로를 키우고, 친구들과 겨뤄요. iPhone과 Android 지원.',
     nav: { features: '기능', faq: '자주 묻는 질문', support: '고객 지원' },
-    badge: '습관 RPG',
     h1: '습관을<br><em>퀘스트</em>로',
     pipSays: '안녕, 나는 핍이야! 하루에 따라 색이 바뀌어.',
     lead: '매일 퀘스트를 달성하고, 연속 기록을 이어가고, XP와 골드를 모아 픽셀 히어로를 키워요. 그리고 친구에게 도전!',
     soon: '곧 출시',
     web: '지금 브라우저에서 플레이',
-    demo: { button: '▶ 데모 플레이', note: '무료, 브라우저에서 바로 즐겨요. 설치할 필요 없고, 영웅은 앱으로 그대로 이어져요.', nav: '▶ 플레이', title: '기다리기 힘들다면? <em>지금 플레이!</em>' },
+    demo: { button: '▶ 데모 플레이', note: '무료, 브라우저에서 바로 즐겨요. 설치할 필요 없고, 영웅은 앱으로 그대로 이어져요.', nav: '▶ 플레이' },
+    beta: { badge: 'ANDROID 베타', title: '<em>안드로이드 테스터</em>가 되어 주세요', text: 'Google Play 출시를 위해 14일 동안 12명의 테스터가 필요해요. 누구보다 먼저 무료로 플레이하고 게임을 함께 만들어요.',
+      steps: ['휴대폰의 Google 계정으로 테스터 그룹에 가입하세요.', 'Google Play 설치 링크가 준비되면 그룹에 바로 올려 드려요.', 'HabitQuest를 설치하고 14일 동안 가끔 열어 주세요.'],
+      button: '🧪 안드로이드 베타 참여하기', note: '무료예요. 이메일은 Google 그룹 가입에만 사용돼요.' },
+    notify: '📩 출시일에 알림 받기',
     featuresTitle: '<em>습관이 이어지는</em> 모든 장치',
     featuresSub: '모든 습관이 퀘스트가 돼요. 꾸준히 한 날만큼 히어로가 강해져요.',
     features: [
@@ -289,13 +303,16 @@ const T = {
     title: 'HabitQuest — 把習慣變成RPG',
     description: '像素風習慣養成App：完成每日任務、延續連續紀錄、培養你的英雄，還能和好友一較高下。支援 iPhone 與 Android。',
     nav: { features: '功能', faq: '常見問題', support: '客服' },
-    badge: '習慣養成RPG',
     h1: '把習慣<br>變成<em>任務</em>',
     pipSays: '你好，我是皮普！我會隨著你一天的狀態變換顏色喔。',
     lead: '完成每日任務、延續連續紀錄，賺取 XP 和金幣，培養你的像素英雄。再向好友發起挑戰！',
     soon: '即將推出',
     web: '或直接在瀏覽器裡玩',
-    demo: { button: '▶ 立即試玩', note: '免費，直接在瀏覽器裡玩，不用安裝。你的英雄之後也能帶到 App 裡。', nav: '▶ 開玩', title: '等不及了？<em>現在就玩。</em>' },
+    demo: { button: '▶ 立即試玩', note: '免費，直接在瀏覽器裡玩，不用安裝。你的英雄之後也能帶到 App 裡。', nav: '▶ 開玩' },
+    beta: { badge: 'ANDROID 測試版', title: '成為 <em>Android 測試員</em>', text: '上架 Google Play 前，Google 需要 12 位測試員連續測試 14 天。搶先免費遊玩，一起打造這款遊戲。',
+      steps: ['用手機上的 Google 帳號加入測試員群組。', 'Google Play 安裝連結準備好後，我們會立即在群組公告。', '安裝 HabitQuest，並在 14 天內不時打開它。'],
+      button: '🧪 加入 Android 測試', note: '免費。你的電子郵件只會用於加入 Google 網上論壇。' },
+    notify: '📩 上架當天通知我',
     featuresTitle: '讓習慣<em>持續下去</em>的一切',
     featuresSub: '每個習慣都是一個任務。堅持越多天，英雄就越強。',
     features: [
@@ -387,6 +404,10 @@ function demoButton(t) {
     : `<p class="web"><a href="${WEB_APP}">${t.web} →</a></p>`;
 }
 
+/** The language menu: its button shows the current language's code, its list each language's own name. */
+const langCode = (l) => (l === 'zh' ? '中文' : l.toUpperCase());
+const LANG_NAMES = { en: 'English', fr: 'Français', ja: '日本語', ko: '한국어', zh: '中文' };
+
 /** Links to the other languages of the landing page (from the page of `lang`). */
 function otherLangs(lang) {
   const root = lang === 'en' ? '' : '../';
@@ -421,19 +442,20 @@ function page(t) {
 <header class="top"><div class="wrap">
   <a class="brand pixel" href="./"><img src="${a}/icon.png" alt="">HabitQuest</a>
   <nav class="nav">
-    <a class="nav-play pixel" href="${WEB_APP}">${t.demo.nav}</a>
     <a href="#features">${t.nav.features}</a><a href="#faq">${t.nav.faq}</a><a href="${t.links.support}">${t.nav.support}</a>
-${otherLangs(t.lang).map(([l, href]) => `    <a class="lang" href="${href}" hreflang="${l === 'zh' ? 'zh-Hant' : l}">${l === 'zh' ? '中文' : l.toUpperCase()}</a>`).join('\n')}
+    <a class="nav-play pixel" href="${WEB_APP}">${t.demo.nav}</a>
+    <details class="langs"><summary>${langCode(t.lang)}</summary><div>
+${otherLangs(t.lang).map(([l, href]) => `      <a href="${href}" hreflang="${l === 'zh' ? 'zh-Hant' : l}" lang="${l === 'zh' ? 'zh-Hant' : l}">${LANG_NAMES[l]}</a>`).join('\n')}
+    </div></details>
   </nav>
 </div></header>
 
 <main>
 <section class="hero"><div class="wrap">
   <div>
-    <span class="badge pixel">${t.badge}</span>
     <h1 class="pixel">${t.h1}</h1>
     <p class="lead">${t.lead}</p>
-    ${PRELAUNCH ? demoButton(t) + storeBadges(t) : storeBadges(t) + demoButton(t)}
+    ${PRELAUNCH ? `${demoButton(t)}<a class="soft" href="#join">${t.notify} ↓</a>` : storeBadges(t) + demoButton(t)}
   </div>
   <div class="hero-art">
     <div class="phone"><img src="${t.screens}/today.png" alt="" width="390" height="844"></div>
@@ -441,6 +463,20 @@ ${otherLangs(t.lang).map(([l, href]) => `    <a class="lang" href="${href}" href
       <p class="pip-says">${t.pipSays}</p>
       <div class="pip-sprite">${['vert', 'orange', 'or', 'bleu', 'violet', 'rose'].map((m) => `<img src="${a}/pip/pip-${m}.png" alt="" width="96" height="96">`).join('')}</div>
     </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2 class="pixel">${t.stepsTitle}</h2>
+  <div class="steps">
+${t.steps.map(([b, s]) => `    <div class="step"><b>${b}</b><span>${s}</span></div>`).join('\n')}
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2 class="pixel">${t.shotsTitle}</h2>
+  <div class="shots">
+${t.shots.map(([img, cap]) => `    <figure><div class="phone"><img src="${t.screens}/${img}.png" alt="${cap}" loading="lazy" width="390" height="844"></div><figcaption>${cap}</figcaption></figure>`).join('\n')}
   </div>
 </div></section>
 
@@ -453,20 +489,6 @@ ${t.features.map(([icon, h, p]) => `    <div class="card"><div class="icon">${ic
 </div></section>
 
 <section><div class="wrap">
-  <h2 class="pixel">${t.shotsTitle}</h2>
-  <div class="shots">
-${t.shots.map(([img, cap]) => `    <figure><div class="phone"><img src="${t.screens}/${img}.png" alt="${cap}" loading="lazy" width="390" height="844"></div><figcaption>${cap}</figcaption></figure>`).join('\n')}
-  </div>
-</div></section>
-
-<section><div class="wrap">
-  <h2 class="pixel">${t.stepsTitle}</h2>
-  <div class="steps">
-${t.steps.map(([b, s]) => `    <div class="step"><b>${b}</b><span>${s}</span></div>`).join('\n')}
-  </div>
-</div></section>
-
-<section><div class="wrap">
   <h2 class="pixel">${t.premiumTitle}</h2>
   <div class="premium">
     <div class="card"><h3>${t.freeTitle}</h3><ul>${t.free.map((x) => `<li>${x}</li>`).join('')}</ul></div>
@@ -474,20 +496,27 @@ ${t.steps.map(([b, s]) => `    <div class="step"><b>${b}</b><span>${s}</span></d
   </div>
 </div></section>
 
-${PRELAUNCH ? `<section><div class="wrap"><div class="cta">
-  <h2 class="pixel">${t.demo.title}</h2>
-  ${demoButton(t)}
+${STORES.android ? '' : `<section id="beta"><div class="wrap"><div class="beta">
+  <div>
+    <span class="badge pixel">${t.beta.badge}</span>
+    <h2 class="pixel">${t.beta.title}</h2>
+    <p>${t.beta.text}</p>
+    <ol>${t.beta.steps.map((x) => `<li>${x}</li>`).join('')}</ol>
+  </div>
+  <div class="beta-cta">
+    <a class="play pixel" href="${BETA_GROUP}" target="_blank" rel="noopener">${t.beta.button}</a>
+    <p>${t.beta.note}</p>
+  </div>
 </div></div></section>
 
-` : ''}<section id="faq"><div class="wrap">
+`}<section id="faq"><div class="wrap">
   <h2 class="pixel">${t.faqTitle}</h2>
 ${t.faq.map(([q, r]) => `  <details><summary>${q}</summary><p>${r}</p></details>`).join('\n')}
 </div></section>
 
-<section><div class="wrap"><div class="cta">
+<section id="join"><div class="wrap"><div class="cta">
   <h2 class="pixel">${t.ctaTitle}</h2>
-  ${storeBadges(t)}
-  ${STORES.ios && STORES.android ? '' : waitlistForm(t)}
+  ${PRELAUNCH ? demoButton(t) + waitlistForm(t) : storeBadges(t) + demoButton(t)}
 </div></div></section>
 </main>
 

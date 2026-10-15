@@ -23,35 +23,23 @@
 <header class="top"><div class="wrap">
   <a class="brand pixel" href="./"><img src="assets/icon.png" alt="">HabitQuest</a>
   <nav class="nav">
+    <a href="#features">Features</a><a href="#faq">FAQ</a><a href="support">Support</a>
     <a class="nav-play pixel" href="https://habitquest.expo.app">▶ Play</a>
-    <a class="nav-beta" href="#beta">Android beta</a><a href="#features">Features</a><a href="#faq">FAQ</a><a href="support">Support</a>
-    <a class="lang" href="fr/" hreflang="fr">FR</a>
-    <a class="lang" href="ja/" hreflang="ja">JA</a>
-    <a class="lang" href="ko/" hreflang="ko">KO</a>
-    <a class="lang" href="zh/" hreflang="zh-Hant">中文</a>
+    <details class="langs"><summary>EN</summary><div>
+      <a href="fr/" hreflang="fr" lang="fr">Français</a>
+      <a href="ja/" hreflang="ja" lang="ja">日本語</a>
+      <a href="ko/" hreflang="ko" lang="ko">한국어</a>
+      <a href="zh/" hreflang="zh-Hant" lang="zh-Hant">中文</a>
+    </div></details>
   </nav>
 </div></header>
 
 <main>
 <section class="hero"><div class="wrap">
   <div>
-    <a class="beta-pill" href="#beta">🧪 Android testers wanted — join the beta →</a>
-    <span class="badge pixel">HABIT TRACKER RPG</span>
     <h1 class="pixel">Turn your habits<br>into <em>quests</em></h1>
     <p class="lead">Complete your daily quests, keep your streaks alive, earn XP and gold, and level up a pixel hero. Then take on your friends.</p>
-    <div class="demo"><a class="play pixel" href="https://habitquest.expo.app">▶ Play the demo</a><p>Free, right in your browser. Nothing to install, and your hero follows you to the app.</p></div>
-    <form class="waitlist in-hero" id="waitlist" data-url="https://aksxyaullvozlkzcegth.supabase.co" data-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc3h5YXVsbHZvemxremNlZ3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NDg2MjUsImV4cCI6MjA4MjEyNDYyNX0.9GfZsW1PqDnOcV2zuOaqGrt1zj76PTwss6OfFl0PVOo" data-lang="en" novalidate>
-      <h3 class="pixel">Be told on launch day</h3>
-      <div class="waitlist-row">
-        <label class="sr" for="wl-email">Your e-mail</label>
-        <input id="wl-email" name="email" type="email" required autocomplete="email" placeholder="Your e-mail">
-        <button type="submit">Notify me</button>
-      </div>
-      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <label class="waitlist-consent"><input id="wl-consent" name="consent" type="checkbox" required> <span>I agree to receive one e-mail when HabitQuest is available on the App Store and Google Play. No spam; unsubscribe anytime. <a href="privacy-policy">Privacy policy</a></span></label>
-      <p class="waitlist-msg" role="status" data-ok="You are on the list! We will write to you on launch day." data-error="That did not work. Check your e-mail and try again."></p>
-    </form>
-    <div class="stores"><span class="store as soon" data-soon="Coming soon" aria-label="Download on the App Store (Coming soon)"><img src="assets/badges/app-store-en.svg" alt="Download on the App Store"></span><span class="store gp soon" data-soon="Coming soon" aria-label="Get it on Google Play (Coming soon)"><img src="assets/badges/google-play-en.png" alt="Get it on Google Play"></span></div>
+    <div class="demo"><a class="play pixel" href="https://habitquest.expo.app">▶ Play the demo</a><p>Free, right in your browser. Nothing to install, and your hero follows you to the app.</p></div><a class="soft" href="#join">📩 Get told on launch day ↓</a>
   </div>
   <div class="hero-art">
     <div class="phone"><img src="assets/screens/today.png" alt="" width="390" height="844"></div>
@@ -62,18 +50,24 @@
   </div>
 </div></section>
 
-<section id="beta" class="beta-section"><div class="wrap"><div class="beta">
-  <div>
-    <span class="badge pixel">ANDROID BETA</span>
-    <h2 class="pixel">Become an <em>Android tester</em></h2>
-    <p>Help us launch on Google Play: Google asks for 12 testers for 14 days. Play before everyone else, for free, and help shape the game.</p>
-    <ol><li>Join the testers group with the Google account of your phone.</li><li>We post the Google Play install link in the group as soon as it is ready.</li><li>Install HabitQuest and open it from time to time for 14 days.</li></ol>
+<section><div class="wrap">
+  <h2 class="pixel">How it <em>works</em></h2>
+  <div class="steps">
+    <div class="step"><b>Create your hero</b><span>Pick your look and your first quests in under a minute.</span></div>
+    <div class="step"><b>Complete your quests</b><span>Each habit you do earns XP and gold, and keeps your streak alive.</span></div>
+    <div class="step"><b>Level up and play</b><span>Unlock gear, finish daily missions and achievements, beat your friends.</span></div>
   </div>
-  <div class="beta-cta">
-    <a class="play pixel" href="https://groups.google.com/g/habitquest-app-testers" target="_blank" rel="noopener">🧪 Join the Android beta</a>
-    <p>Free. Google Groups only uses your address to let you in.</p>
+</div></section>
+
+<section><div class="wrap">
+  <h2 class="pixel">A look <em>inside</em></h2>
+  <div class="shots">
+    <figure><div class="phone"><img src="assets/screens/today.png" alt="Your quests" loading="lazy" width="390" height="844"></div><figcaption>Your quests</figcaption></figure>
+    <figure><div class="phone"><img src="assets/screens/profile.png" alt="Your hero" loading="lazy" width="390" height="844"></div><figcaption>Your hero</figcaption></figure>
+    <figure><div class="phone"><img src="assets/screens/arena.png" alt="The arena" loading="lazy" width="390" height="844"></div><figcaption>The arena</figcaption></figure>
+    <figure><div class="phone"><img src="assets/screens/stats.png" alt="Your progress" loading="lazy" width="390" height="844"></div><figcaption>Your progress</figcaption></figure>
   </div>
-</div></div></section>
+</div></section>
 
 <section id="features"><div class="wrap">
   <h2 class="pixel">Everything that makes <em>habits stick</em></h2>
@@ -89,25 +83,6 @@
 </div></section>
 
 <section><div class="wrap">
-  <h2 class="pixel">A look <em>inside</em></h2>
-  <div class="shots">
-    <figure><div class="phone"><img src="assets/screens/today.png" alt="Your quests" loading="lazy" width="390" height="844"></div><figcaption>Your quests</figcaption></figure>
-    <figure><div class="phone"><img src="assets/screens/profile.png" alt="Your hero" loading="lazy" width="390" height="844"></div><figcaption>Your hero</figcaption></figure>
-    <figure><div class="phone"><img src="assets/screens/arena.png" alt="The arena" loading="lazy" width="390" height="844"></div><figcaption>The arena</figcaption></figure>
-    <figure><div class="phone"><img src="assets/screens/stats.png" alt="Your progress" loading="lazy" width="390" height="844"></div><figcaption>Your progress</figcaption></figure>
-  </div>
-</div></section>
-
-<section><div class="wrap">
-  <h2 class="pixel">How it <em>works</em></h2>
-  <div class="steps">
-    <div class="step"><b>Create your hero</b><span>Pick your look and your first quests in under a minute.</span></div>
-    <div class="step"><b>Complete your quests</b><span>Each habit you do earns XP and gold, and keeps your streak alive.</span></div>
-    <div class="step"><b>Level up and play</b><span>Unlock gear, finish daily missions and achievements, beat your friends.</span></div>
-  </div>
-</div></section>
-
-<section><div class="wrap">
   <h2 class="pixel">Free to play. <em>Premium</em> if you want more.</h2>
   <div class="premium">
     <div class="card"><h3>Free</h3><ul><li>All quests, streaks and your hero</li><li>Daily missions and 23 achievements</li><li>Duels, challenges, co-op and arena</li><li>The basic shop catalog</li></ul></div>
@@ -115,9 +90,17 @@
   </div>
 </div></section>
 
-<section><div class="wrap"><div class="cta">
-  <h2 class="pixel">Can’t wait? <em>Play now.</em></h2>
-  <div class="demo"><a class="play pixel" href="https://habitquest.expo.app">▶ Play the demo</a><p>Free, right in your browser. Nothing to install, and your hero follows you to the app.</p></div>
+<section id="beta"><div class="wrap"><div class="beta">
+  <div>
+    <span class="badge pixel">ANDROID BETA</span>
+    <h2 class="pixel">Become an <em>Android tester</em></h2>
+    <p>Help us launch on Google Play: Google asks for 12 testers for 14 days. Play before everyone else, for free, and help shape the game.</p>
+    <ol><li>Join the testers group with the Google account of your phone.</li><li>We post the Google Play install link in the group as soon as it is ready.</li><li>Install HabitQuest and open it from time to time for 14 days.</li></ol>
+  </div>
+  <div class="beta-cta">
+    <a class="play pixel" href="https://groups.google.com/g/habitquest-app-testers" target="_blank" rel="noopener">🧪 Join the Android beta</a>
+    <p>Free. Google Groups only uses your address to let you in.</p>
+  </div>
 </div></div></section>
 
 <section id="faq"><div class="wrap">
@@ -129,10 +112,19 @@
   <details><summary>I need help</summary><p>Write to us from Settings → Support in the app, or see the <a href="support">Support page</a>.</p></details>
 </div></section>
 
-<section><div class="wrap"><div class="cta">
+<section id="join"><div class="wrap"><div class="cta">
   <h2 class="pixel">Your adventure starts <em>today</em></h2>
-  <div class="stores"><span class="store as soon" data-soon="Coming soon" aria-label="Download on the App Store (Coming soon)"><img src="assets/badges/app-store-en.svg" alt="Download on the App Store"></span><span class="store gp soon" data-soon="Coming soon" aria-label="Get it on Google Play (Coming soon)"><img src="assets/badges/google-play-en.png" alt="Get it on Google Play"></span></div>
-  <p class="notify"><a class="play pixel" href="#waitlist">📩 Get told on launch day</a></p>
+  <div class="demo"><a class="play pixel" href="https://habitquest.expo.app">▶ Play the demo</a><p>Free, right in your browser. Nothing to install, and your hero follows you to the app.</p></div><form class="waitlist" id="waitlist" data-url="https://aksxyaullvozlkzcegth.supabase.co" data-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc3h5YXVsbHZvemxremNlZ3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NDg2MjUsImV4cCI6MjA4MjEyNDYyNX0.9GfZsW1PqDnOcV2zuOaqGrt1zj76PTwss6OfFl0PVOo" data-lang="en" novalidate>
+    <h3 class="pixel">Be told on launch day</h3>
+    <div class="waitlist-row">
+      <label class="sr" for="wl-email">Your e-mail</label>
+      <input id="wl-email" name="email" type="email" required autocomplete="email" placeholder="Your e-mail">
+      <button type="submit">Notify me</button>
+    </div>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="waitlist-consent"><input id="wl-consent" name="consent" type="checkbox" required> <span>I agree to receive one e-mail when HabitQuest is available on the App Store and Google Play. No spam; unsubscribe anytime. <a href="privacy-policy">Privacy policy</a></span></label>
+    <p class="waitlist-msg" role="status" data-ok="You are on the list! We will write to you on launch day." data-error="That did not work. Check your e-mail and try again."></p>
+  </form>
 </div></div></section>
 </main>
 

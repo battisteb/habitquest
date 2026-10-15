@@ -2,7 +2,7 @@
 (function () {
   if (!('IntersectionObserver' in window)) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const targets = document.querySelectorAll('section h2, .sub, .card, .shots figure, .step, .premium > *, details, .cta');
+  const targets = document.querySelectorAll('section h2, .sub, .card, .shots figure, .step, .premium > *, section details, .cta');
   document.documentElement.classList.add('js-reveal');
   const io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
@@ -31,11 +31,22 @@
   const langs = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
   if (!/(^|,)zh/.test(langs)) return;
   const html = document.documentElement.getAttribute('lang') || '';
-  if (html.indexOf('zh') === 0 || !document.querySelector('a.lang[hreflang="zh-Hant"]')) return;
-  const link = document.querySelector('a.lang[hreflang="zh-Hant"]').getAttribute('href');
+  const zh = document.querySelector('a.lang[hreflang="zh-Hant"], .langs a[hreflang="zh-Hant"]');
+  if (html.indexOf('zh') === 0 || !zh) return;
+  const link = zh.getAttribute('href');
   const bar = document.createElement('a');
   bar.className = 'zh-bar';
   bar.href = link;
   bar.textContent = '🇹🇼 本網站與 App 都有繁體中文版 → 切換';
   document.body.insertBefore(bar, document.body.firstChild);
+})();
+
+// The header's Play button only shows once the hero's big one has scrolled away: one call to action
+// on screen at a time.
+(function () {
+  const hero = document.querySelector('.hero .play');
+  if (!hero || !('IntersectionObserver' in window)) return document.body.classList.add('scrolled');
+  new IntersectionObserver(function (entries) {
+    document.body.classList.toggle('scrolled', !entries[0].isIntersecting);
+  }).observe(hero);
 })();
