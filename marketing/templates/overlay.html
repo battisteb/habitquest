@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&family=Press+Start+2P&family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet" />
 <style>
   /* Transparent 1080×1920 layers for edit-reel.js: on-screen text (captions, hooks) and the end card. */
   * { margin: 0; box-sizing: border-box; }
@@ -22,6 +22,8 @@
   .card .line { font-family: Inter; font-weight: 900; font-size: 86px; text-align: center; line-height: 1.1; max-width: 900px; }
   .card .line em { font-style: normal; color: #2F7BEA; }
   .card .sub { font-family: Inter; font-weight: 800; font-size: 50px; color: #4A5A8C; }
+  /* Japanese account (?ja): rounded Japanese type, words joined without spaces. */
+  .ja .cap, .ja .card .line, .ja .card .sub { font-family: 'M PLUS Rounded 1c', Inter, sans-serif; letter-spacing: 0; word-spacing: 0; }
 </style>
 </head>
 <body>
@@ -29,15 +31,17 @@
 <script>
   // window.caption({ text, y, size, words }) — `*word*` in yellow, `|` line break; `words`: how many
   // words are shown (word-by-word reveal), all by default.
+  const JA = location.search.includes('ja');
+  if (JA) document.documentElement.classList.add('ja');
   window.caption = ({ text, y = 0.4, size = 80, words }) => {
     let n = 0;
     const html = text.split('|').map((line) => line.trim().split(/\s+/).map((w) => {
-      const em = /^\*.*\*[.,!?…:]*$/.test(w);
+      const em = /^\*.*\*[.,!?…:、。？！]*$/.test(w);
       const body = w.replace(/\*/g, '');
       n += 1;
       const on = words == null || n <= words;
       return `<span class="w${on ? ' on' : ''}">${em ? `<em>${body}</em>` : body}</span>`;
-    }).join(' ')).join('<br>');
+    }).join(JA ? '' : ' ')).join('<br>');
     document.getElementById('root').innerHTML = `<div class="cap" style="top:${y * 1920}px;font-size:${size}px">${html}</div>`;
     return n;
   };
@@ -46,7 +50,7 @@
     document.getElementById('root').innerHTML = `<div class="card">
       <img src="../brand/pip/${pip}.png" alt="" />
       <div class="logo">HabitQuest</div>
-      <div class="line">${line.replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/\|/g, '<br>')}</div>
+      <div class="line">${(JA ? line.replace(/ /g, '') : line).replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/\|/g, '<br>')}</div>
       ${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
   };
 </script>

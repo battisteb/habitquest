@@ -39,9 +39,12 @@ const FPS = 30;
 const W = 1080, H = 1920;
 const clipDir = process.env.CLIP_DIR || path.join(root, 'clips');
 const appDir = process.env.APP_DIR || path.join(root, 'recordings-hd');
-const specs = JSON.parse(fs.readFileSync(path.join(root, 'edits.en.json'), 'utf8'));
-const outDir = path.join(root, 'exports', 'edits-en');
-const overlay = pathToFileURL(path.join(root, 'templates', 'overlay.html')).href;
+// LANG=ja: the Japanese account's edits (edits.ja.json, VOICEVOX 青山龍星). Japanese captions keep
+// spaces between their words in the spec only, for the word-by-word reveal; they are not shown.
+const JA = process.env.LANG === 'ja';
+const specs = JSON.parse(fs.readFileSync(path.join(root, JA ? 'edits.ja.json' : 'edits.en.json'), 'utf8'));
+const outDir = path.join(root, 'exports', JA ? 'edits-ja' : 'edits-en');
+const overlay = pathToFileURL(path.join(root, 'templates', 'overlay.html')).href + (JA ? '?ja' : '');
 const TRANSITIONS = { flash: 'fadewhite', zoom: 'zoomin', whip: 'slideleft', fade: 'fade', cut: 'fade' };
 
 const run = (args) => execFileSync(ffmpeg, ['-v', 'error', '-y', ...args], { stdio: 'inherit' });
@@ -52,7 +55,7 @@ const probe = (file) => {
 };
 
 const AUDIO = process.env.AUDIO || 'vo';
-const ENGINE = process.env.VO_ENGINE || 'chatterbox';
+const ENGINE = process.env.VO_ENGINE || (JA ? 'voicevox' : 'chatterbox');
 const voDir = path.join(root, 'exports', 'vo');
 const MUSIC = process.env.MUSIC;
 
@@ -67,16 +70,21 @@ function voiceOver(name, spec, total) {
     ...(card.card ? [{ t: total - card.dur + 0.25, end: total, text: card.card.line }] : [])];
   const opts = ENGINE === 'kokoro'
     ? { voice: process.env.VO_VOICE || 'af_bella', speed: Number(process.env.VO_SPEED || 1) }
-    : { exaggeration: Number(process.env.VO_EXAGGERATION || 0.6), cfg: Number(process.env.VO_CFG || 0.4) };
+    : ENGINE === 'voicevox'
+      ? { speaker: process.env.VO_SPEAKER || '青山龍星', style: process.env.VO_STYLE || 'ノーマル', speed: Number(process.env.VO_SPEED || 1.1) }
+      : { exaggeration: Number(process.env.VO_EXAGGERATION || 0.6), cfg: Number(process.env.VO_CFG || 0.4) };
   fs.mkdirSync(voDir, { recursive: true });
   const items = lines.map((l) => {
-    const text = l.text.replace(/\*/g, '').replace(/\s*\|\s*/g, ' ');
+    let text = l.text.replace(/\*/g, '').replace(/\s*\|\s*/g, JA ? '' : ' ');
+    // Japanese: no spaces, and VOICEVOX reads the app's name in katakana (it spells Latin letters).
+    if (JA) text = text.replace(/\s+/g, '').replace(/HabitQuest/g, 'ハビットクエスト');
     const id = require('crypto').createHash('sha1').update(`${ENGINE}|${JSON.stringify(opts)}|${text}`).digest('hex').slice(0, 12);
     return { text, out: path.join(voDir, `${id}.wav`) };
   });
-  const python = ENGINE === 'kokoro' ? process.env.PYTHON || 'python' : process.env.VO_PYTHON || 'python';
+  const [cmd, script] = ENGINE === 'voicevox' ? [process.execPath, 'tts-voicevox.js']
+    : [ENGINE === 'kokoro' ? process.env.PYTHON || 'python' : process.env.VO_PYTHON || 'python', `tts-${ENGINE}.py`];
   // The durations are the last line printed (the models log on stdout too).
-  const durs = JSON.parse(execFileSync(python, [path.join(root, `tts-${ENGINE}.py`)],
+  const durs = JSON.parse(execFileSync(cmd, [path.join(root, script)],
     { input: JSON.stringify({ ...opts, items }), stdio: ['pipe', 'pipe', 'inherit'], maxBuffer: 1 << 24 })
     .toString().trim().split('\n').pop());
   let free = 0;
@@ -143,7 +151,8 @@ function renderSegment(seg, len, file, cardPng) {
     input = ['-loop', '1', '-framerate', String(FPS), '-t', (len + 0.1).toFixed(3), '-i', cardPng];
     crop = 'scale=1080:1920';
   } else {
-    const src = seg.clip ? path.join(clipDir, seg.clip) : path.join(appDir, seg.app);
+    // still: a screenshot of the app (marketing/assets/<still>), for languages without HD recordings.
+    const src = seg.clip ? path.join(clipDir, seg.clip) : seg.still ? path.join(root, 'assets', seg.still) : path.join(appDir, seg.app);
     const { w, h } = probe(src);
     const [fx, fy] = seg.focus || [0.5, 0.45];
     if (w / h > W / H) {
@@ -153,7 +162,9 @@ function renderSegment(seg, len, file, cardPng) {
       const ch = Math.round(w * H / W / 2) * 2;
       crop = `crop=${w}:${ch}:0:${Math.round(Math.max(0, Math.min(h - ch, fy * h - ch / 2)))}`;
     }
-    input = ['-ss', String(seg.start || 0), '-t', (len * speed + 0.2).toFixed(3), '-i', src];
+    input = seg.still
+      ? ['-loop', '1', '-framerate', String(FPS), '-t', (len + 0.2).toFixed(3), '-i', src]
+      : ['-ss', String(seg.start || 0), '-t', (len * speed + 0.2).toFixed(3), '-i', src];
   }
   const sharpen = seg.clip ? ',unsharp=5:5:0.6' : '';
   run([...input, '-an', '-vf', `${crop},setpts=PTS/${speed},fps=${FPS},${camera}${sharpen},setsar=1,format=yuv420p,trim=end_frame=${n}`,
