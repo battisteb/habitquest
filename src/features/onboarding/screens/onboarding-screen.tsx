@@ -9,6 +9,7 @@ import { createHabit } from '../../habits/stores/habits-store';
 import { saveAvatarConfig } from '../../avatar/stores/avatar-config-store';
 import { authStore$ } from '../../auth/stores/auth-store';
 import { markOnboardingComplete } from '../onboarding-state';
+import { resetTutorial } from '../tutorial-state';
 import { colors, fontSizes, spacing, fonts, pixelSize } from '../../../ui/theme/tokens';
 import { useTheme } from '../../../ui/theme/theme-context';
 import { useT } from '../../../lib/i18n';
@@ -17,6 +18,14 @@ import { LanguageSwitch } from '../../../ui/components/language-switch';
 const SLIDE_EMOJIS = ['⚔️', '🔥', '🏆'];
 
 const MAX_FIRST_HABITS = 3;
+// "What do you want to get better at?" (B9): each goal ticks the quick picks that fit it
+// (indexes in the quick list: 0 bedtime, 1 read, 2 exercise, 3 meditate, 4 no social media).
+const GOALS = [
+  { key: 'fitness', label: 'onb_goal_fitness', picks: [2, 0] },
+  { key: 'study', label: 'onb_goal_study', picks: [1, 4] },
+  { key: 'sleep', label: 'onb_goal_sleep', picks: [0, 4] },
+  { key: 'calm', label: 'onb_goal_calm', picks: [3, 0] },
+] as const;
 
 const QUICK_HABIT_CATEGORIES = ['sleep', 'learning', 'fitness', 'mindfulness', 'productivity'] as const;
 
@@ -75,6 +84,7 @@ export default function OnboardingScreen() {
   const [customHabit, setCustomHabit] = useState('');
   // Up to MAX_FIRST_HABITS quick picks: a fuller first day makes daily quests reachable.
   const [selectedQuick, setSelectedQuick] = useState<number[]>([]);
+  const [goal, setGoal] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
   // Avatar colors
@@ -123,11 +133,14 @@ export default function OnboardingScreen() {
       if (customHabit.trim()) {
         await createHabit(customHabit.trim(), 'general');
       }
-      markOnboardingComplete();
+      markOnboardingComplete(userId);
+      // A new account gets the Today tour even on a phone that has already shown it.
+      resetTutorial();
       // Notifications are asked at the end of the Today tour (with the reminder time).
       router.replace('/(tabs)/today');
     } catch {
-      markOnboardingComplete();
+      markOnboardingComplete(authStore$.user.get()?.id);
+      resetTutorial();
       router.replace('/(tabs)/today');
     } finally {
       setIsCreating(false);
@@ -135,7 +148,7 @@ export default function OnboardingScreen() {
   }
 
   function handleSkip() {
-    markOnboardingComplete();
+    markOnboardingComplete(authStore$.user.get()?.id);
     router.replace('/(tabs)/today');
   }
 
@@ -240,8 +253,28 @@ export default function OnboardingScreen() {
           <Text style={styles.title}>{T.onb_habit_title}</Text>
           <Text style={styles.body}>{T.onb_habit_body}</Text>
 
+          {/* Goal: preselects the quick picks */}
+          <Text style={styles.sectionLabel}>{T.onb_goal_label}</Text>
+          <View style={styles.goalRow}>
+            {GOALS.map((g) => (
+              <Pressable
+                key={g.key}
+                style={[styles.goalChip, goal === g.key && styles.quickPickSelected]}
+                onPress={() => {
+                  setGoal(g.key);
+                  setSelectedQuick([...g.picks]);
+                }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: goal === g.key }}
+                testID={`onb-goal-${g.key}`}
+              >
+                <Text style={[styles.quickPickText, goal === g.key && styles.quickPickTextSelected]}>{T[g.label]}</Text>
+              </Pressable>
+            ))}
+          </View>
+
           {/* Quick picks */}
-          <Text style={styles.sectionLabel}>{T.onb_quick_pick}</Text>
+          <Text style={[styles.sectionLabel, { marginTop: spacing.md }]}>{T.onb_quick_pick}</Text>
           {quickHabits.map((h, i) => (
             <Pressable
               key={i}
@@ -389,6 +422,18 @@ function createStyles() {
     borderColor: colors.border,
     borderRadius: 0,
     padding: spacing.sm,
+  },
+  goalRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  goalChip: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm,
   },
   quickPickSelected: {
     borderColor: colors.primary,

@@ -63,11 +63,11 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       // Keep an invite opened before sign-up; it is accepted after onboarding.
       if (inviteCode) savePendingInvite(decodeURIComponent(inviteCode));
       router.replace('/(auth)/sign-in');
-    } else if (isAuthenticated && !inAuthGroup && segments[0] !== 'onboarding' && hasCompletedOnboarding()) {
+    } else if (isAuthenticated && !inAuthGroup && segments[0] !== 'onboarding' && hasCompletedOnboarding(authStore$.user.get())) {
       const pending = takePendingInvite();
       if (pending) router.replace(`/invite/${pending}`);
     } else if (isAuthenticated && inAuthGroup) {
-      if (!hasCompletedOnboarding()) {
+      if (!hasCompletedOnboarding(authStore$.user.get())) {
         router.replace('/onboarding');
       } else {
         router.replace('/(tabs)/profile');
