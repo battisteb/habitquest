@@ -14,3 +14,4 @@ exclude:
   - auth-emails.md
   - web-testing.md
   - ux-review.md
+  - ops/
