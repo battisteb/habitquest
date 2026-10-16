@@ -83,5 +83,34 @@
   "js-android-beta": [
     { "story": true, "pip": "joy-party", "title": "<em>Androidテスター</em>募集中🧪", "body": "いちばん早く、無料で遊べるよ🌸<br><br>① グループに参加<br>② Playストアで入手<br>③ 14日間残してね", "slot": "👆 ここにリンク" },
     { "story": true, "pip": "joy-love", "title": "ピップからの<em>お願い</em>🙏", "body": "<b>12人</b>集まったら公開できるよ！<br>台灣的朋友：Android 測試員招募中！", "slot": "👆 ここにリンク" }
+  ],
+  "j14-mikka-bozu": [
+    { "pip": "sad-worried", "title": "<em>三日坊主</em>の人へ👇", "body": "続かないのは、<span class=\"nw\">きみのせいじゃない。</span>" },
+    { "pip": "sleepy-rest", "title": "なぜ<em>3日目</em>でやめちゃう？", "body": "最初の目標が大きすぎて、<br><b>疲れた日にゼロ</b>になるから。" },
+    { "pip": "happy-calm", "title": "① <em>小さすぎる</em>目標に", "body": "「毎日30分運動」より<br><b>「くつをはくだけ」</b>から。" },
+    { "pip": "happy-love", "title": "② つかれた日の<em>ミニ版</em>", "body": "「20ページ」が無理な日は<br><b>「1ページ」</b>でもOK。" },
+    { "pip": "joy-fire", "title": "③ 続いた日を<em>見える化</em>", "body": "連続記録がのびると、<br><b>やめたくなくなる</b>。" },
+    { "pip": "joy-party", "title": "4日目のきみへ、<em>おめでとう</em>🎉", "body": "保存して、明日見返してね📌", "cta": "保存する" }
+  ],
+  "j15-kotsu-3sen": [
+    { "pip": "proud-love", "title": "続く習慣のコツ<em>3選</em>✨", "body": "今日からできることだけ。" },
+    { "pip": "happy-calm", "title": "① <em>ついでに</em>やる", "body": "「歯みがきのあとに、<br>ストレッチ1分」<br><b>いつもの行動にくっつける</b>。" },
+    { "pip": "happy-love", "title": "② <em>決める</em>のは前の晩", "body": "朝に迷わないように、<br><b>やることを1つだけ</b>決めておく。" },
+    { "pip": "joy-fire", "title": "③ <em>できた日</em>を数える", "body": "できなかった日じゃなくて、<br><b>できた日</b>にしるしをつける。" },
+    { "pip": "joy-party", "title": "どれから<em>ためす</em>？", "body": "コメントで番号を教えてね👇<br>保存してね📌", "cta": "保存する" }
+  ],
+  "j16-han-bun": [
+    { "pip": "sad-worried", "title": "今日は<em>半分</em>しかできなかった…", "body": "それ、ちゃんと<span class=\"nw\">カウントしていいよ。</span>" },
+    { "pip": "happy-calm", "title": "ノートなら<em>半分だけ</em>ぬる", "body": "まるごと×じゃなくて、<br><b>半分の○</b>。" },
+    { "pip": "happy-love", "title": "アプリでは<br><em>ミニ版</em>", "body": "<span class=\"nw\">「1ページだけ」</span>で<span class=\"nw\">クリア。</span><br><b>連続記録は<span class=\"nw\">そのまま</span></b>、<span class=\"nw\">XPは半分。</span>", "image": "create" },
+    { "pip": "proud-love", "title": "ゼロより、<em>半分</em>", "body": "半分の日が、<br><b>続ける力</b>になる。" },
+    { "pip": "joy-party", "title": "きみの<em>ミニ版</em>は？", "body": "コメントで教えてね👇<br>保存してね📌", "cta": "保存する" }
+  ],
+  "j17-halloween": [
+    { "pip": "sad-love", "title": "ハロウィンの<em>こわい</em>モンスター👻", "body": "ほんとうにこわいのは、<span class=\"nw\">連続記録が切れること。</span>" },
+    { "boss": "snooze_golem", "title": "<em>二度寝</em>ゴーレム", "body": "2回目のアラームが大好物。<br><b>たいじ法：</b>1回目で足を床に。" },
+    { "boss": "doomscroll_kraken", "title": "<em>夜ふかしスマホ</em>クラーケン", "body": "真夜中に画面からあらわれる。<br><b>たいじ法：</b>充電は寝室の外で。" },
+    { "boss": "couch_troll", "title": "<em>ソファ</em>トロール", "body": "「あと1話だけ」…が4話に。<br><b>たいじ法：</b>リモコンの前に腕立て10回。" },
+    { "pip": "joy-party", "title": "今月は<em>かぼちゃ帽子</em>🎃", "body": "モンスターをたおして、ヒーローを着がえよう。<br>保存してね📌", "cta": "保存する" }
   ]
 }

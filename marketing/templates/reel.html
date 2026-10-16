@@ -125,7 +125,21 @@
   .bubble p { font-size: 46px; font-weight: 500; line-height: 1.55; margin-top: 22px; color: #3d2f45; text-wrap: balance; }
   .bubble::after { content: ''; position: absolute; left: 50%; bottom: -54px; width: 54px; height: 54px; margin-left: -27px;
                    background: #fff; border-right: 8px solid #14142a; border-bottom: 8px solid #14142a; transform: rotate(45deg); }
-  .pip-img { position: absolute; left: 50%; top: 1000px; width: 560px; height: 560px; margin-left: -280px; image-rendering: pixelated; }
+  .pip-img { position: absolute; left: 50%; top: 1000px; width: 560px; height: 560px; margin-left: -280px; image-rendering: pixelated; }  /* "System" window (Solo Leveling code), pixel art: dark blue night, glowing square panel. */
+  .sysbg { position: absolute; inset: 0; background: radial-gradient(circle at 50% 40%, #12224a 0%, #070b1c 60%, #03050d 100%); overflow: hidden; }
+  .sysgrid { position: absolute; inset: -60px; background-image: linear-gradient(rgba(80,170,255,.08) 2px, transparent 2px), linear-gradient(90deg, rgba(80,170,255,.08) 2px, transparent 2px); background-size: 48px 48px; }
+  .sys { position: absolute; left: 56px; right: 56px; top: 560px; padding: 54px 52px 60px; background: rgba(8,20,48,.92); border: 6px solid #7cc4ff; transform-origin: 50% 0; color: #d8ecff; }
+  .sys-head { display: flex; align-items: center; gap: 24px; font-family: 'Press Start 2P'; font-size: 40px; line-height: 1.4; color: #ffffff; text-shadow: 0 0 18px #4fa8ff; }
+  .sys-mark { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; flex: none; border: 5px solid #7cc4ff; color: #7cc4ff; font-family: Inter, sans-serif; font-weight: 900; font-size: 44px; }
+  .sys-sub { margin-top: 30px; font-size: 48px; font-weight: 800; color: #9fd0ff; opacity: 0; }
+  .sys-list { margin-top: 34px; display: flex; flex-direction: column; gap: 22px; }
+  .sys-q { display: flex; justify-content: space-between; align-items: center; gap: 20px; font-size: 56px; font-weight: 800; opacity: 0; padding: 14px 0; border-bottom: 3px solid rgba(124,196,255,.25); }
+  .sys-q b { font-family: 'Press Start 2P'; font-size: 34px; color: #ff6b6b; font-weight: 400; }
+  .sys-q.ok span { color: #8ff0b0; text-decoration: line-through; text-decoration-thickness: 5px; }
+  .sys-q.ok b { color: #5be38f; }
+  .sys-warn { margin-top: 44px; font-size: 46px; font-weight: 800; line-height: 1.35; color: #ff6b6b; opacity: 0; }
+  .sys-done { margin-top: 44px; text-align: center; font-family: 'Press Start 2P'; font-size: 46px; line-height: 1.5; color: #f5c518; text-shadow: 0 0 22px rgba(245,197,24,.7); opacity: 0; }
+  .sys ~ .handle { color: rgba(216,236,255,.7); }
 </style>
 </head>
 <body>
@@ -846,6 +860,65 @@
         h2.style.transform = `scale(${1 + (t > landed ? 0.035 * b.pulse : 0)})`;
         ctx.clearRect(0, 0, 1080, 1920);
         hits.forEach((h) => burst(ctx, t - h.at, h.x, h.y, h.seed, 18, 0.7));
+        drawFx(s, ctx, t, b);
+      };
+    },
+    // The "System" window of Solo Leveling, in pixel art (lot 2 test, audit 11/10): a blue panel
+    // opens, its header types in, the quests drop one by one, a red warning blinks; `checks`
+    // ([{ i, at }]) tick quests later, `done` shows a reward line once every quest is ticked.
+    system: (s) => {
+      const quests = s.quests || [];
+      root.innerHTML = `<div class="sysbg"><div class="sysgrid"></div></div><div class="sys">
+          <div class="sys-head"><span class="sys-mark">!</span><span class="sys-title"></span></div>
+          ${s.sub ? `<div class="sys-sub">${s.sub}</div>` : ''}
+          <div class="sys-list">${quests.map((q) => `<div class="sys-q"><span>${q}</span><b>[0/1]</b></div>`).join('')}</div>
+          ${s.warn ? `<div class="sys-warn">${s.warn}</div>` : ''}
+          ${s.done ? `<div class="sys-done">${s.done}</div>` : ''}
+        </div><div class="handle">${HANDLE}</div>${fxCanvas}`;
+      const panel = root.querySelector('.sys');
+      const title = root.querySelector('.sys-title');
+      const rows = [...root.querySelectorAll('.sys-q')];
+      const warn = root.querySelector('.sys-warn');
+      const done = root.querySelector('.sys-done');
+      const sub = root.querySelector('.sys-sub');
+      const head = s.head || 'DAILY QUEST HAS ARRIVED';
+      const ctx = root.querySelector('.fx').getContext('2d');
+      const checks = s.checks || [];
+      const open = s.entered ? 0 : 0.35;
+      window.frame = (t) => {
+        const b = beatAt(s, t);
+        root.querySelector('.sysgrid').style.transform = `translate(${-(b.T * 20) % 48}px, ${-(b.T * 30) % 48}px)`;
+        const k = clamp01(t / Math.max(open, 0.01));
+        panel.style.transform = `scaleY(${open ? 0.02 + 0.98 * ease(k) : 1})`;
+        panel.style.boxShadow = `0 0 0 6px #0b1a3a, 0 0 ${40 + 30 * b.pulse}px rgba(80,170,255,${0.55 + 0.3 * b.pulse})`;
+        const chars = Math.floor(clamp01((t - open) / 0.6) * head.length);
+        title.textContent = `[ ${head.slice(0, chars)} ]`;
+        if (sub) sub.style.opacity = String(clamp01((t - open - 0.5) / 0.3));
+        const step = s.step || 0.32;
+        const t1 = open + 0.7;
+        ctx.clearRect(0, 0, 1080, 1920);
+        rows.forEach((el, i) => {
+          const q = (t - t1 - i * step) / 0.25;
+          el.style.opacity = String(clamp01(q * 2));
+          el.style.transform = `translateX(${(1 - ease(q)) * -60}px)`;
+          const c = checks.find((x) => x.i === i);
+          const ticked = c && t >= c.at;
+          el.classList.toggle('ok', !!ticked);
+          el.querySelector('b').textContent = ticked ? '[1/1]' : '[0/1]';
+          if (c) {
+            const r = el.getBoundingClientRect();
+            burst(ctx, t - c.at, r.right - 80, r.top + r.height / 2, 30 + i, 16, 0.6);
+          }
+        });
+        const tw = t1 + rows.length * step + 0.2;
+        if (warn) warn.style.opacity = t < tw ? '0' : String(0.55 + 0.45 * (Math.sin((t - tw) * 9) > 0 ? 1 : 0));
+        if (done) {
+          const all = checks.length ? Math.max(...checks.map((x) => x.at)) + 0.3 : tw;
+          const d = (t - all) / 0.3;
+          done.style.opacity = String(clamp01(d * 2));
+          done.style.transform = `scale(${d <= 0 ? 0.6 : 0.6 + 0.4 * back(d)})`;
+          if (d > 0) { const r = done.getBoundingClientRect(); burst(ctx, t - all, r.left + r.width / 2, r.top + r.height / 2, 99, 34, 1.1); }
+        }
         drawFx(s, ctx, t, b);
       };
     },

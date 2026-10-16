@@ -226,5 +226,12 @@
       "body": "Google asks for <b>12 testers during 14 days</b> before HabitQuest can go on Google Play.<br><br>Be one of them 💪",
       "slot": "👆 Join the beta"
     }
+  ],
+  "c8-halloween": [
+    { "emoji": "🎃", "title": "The <em>habit monsters</em> of Halloween", "body": "Real horror is a broken streak.<br><b>Which one haunts you?</b>" },
+    { "boss": "snooze_golem", "title": "The <em>Snooze</em> Golem", "body": "Feeds on the 2nd alarm.<br><b>Banish it:</b> feet on the floor at the 1st." },
+    { "boss": "doomscroll_kraken", "title": "The <em>Doomscroll</em> Kraken", "body": "Rises at midnight from your phone.<br><b>Banish it:</b> charge it outside the bedroom." },
+    { "boss": "couch_troll", "title": "The <em>Couch</em> Troll", "body": "“One more episode”… then four.<br><b>Banish it:</b> 10 push-ups before the remote." },
+    { "emoji": "🎃", "title": "This month: the <em>Pumpkin Hat</em>", "body": "Beat your monsters, dress your hero.<br><b>Save this for your Halloween reset 📌</b>" }
   ]
 }

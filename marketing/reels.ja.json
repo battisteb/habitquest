@@ -6930,5 +6930,91 @@
         "ctaBeat": 4
       }
     ]
+  },
+  "j-h1-halloween": {
+    "music": {
+      "file": "marketing/audio/theme-epic.m4a",
+      "theme": "phonk",
+      "drop": 1,
+      "lift": 2
+    },
+    "musicVol": 0.8,
+    "voiceVol": 1,
+    "segments": [
+      {
+        "sayAt": 0.2,
+        "sayTail": 0.2,
+        "transition": "cut",
+        "captions": false,
+        "type": "kinetic",
+        "dur": 2.2,
+        "title": "ハロウィンで<br>いちばんこわいのは…",
+        "say": "ハロウィンで、いちばんこわいのは…"
+      },
+      {
+        "sayAt": 0.2,
+        "sayTail": 0.2,
+        "transition": "cut",
+        "captions": false,
+        "type": "boss",
+        "boss": "snooze_golem",
+        "dur": 2.2,
+        "sayY": 1740,
+        "title": "…<em>二度寝</em>の<br>モンスター。",
+        "subtitle": "スヌーズゴーレム",
+        "say": "二度寝の*モンスター*。"
+      },
+      {
+        "sayAt": 0.2,
+        "sayTail": 0.2,
+        "transition": "cut",
+        "captions": false,
+        "type": "still",
+        "src": "today",
+        "dur": 2.2,
+        "title": "毎日の<em>クエスト</em>で<br>やっつけよう。",
+        "say": "毎日のクエストで、*やっつけよう*。"
+      },
+      {
+        "sayAt": 0.2,
+        "sayTail": 0.2,
+        "transition": "cut",
+        "captions": false,
+        "type": "hero",
+        "dur": 3,
+        "every": 1.4,
+        "looks": [
+          {
+            "lv": 1
+          },
+          {
+            "hat": "hat_pumpkin",
+            "outfit": "outfit_shadow",
+            "label": "かぼちゃナイト",
+            "lv": 13
+          }
+        ],
+        "title": "今月のアイテム：<br><em>かぼちゃ帽子</em>🎃",
+        "say": "今月のアイテムは、*かぼちゃ帽子*。"
+      },
+      {
+        "sayAt": 0.2,
+        "sayTail": 0.2,
+        "transition": "cut",
+        "captions": false,
+        "type": "pip",
+        "dur": 2.2,
+        "title": "トリック・オア・<br><em>クエスト</em>？",
+        "subtitle": "コメントで🎃って教えてね",
+        "say": "トリック・オア・*クエスト*？",
+        "pips": [
+          "proud-love",
+          "joy-party"
+        ],
+        "every": 1.1,
+        "cta": "@habitquest.app",
+        "ctaBeat": 4
+      }
+    ]
   }
 }
