@@ -54,6 +54,31 @@ const out = {
     'きのうの 自分と。',
     'HabitQuestで|毎日を *クエスト* に。',
   ], { pip: 'pip-joy-love', line: 'いっしょに 言おう。|*戦え！*', sub: 'コメントで「戦え」👇' }),
+  'j-e2-shun': ja(en['e2-jinwoo-one-year'], [
+    'これが 今日の *きみ。*',
+    '1年後の|*きみ。*',
+    'その 差は？',
+    '*毎日の クエスト。*',
+    '*きみの* デイリークエスト。',
+    'やりきって、|*レベルアップ。*',
+    '毎日、 *毎日。*',
+  ], { pip: 'pip-joy-love', line: 'デイリークエストが|*待ってるよ。*', sub: 'コメントで「やる」👇' }),
+  'j-e9-tanjiro': own([
+    { clip: 'tanjiro/wWarogrnQ9M.mp4', start: 17.5, dur: 2.2, focus: [0.5, 0.5], cam: [[0, 1.2, 0.5, 0.42], [1, 1.35, 0.5, 0.4]] },
+    { clip: 'tanjiro/YFcMc0amTUM.mp4', start: 75.5, dur: 2.2, focus: [0.45, 0.5], in: 'fade', inDur: 0.3, cam: [[0, 1.2, 0.5, 0.42], [1, 1.3, 0.45, 0.42]] },
+    { clip: 'tanjiro/tbPvK1f96hQ.mp4', start: 20, dur: 1.6, focus: [0.45, 0.5], in: 'whip', inDur: 0.25, cam: [[0, 1.2, 0.5, 0.45], [1, 1.35, 0.5, 0.42]] },
+    { clip: 'tanjiro/tbPvK1f96hQ.mp4', start: 33, dur: 0.9, focus: [0.5, 0.5], cam: [[0, 1.15, 0.5, 0.45], [1, 1.3, 0.5, 0.42]] },
+    { clip: 'tanjiro/tbPvK1f96hQ.mp4', start: 35.4, dur: 2.2, focus: [0.5, 0.5], in: 'flash', inDur: 0.3, cam: [[0, 1.1, 0.5, 0.5], [1, 1.25, 0.45, 0.5]] },
+    appStill(3.8),
+    card('きみの *岩* は|なに？', 'コメントで教えて👇'),
+  ], [
+    [0, 2.2, '師匠の 課題：|この *岩* を 斬れ。', 0.26, 96],
+    [2.2, 4.4, 'だから 彼は、|*毎日* 刀を 振った。', 0.26, 96],
+    [4.4, 6, '*1年* かけて、', 0.28, 120],
+    [6, 6.9, 'ついに……', 0.3, 120],
+    [6.9, 9.1, '岩を、|*真っ二つ* に。', 0.26, 110],
+    [9.4, 12.8, 'HabitQuestは|一振り 一振りを *クエスト* に。', 0.8, 76],
+  ]),
   // Japanese-only memes (the old framed reels j-m8, j-m9, j-m10), full screen.
   'j-e6-keikaku': own([
     { clip: 'light/a7eWvOJDw3Q.mp4', start: 5.6, dur: 2.6, focus: [0.45, 0.5], cam: [[0, 1.1, 0.5, 0.45], [1, 1.3, 0.5, 0.42]] },
