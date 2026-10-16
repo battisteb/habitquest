@@ -49,6 +49,9 @@ jest.mock('../onboarding-state', () => ({
   markOnboardingComplete: jest.fn(),
 }));
 
+const mockResetTutorial = jest.fn();
+jest.mock('../tutorial-state', () => ({ resetTutorial: () => mockResetTutorial() }));
+
 jest.mock('../../notifications/utils/notification-service', () => ({
   requestPermissions: jest.fn(() => Promise.resolve(false)),
   applyNotificationPrefs: jest.fn(),
@@ -118,6 +121,21 @@ describe('OnboardingScreen', () => {
     expect(markOnboardingComplete).toHaveBeenCalled();
     // Notifications are asked later, at the end of the Today tour.
     expect(requestPermissions).not.toHaveBeenCalled();
+  });
+
+  it('a goal preselects the quests that fit it, for this account, and the Today tour is replayed', async () => {
+    const utils = render(<OnboardingScreen />);
+    goToHabitStep(utils);
+
+    fireEvent.press(utils.getByTestId('onb-goal-fitness'));
+    fireEvent.press(utils.getByText('ONB_START_QUEST'));
+
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/(tabs)/today'));
+    expect(createHabit).toHaveBeenCalledTimes(2);
+    expect(createHabit).toHaveBeenCalledWith('onb_quick_exercise', 'fitness');
+    expect(createHabit).toHaveBeenCalledWith('onb_quick_bedtime', 'sleep');
+    expect(markOnboardingComplete).toHaveBeenCalledWith('user-1');
+    expect(mockResetTutorial).toHaveBeenCalled();
   });
 
   it('creates up to three quick-pick habits', async () => {
